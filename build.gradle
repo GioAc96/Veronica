@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id "io.freefair.lombok" version "4.1.6"
+    id 'jacoco'
 }
 
 group 'org.gioac96'
@@ -11,6 +13,26 @@ repositories {
     mavenCentral()
 }
 
+jacocoTestReport {
+
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.enabled true
+    }
+
+}
+
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
