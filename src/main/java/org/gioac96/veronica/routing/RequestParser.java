@@ -14,6 +14,8 @@ public class RequestParser {
 
         return Request.builder()
             .httpMethod(httpMethod)
+            .uri(httpExchange.getRequestURI())
+            .headers(httpExchange.getRequestHeaders())
             .body(body)
             .build();
 
