@@ -10,12 +10,12 @@ public class Response {
 
     @Getter
     @Setter
-    private String body;
+    protected String body;
 
     @Getter
     @Setter
     @NonNull
-    private HttpStatus httpStatus;
+    protected HttpStatus httpStatus;
 
 
 }
