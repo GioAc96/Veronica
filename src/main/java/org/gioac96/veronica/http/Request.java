@@ -30,10 +30,10 @@ public class Request {
     protected final URI uri;
 
     @Getter(lazy = true)
-    private final transient Map<String, String> queryMap = lazyLoadQueryMap();
+    private final Map<String, String> queryMap = lazyLoadQueryMap();
 
     @Getter(lazy = true)
-    private final transient List<HttpCookie> cookie = lazyLoadCookie();
+    private final List<HttpCookie> cookie = lazyLoadCookie();
 
     @Builder
     public Request(
