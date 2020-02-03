@@ -2,6 +2,9 @@ package org.gioac96.veronica.http;
 
 import lombok.Getter;
 
+/**
+ * Http statuses.
+ */
 public enum HttpStatus {
 
     CONTINUE(100, "Continue"),

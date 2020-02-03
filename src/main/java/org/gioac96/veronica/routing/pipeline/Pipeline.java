@@ -5,18 +5,21 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.gioac96.veronica.http.Request;
 import org.gioac96.veronica.http.Response;
-import org.gioac96.veronica.util.PriorityList;
+import org.gioac96.veronica.util.PrioritySet;
 
+/**
+ * Request pipeline.
+ */
 public class Pipeline {
 
     @Getter
-    private final PriorityList<PreFilter> preFilters;
+    private final PrioritySet<PreFilter> preFilters;
 
     @Getter
-    private final PriorityList<PostFilter> postFilters;
+    private final PrioritySet<PostFilter> postFilters;
 
     @Getter
-    private final PriorityList<PostProcessor> postProcessors;
+    private final PrioritySet<PostProcessor> postProcessors;
 
     @Getter
     @Setter
@@ -25,9 +28,9 @@ public class Pipeline {
 
     public Pipeline(@NonNull ResponseRenderer responseRenderer) {
 
-        preFilters = new PriorityList<>();
-        postFilters = new PriorityList<>();
-        postProcessors = new PriorityList<>();
+        preFilters = new PrioritySet<>();
+        postFilters = new PrioritySet<>();
+        postProcessors = new PrioritySet<>();
 
         this.responseRenderer = responseRenderer;
 
@@ -63,6 +66,12 @@ public class Pipeline {
 
     }
 
+    /**
+     * Handles a request by passing through the pipeline.
+     * @param request request to handle
+     * @param requestHandler request handler that performs the requested action
+     * @return the generated resposne
+     */
     public Response handle(@NonNull Request request, @NonNull RequestHandler requestHandler) {
 
         Response response;

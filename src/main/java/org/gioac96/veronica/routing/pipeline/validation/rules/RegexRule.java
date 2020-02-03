@@ -4,12 +4,16 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.gioac96.veronica.routing.pipeline.validation.DefaultValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureData;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureResponse;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationRule;
 
+/**
+ * {@link ValidationRule} that checks that a field's value matches a specified regex pattern.
+ */
 @RequiredArgsConstructor
 public class RegexRule implements ValidationRule {
 
@@ -18,13 +22,16 @@ public class RegexRule implements ValidationRule {
     @NonNull
     private String pattern;
 
-    @Override
-    public void validate(String fieldName, String fieldValue) throws ValidationException {
+    protected void validate(
+        String fieldName,
+        String fieldValue,
+        ValidationFailureReason failureReason
+    ) throws ValidationException {
 
         if (! fieldValue.matches(pattern)) {
 
             ValidationFailureData failureData = new ValidationFailureData(
-                ValidationFailureReason.PATTERN_NOT_MATCHED,
+                failureReason,
                 fieldName
             );
 
@@ -35,6 +42,13 @@ public class RegexRule implements ValidationRule {
             throw new ValidationException(validationFailureResponse, failureData);
 
         }
+
+    }
+
+    @Override
+    public void validate(String fieldName, String fieldValue) throws ValidationException {
+
+        validate(fieldName, fieldValue, DefaultValidationFailureReason.PATTERN_NOT_MATCHED);
 
     }
 

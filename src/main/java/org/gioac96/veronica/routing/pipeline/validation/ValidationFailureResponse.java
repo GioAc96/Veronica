@@ -4,6 +4,9 @@ import lombok.NonNull;
 import org.gioac96.veronica.http.HttpStatus;
 import org.gioac96.veronica.http.Response;
 
+/**
+ * {@link Response} generated on validation failure.
+ */
 public class ValidationFailureResponse extends Response {
 
     private final ValidationFailureData validationFailureData;

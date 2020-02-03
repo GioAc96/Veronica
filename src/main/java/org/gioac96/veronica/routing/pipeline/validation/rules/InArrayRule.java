@@ -1,17 +1,20 @@
 package org.gioac96.veronica.routing.pipeline.validation.rules;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.gioac96.veronica.routing.pipeline.validation.DefaultValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureData;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureResponse;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationRule;
 
+
+/**
+ * Validation rule that checks that a field's value is among the specified valid values.
+ */
 @RequiredArgsConstructor
 public class InArrayRule implements ValidationRule {
 
@@ -20,8 +23,11 @@ public class InArrayRule implements ValidationRule {
     @NonNull
     private String[] allowedValues;
 
-    @Override
-    public void validate(String fieldName, String fieldValue) throws ValidationException {
+    protected void validate(
+        String fieldName,
+        String fieldValue,
+        ValidationFailureReason failureReason
+    ) throws ValidationException {
 
         for (String allowedValue : allowedValues) {
 
@@ -34,7 +40,7 @@ public class InArrayRule implements ValidationRule {
         }
 
         ValidationFailureData failureData = new ValidationFailureData(
-            ValidationFailureReason.NOT_IN_ARRAY,
+            failureReason,
             fieldName
         );
 
@@ -43,6 +49,13 @@ public class InArrayRule implements ValidationRule {
         );
 
         throw new ValidationException(validationFailureResponse, failureData);
+
+    }
+
+    @Override
+    public void validate(String fieldName, String fieldValue) throws ValidationException {
+
+        validate(fieldName, fieldValue, DefaultValidationFailureReason.NOT_IN_ARRAY);
 
     }
 

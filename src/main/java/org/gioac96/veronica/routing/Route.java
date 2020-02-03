@@ -9,6 +9,9 @@ import org.gioac96.veronica.routing.pipeline.Pipeline;
 import org.gioac96.veronica.routing.pipeline.RequestHandler;
 import org.gioac96.veronica.routing.pipeline.ResponseRenderer;
 
+/**
+ * Application route.
+ */
 public class Route {
 
     @NonNull
@@ -72,12 +75,22 @@ public class Route {
 
     }
 
+    /**
+     * Checks wether the route should handle the specified {@link Request}.
+     * @param request request to handle
+     * @return true iff the route should handle the specified {@link Request}
+     */
     public boolean shouldHandle(@NonNull Request request) {
 
         return requestMatcher.matches(request);
 
     }
 
+    /**
+     * Handles the specified {@link Request} via passing it through the route's {@link Pipeline}.
+     * @param request request to handle
+     * @return the generated {@link Response}
+     */
     public Response handle(@NonNull Request request) {
 
         return pipeline.handle(request, requestHandler);

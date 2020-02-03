@@ -1,12 +1,15 @@
 package org.gioac96.veronica.routing.pipeline.validation.rules;
 
 import lombok.Getter;
+import org.gioac96.veronica.routing.pipeline.validation.DefaultValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureData;
-import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureResponse;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationRule;
 
+/**
+ * Validation rule that checks that a value is between a maximum and a minimum.
+ */
 public class BetweenRule implements ValidationRule {
 
     @Getter
@@ -35,6 +38,7 @@ public class BetweenRule implements ValidationRule {
 
     }
 
+    @Override
     public void validate(String fieldName, String fieldValue) throws ValidationException {
 
         double value;
@@ -46,7 +50,7 @@ public class BetweenRule implements ValidationRule {
         } catch (NumberFormatException e) {
 
             ValidationFailureData failureData = new ValidationFailureData(
-                ValidationFailureReason.NOT_NUMERIC,
+                DefaultValidationFailureReason.NOT_NUMERIC,
                 fieldName
             );
 
@@ -60,12 +64,12 @@ public class BetweenRule implements ValidationRule {
 
 
         if (
-            (inclusive && (value < minVal || value > maxVal)) ||
-                (! inclusive && (value <= minVal || value > maxVal))
+            (inclusive && (value < minVal || value > maxVal))
+                || (!inclusive && (value <= minVal || value > maxVal))
         ) {
 
             ValidationFailureData failureData = new ValidationFailureData(
-                ValidationFailureReason.OUT_OF_RANGE,
+                DefaultValidationFailureReason.OUT_OF_RANGE,
                 fieldName
             );
 

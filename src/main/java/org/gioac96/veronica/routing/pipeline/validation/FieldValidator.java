@@ -2,12 +2,15 @@ package org.gioac96.veronica.routing.pipeline.validation;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.gioac96.veronica.util.PriorityList;
+import org.gioac96.veronica.util.PrioritySet;
 
+/**
+ * Field validator.
+ */
 public class FieldValidator {
 
     @Getter
-    private PriorityList<ValidationRule> validationRules;
+    private PrioritySet<ValidationRule> validationRules;
 
     @Getter
     @Setter
@@ -15,7 +18,7 @@ public class FieldValidator {
 
     public FieldValidator() {
 
-        validationRules = new PriorityList<>();
+        validationRules = new PrioritySet<>();
         nullable = false;
 
     }
@@ -26,18 +29,44 @@ public class FieldValidator {
 
     }
 
-
+    /**
+     * Validates a field by enforcing all of the field's validation rules.
+     * @param fieldName name of the field to validate
+     * @param fieldValue value of the field to validate
+     * @throws ValidationException on validation failure
+     */
     public void validateField(String fieldName, String fieldValue) throws ValidationException {
 
-        if (nullable && (fieldValue == null || fieldValue == "")) {
-            return;
+        if (fieldValue == null || fieldValue.equals("")) {
+
+            if (! nullable) {
+
+                ValidationFailureData failureData = new ValidationFailureData(
+                    DefaultValidationFailureReason.NOT_PRESENT,
+                    fieldName
+                );
+
+                ValidationFailureResponse failureResponse = new ValidationFailureResponse(
+                    failureData
+                );
+
+                throw new ValidationException(
+                    failureResponse,
+                    failureData
+                );
+
+            }
+
+        } else {
+
+            for (ValidationRule validationRule : validationRules) {
+
+                validationRule.validate(fieldName, fieldValue);
+
+            }
+
         }
 
-        for (ValidationRule validationRule : validationRules) {
-
-            validationRule.validate(fieldName, fieldValue);
-
-        }
 
     }
 

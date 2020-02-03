@@ -8,6 +8,9 @@ import org.gioac96.veronica.http.Request;
 import org.gioac96.veronica.routing.pipeline.PipelineBreakException;
 import org.gioac96.veronica.routing.pipeline.PreFilter;
 
+/**
+ * {@link PreFilter} that validates a {@link Request} query.
+ */
 public class QueryValidator implements PreFilter {
 
     @Getter
