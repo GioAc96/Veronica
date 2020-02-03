@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id "io.freefair.lombok" version "4.1.6"
     id 'jacoco'
+    id 'checkstyle'
 }
 
 group 'org.gioac96'
@@ -35,4 +36,11 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
+}
+
+checkstyle {
+    toolVersion "8.25"
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    ignoreFailures = false
+    maxWarnings = 0
 }
