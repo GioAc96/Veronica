@@ -1,11 +1,13 @@
 package org.gioac96.veronica.http;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.gioac96.veronica.routing.pipeline.ResponseRenderer;
 
+/**
+ * Http response.
+ */
 public class Response {
 
     @Getter
@@ -28,6 +30,10 @@ public class Response {
 
     }
 
+    /**
+     * Renders the response with the specified renderer.
+     * @param responseRenderer renderer used to render the response
+     */
     public void render(ResponseRenderer responseRenderer) {
 
         if (isRendered) {

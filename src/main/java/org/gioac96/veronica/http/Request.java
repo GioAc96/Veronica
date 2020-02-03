@@ -11,6 +11,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Http Request.
+ */
 public class Request {
 
     @Getter
@@ -50,12 +53,21 @@ public class Request {
 
     }
 
+    /**
+     * Gets a query parameter's value.
+     * @param paramName name of the parameter to get the value of
+     * @return the value of the query parameter if specified, null otherwise
+     */
     public String getQueryParam(String paramName) {
 
         return getQueryMap().getOrDefault(paramName, null);
 
     }
 
+    /**
+     * Gets the request path.
+     * @return the request path
+     */
     public String getPath() {
 
         return uri.getPath();

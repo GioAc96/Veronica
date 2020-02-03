@@ -12,6 +12,9 @@ import org.gioac96.veronica.http.Response;
 import org.gioac96.veronica.routing.RequestParser;
 import org.gioac96.veronica.routing.Router;
 
+/**
+ * Veronica application.
+ */
 public class Application {
 
     @Getter
@@ -75,6 +78,9 @@ public class Application {
 
     }
 
+    /**
+     * Starts the application.
+     */
     public void start() {
 
         if (router == null) {
@@ -87,10 +93,12 @@ public class Application {
 
     }
 
+    /**
+     * Stops application.
+     */
     public void stop() {
 
         server.stop(1);
-
 
     }
 
