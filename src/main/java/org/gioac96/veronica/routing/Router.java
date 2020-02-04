@@ -7,7 +7,7 @@ import org.gioac96.veronica.http.Response;
 import org.gioac96.veronica.util.PrioritySet;
 
 /**
- * Application router, responsible for routing {@link Request} to a specific route, that handles the
+ * Application router, responsible for routing {@link Request} to a specific {@link Route}, that handles the
  * request and generates a response.
  */
 public class Router {
@@ -30,7 +30,9 @@ public class Router {
     }
 
     /**
-     * Routes the specified {@link Request}.
+     * Routes the specified {@link Request}. If none of the available routes can handle the request, the request is
+     * handled by the fallback route.
+     *
      * @param request request to route
      * @return generated {@link Response}
      */

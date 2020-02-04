@@ -1,7 +1,7 @@
 package org.gioac96.veronica.routing.pipeline.validation.rules;
 
 import lombok.Getter;
-import org.gioac96.veronica.routing.pipeline.validation.DefaultValidationFailureReason;
+import org.gioac96.veronica.routing.pipeline.validation.CommonValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureData;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureResponse;
@@ -50,7 +50,7 @@ public class BetweenRule implements ValidationRule {
         } catch (NumberFormatException e) {
 
             ValidationFailureData failureData = new ValidationFailureData(
-                DefaultValidationFailureReason.NOT_NUMERIC,
+                CommonValidationFailureReason.NOT_NUMERIC,
                 fieldName
             );
 
@@ -69,7 +69,7 @@ public class BetweenRule implements ValidationRule {
         ) {
 
             ValidationFailureData failureData = new ValidationFailureData(
-                DefaultValidationFailureReason.OUT_OF_RANGE,
+                CommonValidationFailureReason.OUT_OF_RANGE,
                 fieldName
             );
 

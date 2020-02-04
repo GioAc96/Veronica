@@ -31,7 +31,8 @@ public class FieldValidator {
 
     /**
      * Validates a field by enforcing all of the field's validation rules.
-     * @param fieldName name of the field to validate
+     *
+     * @param fieldName  name of the field to validate
      * @param fieldValue value of the field to validate
      * @throws ValidationException on validation failure
      */
@@ -39,10 +40,10 @@ public class FieldValidator {
 
         if (fieldValue == null || fieldValue.equals("")) {
 
-            if (! nullable) {
+            if (!nullable) {
 
                 ValidationFailureData failureData = new ValidationFailureData(
-                    DefaultValidationFailureReason.NOT_PRESENT,
+                    CommonValidationFailureReason.NOT_PRESENT,
                     fieldName
                 );
 
@@ -66,7 +67,6 @@ public class FieldValidator {
             }
 
         }
-
 
     }
 

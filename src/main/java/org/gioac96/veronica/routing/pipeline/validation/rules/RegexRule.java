@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.gioac96.veronica.routing.pipeline.validation.DefaultValidationFailureReason;
+import org.gioac96.veronica.routing.pipeline.validation.CommonValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureData;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureReason;
@@ -28,7 +28,7 @@ public class RegexRule implements ValidationRule {
         ValidationFailureReason failureReason
     ) throws ValidationException {
 
-        if (! fieldValue.matches(pattern)) {
+        if (!fieldValue.matches(pattern)) {
 
             ValidationFailureData failureData = new ValidationFailureData(
                 failureReason,
@@ -48,7 +48,7 @@ public class RegexRule implements ValidationRule {
     @Override
     public void validate(String fieldName, String fieldValue) throws ValidationException {
 
-        validate(fieldName, fieldValue, DefaultValidationFailureReason.PATTERN_NOT_MATCHED);
+        validate(fieldName, fieldValue, CommonValidationFailureReason.PATTERN_NOT_MATCHED);
 
     }
 

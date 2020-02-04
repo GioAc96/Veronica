@@ -1,6 +1,6 @@
 package org.gioac96.veronica.routing.pipeline.validation.rules;
 
-import org.gioac96.veronica.routing.pipeline.validation.DefaultValidationFailureReason;
+import org.gioac96.veronica.routing.pipeline.validation.CommonValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureData;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureResponse;
@@ -21,7 +21,7 @@ public class NumericRule implements ValidationRule {
         } catch (NumberFormatException e) {
 
             ValidationFailureData failureData = new ValidationFailureData(
-                DefaultValidationFailureReason.NOT_NUMERIC,
+                CommonValidationFailureReason.NOT_NUMERIC,
                 fieldName
             );
 

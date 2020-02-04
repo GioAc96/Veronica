@@ -5,7 +5,7 @@ import lombok.Getter;
 /**
  * Common reasons for validation failure.
  */
-public enum DefaultValidationFailureReason implements ValidationFailureReason {
+public enum CommonValidationFailureReason implements ValidationFailureReason {
 
     NOT_IN_ARRAY("field value is not in array of possible values"),
     NOT_BOOLEAN("field value must be either true or false"),
@@ -18,7 +18,7 @@ public enum DefaultValidationFailureReason implements ValidationFailureReason {
     @Getter
     private final String message;
 
-    DefaultValidationFailureReason(String message) {
+    CommonValidationFailureReason(String message) {
 
         this.message = message;
 

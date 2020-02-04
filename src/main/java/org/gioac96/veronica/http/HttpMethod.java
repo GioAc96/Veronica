@@ -13,6 +13,7 @@ public enum HttpMethod {
 
     /**
      * Returns an @{link HttpMethod} by its name.
+     *
      * @param name name of the HttpMethod
      * @return an @{link HttpMethod} corresponding to the specified method name
      */

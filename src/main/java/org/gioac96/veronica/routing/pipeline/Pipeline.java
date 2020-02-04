@@ -68,7 +68,8 @@ public class Pipeline {
 
     /**
      * Handles a request by passing through the pipeline.
-     * @param request request to handle
+     *
+     * @param request        request to handle
      * @param requestHandler request handler that performs the requested action
      * @return the generated resposne
      */
@@ -90,7 +91,7 @@ public class Pipeline {
 
             response = e.getResponse();
 
-            if (! response.isRendered()) {
+            if (!response.isRendered()) {
 
                 response.render(responseRenderer);
 

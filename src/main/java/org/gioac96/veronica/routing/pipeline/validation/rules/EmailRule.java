@@ -1,6 +1,6 @@
 package org.gioac96.veronica.routing.pipeline.validation.rules;
 
-import org.gioac96.veronica.routing.pipeline.validation.DefaultValidationFailureReason;
+import org.gioac96.veronica.routing.pipeline.validation.CommonValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
 
 /**
@@ -17,7 +17,7 @@ public class EmailRule extends RegexRule {
     @Override
     public void validate(String fieldName, String fieldValue) throws ValidationException {
 
-        super.validate(fieldName, fieldValue, DefaultValidationFailureReason.INVALID_EMAIL);
+        super.validate(fieldName, fieldValue, CommonValidationFailureReason.INVALID_EMAIL);
 
     }
 

@@ -77,6 +77,7 @@ public class Route {
 
     /**
      * Checks wether the route should handle the specified {@link Request}.
+     *
      * @param request request to handle
      * @return true iff the route should handle the specified {@link Request}
      */
@@ -88,6 +89,7 @@ public class Route {
 
     /**
      * Handles the specified {@link Request} via passing it through the route's {@link Pipeline}.
+     *
      * @param request request to handle
      * @return the generated {@link Response}
      */

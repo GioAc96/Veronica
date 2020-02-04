@@ -12,6 +12,7 @@ public class RequestParser {
 
     /**
      * Parses an {@link HttpExchange} to generate a {@link Request} object.
+     *
      * @param httpExchange httpExchange to parse
      * @return the generated {@link Request}
      * @throws IOException on parsing failure
