@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.gioac96.veronica.http.Request;
 import org.gioac96.veronica.http.Response;
+import org.gioac96.veronica.routing.matching.RequestMatcher;
 import org.gioac96.veronica.routing.pipeline.Pipeline;
 import org.gioac96.veronica.routing.pipeline.RequestHandler;
-import org.gioac96.veronica.routing.pipeline.ResponseRenderer;
 
 /**
  * Application route.
@@ -18,10 +18,11 @@ import org.gioac96.veronica.routing.pipeline.ResponseRenderer;
 @RequiredArgsConstructor
 public class Route {
 
-    @NonNull
     @Getter
     @Setter
-    private RequestMatcher requestMatcher;
+    @NonNull
+    @Builder.Default
+    private RequestMatcher requestMatcher = RequestMatcher.alwaysMatch();
 
     @Getter
     @Setter
@@ -31,56 +32,11 @@ public class Route {
     @Getter
     @Setter
     @NonNull
-    private Pipeline pipeline;
-
-    public Route(
-        @NonNull RequestHandler requestHandler,
-        @NonNull ResponseRenderer responseRenderer
-    ) {
-
-        this.requestMatcher = new RequestMatcher(request -> true);
-        this.requestHandler = requestHandler;
-        this.pipeline = new Pipeline(responseRenderer);
-
-    }
-
-    public Route(
-        @NonNull RequestHandler requestHandler,
-        @NonNull Pipeline pipeline
-    ) {
-
-        this.requestMatcher = new RequestMatcher(request -> true);
-        this.requestHandler = requestHandler;
-        this.pipeline = pipeline;
-
-    }
-
-    public Route(
-        @NonNull RequestHandler requestHandler,
-        @NonNull RequestMatcher requestMatcher,
-        @NonNull ResponseRenderer responseRenderer
-    ) {
-
-        this.requestMatcher = requestMatcher;
-        this.requestHandler = requestHandler;
-        this.pipeline = new Pipeline(responseRenderer);
-
-    }
-
-    public Route(
-        @NonNull RequestHandler requestHandler,
-        @NonNull RequestMatcher requestMatcher,
-        @NonNull Pipeline pipeline
-    ) {
-
-        this.requestMatcher = requestMatcher;
-        this.requestHandler = requestHandler;
-        this.pipeline = pipeline;
-
-    }
+    @Builder.Default
+    private Pipeline pipeline = new Pipeline();
 
     /**
-     * Checks wether the route should handle the specified {@link Request}.
+     * Checks whether the route should handle the specified {@link Request}.
      *
      * @param request request to handle
      * @return true iff the route should handle the specified {@link Request}

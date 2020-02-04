@@ -90,7 +90,7 @@ public abstract class SetOps<T> extends AbstractSet<T> implements Set<T> {
      * @param check criteria to find first matching element of the set
      * @param def   default value to return when no element of the set meets the specified criteria.
      * @return the first element of the set that matches the specified criteria, or a default specified value if none
-     * matches
+     *      matches
      */
     public T firstOrDefault(Function<T, Boolean> check, T def) {
 

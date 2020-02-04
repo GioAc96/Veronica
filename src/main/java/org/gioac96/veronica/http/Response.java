@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.gioac96.veronica.routing.pipeline.PipelineBreakException;
 import org.gioac96.veronica.routing.pipeline.ResponseRenderer;
+import org.gioac96.veronica.routing.pipeline.ResponseRenderingException;
 
 /**
  * Http response.
@@ -23,27 +25,66 @@ public class Response {
 
     @Getter
     @Builder.Default
-    private boolean isRendered = false;
-
-    @Getter
-    @Builder.Default
     private String body = null;
 
     /**
-     * Renders the response with the specified renderer.
+     * Checks whether the response is already rendered.
      *
-     * @param responseRenderer renderer used to render the response
+     * @return true iff the response is already rendered
      */
-    public void render(ResponseRenderer responseRenderer) {
+    public boolean isRendered() {
 
-        if (isRendered) {
+        return body != null;
 
-            throw new SecurityException("Response body was already set");
+    }
+
+    /**
+     * Renders the response with the specified renderer, if the response is not already rendered.
+     *
+     * @param responseRenderer renderer to use to rendered the response
+     * @return true iff the response was not already rendered
+     * @throws ResponseRenderingException on rendering failure
+     */
+    public boolean render(@NonNull ResponseRenderer responseRenderer) throws ResponseRenderingException {
+
+        /*
+         * Not calling the setBody method to avoid rendering the response with the responseRenderer
+         * if it is already rendered.
+         */
+
+        if (isRendered()) {
+
+            return false;
+
+        } else {
+
+            this.body = responseRenderer.render(this);
+
+            return true;
 
         }
 
-        this.body = responseRenderer.render(this);
-        isRendered = true;
+    }
+
+    /**
+     * Sets the body of the response if the response is not already rendered.
+     *
+     * @param body body of the response
+     * @return true if the response was not already rendered and the body was successfully set
+     */
+    public boolean setBody(@NonNull String body) {
+
+        if (isRendered()) {
+
+            return false;
+
+        } else {
+
+            this.body = body;
+
+            return true;
+
+        }
 
     }
 

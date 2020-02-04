@@ -8,6 +8,6 @@ import org.gioac96.veronica.http.Response;
  */
 public interface ResponseRenderer {
 
-    String render(@NonNull Response response);
+    String render(@NonNull Response response) throws ResponseRenderingException;
 
 }

@@ -13,28 +13,17 @@ import org.gioac96.veronica.util.PrioritySet;
 public class Pipeline {
 
     @Getter
-    private final PrioritySet<PreFilter> preFilters;
+    private final PrioritySet<PreFilter> preFilters = new PrioritySet<>();
 
     @Getter
-    private final PrioritySet<PostFilter> postFilters;
+    private final PrioritySet<PostFilter> postFilters = new PrioritySet<>();
 
     @Getter
-    private final PrioritySet<PostProcessor> postProcessors;
+    private final PrioritySet<PostProcessor> postProcessors = new PrioritySet<>();
 
     @Getter
     @Setter
-    @NonNull
     private ResponseRenderer responseRenderer;
-
-    public Pipeline(@NonNull ResponseRenderer responseRenderer) {
-
-        preFilters = new PrioritySet<>();
-        postFilters = new PrioritySet<>();
-        postProcessors = new PrioritySet<>();
-
-        this.responseRenderer = responseRenderer;
-
-    }
 
     private void applyPreFilters(Request request) throws PipelineBreakException {
 
@@ -71,37 +60,52 @@ public class Pipeline {
      *
      * @param request        request to handle
      * @param requestHandler request handler that performs the requested action
-     * @return the generated resposne
+     * @return the generated response
      */
     public Response handle(@NonNull Request request, @NonNull RequestHandler requestHandler) {
 
-        Response response;
+        // Pre-render
+        Response response = preRender(request, requestHandler);
 
-        try {
+        // Rendering
+        if (responseRenderer != null) {
 
-            applyPreFilters(request);
-
-            response = requestHandler.handle(request);
-
-            applyPostFilters(request, response);
-
-            response.render(responseRenderer);
-
-        } catch (PipelineBreakException e) {
-
-            response = e.getResponse();
-
-            if (!response.isRendered()) {
+            try {
 
                 response.render(responseRenderer);
+
+            } catch (ResponseRenderingException e) {
+
+                response = e.getResponse();
 
             }
 
         }
 
+        // Post-render
         applyPostProcessors(request, response);
 
         return response;
+
+    }
+
+    private Response preRender(Request request, RequestHandler requestHandler) {
+
+        try {
+
+            applyPreFilters(request);
+
+            Response response = requestHandler.handle(request);
+
+            applyPostFilters(request, response);
+
+            return response;
+
+        } catch (PipelineBreakException e) {
+
+            return e.getResponse();
+
+        }
 
     }
 

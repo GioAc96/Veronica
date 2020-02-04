@@ -1,25 +1,24 @@
-package org.gioac96.veronica.routing;
+package org.gioac96.veronica.routing.matching;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import org.gioac96.veronica.http.Request;
-import org.gioac96.veronica.routing.matching.RequestMatchingRule;
 import org.gioac96.veronica.util.ArraySet;
 
 /**
  * Checks that a {@link Request} object matches a specified condition.
  */
-@AllArgsConstructor
-public class RequestMatcher {
+@NoArgsConstructor
+public class RulesRequestMatcher extends RequestMatcher {
 
     @Getter
     @Setter
     @NonNull
-    private ArraySet<RequestMatchingRule> matchingRules;
+    private ArraySet<RequestMatchingRule> matchingRules = new ArraySet<>();
 
-    public RequestMatcher(@NonNull RequestMatchingRule rule) {
+    public RulesRequestMatcher(@NonNull RequestMatchingRule rule) {
 
         matchingRules = ArraySet.of(RequestMatchingRule.class, rule);
 
@@ -35,5 +34,7 @@ public class RequestMatcher {
         return matchingRules.every(matchingRule -> matchingRule.matches(request));
 
     }
+
+
 
 }

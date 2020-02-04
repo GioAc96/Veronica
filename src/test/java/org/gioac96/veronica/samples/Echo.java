@@ -1,16 +1,12 @@
 package org.gioac96.veronica.samples;
 
 import java.io.IOException;
-import lombok.Getter;
-import lombok.NonNull;
 import org.gioac96.veronica.Application;
 import org.gioac96.veronica.http.HttpStatus;
 import org.gioac96.veronica.http.Response;
-import org.gioac96.veronica.routing.RequestMatcher;
+import org.gioac96.veronica.routing.matching.RequestMatcher;
 import org.gioac96.veronica.routing.Route;
 import org.gioac96.veronica.routing.Router;
-import org.gioac96.veronica.routing.pipeline.Pipeline;
-import org.gioac96.veronica.routing.pipeline.ResponseRenderer;
 
 public class Echo {
 
@@ -18,31 +14,27 @@ public class Echo {
 
         Application application = new Application(80);
 
-        ResponseRenderer responseRenderer = response -> ((TextResponse) response).getData();
-
-        Route fallback = new Route(
-            request -> new TextResponse(HttpStatus.OK, "Try to specify a request body"),
-            responseRenderer
-        );
-
-        Route echo = Route.builder()
-            .requestHandler(
-                request -> Response.builder()
-                    .httpStatus(HttpStatus.OK)
-                    .body(request.getBody())
-                    .build()
-            )
-            .requestMatcher(
-                new RequestMatcher(request -> request.getBody().length() > 0)
-            )
-            .pipeline(
-                new Pipeline(responseRenderer)
+        Route fallback = Route.builder()
+            .requestHandler(request -> Response.builder()
+                .httpStatus(HttpStatus.OK)
+                .body("Try to specify a request body")
+                .build()
             )
             .build();
 
+
         Router router = new Router(fallback);
 
-        router.getRoutes().add(echo, 0);
+        router.getRoutes().add(
+            Route.builder()
+                .requestMatcher(RequestMatcher.alwaysMatch())
+                .requestHandler(request -> Response.builder()
+                    .httpStatus(HttpStatus.OK)
+                    .body(request.getBody())
+                    .build()
+                )
+                .build()
+        );
 
         application.setRouter(router);
 
@@ -50,18 +42,5 @@ public class Echo {
 
     }
 
-    private static class TextResponse extends Response {
-
-        @Getter
-        private String data;
-
-        public TextResponse(@NonNull HttpStatus httpStatus, String data) {
-
-            super(httpStatus);
-            this.data = data;
-
-        }
-
-    }
 
 }
