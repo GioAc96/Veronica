@@ -1,5 +1,6 @@
 package org.gioac96.veronica.routing;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import org.gioac96.veronica.routing.pipeline.ResponseRenderer;
 /**
  * Application route.
  */
+@Builder
 public class Route {
 
     @NonNull
@@ -34,7 +36,7 @@ public class Route {
         @NonNull ResponseRenderer responseRenderer
     ) {
 
-        this.requestMatcher = request -> true;
+        this.requestMatcher = new RequestMatcher(request -> true);
         this.requestHandler = requestHandler;
         this.pipeline = new Pipeline(responseRenderer);
 
@@ -45,7 +47,7 @@ public class Route {
         @NonNull Pipeline pipeline
     ) {
 
-        this.requestMatcher = request -> true;
+        this.requestMatcher = new RequestMatcher(request -> true);
         this.requestHandler = requestHandler;
         this.pipeline = pipeline;
 

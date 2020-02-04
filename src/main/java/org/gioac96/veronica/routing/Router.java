@@ -12,8 +12,8 @@ import org.gioac96.veronica.util.PrioritySet;
  */
 public class Router {
 
-    @NonNull
     @Getter
+    @NonNull
     protected final PrioritySet<Route> routes;
 
     @Getter
@@ -38,17 +38,10 @@ public class Router {
      */
     public Response route(Request request) {
 
-        for (Route route : routes) {
-
-            if (route.shouldHandle(request)) {
-
-                return route.handle(request);
-
-            }
-
-        }
-
-        return fallbackRoute.handle(request);
+        return routes.firstOrDefault(
+            route -> route.shouldHandle(request),
+            fallbackRoute
+        ).handle(request);
 
     }
 

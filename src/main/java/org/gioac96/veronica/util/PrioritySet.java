@@ -1,6 +1,5 @@
 package org.gioac96.veronica.util;
 
-import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
@@ -8,27 +7,12 @@ import lombok.Getter;
 
 /**
  * Set with support for elements priority.
+ *
  * @param <T> the type of the elements in the set
  */
-public class PrioritySet<T> extends AbstractSet<T> implements Set<T>  {
+public class PrioritySet<T> extends SetOps<T> implements Set<T> {
 
     private static final int DEFAULT_PRIORITY = 0;
-
-    private class Entry {
-
-        @Getter
-        private final int priority;
-
-        @Getter
-        private final T element;
-
-        public Entry(int priority, T element) {
-            this.priority = priority;
-            this.element = element;
-        }
-
-    }
-
     private ArrayList<Entry> entries;
 
     public PrioritySet() {
@@ -41,13 +25,6 @@ public class PrioritySet<T> extends AbstractSet<T> implements Set<T>  {
     public int size() {
 
         return entries.size();
-
-    }
-
-    @Override
-    public boolean isEmpty() {
-
-        return entries.isEmpty();
 
     }
 
@@ -93,7 +70,8 @@ public class PrioritySet<T> extends AbstractSet<T> implements Set<T>  {
     /**
      * Adds an element to the set with a specified priority. If the set already contains the
      * element, the element is ignored and the method returns false.
-     * @param element element to add to the set
+     *
+     * @param element  element to add to the set
      * @param priority priority to assign to the element
      * @return true iff the element was not already in the set.
      */
@@ -127,6 +105,7 @@ public class PrioritySet<T> extends AbstractSet<T> implements Set<T>  {
 
     /**
      * Gets priority of the specified element.
+     *
      * @param element element to get the priority of
      * @return the priority of the specified element, null if the element is not in the set.
      */
@@ -149,10 +128,11 @@ public class PrioritySet<T> extends AbstractSet<T> implements Set<T>  {
     /**
      * Changes the priority of an element in a set. If the element is not in the set, the element
      * is added to the set.
-     * @param element element to change the priority of
+     *
+     * @param element  element to change the priority of
      * @param priority priority to assign to the element
      * @return true iff the element was not in the set already or if the element had a different
-     *     priority prior to the call.
+     * priority prior to the call.
      */
     public boolean changePriority(T element, int priority) {
 
@@ -184,10 +164,18 @@ public class PrioritySet<T> extends AbstractSet<T> implements Set<T>  {
 
     }
 
-    @Override
-    public void clear() {
+    private class Entry {
 
-        entries.clear();
+        @Getter
+        private final int priority;
+
+        @Getter
+        private final T element;
+
+        public Entry(int priority, T element) {
+            this.priority = priority;
+            this.element = element;
+        }
 
     }
 
