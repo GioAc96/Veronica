@@ -11,7 +11,7 @@ public class BooleanRule extends InArrayRule {
 
     public BooleanRule() {
 
-        super(new String[]{
+        super(ArraySet.of(String.class,
             "true",
             "false",
             "on",

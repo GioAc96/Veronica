@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.gioac96.veronica.routing.pipeline.validation.DefaultValidationFailureReason;
+import org.gioac96.veronica.routing.pipeline.validation.CommonValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureData;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureResponse;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationRule;
+import org.gioac96.veronica.util.ArraySet;
 
 
 /**
@@ -21,7 +22,7 @@ public class InArrayRule implements ValidationRule {
     @Getter
     @Setter
     @NonNull
-    private String[] allowedValues;
+    private ArraySet<String> allowedValues;
 
     protected void validate(
         String fieldName,
@@ -29,33 +30,27 @@ public class InArrayRule implements ValidationRule {
         ValidationFailureReason failureReason
     ) throws ValidationException {
 
-        for (String allowedValue : allowedValues) {
+        if (allowedValues.none(allowedValue -> allowedValue.equals(fieldValue))) {
 
-            if (fieldValue.equals(allowedValue)) {
+            ValidationFailureData failureData = new ValidationFailureData(
+                failureReason,
+                fieldName
+            );
 
-                return;
+            ValidationFailureResponse validationFailureResponse = new ValidationFailureResponse(
+                failureData
+            );
 
-            }
+            throw new ValidationException(validationFailureResponse, failureData);
 
         }
-
-        ValidationFailureData failureData = new ValidationFailureData(
-            failureReason,
-            fieldName
-        );
-
-        ValidationFailureResponse validationFailureResponse = new ValidationFailureResponse(
-            failureData
-        );
-
-        throw new ValidationException(validationFailureResponse, failureData);
 
     }
 
     @Override
     public void validate(String fieldName, String fieldValue) throws ValidationException {
 
-        validate(fieldName, fieldValue, DefaultValidationFailureReason.NOT_IN_ARRAY);
+        validate(fieldName, fieldValue, CommonValidationFailureReason.NOT_IN_ARRAY);
 
     }
 
