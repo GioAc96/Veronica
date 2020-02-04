@@ -1,2 +1,2 @@
 # Veronica
-A fast, elegant and versatile Java web framework.
+A fast, elegant and versatile Java backend web framework.
