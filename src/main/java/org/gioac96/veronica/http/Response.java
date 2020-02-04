@@ -1,8 +1,10 @@
 package org.gioac96.veronica.http;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.gioac96.veronica.routing.pipeline.ResponseRenderer;
 
@@ -10,25 +12,22 @@ import org.gioac96.veronica.routing.pipeline.ResponseRenderer;
  * Http response.
  */
 @Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Response {
 
     @Getter
     @Setter
     @NonNull
     protected HttpStatus httpStatus;
+
     @Getter
-    private boolean isRendered;
+    @Builder.Default
+    private boolean isRendered = false;
+
     @Getter
-    private String body;
-
-    public Response(@NonNull HttpStatus httpStatus) {
-
-        this.httpStatus = httpStatus;
-
-        this.isRendered = false;
-        this.body = null;
-
-    }
+    @Builder.Default
+    private String body = null;
 
     /**
      * Renders the response with the specified renderer.

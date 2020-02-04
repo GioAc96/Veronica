@@ -21,6 +21,28 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T> {
 
     }
 
+    /**
+     * Initializes an {@link PrioritySet} given its starting elements and their type.
+     *
+     * @param type     type of the {@link PrioritySet}
+     * @param elements starting elements of the set
+     * @param <U>      type of the {@link PrioritySet}
+     * @return the initialized {@link PrioritySet}
+     */
+    public static <U> PrioritySet<U> of(Class<U> type, U... elements) {
+
+        PrioritySet<U> result = new PrioritySet<>();
+
+        for (U element : elements) {
+
+            result.add(element);
+
+        }
+
+        return result;
+
+    }
+
     @Override
     public int size() {
 

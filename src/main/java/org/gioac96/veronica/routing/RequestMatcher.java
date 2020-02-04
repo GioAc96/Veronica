@@ -25,6 +25,11 @@ public class RequestMatcher {
 
     }
 
+    /**
+     * Checks whether a request matches the matching rules.
+     * @param request request to check
+     * @return true iff the request matches the matching rules
+     */
     public boolean matches(Request request) {
 
         return matchingRules.every(matchingRule -> matchingRule.matches(request));

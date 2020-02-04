@@ -3,6 +3,7 @@ package org.gioac96.veronica.routing;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.gioac96.veronica.http.Request;
 import org.gioac96.veronica.http.Response;
@@ -14,6 +15,7 @@ import org.gioac96.veronica.routing.pipeline.ResponseRenderer;
  * Application route.
  */
 @Builder
+@RequiredArgsConstructor
 public class Route {
 
     @NonNull

@@ -7,6 +7,9 @@ import lombok.Setter;
 import org.gioac96.veronica.http.Request;
 import org.gioac96.veronica.util.ArraySet;
 
+/**
+ * Request matching rule based on path of request.
+ */
 @AllArgsConstructor
 public class PathRule implements RequestMatchingRule {
 

@@ -8,6 +8,9 @@ import org.gioac96.veronica.http.HttpMethod;
 import org.gioac96.veronica.http.Request;
 import org.gioac96.veronica.util.ArraySet;
 
+/**
+ * Request matching rule based on http method of request.
+ */
 @AllArgsConstructor
 public class MethodRule implements RequestMatchingRule {
 
