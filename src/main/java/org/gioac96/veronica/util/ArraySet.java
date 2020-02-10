@@ -1,15 +1,18 @@
 package org.gioac96.veronica.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
+import javafx.print.Collation;
 
 /**
  * Set based on ArrayList, for maximum efficiency on reading operations.
  *
  * @param <T> Type of the set
  */
-public class ArraySet<T> extends SetOps<T> implements Set<T> {
+public class ArraySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
     private ArrayList<T> entries;
 
@@ -30,11 +33,7 @@ public class ArraySet<T> extends SetOps<T> implements Set<T> {
 
         ArraySet<U> result = new ArraySet<>();
 
-        for (U element : elements) {
-
-            result.add(element);
-
-        }
+        Collections.addAll(result, elements);
 
         return result;
 

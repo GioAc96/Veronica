@@ -27,7 +27,7 @@ public class Echo {
 
         router.getRoutes().add(
             Route.builder()
-                .requestMatcher(RequestMatcher.alwaysMatch())
+                .requestMatcher(request -> request.getBody().length() > 0)
                 .requestHandler(request -> Response.builder()
                     .httpStatus(HttpStatus.OK)
                     .body(request.getBody())

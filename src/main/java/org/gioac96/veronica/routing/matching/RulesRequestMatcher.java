@@ -11,7 +11,7 @@ import org.gioac96.veronica.util.ArraySet;
  * Checks that a {@link Request} object matches a specified condition.
  */
 @NoArgsConstructor
-public class RulesRequestMatcher extends RequestMatcher {
+public class RulesRequestMatcher implements RequestMatcher {
 
     @Getter
     @Setter

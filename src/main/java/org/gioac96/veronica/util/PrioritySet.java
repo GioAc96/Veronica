@@ -1,6 +1,8 @@
 package org.gioac96.veronica.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 import lombok.Getter;
@@ -10,7 +12,7 @@ import lombok.Getter;
  *
  * @param <T> the type of the elements in the set
  */
-public class PrioritySet<T> extends SetOps<T> implements Set<T> {
+public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
     private static final int DEFAULT_PRIORITY = 0;
     private ArrayList<Entry> entries;
@@ -29,15 +31,12 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T> {
      * @param <U>      type of the {@link PrioritySet}
      * @return the initialized {@link PrioritySet}
      */
+    @SafeVarargs
     public static <U> PrioritySet<U> of(Class<U> type, U... elements) {
 
         PrioritySet<U> result = new PrioritySet<>();
 
-        for (U element : elements) {
-
-            result.add(element);
-
-        }
+        Collections.addAll(result, elements);
 
         return result;
 

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.gioac96.veronica.routing.pipeline.PipelineBreakException;
 import org.gioac96.veronica.routing.pipeline.ResponseRenderer;
 import org.gioac96.veronica.routing.pipeline.ResponseRenderingException;
 

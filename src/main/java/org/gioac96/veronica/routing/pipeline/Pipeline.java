@@ -1,5 +1,10 @@
 package org.gioac96.veronica.routing.pipeline;
 
+import java.util.Collection;
+import java.util.Collections;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -10,16 +15,23 @@ import org.gioac96.veronica.util.PrioritySet;
 /**
  * Request pipeline.
  */
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Pipeline {
 
     @Getter
-    private final PrioritySet<PreFilter> preFilters = new PrioritySet<>();
+    @Setter
+    @NonNull
+    private PrioritySet<PreFilter> preFilters;
 
     @Getter
-    private final PrioritySet<PostFilter> postFilters = new PrioritySet<>();
+    @Setter
+    @NonNull
+    private PrioritySet<PostFilter> postFilters;
 
     @Getter
-    private final PrioritySet<PostProcessor> postProcessors = new PrioritySet<>();
+    @Setter
+    @NonNull
+    private PrioritySet<PostProcessor> postProcessors;
 
     @Getter
     @Setter
@@ -108,5 +120,88 @@ public class Pipeline {
         }
 
     }
+
+    public static PipelineBuilder builder() {
+
+        return new PipelineBuilder();
+
+    }
+
+    public static class PipelineBuilder {
+
+        private PrioritySet<PreFilter> preFilters = new PrioritySet<>();
+        private PrioritySet<PostFilter> postFilters = new PrioritySet<>();
+        private PrioritySet<PostProcessor> postProcessors = new PrioritySet<>();
+        private ResponseRenderer responseRenderer = null;
+
+        public PipelineBuilder preFilters(PreFilter... preFilters) {
+
+            Collections.addAll(this.preFilters, preFilters);
+
+            return this;
+
+        }
+
+        public PipelineBuilder preFilters(Collection<PreFilter> preFilters) {
+
+            this.preFilters.addAll(preFilters);
+
+            return this;
+
+        }
+
+        public PipelineBuilder postFilters(PostFilter... postFilters) {
+
+            Collections.addAll(this.postFilters, postFilters);
+
+            return this;
+
+        }
+
+        public PipelineBuilder postFilters(Collection<PostFilter> postFilters) {
+
+            this.postFilters.addAll(postFilters);
+
+            return this;
+
+        }
+
+        public PipelineBuilder postProcessors(PostProcessor... postProcessors) {
+
+            Collections.addAll(this.postProcessors, postProcessors);
+
+            return this;
+
+        }
+
+        public PipelineBuilder postProcessors(Collection<PostProcessor> postProcessors) {
+
+            this.postProcessors.addAll(postProcessors);
+
+            return this;
+
+        }
+
+        public PipelineBuilder responseRenderer(ResponseRenderer responseRenderer) {
+
+            this.responseRenderer = responseRenderer;
+
+            return this;
+
+        }
+
+        public Pipeline build() {
+
+            return new Pipeline(
+                preFilters,
+                postFilters,
+                postProcessors,
+                responseRenderer
+            );
+
+        }
+
+    }
+
 
 }

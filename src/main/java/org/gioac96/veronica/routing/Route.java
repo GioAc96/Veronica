@@ -1,12 +1,15 @@
 package org.gioac96.veronica.routing;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.gioac96.veronica.http.Request;
 import org.gioac96.veronica.http.Response;
+import org.gioac96.veronica.routing.matching.CommonRequestMatchers;
 import org.gioac96.veronica.routing.matching.RequestMatcher;
 import org.gioac96.veronica.routing.pipeline.Pipeline;
 import org.gioac96.veronica.routing.pipeline.RequestHandler;
@@ -22,7 +25,7 @@ public class Route {
     @Setter
     @NonNull
     @Builder.Default
-    private RequestMatcher requestMatcher = RequestMatcher.alwaysMatch();
+    private RequestMatcher requestMatcher = CommonRequestMatchers.alwaysMatch();
 
     @Getter
     @Setter
@@ -33,7 +36,7 @@ public class Route {
     @Setter
     @NonNull
     @Builder.Default
-    private Pipeline pipeline = new Pipeline();
+    private Pipeline pipeline = Pipeline.builder().build();
 
     /**
      * Checks whether the route should handle the specified {@link Request}.
