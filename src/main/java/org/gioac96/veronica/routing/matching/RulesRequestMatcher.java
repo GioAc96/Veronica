@@ -26,6 +26,7 @@ public class RulesRequestMatcher implements RequestMatcher {
 
     /**
      * Checks whether a request matches the matching rules.
+     *
      * @param request request to check
      * @return true iff the request matches the matching rules
      */
@@ -34,7 +35,5 @@ public class RulesRequestMatcher implements RequestMatcher {
         return matchingRules.every(matchingRule -> matchingRule.matches(request));
 
     }
-
-
-
+    
 }

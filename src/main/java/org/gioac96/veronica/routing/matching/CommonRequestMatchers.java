@@ -9,9 +9,10 @@ import org.gioac96.veronica.http.Request;
  */
 @UtilityClass
 public class CommonRequestMatchers {
-    
+
     /**
      * Always positive {@link RequestMatcher}.
+     *
      * @return an always positive {@link RequestMatcher}
      */
     public static RequestMatcher alwaysMatch() {
@@ -28,6 +29,7 @@ public class CommonRequestMatchers {
 
     /**
      * Generates a request matcher that matches GET requests that have a pattern matching the specified one.
+     *
      * @param pathPattern pattern to check the {@link Request} path against
      * @return the generated request matcher
      */
@@ -40,6 +42,7 @@ public class CommonRequestMatchers {
 
     /**
      * Generates a request matcher that matches POST requests that have a pattern matching the specified one.
+     *
      * @param pathPattern pattern to check the {@link Request} path against
      * @return the generated request matcher
      */

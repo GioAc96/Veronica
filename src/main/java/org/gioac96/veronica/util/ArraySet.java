@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
-import javafx.print.Collation;
 
 /**
  * Set based on ArrayList, for maximum efficiency on reading operations.
@@ -24,9 +23,10 @@ public class ArraySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
     /**
      * Initializes an {@link ArraySet} given its starting elements and their type.
-     * @param type type of the {@link ArraySet}
+     *
+     * @param type     type of the {@link ArraySet}
      * @param elements starting elements of the set
-     * @param <U> type of the {@link ArraySet}
+     * @param <U>      type of the {@link ArraySet}
      * @return the initialized {@link ArraySet}
      */
     public static <U> ArraySet<U> of(Class<U> type, U... elements) {

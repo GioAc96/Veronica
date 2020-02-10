@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -36,6 +35,13 @@ public class Pipeline {
     @Getter
     @Setter
     private ResponseRenderer responseRenderer;
+
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    public static PipelineBuilder builder() {
+
+        return new PipelineBuilder();
+
+    }
 
     private void applyPreFilters(Request request) throws PipelineBreakException {
 
@@ -121,12 +127,7 @@ public class Pipeline {
 
     }
 
-    public static PipelineBuilder builder() {
-
-        return new PipelineBuilder();
-
-    }
-
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public static class PipelineBuilder {
 
         private PrioritySet<PreFilter> preFilters = new PrioritySet<>();

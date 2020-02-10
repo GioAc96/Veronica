@@ -4,12 +4,8 @@ import java.util.Collection;
 import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Generated;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.Setter;
 import org.gioac96.veronica.http.Request;
 import org.gioac96.veronica.http.Response;
 import org.gioac96.veronica.util.PrioritySet;
@@ -23,11 +19,17 @@ public class Router {
 
     @Getter
     @NonNull
-    protected PrioritySet<Route> routes = new PrioritySet<>();
-
+    protected final Route fallbackRoute;
     @Getter
     @NonNull
-    protected final Route fallbackRoute;
+    protected PrioritySet<Route> routes = new PrioritySet<>();
+
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    public static RouterBuilder builder() {
+
+        return new RouterBuilder();
+
+    }
 
     /**
      * Routes the specified {@link Request}. If none of the available routes can handle the request, the request is
@@ -45,12 +47,7 @@ public class Router {
 
     }
 
-    public static RouterBuilder builder() {
-
-        return new RouterBuilder();
-
-    }
-
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public static class RouterBuilder {
 
         private PrioritySet<Route> routes = new PrioritySet<>();

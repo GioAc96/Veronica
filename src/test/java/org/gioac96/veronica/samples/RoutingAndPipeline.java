@@ -1,48 +1,48 @@
 package org.gioac96.veronica.samples;
 
+import static org.gioac96.veronica.routing.matching.CommonRequestMatchers.get;
+
 import java.io.IOException;
 import org.gioac96.veronica.Application;
 import org.gioac96.veronica.http.HttpStatus;
 import org.gioac96.veronica.http.Response;
-import org.gioac96.veronica.routing.matching.RequestMatcher;
 import org.gioac96.veronica.routing.Route;
 import org.gioac96.veronica.routing.Router;
+import org.gioac96.veronica.routing.pipeline.Pipeline;
 
-public class Echo {
+public class RoutingAndPipeline {
 
     public static void main(String[] args) throws IOException {
 
         Application application = new Application(80);
 
-        Route fallback = Route.builder()
+        Route notFound = Route.builder()
             .requestHandler(request -> Response.builder()
-                .httpStatus(HttpStatus.OK)
-                .body("Try to specify a request body")
+                .body("Not found")
+                .httpStatus(HttpStatus.NOT_FOUND)
                 .build()
             )
             .build();
 
-
         Router router = Router.builder()
-            .fallbackRoute(fallback)
+            .fallbackRoute(notFound)
             .build();
 
         router.getRoutes().add(
             Route.builder()
-                .requestMatcher(request -> request.getBody().length() > 0)
+                .requestMatcher(get("/hello"))
                 .requestHandler(request -> Response.builder()
                     .httpStatus(HttpStatus.OK)
-                    .body(request.getBody())
+                    .body("Hello to you, " + request.getQueryParam("name"))
                     .build()
+                )
+                .pipeline(
+                    Pipeline.builder().build()
                 )
                 .build()
         );
 
-        application.setRouter(router);
-
-        application.start();
 
     }
-
 
 }

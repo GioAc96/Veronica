@@ -23,6 +23,13 @@ public class FieldValidator {
     @Setter
     private boolean nullable;
 
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    public static FieldValidatorBuilder builder() {
+
+        return new FieldValidatorBuilder();
+
+    }
+
     /**
      * Validates a field by enforcing all of the field's validation rules.
      *
@@ -64,18 +71,20 @@ public class FieldValidator {
 
     }
 
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public static class FieldValidatorBuilder {
 
         private PrioritySet<ValidationRule> validationRules = new PrioritySet<>();
         private boolean nullable = false;
 
-        public FieldValidatorBuilder validationRules(ValidationRule...validationRules) {
+        public FieldValidatorBuilder validationRules(ValidationRule... validationRules) {
 
             Collections.addAll(this.validationRules, validationRules);
 
             return this;
 
         }
+
 
         public FieldValidatorBuilder validationRules(Collection<ValidationRule> validationRules) {
 
