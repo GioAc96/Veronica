@@ -13,23 +13,23 @@ public class Query {
         Application application = new Application(80);
 
         application.setRouter(Router.builder()
-                .routes(Route.builder()
-                    .requestMatcher(request -> request.getQueryMap().size() > 0)
-                    .requestHandler(
-                        request -> Response.builder()
-                            .body(request.getQueryMap().toString())
-                            .build()
-                    )
-                    .build()
-                )
-                .fallbackRoute(Route.builder()
-                    .requestHandler(request -> Response.builder()
-                        .body("Request is empty")
+            .routes(Route.builder()
+                .requestMatcher(request -> request.getQueryMap().size() > 0)
+                .requestHandler(
+                    request -> Response.builder()
+                        .body(request.getQueryMap().toString())
                         .build()
-                    )
+                )
+                .build()
+            )
+            .fallbackRoute(Route.builder()
+                .requestHandler(request -> Response.builder()
+                    .body("Request is empty")
                     .build()
                 )
                 .build()
+            )
+            .build()
         );
 
         application.start();

@@ -3,7 +3,6 @@ package org.gioac96.veronica.routing.pipeline.validation;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.experimental.SuperBuilder;
 import org.gioac96.veronica.http.Response;
 import org.gioac96.veronica.routing.pipeline.PipelineBreakException;
 

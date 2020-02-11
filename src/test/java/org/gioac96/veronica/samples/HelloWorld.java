@@ -20,7 +20,7 @@ public class HelloWorld {
                             .body("Hello, world!")
                             .build()
                         )
-                    .build()
+                        .build()
                 )
                 .build()
         );

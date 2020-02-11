@@ -2,9 +2,7 @@ package org.gioac96.veronica.samples;
 
 import java.io.IOException;
 import org.gioac96.veronica.Application;
-import org.gioac96.veronica.http.HttpStatus;
 import org.gioac96.veronica.http.Response;
-import org.gioac96.veronica.routing.matching.RequestMatcher;
 import org.gioac96.veronica.routing.Route;
 import org.gioac96.veronica.routing.Router;
 

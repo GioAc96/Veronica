@@ -2,7 +2,6 @@ package org.gioac96.veronica.routing.pipeline.validation;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;

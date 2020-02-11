@@ -1,7 +1,6 @@
 package org.gioac96.veronica.http;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -22,31 +21,6 @@ class RequestTest {
 
     @Mock
     private URI uriMock;
-
-    @BeforeEach
-    void setUp() {
-        initMocks(this);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {
-        "test1",
-        "test2",
-        "test3",
-        "ciao",
-        "random string",
-        ""
-    })
-    void getPath_test(String path) {
-
-        when(uriMock.getPath())
-            .thenReturn(path);
-
-        Request request = new Request(HttpMethod.GET, "", headersMock, uriMock);
-
-        assertEquals(path, request.getPath());
-
-    }
 
     static Object[][] parseQueryStringTestParameters() {
 
@@ -88,6 +62,31 @@ class RequestTest {
         };
 
         return result;
+
+    }
+
+    @BeforeEach
+    void setUp() {
+        initMocks(this);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "test1",
+        "test2",
+        "test3",
+        "ciao",
+        "random string",
+        ""
+    })
+    void getPath_test(String path) {
+
+        when(uriMock.getPath())
+            .thenReturn(path);
+
+        Request request = new Request(HttpMethod.GET, "", headersMock, uriMock);
+
+        assertEquals(path, request.getPath());
 
     }
 
