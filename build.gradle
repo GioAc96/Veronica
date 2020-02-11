@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id "io.freefair.lombok" version "4.1.6"
     id 'jacoco'
+    id 'checkstyle'
 }
 
 group 'org.gioac96'
@@ -27,6 +28,9 @@ dependencies {
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.2.4'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.6.0'
+    testCompile group: 'org.mockito', name: 'mockito-inline', version: '3.2.4'
 
 }
 
@@ -35,4 +39,12 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
+}
+
+checkstyle {
+    toolVersion "8.25"
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    ignoreFailures = false
+    maxWarnings = 0
+    checkstyleTest.enabled = false
 }
