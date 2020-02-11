@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import org.gioac96.veronica.http.Request;
@@ -13,8 +15,9 @@ import org.gioac96.veronica.util.PrioritySet;
 
 /**
  * Request pipeline.
+ * Builder is extensible with lombok's {@link lombok.experimental.SuperBuilder}.
  */
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Pipeline {
 
     @Getter
@@ -36,10 +39,18 @@ public class Pipeline {
     @Setter
     private ResponseRenderer responseRenderer;
 
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static PipelineBuilder builder() {
+    protected Pipeline(PipelineBuilder<?, ?> b) {
+        this.preFilters = b.preFilters;
+        this.postFilters = b.postFilters;
+        this.postProcessors = b.postProcessors;
+        this.responseRenderer = b.responseRenderer;
+    }
 
-        return new PipelineBuilder();
+    @Generated
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    public static PipelineBuilder<?, ?> builder() {
+
+        return new PipelineBuilderImpl();
 
     }
 
@@ -127,19 +138,20 @@ public class Pipeline {
 
     }
 
+    @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public static class PipelineBuilder {
+    public abstract static class PipelineBuilder<C extends Pipeline, B extends PipelineBuilder<C, B>> {
 
-        private PrioritySet<PreFilter> preFilters = new PrioritySet<>();
-        private PrioritySet<PostFilter> postFilters = new PrioritySet<>();
-        private PrioritySet<PostProcessor> postProcessors = new PrioritySet<>();
-        private ResponseRenderer responseRenderer = null;
+        private @NonNull PrioritySet<PreFilter> preFilters = new PrioritySet<>();
+        private @NonNull PrioritySet<PostFilter> postFilters = new PrioritySet<>();
+        private @NonNull PrioritySet<PostProcessor> postProcessors = new PrioritySet<>();
+        private ResponseRenderer responseRenderer;
 
         public PipelineBuilder preFilters(PreFilter... preFilters) {
 
             Collections.addAll(this.preFilters, preFilters);
 
-            return this;
+            return self();
 
         }
 
@@ -147,7 +159,7 @@ public class Pipeline {
 
             this.preFilters.addAll(preFilters);
 
-            return this;
+            return self();
 
         }
 
@@ -155,7 +167,7 @@ public class Pipeline {
 
             Collections.addAll(this.postFilters, postFilters);
 
-            return this;
+            return self();
 
         }
 
@@ -163,7 +175,7 @@ public class Pipeline {
 
             this.postFilters.addAll(postFilters);
 
-            return this;
+            return self();
 
         }
 
@@ -171,7 +183,7 @@ public class Pipeline {
 
             Collections.addAll(this.postProcessors, postProcessors);
 
-            return this;
+            return self();
 
         }
 
@@ -179,13 +191,36 @@ public class Pipeline {
 
             this.postProcessors.addAll(postProcessors);
 
-            return this;
+            return self();
 
         }
 
-        public PipelineBuilder responseRenderer(ResponseRenderer responseRenderer) {
+        public B responseRenderer(ResponseRenderer responseRenderer) {
 
             this.responseRenderer = responseRenderer;
+
+            return self();
+
+        }
+
+        protected abstract B self();
+
+        public abstract C build();
+
+        public String toString() {
+
+            return "Pipeline.PipelineBuilder(preFilters=" + this.preFilters
+                + ", postFilters=" + this.postFilters
+                + ", postProcessors=" + this.postProcessors
+                + ", responseRenderer=" + this.responseRenderer + ")";
+
+        }
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    private static final class PipelineBuilderImpl extends PipelineBuilder<Pipeline, PipelineBuilderImpl> {
+
+        protected Pipeline.PipelineBuilderImpl self() {
 
             return this;
 
@@ -193,16 +228,10 @@ public class Pipeline {
 
         public Pipeline build() {
 
-            return new Pipeline(
-                preFilters,
-                postFilters,
-                postProcessors,
-                responseRenderer
-            );
+            return new Pipeline(this);
 
         }
 
     }
-
 
 }

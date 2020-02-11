@@ -5,10 +5,10 @@ import org.gioac96.veronica.http.HttpMethod;
 import org.gioac96.veronica.http.Request;
 
 /**
- * Contains declaration for common request matchers.
+ * Contains declaration for common instances of {@link RequestMatcher}.
  */
 @UtilityClass
-public class CommonRequestMatchers {
+public final class CommonRequestMatchers {
 
     /**
      * Always positive {@link RequestMatcher}.

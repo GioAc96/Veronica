@@ -7,7 +7,7 @@ import org.gioac96.veronica.util.ArraySet;
 /**
  * Validation rule that checks that a value represents a boolean.
  */
-public class BooleanRule extends InArrayRule {
+public final class BooleanRule extends InArrayRule {
 
     public BooleanRule() {
 
@@ -23,6 +23,13 @@ public class BooleanRule extends InArrayRule {
             "0",
             ""
         ));
+
+    }
+
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    public static BooleanRule build() {
+
+        return new BooleanRule();
 
     }
 

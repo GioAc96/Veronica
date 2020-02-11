@@ -1,26 +1,30 @@
 package org.gioac96.veronica.http;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.gioac96.veronica.routing.pipeline.ResponseRenderer;
 import org.gioac96.veronica.routing.pipeline.ResponseRenderingException;
 
 /**
  * Http response.
  */
-@Builder
-@AllArgsConstructor
-@RequiredArgsConstructor
+@SuperBuilder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Response {
 
     @Getter
     @Setter
     @NonNull
-    protected HttpStatus httpStatus;
+    @Builder.Default
+    protected HttpStatus httpStatus = HttpStatus.OK;
 
     @Getter
     @Builder.Default

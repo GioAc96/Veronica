@@ -6,11 +6,18 @@ import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
 /**
  * Validation rule that checks that a value represents a value email address.
  */
-public class EmailRule extends RegexRule {
+public final class EmailRule extends RegexRule {
 
     public EmailRule() {
 
         super("^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$");
+
+    }
+
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    public static EmailRule build() {
+
+        return new EmailRule();
 
     }
 

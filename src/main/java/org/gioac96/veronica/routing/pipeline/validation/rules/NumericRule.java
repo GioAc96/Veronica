@@ -9,7 +9,14 @@ import org.gioac96.veronica.routing.pipeline.validation.ValidationRule;
 /**
  * Validation rule that checks that a value is numeric.
  */
-public class NumericRule implements ValidationRule {
+public final class NumericRule implements ValidationRule {
+
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    public static NumericRule build() {
+
+        return new NumericRule();
+
+    }
 
     @Override
     public void validate(String fieldName, String fieldValue) throws ValidationException {
@@ -20,16 +27,16 @@ public class NumericRule implements ValidationRule {
 
         } catch (NumberFormatException e) {
 
-            ValidationFailureData failureData = new ValidationFailureData(
-                CommonValidationFailureReason.NOT_NUMERIC,
-                fieldName
-            );
+            ValidationFailureData failureData = ValidationFailureData.builder()
+                .failureReason(CommonValidationFailureReason.NOT_NUMERIC)
+                .fieldName(fieldName)
+                .build();
 
-            ValidationFailureResponse validationFailureResponse = new ValidationFailureResponse(
-                failureData
-            );
+            ValidationFailureResponse failureResponse = ValidationFailureResponse.builder()
+                .validationFailureData(failureData)
+                .build();
 
-            throw new ValidationException(validationFailureResponse, failureData);
+            throw new ValidationException(failureResponse, failureData);
 
         }
 

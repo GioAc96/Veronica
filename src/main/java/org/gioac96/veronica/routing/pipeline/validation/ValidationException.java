@@ -1,6 +1,9 @@
 package org.gioac96.veronica.routing.pipeline.validation;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.experimental.SuperBuilder;
 import org.gioac96.veronica.http.Response;
 import org.gioac96.veronica.routing.pipeline.PipelineBreakException;
 
@@ -10,9 +13,14 @@ import org.gioac96.veronica.routing.pipeline.PipelineBreakException;
 public class ValidationException extends PipelineBreakException {
 
     @Getter
+    @NonNull
     private final ValidationFailureData validationFailureData;
 
-    public ValidationException(Response response, ValidationFailureData validationFailureData) {
+    @Builder
+    public ValidationException(
+        @NonNull Response response,
+        @NonNull ValidationFailureData validationFailureData
+    ) {
 
         super(response);
         this.validationFailureData = validationFailureData;

@@ -14,31 +14,31 @@ public class Echo {
 
         Application application = new Application(80);
 
-        Route fallback = Route.builder()
-            .requestHandler(request -> Response.builder()
-                .httpStatus(HttpStatus.OK)
-                .body("Try to specify a request body")
-                .build()
-            )
-            .build();
-
-
-        Router router = Router.builder()
-            .fallbackRoute(fallback)
-            .build();
-
-        router.getRoutes().add(
-            Route.builder()
-                .requestMatcher(request -> request.getBody().length() > 0)
-                .requestHandler(request -> Response.builder()
-                    .httpStatus(HttpStatus.OK)
-                    .body(request.getBody())
-                    .build()
+        application.setRouter(
+            Router.builder()
+                .routes(
+                    Route.builder()
+                        .requestHandler(
+                            request -> Response.builder()
+                                .body(request.getBody())
+                                .build()
+                        )
+                        .requestMatcher(
+                            request -> request.getBody().length() > 0
+                        )
+                        .build()
+                )
+                .fallbackRoute(
+                    Route.builder()
+                        .requestHandler(
+                            request -> Response.builder()
+                                .body("Try to insert something in the request body")
+                                .build()
+                        )
+                        .build()
                 )
                 .build()
         );
-
-        application.setRouter(router);
 
         application.start();
 

@@ -5,28 +5,39 @@ import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import org.gioac96.veronica.util.PrioritySet;
 
 /**
  * Field validator.
+ * Builder is extensible with lombok's {@link lombok.experimental.SuperBuilder}.
  */
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class FieldValidator {
 
     @Getter
+    @Setter
     @NonNull
     private PrioritySet<ValidationRule> validationRules;
 
     @Getter
     @Setter
-    private boolean nullable;
+    @NonNull
+    private Boolean nullable;
+
+    protected FieldValidator(FieldValidatorBuilder<?, ?> b) {
+
+        this.validationRules = b.validationRules;
+        this.nullable = b.nullable;
+
+    }
 
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static FieldValidatorBuilder builder() {
+    public static FieldValidatorBuilder<?, ?> builder() {
 
-        return new FieldValidatorBuilder();
+        return new FieldValidatorBuilderImpl();
 
     }
 
@@ -48,14 +59,13 @@ public class FieldValidator {
                     fieldName
                 );
 
-                ValidationFailureResponse failureResponse = new ValidationFailureResponse(
-                    failureData
-                );
+                ValidationFailureResponse failureResponse = ValidationFailureResponse.builder()
+                    .validationFailureData(failureData)
+                    .build();
 
-                throw new ValidationException(
-                    failureResponse,
-                    failureData
-                );
+                throw ValidationException.builder()
+                    .validationFailureData(failureData)
+                    .build();
 
             }
 
@@ -72,39 +82,64 @@ public class FieldValidator {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public static class FieldValidatorBuilder {
+    public abstract static class
+        FieldValidatorBuilder<C extends FieldValidator, B extends FieldValidatorBuilder<C, B>> {
 
-        private PrioritySet<ValidationRule> validationRules = new PrioritySet<>();
-        private boolean nullable = false;
+        private @NonNull PrioritySet<ValidationRule> validationRules = new PrioritySet<>();
+        private @NonNull Boolean nullable = false;
 
         public FieldValidatorBuilder validationRules(ValidationRule... validationRules) {
 
             Collections.addAll(this.validationRules, validationRules);
 
-            return this;
+            return self();
 
         }
-
 
         public FieldValidatorBuilder validationRules(Collection<ValidationRule> validationRules) {
 
             this.validationRules.addAll(validationRules);
 
-            return this;
+            return self();
 
         }
 
-        public FieldValidatorBuilder nullable() {
 
-            this.nullable = true;
+        public B nullable(@NonNull Boolean nullable) {
 
-            return this;
+            this.nullable = nullable;
+            return self();
 
         }
 
-        public FieldValidatorBuilder notNullable() {
+        public B nullable() {
 
-            this.nullable = false;
+            return nullable(true);
+
+        }
+
+        public B notNullable() {
+
+            return nullable(false);
+
+        }
+
+        protected abstract B self();
+
+        public abstract C build();
+
+        public String toString() {
+            return
+                "FieldValidator.FieldValidatorBuilder(validationRules=" + this.validationRules
+                    + ", nullable=" + this.nullable + ")";
+        }
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    private static final class
+        FieldValidatorBuilderImpl extends FieldValidatorBuilder<FieldValidator, FieldValidatorBuilderImpl> {
+
+        protected FieldValidator.FieldValidatorBuilderImpl self() {
 
             return this;
 
@@ -112,13 +147,9 @@ public class FieldValidator {
 
         public FieldValidator build() {
 
-            return new FieldValidator(
-                validationRules,
-                nullable
-            );
+            return new FieldValidator(this);
 
         }
 
     }
-
 }

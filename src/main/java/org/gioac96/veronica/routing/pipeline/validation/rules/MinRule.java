@@ -1,8 +1,9 @@
 package org.gioac96.veronica.routing.pipeline.validation.rules;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.gioac96.veronica.routing.pipeline.validation.CommonValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
@@ -14,17 +15,18 @@ import org.gioac96.veronica.routing.pipeline.validation.ValidationRule;
 /**
  * Validation rule that checks that a value is above a specified minimum.
  */
-@RequiredArgsConstructor
-@AllArgsConstructor
-public class MinRule implements ValidationRule {
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+public final class MinRule implements ValidationRule {
 
     @Getter
     @Setter
-    private double minValue;
+    private Double minValue;
 
     @Getter
     @Setter
-    private boolean inclusive = true;
+    @Builder.Default
+    private Boolean inclusive = true;
 
 
     @Override
@@ -38,16 +40,16 @@ public class MinRule implements ValidationRule {
 
         } catch (NumberFormatException e) {
 
-            ValidationFailureData failureData = new ValidationFailureData(
-                CommonValidationFailureReason.NOT_NUMERIC,
-                fieldName
-            );
+            ValidationFailureData failureData = ValidationFailureData.builder()
+                .failureReason(CommonValidationFailureReason.OUT_OF_RANGE)
+                .fieldName(fieldName)
+                .build();
 
-            ValidationFailureResponse validationFailureResponse = new ValidationFailureResponse(
-                failureData
-            );
+            ValidationFailureResponse failureResponse = ValidationFailureResponse.builder()
+                .validationFailureData(failureData)
+                .build();
 
-            throw new ValidationException(validationFailureResponse, failureData);
+            throw new ValidationException(failureResponse, failureData);
 
         }
 
@@ -55,16 +57,16 @@ public class MinRule implements ValidationRule {
             (inclusive && value < minValue) || (!inclusive && value <= minValue)
         ) {
 
-            ValidationFailureData failureData = new ValidationFailureData(
-                CommonValidationFailureReason.OUT_OF_RANGE,
-                fieldName
-            );
+            ValidationFailureData failureData = ValidationFailureData.builder()
+                .failureReason(CommonValidationFailureReason.OUT_OF_RANGE)
+                .fieldName(fieldName)
+                .build();
 
-            ValidationFailureResponse validationFailureResponse = new ValidationFailureResponse(
-                failureData
-            );
+            ValidationFailureResponse failureResponse = ValidationFailureResponse.builder()
+                .validationFailureData(failureData)
+                .build();
 
-            throw new ValidationException(validationFailureResponse, failureData);
+            throw new ValidationException(failureResponse, failureData);
 
         }
 
