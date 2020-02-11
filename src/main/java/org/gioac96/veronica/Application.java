@@ -9,7 +9,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.gioac96.veronica.http.Request;
 import org.gioac96.veronica.http.Response;
-import org.gioac96.veronica.routing.RequestParser;
+import org.gioac96.veronica.http.HttpExchangeParser;
 import org.gioac96.veronica.routing.Router;
 
 /**
@@ -22,7 +22,7 @@ public class Application {
 
     protected HttpServer server;
 
-    protected RequestParser requestParser;
+    protected HttpExchangeParser httpExchangeParser;
 
     @Getter
     @Setter
@@ -32,7 +32,7 @@ public class Application {
     public Application(int port) throws IOException {
 
         this.port = port;
-        this.requestParser = new RequestParser();
+        this.httpExchangeParser = new HttpExchangeParser();
 
         initServer();
 
@@ -41,7 +41,7 @@ public class Application {
     public Application(int port, @NonNull Router router) throws IOException {
 
         this.port = port;
-        this.requestParser = new RequestParser();
+        this.httpExchangeParser = new HttpExchangeParser();
         this.router = router;
 
         initServer();
@@ -53,7 +53,7 @@ public class Application {
         HttpHandler httpHandler = exchange -> {
 
             // Parse request
-            Request request = requestParser.parseExchange(exchange);
+            Request request = httpExchangeParser.parseExchange(exchange);
 
             // Generate response
             Response response = router.route(request);
