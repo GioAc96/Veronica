@@ -8,7 +8,7 @@ import org.gioac96.veronica.http.Request;
 /**
  * {@link HttpExchange} parser that generates a {@link Request} output object.
  */
-public class RequestParser {
+public final class RequestParser {
 
     /**
      * Parses an {@link HttpExchange} to generate a {@link Request} object.

@@ -1,10 +1,12 @@
 package org.gioac96.veronica.routing;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.gioac96.veronica.http.Request;
 import org.gioac96.veronica.http.Response;
 import org.gioac96.veronica.routing.matching.CommonRequestMatchers;
@@ -15,8 +17,8 @@ import org.gioac96.veronica.routing.pipeline.RequestHandler;
 /**
  * Application route.
  */
-@Builder
-@RequiredArgsConstructor
+@SuperBuilder
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Route {
 
     @Getter

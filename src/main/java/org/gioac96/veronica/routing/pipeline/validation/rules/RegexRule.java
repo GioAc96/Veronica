@@ -1,8 +1,10 @@
 package org.gioac96.veronica.routing.pipeline.validation.rules;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.gioac96.veronica.routing.pipeline.validation.CommonValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
@@ -14,7 +16,8 @@ import org.gioac96.veronica.routing.pipeline.validation.ValidationRule;
 /**
  * {@link ValidationRule} that checks that a field's value matches a specified regex pattern.
  */
-@RequiredArgsConstructor
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class RegexRule implements ValidationRule {
 
     @Getter
@@ -30,16 +33,16 @@ public class RegexRule implements ValidationRule {
 
         if (!fieldValue.matches(pattern)) {
 
-            ValidationFailureData failureData = new ValidationFailureData(
-                failureReason,
-                fieldName
-            );
+            ValidationFailureData failureData = ValidationFailureData.builder()
+                .failureReason(failureReason)
+                .fieldName(fieldName)
+                .build();
 
-            ValidationFailureResponse validationFailureResponse = new ValidationFailureResponse(
-                failureData
-            );
+            ValidationFailureResponse failureResponse = ValidationFailureResponse.builder()
+                .validationFailureData(failureData)
+                .build();
 
-            throw new ValidationException(validationFailureResponse, failureData);
+            throw new ValidationException(failureResponse, failureData);
 
         }
 

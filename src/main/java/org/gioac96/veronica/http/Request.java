@@ -6,13 +6,17 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Http Request.
  */
+@SuperBuilder
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Request {
 
     @Getter
@@ -36,21 +40,6 @@ public class Request {
 
     @Getter(lazy = true)
     private final List<HttpCookie> cookie = lazyLoadCookie();
-
-    @Builder
-    public Request(
-        @NonNull HttpMethod httpMethod,
-        @NonNull String body,
-        @NonNull Headers headers,
-        @NonNull URI uri
-    ) {
-
-        this.httpMethod = httpMethod;
-        this.body = body;
-        this.headers = headers;
-        this.uri = uri;
-
-    }
 
     /**
      * Gets a query parameter's value.
@@ -79,13 +68,15 @@ public class Request {
 
         Map<String, String> queryMap = new HashMap<>();
 
-        if (uri.getQuery() == null || uri.getQuery().length() == 0) {
+        String query = uri.getQuery();
+
+        if (query == null || query.length() == 0) {
 
             return queryMap;
 
         }
 
-        String[] queryParts = uri.getQuery().split("&");
+        String[] queryParts = query.split("&");
 
         for (String queryPart : queryParts) {
 

@@ -1,6 +1,11 @@
 package org.gioac96.veronica.routing.pipeline.validation.rules;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import org.gioac96.veronica.routing.pipeline.validation.CommonValidationFailureReason;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
 import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureData;
@@ -10,33 +15,25 @@ import org.gioac96.veronica.routing.pipeline.validation.ValidationRule;
 /**
  * Validation rule that checks that a value is between a maximum and a minimum.
  */
-public class BetweenRule implements ValidationRule {
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+public final class BetweenRule implements ValidationRule {
 
     @Getter
-    protected double minVal;
+    @Setter
+    @NonNull
+    protected Double minVal;
 
     @Getter
-    protected double maxVal;
+    @Setter
+    @NonNull
+    protected Double maxVal;
 
     @Getter
-    protected boolean inclusive;
-
-    public BetweenRule(double minVal, double maxVal) {
-
-        this.minVal = minVal;
-        this.maxVal = maxVal;
-
-        this.inclusive = true;
-
-    }
-
-    public BetweenRule(double minVal, double maxVal, boolean inclusive) {
-
-        this.minVal = minVal;
-        this.maxVal = maxVal;
-        this.inclusive = inclusive;
-
-    }
+    @Setter
+    @NonNull
+    @Builder.Default
+    protected Boolean inclusive = false;
 
     @Override
     public void validate(String fieldName, String fieldValue) throws ValidationException {
@@ -49,16 +46,16 @@ public class BetweenRule implements ValidationRule {
 
         } catch (NumberFormatException e) {
 
-            ValidationFailureData failureData = new ValidationFailureData(
-                CommonValidationFailureReason.NOT_NUMERIC,
-                fieldName
-            );
+            ValidationFailureData failureData = ValidationFailureData.builder()
+                .failureReason(CommonValidationFailureReason.NOT_NUMERIC)
+                .fieldName(fieldName)
+                .build();
 
-            ValidationFailureResponse validationFailureResponse = new ValidationFailureResponse(
-                failureData
-            );
+            ValidationFailureResponse failureResponse = ValidationFailureResponse.builder()
+                .validationFailureData(failureData)
+                .build();
 
-            throw new ValidationException(validationFailureResponse, failureData);
+            throw new ValidationException(failureResponse, failureData);
 
         }
 
@@ -68,16 +65,16 @@ public class BetweenRule implements ValidationRule {
                 || (!inclusive && (value <= minVal || value > maxVal))
         ) {
 
-            ValidationFailureData failureData = new ValidationFailureData(
-                CommonValidationFailureReason.OUT_OF_RANGE,
-                fieldName
-            );
+            ValidationFailureData failureData = ValidationFailureData.builder()
+                .failureReason(CommonValidationFailureReason.OUT_OF_RANGE)
+                .fieldName(fieldName)
+                .build();
 
-            ValidationFailureResponse validationFailureResponse = new ValidationFailureResponse(
-                failureData
-            );
+            ValidationFailureResponse failureResponse = ValidationFailureResponse.builder()
+                .validationFailureData(failureData)
+                .build();
 
-            throw new ValidationException(validationFailureResponse, failureData);
+            throw new ValidationException(failureResponse, failureData);
 
         }
 
