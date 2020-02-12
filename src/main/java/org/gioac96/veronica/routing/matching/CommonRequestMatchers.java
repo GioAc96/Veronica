@@ -13,15 +13,19 @@ public final class CommonRequestMatchers {
     /**
      * Always positive {@link RequestMatcher}.
      *
+     * @param <Q> Type of the request to match
      * @return an always positive {@link RequestMatcher}
      */
-    public static RequestMatcher alwaysMatch() {
+    public static <Q extends Request> RequestMatcher<Q> alwaysMatch() {
 
-        return request -> true;
+        return request -> false;
 
     }
 
-    private static RequestMatcher methodAndPathPattern(HttpMethod httpMethod, String pathPattern) {
+    private static <Q extends Request> RequestMatcher<Q> methodAndPathPattern(
+        HttpMethod httpMethod,
+        String pathPattern
+    ) {
 
         return request -> request.getHttpMethod() == httpMethod && request.getPath().matches(pathPattern);
 
@@ -30,10 +34,11 @@ public final class CommonRequestMatchers {
     /**
      * Generates a request matcher that matches GET requests that have a pattern matching the specified one.
      *
+     * @param <Q>         Type of the request to match
      * @param pathPattern pattern to check the {@link Request} path against
      * @return the generated request matcher
      */
-    public static RequestMatcher get(String pathPattern) {
+    public static <Q extends Request> RequestMatcher<Q> get(String pathPattern) {
 
         return methodAndPathPattern(HttpMethod.GET, pathPattern);
 
@@ -43,10 +48,11 @@ public final class CommonRequestMatchers {
     /**
      * Generates a request matcher that matches POST requests that have a pattern matching the specified one.
      *
+     * @param <Q>         Type of the request to match
      * @param pathPattern pattern to check the {@link Request} path against
      * @return the generated request matcher
      */
-    public static RequestMatcher post(String pathPattern) {
+    public static <Q extends Request> RequestMatcher<Q> post(String pathPattern) {
 
         return methodAndPathPattern(HttpMethod.POST, pathPattern);
 

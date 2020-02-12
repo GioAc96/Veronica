@@ -15,48 +15,43 @@ import org.gioac96.veronica.util.PrioritySet;
 
 /**
  * Request pipeline.
- * Builder is extensible with lombok's {@link lombok.experimental.SuperBuilder}.
  */
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Pipeline {
+public class Pipeline<Q extends Request, S extends Response> {
 
     @Getter
     @Setter
     @NonNull
-    private PrioritySet<PreFilter> preFilters;
+    private PrioritySet<PreFilter<Q>> preFilters;
 
     @Getter
     @Setter
     @NonNull
-    private PrioritySet<PostFilter> postFilters;
+    private PrioritySet<PostFilter<Q, S>> postFilters;
 
     @Getter
     @Setter
     @NonNull
-    private PrioritySet<PostProcessor> postProcessors;
+    private PrioritySet<PostProcessor<Q, S>> postProcessors;
 
     @Getter
     @Setter
-    private ResponseRenderer responseRenderer;
+    private ResponseRenderer<S> responseRenderer;
 
-    protected Pipeline(PipelineBuilder<?, ?> b) {
+    protected Pipeline(PipelineBuilder<Q, S, ?, ?> b) {
         this.preFilters = b.preFilters;
         this.postFilters = b.postFilters;
         this.postProcessors = b.postProcessors;
         this.responseRenderer = b.responseRenderer;
     }
 
-    @Generated
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static PipelineBuilder<?, ?> builder() {
-
-        return new PipelineBuilderImpl();
-
+    public static <Q extends Request, S extends Response> PipelineBuilder<Q, S, ?, ?> builder() {
+        return new PipelineBuilderImpl<Q, S>();
     }
 
-    private void applyPreFilters(Request request) throws PipelineBreakException {
+    private void applyPreFilters(Q request) throws PipelineBreakException {
 
-        for (PreFilter preFilter : preFilters) {
+        for (PreFilter<Q> preFilter : preFilters) {
 
             preFilter.filter(request);
 
@@ -64,19 +59,19 @@ public class Pipeline {
 
     }
 
-    private void applyPostFilters(Request request, Response response) throws PipelineBreakException {
+    private void applyPostFilters(Q request, S response) throws PipelineBreakException {
 
-        for (PostFilter preFilter : postFilters) {
+        for (PostFilter<Q, S> postFilter : postFilters) {
 
-            preFilter.filter(request, response);
+            postFilter.filter(request, response);
 
         }
 
     }
 
-    private void applyPostProcessors(Request request, Response response) {
+    private void applyPostProcessors(Q request, S response) {
 
-        for (PostProcessor postProcessor : postProcessors) {
+        for (PostProcessor<Q, S> postProcessor : postProcessors) {
 
             postProcessor.process(request, response);
 
@@ -91,10 +86,11 @@ public class Pipeline {
      * @param requestHandler request handler that performs the requested action
      * @return the generated response
      */
-    public Response handle(@NonNull Request request, @NonNull RequestHandler requestHandler) {
+    @SuppressWarnings("unchecked")
+    public S handle(@NonNull Q request, @NonNull RequestHandler<Q, S> requestHandler) {
 
         // Pre-render
-        Response response = preRender(request, requestHandler);
+        S response = preRender(request, requestHandler);
 
         // Rendering
         if (responseRenderer != null) {
@@ -105,7 +101,7 @@ public class Pipeline {
 
             } catch (ResponseRenderingException e) {
 
-                response = e.getResponse();
+                response = (S) e.getResponse();
 
             }
 
@@ -118,13 +114,15 @@ public class Pipeline {
 
     }
 
-    private Response preRender(Request request, RequestHandler requestHandler) {
+
+    @SuppressWarnings("unchecked")
+    private S preRender(Q request, RequestHandler<Q, S> requestHandler) {
 
         try {
 
             applyPreFilters(request);
 
-            Response response = requestHandler.handle(request);
+            S response = requestHandler.handle(request);
 
             applyPostFilters(request, response);
 
@@ -132,7 +130,7 @@ public class Pipeline {
 
         } catch (PipelineBreakException e) {
 
-            return e.getResponse();
+            return (S) e.getResponse();
 
         }
 
@@ -140,65 +138,84 @@ public class Pipeline {
 
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public abstract static class PipelineBuilder<C extends Pipeline, B extends PipelineBuilder<C, B>> {
+    public abstract static class PipelineBuilder<
+        Q extends Request,
+        S extends Response,
+        C extends Pipeline<Q, S>,
+        B extends PipelineBuilder<Q, S, C, B>
+        > {
 
-        private @NonNull PrioritySet<PreFilter> preFilters = new PrioritySet<>();
-        private @NonNull PrioritySet<PostFilter> postFilters = new PrioritySet<>();
-        private @NonNull PrioritySet<PostProcessor> postProcessors = new PrioritySet<>();
-        private ResponseRenderer responseRenderer;
+        private @NonNull PrioritySet<PreFilter<Q>> preFilters = new PrioritySet<>();
+        private @NonNull PrioritySet<PostFilter<Q, S>> postFilters = new PrioritySet<>();
+        private @NonNull PrioritySet<PostProcessor<Q, S>> postProcessors = new PrioritySet<>();
+        private ResponseRenderer<S> responseRenderer;
 
-        public PipelineBuilder preFilters(PreFilter... preFilters) {
+        public B preFilters(@NonNull PrioritySet<PreFilter<Q>> preFilters) {
+
+            this.preFilters = preFilters;
+            return self();
+
+        }
+
+        public B preFilters(PreFilter<Q>... preFilters) {
 
             Collections.addAll(this.preFilters, preFilters);
-
             return self();
 
         }
 
-        public PipelineBuilder preFilters(Collection<PreFilter> preFilters) {
+        public B preFilters(Collection<PreFilter<Q>> preFilters) {
 
             this.preFilters.addAll(preFilters);
-
             return self();
 
         }
 
-        public PipelineBuilder postFilters(PostFilter... postFilters) {
+        public B postFilters(@NonNull PrioritySet<PostFilter<Q, S>> postFilters) {
+
+            this.postFilters = postFilters;
+            return self();
+
+        }
+
+        public B postFilters(PostFilter<Q, S>... postFilters) {
 
             Collections.addAll(this.postFilters, postFilters);
-
             return self();
 
         }
 
-        public PipelineBuilder postFilters(Collection<PostFilter> postFilters) {
+        public B postFilters(Collection<PostFilter<Q, S>> postFilters) {
 
             this.postFilters.addAll(postFilters);
-
             return self();
 
         }
 
-        public PipelineBuilder postProcessors(PostProcessor... postProcessors) {
+        public B postProcessors(@NonNull PrioritySet<PostProcessor<Q, S>> postProcessors) {
+
+            this.postProcessors = postProcessors;
+            return self();
+
+        }
+
+        public B postProcessors(PostProcessor<Q, S>... postProcessors) {
 
             Collections.addAll(this.postProcessors, postProcessors);
-
             return self();
 
         }
 
-        public PipelineBuilder postProcessors(Collection<PostProcessor> postProcessors) {
+        public B postProcessors(Collection<PostProcessor<Q, S>> postProcessors) {
 
             this.postProcessors.addAll(postProcessors);
-
             return self();
 
         }
 
-        public B responseRenderer(ResponseRenderer responseRenderer) {
+        public B responseRenderer(ResponseRenderer<S> responseRenderer) {
 
             this.responseRenderer = responseRenderer;
-
             return self();
 
         }
@@ -209,29 +226,34 @@ public class Pipeline {
 
         public String toString() {
 
-            return "Pipeline.PipelineBuilder(preFilters=" + this.preFilters
-                + ", postFilters=" + this.postFilters
-                + ", postProcessors=" + this.postProcessors
-                + ", responseRenderer=" + this.responseRenderer + ")";
+            return
+                "Pipeline.PipelineBuilder(preFilters=" + this.preFilters
+                    + ", postFilters=" + this.postFilters
+                    + ", postProcessors=" + this.postProcessors
+                    + ", responseRenderer=" + this.responseRenderer
+                    + ")";
 
         }
+
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static final class PipelineBuilderImpl extends PipelineBuilder<Pipeline, PipelineBuilderImpl> {
+    private static final class PipelineBuilderImpl<
+        Q extends Request,
+        S extends Response
+        > extends PipelineBuilder<Q, S, Pipeline<Q, S>, PipelineBuilderImpl<Q, S>> {
 
-        protected Pipeline.PipelineBuilderImpl self() {
+        protected Pipeline.PipelineBuilderImpl<Q, S> self() {
 
             return this;
 
         }
 
-        public Pipeline build() {
+        public Pipeline<Q, S> build() {
 
-            return new Pipeline(this);
+            return new Pipeline<Q, S>(this);
 
         }
 
     }
-
 }
