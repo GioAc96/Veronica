@@ -7,9 +7,9 @@ import java.net.InetSocketAddress;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.gioac96.veronica.http.HttpExchangeParser;
 import org.gioac96.veronica.http.Request;
 import org.gioac96.veronica.http.Response;
-import org.gioac96.veronica.http.HttpExchangeParser;
 import org.gioac96.veronica.routing.Router;
 
 /**
