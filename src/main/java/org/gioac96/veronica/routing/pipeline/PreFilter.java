@@ -7,8 +7,8 @@ import org.gioac96.veronica.http.Request;
  * Pipeline stage that filters a {@link Request} before a {@link org.gioac96.veronica.http.Response}
  * is generated.
  */
-public interface PreFilter {
+public interface PreFilter<Q extends Request> {
 
-    void filter(@NonNull Request request) throws PipelineBreakException;
+    void filter(@NonNull Q request) throws PipelineBreakException;
 
 }

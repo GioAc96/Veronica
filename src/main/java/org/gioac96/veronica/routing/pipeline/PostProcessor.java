@@ -7,8 +7,8 @@ import org.gioac96.veronica.http.Response;
 /**
  * {@link Pipeline} stage that processes a {@link Request} after the {@link Response} was already sent.
  */
-public interface PostProcessor {
+public interface PostProcessor<Q extends Request, S extends Response> {
 
-    void process(@NonNull Request request, @NonNull Response response);
+    void process(@NonNull Q request, @NonNull S response);
 
 }

@@ -19,24 +19,24 @@ import org.gioac96.veronica.routing.pipeline.RequestHandler;
  */
 @SuperBuilder
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class Route {
+public class Route<Q extends Request, S extends Response> {
 
     @Getter
     @Setter
     @NonNull
     @Builder.Default
-    private RequestMatcher requestMatcher = CommonRequestMatchers.alwaysMatch();
+    private RequestMatcher<Q> requestMatcher = CommonRequestMatchers.alwaysMatch();
 
     @Getter
     @Setter
     @NonNull
-    private RequestHandler requestHandler;
+    private RequestHandler<Q, S> requestHandler;
 
     @Getter
     @Setter
     @NonNull
     @Builder.Default
-    private Pipeline pipeline = Pipeline.builder().build();
+    private Pipeline<Q, S> pipeline = Pipeline.<Q, S>builder().build();
 
     /**
      * Checks whether the route should handle the specified {@link Request}.
@@ -44,7 +44,7 @@ public class Route {
      * @param request request to handle
      * @return true iff the route should handle the specified {@link Request}
      */
-    public boolean shouldHandle(@NonNull Request request) {
+    public boolean shouldHandle(@NonNull Q request) {
 
         return requestMatcher.matches(request);
 
@@ -56,7 +56,7 @@ public class Route {
      * @param request request to handle
      * @return the generated {@link Response}
      */
-    public Response handle(@NonNull Request request) {
+    public S handle(@NonNull Q request) {
 
         return pipeline.handle(request, requestHandler);
 

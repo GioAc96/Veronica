@@ -3,6 +3,7 @@ package org.gioac96.veronica.http;
 import com.sun.net.httpserver.Headers;
 import java.net.HttpCookie;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +101,16 @@ public class Request {
 
     private List<HttpCookie> lazyLoadCookie() {
 
-        return HttpCookie.parse(headers.getFirst("cookie"));
+        if (headers == null) {
+
+            return new ArrayList<>(0);
+
+        } else {
+
+            return HttpCookie.parse(headers.getFirst("cookie"));
+
+        }
+
 
     }
 

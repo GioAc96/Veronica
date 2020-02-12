@@ -6,8 +6,8 @@ import org.gioac96.veronica.http.Response;
 /**
  * Stage of the {@link Pipeline} responsible for generating a {@link Response}.
  */
-public interface RequestHandler {
+public interface RequestHandler<Q extends Request, S extends Response> {
 
-    Response handle(Request request) throws PipelineBreakException;
+    S handle(Q request) throws PipelineBreakException;
 
 }

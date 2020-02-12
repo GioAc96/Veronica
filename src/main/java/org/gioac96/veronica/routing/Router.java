@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -18,29 +19,30 @@ import org.gioac96.veronica.util.PrioritySet;
  * Builder is extensible with lombok's {@link lombok.experimental.SuperBuilder}.
  */
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Router {
+public final class Router<Q extends Request, S extends Response> {
 
     @Getter
     @Setter
     @NonNull
-    protected Route fallbackRoute;
+    protected Route<Q, S> fallbackRoute;
 
     @Getter
     @Setter
     @NonNull
-    protected PrioritySet<Route> routes;
+    protected PrioritySet<Route<Q, S>> routes;
 
-    protected Router(RouterBuilder<?, ?> b) {
-
+    @Generated
+    protected Router(RouterBuilder<Q, S, ?, ?> b) {
         this.fallbackRoute = b.fallbackRoute;
         this.routes = b.routes;
-
     }
 
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static RouterBuilder<?, ?> builder() {
 
-        return new RouterBuilderImpl();
+    @Generated
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    public static <Q extends Request, S extends Response> RouterBuilder<Q, S, ?, ?> builder() {
+
+        return new RouterBuilderImpl<Q, S>();
 
     }
 
@@ -51,7 +53,7 @@ public class Router {
      * @param request request to route
      * @return generated {@link Response}
      */
-    public Response route(Request request) {
+    public S route(Q request) {
 
         return routes.firstOrDefault(
             route -> route.shouldHandle(request),
@@ -60,20 +62,26 @@ public class Router {
 
     }
 
+    @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public abstract static class RouterBuilder<C extends Router, B extends RouterBuilder<C, B>> {
+    public abstract static class RouterBuilder<
+        Q extends Request,
+        S extends Response,
+        C extends Router<Q, S>,
+        B extends RouterBuilder<Q, S, C, B>
+        > {
 
-        private @NonNull Route fallbackRoute;
-        private @NonNull PrioritySet<Route> routes = new PrioritySet<>();
+        private @NonNull Route<Q, S> fallbackRoute;
+        private @NonNull PrioritySet<Route<Q, S>> routes = new PrioritySet<>();
 
-        public B fallbackRoute(@NonNull Route fallbackRoute) {
+        public B fallbackRoute(@NonNull Route<Q, S> fallbackRoute) {
 
             this.fallbackRoute = fallbackRoute;
             return self();
 
         }
 
-        public RouterBuilder routes(Route... routes) {
+        public B routes(@NonNull Route<Q, S>... routes) {
 
             Collections.addAll(this.routes, routes);
 
@@ -81,7 +89,7 @@ public class Router {
 
         }
 
-        public RouterBuilder routes(Collection<Route> routes) {
+        public B routes(@NonNull Collection<Route<Q, S>> routes) {
 
             this.routes.addAll(routes);
 
@@ -95,24 +103,35 @@ public class Router {
 
         public String toString() {
 
-            return "Router.RouterBuilder(fallbackRoute=" + this.fallbackRoute + ", routes=" + this.routes + ")";
+            return
+                "Router.RouterBuilder(fallbackRoute=" + this.fallbackRoute
+                    + ", routes=" + this.routes
+                    + ")";
 
         }
 
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static final class RouterBuilderImpl extends RouterBuilder<Router, RouterBuilderImpl> {
+    private static final class RouterBuilderImpl<
+        Q extends Request,
+        S extends Response
+        > extends RouterBuilder<
+        Q,
+        S,
+        Router<Q, S>,
+        RouterBuilderImpl<Q, S>
+        > {
 
-        protected Router.RouterBuilderImpl self() {
+        protected Router.RouterBuilderImpl<Q, S> self() {
 
             return this;
 
         }
 
-        public Router build() {
+        public Router<Q, S> build() {
 
-            return new Router(this);
+            return new Router<Q, S>(this);
 
         }
 

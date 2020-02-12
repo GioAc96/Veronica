@@ -11,26 +11,20 @@ import org.gioac96.veronica.http.Request;
 import org.gioac96.veronica.util.ArraySet;
 
 /**
- * Checks that a {@link Request} object matches a specified condition.
+ * Checks that a {@link Request} object matches a set of specified rules.
  */
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public final class RulesRequestMatcher implements RequestMatcher {
+public final class RulesRequestMatcher<Q extends Request> implements RequestMatcher<Q> {
 
     @Getter
     @Setter
     @NonNull
-    private ArraySet<RequestMatchingRule> matchingRules;
-
-    public RulesRequestMatcher(@NonNull RequestMatchingRule rule) {
-
-        matchingRules = ArraySet.of(RequestMatchingRule.class, rule);
-
-    }
+    private ArraySet<RequestMatcher<Q>> matchingRules;
 
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static RulesRequestMatcherBuilder builder() {
+    public static <Q extends Request> RulesRequestMatcherBuilder<Q> builder() {
 
-        return new RulesRequestMatcherBuilder();
+        return new RulesRequestMatcherBuilder<Q>();
 
     }
 
@@ -40,18 +34,18 @@ public final class RulesRequestMatcher implements RequestMatcher {
      * @param request request to check
      * @return true iff the request matches the matching rules
      */
-    public boolean matches(Request request) {
+    public boolean matches(Q request) {
 
         return matchingRules.every(matchingRule -> matchingRule.matches(request));
 
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public static class RulesRequestMatcherBuilder {
+    public static class RulesRequestMatcherBuilder<Q extends Request> {
 
-        private ArraySet<RequestMatchingRule> requestMatchingRules = new ArraySet<>();
+        private ArraySet<RequestMatcher<Q>> requestMatchingRules = new ArraySet<>();
 
-        public RulesRequestMatcherBuilder requestMatchingRules(RequestMatchingRule... requestMatchingRules) {
+        public RulesRequestMatcherBuilder<Q> requestMatchingRules(RequestMatcher<Q>... requestMatchingRules) {
 
             Collections.addAll(this.requestMatchingRules, requestMatchingRules);
 
@@ -59,7 +53,7 @@ public final class RulesRequestMatcher implements RequestMatcher {
 
         }
 
-        public RulesRequestMatcherBuilder requestMatchingRules(Collection<RequestMatchingRule> requestMatchingRules) {
+        public RulesRequestMatcherBuilder<Q> requestMatchingRules(Collection<RequestMatcher<Q>> requestMatchingRules) {
 
             this.requestMatchingRules.addAll(requestMatchingRules);
 
@@ -67,9 +61,9 @@ public final class RulesRequestMatcher implements RequestMatcher {
 
         }
 
-        public RulesRequestMatcher build() {
+        public RulesRequestMatcher<Q> build() {
 
-            return new RulesRequestMatcher(
+            return new RulesRequestMatcher<Q>(
                 requestMatchingRules
             );
 
