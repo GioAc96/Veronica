@@ -132,7 +132,7 @@ body {
  
   }
   
-  > p {
+  > p, > ul {
     
     font-weight: 300;
     font-size: 20px;
@@ -140,6 +140,28 @@ body {
     margin: 14px 0;
     padding: 0 50px;
     text-align: justify;
+
+  }
+  
+  li {
+
+    margin: 20px 10px;
+
+  }
+
+}
+
+@media (max-width: 1000px) {
+
+  #left-pane {
+
+    display: none;
+
+  }
+
+  #content {
+
+    width: 100%;
 
   }
 
