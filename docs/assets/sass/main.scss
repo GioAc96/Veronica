@@ -95,6 +95,26 @@ body {
   top: 0;
   width: calc(100% - 350px);
 
+  a {
+
+    color: white;
+
+  }
+
+  > #disclaimer {
+
+    > h2 {
+
+      margin: 20px 0;
+
+    }
+
+    text-align: center;
+    padding: 0 50px;
+    font-size: 24px;
+
+  }
+
   > h1 {
 
     text-align: center;
@@ -104,6 +124,14 @@ body {
       
       width: 400px;
       
+    }
+
+    > .subtitle {
+      
+      font-weight: 300;
+      font-style: italic;
+      margin-top: 20px;
+
     }
     
   }
@@ -142,7 +170,7 @@ body {
     text-align: justify;
 
   }
-  
+
   li {
 
     margin: 20px 10px;
