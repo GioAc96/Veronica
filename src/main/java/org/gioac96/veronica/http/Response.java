@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -16,7 +15,6 @@ import org.gioac96.veronica.routing.pipeline.ResponseRenderingException;
  */
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor
 public class Response {
 
     @Getter
@@ -47,6 +45,7 @@ public class Response {
      * @return true iff the response was not already rendered
      * @throws ResponseRenderingException on rendering failure
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public boolean render(@NonNull ResponseRenderer responseRenderer) throws ResponseRenderingException {
 
         /*

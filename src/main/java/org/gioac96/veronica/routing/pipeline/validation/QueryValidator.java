@@ -17,7 +17,7 @@ import org.gioac96.veronica.routing.pipeline.PreFilter;
  */
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class QueryValidator implements PreFilter {
+public class QueryValidator<Q extends Request> implements PreFilter<Q> {
 
     @Getter
     @Setter
@@ -31,7 +31,7 @@ public class QueryValidator implements PreFilter {
     }
 
     @Override
-    public void filter(@NonNull Request request) throws PipelineBreakException {
+    public void filter(@NonNull Q request) throws PipelineBreakException {
 
         for (Map.Entry<String, FieldValidator> entry : fieldValidators.entrySet()) {
 

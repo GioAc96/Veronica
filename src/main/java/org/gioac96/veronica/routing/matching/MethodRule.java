@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import org.gioac96.veronica.http.HttpMethod;
@@ -15,22 +17,23 @@ import org.gioac96.veronica.util.ArraySet;
  * Request matching rule based on http method of request.
  */
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public final class MethodRule implements RequestMatchingRule {
+public final class MethodRule<Q extends Request> implements RequestMatcher<Q> {
 
     @Getter
     @Setter
     @NonNull
     private ArraySet<HttpMethod> allowedHttpMethods;
 
+    @Generated
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static MethodRuleBuilder builder() {
+    public static <Q extends Request> MethodRuleBuilder<Q> builder() {
 
-        return new MethodRuleBuilder();
+        return new MethodRuleBuilder<Q>();
 
     }
 
     @Override
-    public boolean matches(Request request) {
+    public boolean matches(Q request) {
 
         return allowedHttpMethods.any(
             allowedHttpMethod -> allowedHttpMethod.equals(request.getHttpMethod())
@@ -38,12 +41,14 @@ public final class MethodRule implements RequestMatchingRule {
 
     }
 
+    @Generated
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public static class MethodRuleBuilder {
+    public static class MethodRuleBuilder<Q extends Request> {
 
-        private ArraySet<HttpMethod> allowedHttpMethods = new ArraySet<>();
+        private @NonNull ArraySet<HttpMethod> allowedHttpMethods = new ArraySet<>();
 
-        public MethodRuleBuilder allowedMethods(HttpMethod... allowedMethods) {
+        public MethodRuleBuilder<Q> allowedMethods(HttpMethod... allowedMethods) {
 
             Collections.addAll(allowedHttpMethods, allowedMethods);
 
@@ -51,7 +56,7 @@ public final class MethodRule implements RequestMatchingRule {
 
         }
 
-        public MethodRuleBuilder allowedMethods(Collection<HttpMethod> allowedMethods) {
+        public MethodRuleBuilder<Q> allowedMethods(Collection<HttpMethod> allowedMethods) {
 
             this.allowedHttpMethods.addAll(allowedMethods);
 
@@ -59,11 +64,17 @@ public final class MethodRule implements RequestMatchingRule {
 
         }
 
-        public MethodRule build() {
+        public MethodRule<Q> build() {
 
-            return new MethodRule(
-                allowedHttpMethods
-            );
+            return new MethodRule<Q>(allowedHttpMethods);
+
+        }
+
+        public String toString() {
+
+            return
+                "MethodRule.MethodRuleBuilder(allowedHttpMethods="
+                    + this.allowedHttpMethods + ")";
 
         }
 

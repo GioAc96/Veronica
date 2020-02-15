@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -34,6 +35,7 @@ public class FieldValidator {
 
     }
 
+    @Generated
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static FieldValidatorBuilder<?, ?> builder() {
 
@@ -81,14 +83,17 @@ public class FieldValidator {
 
     }
 
+    @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public abstract static class
-        FieldValidatorBuilder<C extends FieldValidator, B extends FieldValidatorBuilder<C, B>> {
+    public abstract static class FieldValidatorBuilder<
+        C extends FieldValidator,
+        B extends FieldValidatorBuilder<C, B>
+        > {
 
         private @NonNull PrioritySet<ValidationRule> validationRules = new PrioritySet<>();
         private @NonNull Boolean nullable = false;
 
-        public FieldValidatorBuilder validationRules(ValidationRule... validationRules) {
+        public B validationRules(ValidationRule... validationRules) {
 
             Collections.addAll(this.validationRules, validationRules);
 
@@ -96,7 +101,7 @@ public class FieldValidator {
 
         }
 
-        public FieldValidatorBuilder validationRules(Collection<ValidationRule> validationRules) {
+        public B validationRules(Collection<ValidationRule> validationRules) {
 
             this.validationRules.addAll(validationRules);
 
@@ -136,8 +141,10 @@ public class FieldValidator {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static final class
-        FieldValidatorBuilderImpl extends FieldValidatorBuilder<FieldValidator, FieldValidatorBuilderImpl> {
+    private static final class FieldValidatorBuilderImpl extends FieldValidatorBuilder<
+        FieldValidator,
+        FieldValidatorBuilderImpl
+        > {
 
         protected FieldValidator.FieldValidatorBuilderImpl self() {
 
