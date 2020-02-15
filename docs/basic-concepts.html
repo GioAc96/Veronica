@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="/static/css/partials/wip.css">
 
 
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-85967130-4"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -24,7 +25,11 @@
   </script>
 </head>
 <body>
-  <aside id="left-pane">
+  <div id="hamburger">
+  <span class="top-line"></span>
+  <span class="bottom-line"></span>
+</div>
+<aside id="left-pane">
   <img id="v" src="/static/images/logo/v-dark.svg" alt="Veronica">
   <h2>Table of Contents</h2>
   <div id="table-of-contents">
@@ -156,5 +161,6 @@
   Made with <span class="green">❤</span> by <a href="https://gioac96.rocks" class="green">Giorgio Acquati.</a>
 </footer>
   </div>
+  <script src="/static/js/left-pane.js"></script>
 </body>
 </html>

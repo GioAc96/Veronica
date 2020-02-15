@@ -95,15 +95,35 @@ body {
 
 @media (max-width: 1000px) {
 
-  #left-pane {
-
-    display: none;
-
-  }
-
   #content {
 
     width: 100%;
+
+  }
+
+}
+
+
+@media (max-device-width: 600px) {
+
+  #content {
+
+    > p, > ul, > * {
+
+      font-size: 40px;
+
+    }
+
+    > h2 {
+      font-size: 70px;
+      text-align: center;
+    }
+
+    > h3 {
+
+      font-size: 50px;
+
+    }
 
   }
 

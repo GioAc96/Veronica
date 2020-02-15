@@ -15,8 +15,14 @@
     
     font-weight: 300;
     font-style: italic;
-    margin-top: 20px;
+    margin: 20px 30px 00 30px;
     font-size: 28px;
+    
+    @media (max-device-width: 600px) {
+
+      font-size: 44px;
+
+    }
 
   }
   

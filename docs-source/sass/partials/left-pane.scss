@@ -1,5 +1,77 @@
 @import '../palette.scss';
 
+#hamburger {
+
+  display: none;
+
+  $size: 65px;
+
+  position: fixed;
+  background-color: $green;
+  border-radius: 50%;
+  width: $size;
+  height: $size;
+  top: 25px;
+  right: 25px;
+  cursor: pointer;
+  z-index: 2;
+
+  > span {
+
+    left: 12px;
+    position: absolute;
+    width: 41px;
+    height: 5px;
+    background-color: $black;
+    transition:
+      top .1s ease .1s,
+      bottom .1s ease .1s,
+      transform .1s ease;
+
+    &.top-line {
+
+      top: 20px;
+
+    }
+
+    &.bottom-line {
+
+      bottom: 20px;
+
+    }
+
+
+
+  }
+
+  &.open {
+
+    > span {
+      
+      transition:
+      top .1s ease,
+      bottom .1s ease,
+      transform .1s ease .1s;
+
+    }
+    
+    > .top-line {
+
+      top: 30px;
+      transform: rotate(45deg);
+      
+    }
+    > .bottom-line {
+      
+      bottom: 30px;
+      transform: rotate(-45deg);
+
+    }
+
+  }
+
+}
+
 #left-pane {
 
   font-family: 'Josefin Sans', sans-serif;
@@ -66,6 +138,117 @@
       font-weight: 300;
       font-size: 20px;
       margin: 14px 0;
+
+    }
+
+  }
+
+}
+
+@media (max-width: 1000px) {
+
+  #hamburger {
+
+    display: initial;
+
+  }
+
+  #left-pane {
+
+    width: 100%;
+    position: fixed;
+    height: 100%;
+    top: 0;
+    z-index: 1;
+    transform: translateX(-100%);
+    transition: .1s ease;
+    
+    > #table-of-contents {
+
+      text-align: center;
+
+      * {
+        margin-left: 0px !important;
+      }
+
+      > ol {
+
+        display: inline-block;
+
+      }
+
+    }
+    
+  }
+  
+  #hamburger.open ~ #left-pane {
+    
+    left: 0;
+    transform: translateX(0%);
+
+  }
+
+}
+
+@media (max-device-width: 600px) {
+
+  #hamburger {
+    
+    width: 85px;
+    height: 85px;
+
+    > span {
+
+      width: 41px;
+      left: 22px;
+
+      &.top-line {
+
+        top: 32px;
+
+      }
+
+      &.bottom-line {
+
+        bottom: 32px;
+
+      }
+
+    }
+
+    &.open {
+
+      >.top-line {
+
+        top: 40px;
+
+      }
+
+      > .bottom-line {
+
+        bottom: 40px;
+
+      }
+
+    }
+
+  }
+
+  #left-pane {
+    
+    > h2 {
+
+      font-size: 80px;
+
+    }    
+
+    #table-of-contents {
+
+      font-size: 52px;
+
+      * {
+        font-size: inherit !important;
+      }
 
     }
 
