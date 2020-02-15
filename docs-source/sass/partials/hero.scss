@@ -1,0 +1,23 @@
+@import '../palette.scss';
+
+#hero {
+
+  text-align: center;
+  margin: 50px 0;
+  
+  > img {
+    
+    width: 400px;
+    
+  }
+
+  > .subtitle {
+    
+    font-weight: 300;
+    font-style: italic;
+    margin-top: 20px;
+    font-size: 28px;
+
+  }
+  
+}

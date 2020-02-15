@@ -1,0 +1,16 @@
+@import '../palette.scss';
+
+#disclaimer {
+
+  > h2 {
+
+    margin: 20px 0;
+    color: $peach;
+    
+  }
+  
+  text-align: center;
+  padding: 0 50px;
+  font-size: 24px;
+
+}

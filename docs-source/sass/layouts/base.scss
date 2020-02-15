@@ -1,0 +1,82 @@
+@import '../palette.scss';
+
+body {
+
+  background-color: $black;
+  color: $white;
+  font-family: 'Josefin Sans', sans-serif;
+
+}
+
+
+#content {
+  counter-reset: item;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: calc(100% - 350px);
+
+  a {
+
+    color: white;
+
+  }
+  
+  > h2 {
+    
+    font-weight: 400;
+    font-size: 40px;
+    margin: 30px 0;
+    padding: 0 30px;
+    
+    &::before {
+      
+      content: counters(item, ".") ". ";
+      counter-increment: item
+      
+    }
+    
+  }
+  > h3 {
+    
+    font-weight: 400;
+    font-size: 30px;
+    margin: 22px 0;
+    padding: 0 40px;
+ 
+  }
+  
+  > p, > ul {
+    
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 1.4;
+    margin: 14px 0;
+    padding: 0 50px;
+    text-align: justify;
+
+  }
+
+  li {
+
+    margin: 20px 10px;
+
+  }
+
+}
+
+@media (max-width: 1000px) {
+
+  #left-pane {
+
+    display: none;
+
+  }
+
+  #content {
+
+    width: 100%;
+
+  }
+
+}

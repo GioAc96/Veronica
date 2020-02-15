@@ -1,1 +1,7 @@
-{"version":3,"sourceRoot":"","sources":["../../assets/sass/main.scss","../../assets/sass/palette.scss"],"names":[],"mappings":"AAEA,EAEE,YACA,aACA,UACA,SAIF,KAEE,iBCVM,QDWN,MCPM,QDQN,sCAIF,WAEE,iBCfW,QDgBX,YACA,eACA,OACA,MACA,SACA,uCACA,aAEA,cAEE,cACA,WACA,iBAIF,cAEE,eACA,gBACA,kBAIF,8BAEE,gBAEA,iCAEE,mBACA,iBAIF,iCAEE,cAIF,wCAEE,iCACA,uBAIF,oCAEE,gBACA,eACA,cAIF,0CAEE,gBACA,eACA,cAQN,SACE,mBACA,kBACA,QACA,MACA,yBAEA,WAEE,WAIF,qBASE,kBACA,eACA,eATA,wBAEE,cACA,MCxGE,QDkHN,YAEE,kBACA,cAEA,gBAEE,YAIF,sBAEE,gBACA,kBACA,gBACA,eAMJ,YAEE,gBACA,eACA,cACA,eAEA,oBAEE,iCACA,uBAKJ,YAEE,gBACA,eACA,cACA,eAIF,uBAEE,gBACA,eACA,gBACA,cACA,eACA,mBAIF,YAEE,iBAMJ,0BAEE,WAEE,aAIF,SAEE","file":"main.css"}
+{
+"version": 3,
+"mappings": "AAEA,CAAE,CAEA,MAAM,CAAE,IAAI,CACZ,OAAO,CAAE,IAAI,CACb,OAAO,CAAE,CAAC,CACV,MAAM,CAAE,CAAC",
+"sources": ["../../../docs-source/sass/main.scss"],
+"names": [],
+"file": "main.css"
+}
