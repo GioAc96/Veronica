@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Veronica Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans:100,300,300i,400,600,700&display=swap">
+  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/static/css/layouts/base.css">
+  <link rel="stylesheet" href="/static/css/partials/left-pane.css">
+  
+
+  <link rel="stylesheet" href="/static/css/partials/wip.css">
+
+
+</head>
+<body>
+  <aside id="left-pane">
+  <img id="v" src="/static/images/logo/v.svg" alt="Veronica">
+  <h2>Table of Contents</h2>
+  <div id="table-of-contents">
+    <ol>
+      <li>
+        <a href="/" class="nolink">Introduction</a>
+      </li>
+      <li>
+        <a href="/basic-concepts.html" class="nolink">Basic Concepts</a>
+        <ol>
+          <li>
+            <a href="/basic-concepts.html#the-application-structure" class="nolink">The application structure</a>
+          </li>
+          <li><a href="/basic-concepts.html#the-request-pipeline" class="nolink">The request pipeline</a></li>
+          <li><a href="/basic-concepts.html#routing" class="nolink">Routing</a></li>
+          <li><a href="/basic-concepts.html#validation" class="nolink">Validation</a></li>
+        </ol>
+      </li>
+      <li>
+        <a href="/about.html" class="nolink">About Veronica</a>
+        <ol>
+          <li><a href="/about.html#purpose-and-inspiration" class="nolink">Purpose & Inspiration</a></li>
+          <li><a href="/about.html#the-author" class="nolink">The author</a></li>
+          <li><a href="/about.html#contributing" class="nolink">Contributing</a></li>
+        </ol>
+      </li>
+    </ol>
+  </div>
+</aside>
+  <div id="content">
+    
+  <h2>Basic concepts</h2>
+  <p>In this section you will find a description of the basic concepts and ideas that consitute Veronica.</p>
+  <a name="the-application-structure"></a>
+  <h3>The application structure</h3>
+  <p>To understand how Veronica works, we first need to have a general idea of how the framework is structured and <i>who does what</i>. To do so, we are now going to follow the lifecycle of an Http request as it gets processed by a Veronica based application, to see how a response is generated.</p>
+  <ul>
+    <li>The <b>Application</b> object constitues the starting point of the development of a Veronica based web-app. It contains a basic implementation of an <b>Http Server</b> and the <b>Application Router</b>. The application manages the <b>Http Server</b>, and when a request is received it gets parsed and transformed into a <b>Request</b> object. The <b>Request</b> is then passed down to the <b>Router</b>.</li>
+    <li>The <b>Router</b> receives the <b>Request</b> from the <b>Application</b> and is now responsible for establishing which <b>Route</b> will handle the <b>Request</b> and generate a <b>Response</b>. For more information about the routing process, check the documentation.</li>
+    <li>Once a <b>Route</b> receives a <b>Request</b>, it will proceed to generate a <b>Response</b>. The genration of a <b>Response</b> happens through a process which is divided into serveral stages, which together consitute the <b>Route</b>'s <b>Request Pipeline</b>. In fact, every route has a different <b>Pipeline</b> assigned to it which is responsible for generating the <b>Response</b>. For more information about the <b>Request Pipeline</b>, check the documentation.</li>
+    <li>Once a <b>Response</b> is generated, the <b>Application</b> passes it to the <b>Http Server</b> which sends it back to the client.</li>
+  </ul>
+  <p>
+    You should now have a high-level understanding of how the framework is structured and how the general process of handling Http requests is managed. In the next section, we will get into details of how you can design the routes for your application.
+  </p>
+  <a name="the-request-pipeline"></a>
+  <h3>The Request Pipeline</h3>
+  <p>
+    The <b>Request Pipeline</b> (or simply <b>Pipeline</b>) lies at the core of Veronica's functionality. It describes how a <b>Route</b> generates a <b>Response</b> given a certain <b>Request</b>. Briefly, a <b>Pipeline</b> is a series of ordered stages of processing that <b>Request</b> and <b>Response</b> objects need to go through.
+  </p>
+  <p>
+    The most intuitive way to understand how the <b>Pipeline</b> operates is through a practical example. Therefore, we are now going to present the requirements of a hypothetical Veronica Application. Next, we  will see how to structure a <b>Pipeline</b> to meet such criteria.
+  </p>
+  <p>
+    Suppose that you want to develop a website with a simple registration and login functionality. You need such feature to restrict access to parts of your site to registered users only, and you need to validate the data submitted by the users on registration. Upon registration, you want to send a confirmation message to the user's email inbox, in order to verify the identity of your new subscriber. Also, suppose that you want your application to always make use of database transactions in order to avoid data corruption.
+  </p>
+  <p>
+    Now, let's try to define the steps of the process that registers users to your website.
+  </p>
+  <ul>
+    <li>
+      The first step would be to validate the user submitted data. We could, for example, enforce a user to enter a valid username that is not already taken by another user. Also, we would like to verify that the email address specified by the user is indeed a valid address.
+    </li>
+    <li>
+      After validating the user input and before storing the user's data on our website, we would like to start a database transaction, in order to avoid data corruption.
+    </li>
+    <li>
+      We are now ready to store the newly registered user's data in the database, and we proceed by doing so.
+    </li>
+    <li>
+      Next, we are done interacting with the database, and therefore we would like to close the database transaction.
+    </li>
+    <li>
+      Then, we would like to generate a confirmation message to display to the user, reminding them to check their email inbox.
+    </li>
+    <li>
+      We are now ready to send the user the generated response, which displays the confirmation message.
+    </li>
+    <li>
+      Finally, we want to send the confirmation email message to the user's address. We specifically want to do this asyncronously, in order to avoid having to wait for the email message to be sent before sending the http response.
+    </li>
+  </ul>
+  <p>Since we have clearly defined all of the necessary steps in the user registration process, we are now ready to design our <b>Pipeline</b>. </p>
+  <ul>
+    <li>
+      <b>Pre-Filters</b> are the first group of stages in the <b>Pipeline</b>. They are responsible for processing the <b>Request</b> before a <b>Response</b> is generated. In general, they represent all of the checks that need to be executed before the action requested by the user is performed.<br>
+      In our case, both the input validation and the database transaction start are steps that need to be performed before storing the user's data in the database, and are executed by two different <b>Pre-Filters</b>.
+    </li>
+    <li>
+      The <b>Request Handler</b> is responsible for executing the action requested by the user, once all of the preliminary checks have passed. In our case, this would be expressed by storing the user's data in the database.<br>
+      The <b>Request Handler</b> is also responsible for generating a <b>Response</b> object, which contains the logical representation of the output that will be sent to the client.</li>
+      <li><b>Post-Filters</b> are executed immediatly after the <b>Request</b> was processed by the <b>Request Handler</b> and a <b>Response</b> was generated. Compared to the <b>Pre-Filters</b>, they have access to the <b>Response</b> object and are therefore able to manipulate it along the <b>Request</b>.<br>
+      In our practical example, the database transaction end would be executed by a <b>Post-Filter</b>.
+    </li>
+    <li>
+      At this stage, the <b>Response</b> is ready to be sent to the client. But before we do so, the <b>Response</b> must be rendered. In fact, the <b>Response</b> is still purely logical and does not contain a concrete representation of the body of the Http response that will be output.<br>
+      This is where the <b>Response Renderer</b> comes into play. Its duty is to attach a body to the <b>Response</b> object, which will be sent as the body of the Http response.<br>
+      In our case, we can think of the <b>Response</b> object before rendering as containing a reference to the html file that needs to be sent to the user. After the rendering process, the <b>Response</b> will hold the Http response body that will be output.
+    </li>
+    <li>
+      Finally, the <b>Request</b> and <b>Response</b> objects are managed by the <b>Post-Processors</b>. These stages have access to the rendered <b>Response</b> and can process it before the Http response is output. Alternatively, they can schedule asyncronous operations that are completed after the response is sent to the client.<br>
+      In our example, the confirmation email would be sent by an asyncronous <b>Post-Processor</b>, that starts a new thread responsible for sending the message.
+    </li>
+  </ul>
+  <a name="routing"></a>
+  <h3>Routing</h3>
+  <div id="wip">
+  <h2>Work in progress</h2>
+  This section of the documentation has not been written yet.
+</div>
+  <a name="validation"></a>
+  <h3>Validation</h3>
+  <div id="wip">
+  <h2>Work in progress</h2>
+  This section of the documentation has not been written yet.
+</div>
+
+  </div>
+</body>
+</html>
