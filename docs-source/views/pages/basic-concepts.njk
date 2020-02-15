@@ -15,10 +15,18 @@
   <h3>The application structure</h3>
   <p>To understand how Veronica works, we first need to have a general idea of how the framework is structured and <i>who does what</i>. To do so, we are now going to follow the lifecycle of an Http request as it gets processed by a Veronica based application, to see how a response is generated.</p>
   <ul>
-    <li>The <b>Application</b> object constitues the starting point of the development of a Veronica based web-app. It contains a basic implementation of an <b>Http Server</b> and the <b>Application Router</b>. The application manages the <b>Http Server</b>, and when a request is received it gets parsed and transformed into a <b>Request</b> object. The <b>Request</b> is then passed down to the <b>Router</b>.</li>
-    <li>The <b>Router</b> receives the <b>Request</b> from the <b>Application</b> and is now responsible for establishing which <b>Route</b> will handle the <b>Request</b> and generate a <b>Response</b>. For more information about the routing process, check the documentation.</li>
-    <li>Once a <b>Route</b> receives a <b>Request</b>, it will proceed to generate a <b>Response</b>. The genration of a <b>Response</b> happens through a process which is divided into serveral stages, which together consitute the <b>Route</b>'s <b>Request Pipeline</b>. In fact, every route has a different <b>Pipeline</b> assigned to it which is responsible for generating the <b>Response</b>. For more information about the <b>Request Pipeline</b>, check the documentation.</li>
-    <li>Once a <b>Response</b> is generated, the <b>Application</b> passes it to the <b>Http Server</b> which sends it back to the client.</li>
+    <li>
+      The <b>Application</b> object constitues the starting point of the development of a Veronica based web-app. It contains a basic implementation of an <b>Http Server</b> and the <b>Application Router</b>. The application manages the <b>Http Server</b>, and when a request is received it gets parsed and transformed into a <b>Request</b> object. The <b>Request</b> is then passed down to the <b>Router</b>.
+    </li>
+    <li>
+      The <b>Router</b> receives the <b>Request</b> from the <b>Application</b> and is now responsible for establishing which <b>Route</b> will handle the <b>Request</b> and generate a <b>Response</b>. For more information about the routing process, check the documentation.
+    </li>
+    <li>
+      Once a <b>Route</b> receives a <b>Request</b>, it will proceed to generate a <b>Response</b>. The genration of a <b>Response</b> happens through a process which is divided into serveral stages, which together consitute the <b>Route</b>'s <b>Request Pipeline</b>. In fact, every route has a different <b>Pipeline</b> assigned to it which is responsible for generating the <b>Response</b>. For more information about the <b>Request Pipeline</b>, check the documentation
+    </li>
+    <li>
+      Once a <b>Response</b> is generated, the <b>Application</b> passes it to the <b>Http Server</b> which sends it back to the client.
+    </li>
   </ul>
   <p>
     You should now have a high-level understanding of how the framework is structured and how the general process of handling Http requests is managed. In the next section, we will get into details of how you can design the routes for your application.
@@ -68,8 +76,10 @@
     </li>
     <li>
       The <b>Request Handler</b> is responsible for executing the action requested by the user, once all of the preliminary checks have passed. In our case, this would be expressed by storing the user's data in the database.<br>
-      The <b>Request Handler</b> is also responsible for generating a <b>Response</b> object, which contains the logical representation of the output that will be sent to the client.</li>
-      <li><b>Post-Filters</b> are executed immediatly after the <b>Request</b> was processed by the <b>Request Handler</b> and a <b>Response</b> was generated. Compared to the <b>Pre-Filters</b>, they have access to the <b>Response</b> object and are therefore able to manipulate it along the <b>Request</b>.<br>
+      The <b>Request Handler</b> is also responsible for generating a <b>Response</b> object, which contains the logical representation of the output that will be sent to the client.
+    </li>
+    <li>
+      <b>Post-Filters</b> are executed immediatly after the <b>Request</b> was processed by the <b>Request Handler</b> and a <b>Response</b> was generated. Compared to the <b>Pre-Filters</b>, they have access to the <b>Response</b> object and are therefore able to manipulate it along the <b>Request</b>.<br>
       In our practical example, the database transaction end would be executed by a <b>Post-Filter</b>.
     </li>
     <li>

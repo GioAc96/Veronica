@@ -15,6 +15,12 @@ body {
   top: 0;
   width: calc(100% - 350px);
 
+  h2, h3, h4, h5, h6 {
+
+    color: $green;
+
+  }
+
   a {
 
     color: inherit;
@@ -59,8 +65,31 @@ body {
   li {
 
     margin: 20px 10px;
+    list-style: none;
+
+    > h2, h3, h4, h5, h6 {
+
+      display: inline;
+
+    }
+
+    &::before {
+      
+      content: '';
+      display: inline-block;
+      background-image: url('/static/images/green-bullet.svg');
+      width: 12px;
+      height: .8em;
+      background-size: 8px;
+      background-position: center;
+      background-repeat: no-repeat;
+
+    }
+
 
   }
+
+
 
 }
 
