@@ -2,14 +2,16 @@
 
 #left-pane {
 
-  background-color: $terracotta;
+  font-family: 'Josefin Sans', sans-serif;
+  background-color: $green;
   width: 350px;
   position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
-  text-shadow: 0px 3px 6px rgba(0, 0, 0, .2);
+  //text-shadow: 0px 3px 6px rgba(0, 0, 0, .2);
   height: 100vh;
+  color: $black;
 
   > #v {
 
