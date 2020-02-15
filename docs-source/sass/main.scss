@@ -1,0 +1,23 @@
+@import 'palette.scss';
+
+* {
+
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+
+}
+
+a.nolink {
+
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+
+    text-decoration: underline;
+
+  }
+
+}

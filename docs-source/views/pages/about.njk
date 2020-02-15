@@ -1,0 +1,27 @@
+{# Layout declaration #}
+{% extends "layouts/base.njk" %}
+
+{% block head %}
+
+  <link rel="stylesheet" href="/static/css/partials/wip.css">
+
+{% endblock %}
+
+{# Page content #}
+{% block content %}
+
+  <h2>About Veronica</h2>
+  
+  <a name="purpose-and-inspiration"></a>
+  <h3>Purpose & Inspiration</h3>
+  {% include "partials/wip.njk" %}
+
+  <a name="the-author"></a>
+  <h3>The Author</h3>
+  {% include "partials/wip.njk" %}
+
+  <a name="contributing"></a>
+  <h3>Contributing</h3>
+  {% include "partials/wip.njk" %}
+
+{% endblock %}
