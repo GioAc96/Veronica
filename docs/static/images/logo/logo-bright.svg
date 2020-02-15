@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1653.971" height="413" viewBox="0 0 1653.971 413"><g transform="translate(0)"><text transform="translate(300.971 310)" fill="#fafafa" font-size="413" font-family="JosefinSans-Regular, Josefin Sans"><tspan x="0" y="0">eronica</tspan></text><g transform="translate(0 76.348)"><path d="M3632.286,3876.8l104.054,180.229-46.3,80.131-150.3-260.33Z" transform="translate(-3539.743 -3876.737)" fill="#11afaf" fill-rule="evenodd"/><path d="M4163.228,3956.75l-46.246-80.1,92.544-.029Z" transform="translate(-3908.759 -3876.62)" fill="#ffb065" fill-rule="evenodd"/></g></g></svg>
+<svg id="logo-bright" xmlns="http://www.w3.org/2000/svg" width="1653.971" height="413" viewBox="0 0 1653.971 413">
+  <text id="eronica" transform="translate(300.971 310)" fill="#eee" font-size="413" font-family="JosefinSans-Regular, Josefin Sans"><tspan x="0" y="0">eronica</tspan></text>
+  <path id="Path_1" data-name="Path 1" d="M3632.286,3876.8l104.054,180.229-46.3,80.131-150.3-260.33Z" transform="translate(-3539.743 -3800.389)" fill="#3ee7ad" fill-rule="evenodd"/>
+  <path id="Path_2" data-name="Path 2" d="M4163.228,3956.75l-46.246-80.1,92.544-.029Z" transform="translate(-3908.759 -3800.271)" fill="#3ee7ad" fill-rule="evenodd"/>
+</svg>
