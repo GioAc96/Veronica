@@ -1,3 +1,8 @@
+if (Cookies.get('night-mode') === undefined) {
+
+  Cookies.set('night-mode', 'true')
+
+}
 if (Cookies.get('night-mode') === 'true') {
 
   $('body').addClass('night-mode');
