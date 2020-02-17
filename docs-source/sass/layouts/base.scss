@@ -2,8 +2,38 @@
 
 body {
 
+  background-color: $white;
+  color: $black;
+  transition: .1s ease;
+
+  #content {
+
+    h2, h3, h4, h5, h6 {
+
+      color: $black;
+  
+    }
+
+  }
+
+
+}
+
+body.night-mode {
+
   background-color: $black;
   color: $white;
+
+
+  #content {
+
+    h2, h3, h4, h5, h6 {
+
+      color: $green;
+  
+    }
+
+  }
 
 }
 
@@ -13,12 +43,6 @@ body {
   right: 0;
   top: 0;
   width: calc(100% - 350px);
-
-  h2, h3, h4, h5, h6 {
-
-    color: $green;
-
-  }
 
   a {
 

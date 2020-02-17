@@ -72,6 +72,23 @@
 
 }
 
+#night-mode-switch {
+
+  $size: 25px;
+
+  position: absolute;
+  left: 25px;
+  top: 25px;
+  width: 25px;
+  height: 25px;
+  background-image: url('/static/images/moon.svg');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+
+}
+
 #left-pane {
 
   font-family: 'Josefin Sans', sans-serif;
@@ -147,6 +164,15 @@
 
 @media (max-width: 1000px) {
 
+  #night-mode-switch {
+    
+    width: 65px;
+    height: 65px;
+    background-size: 38%;
+    border-radius: 50%;
+
+  }
+
   #hamburger {
 
     display: initial;
@@ -191,6 +217,13 @@
 }
 
 @media (max-device-width: 600px) {
+
+  #night-mode-switch {
+
+    width: 85px;
+    height: 85px;
+
+  }
 
   #hamburger {
     

@@ -23,13 +23,15 @@
     gtag('js', new Date());
     gtag('config', 'UA-85967130-4');
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
 </head>
-<body>
+<body class="night-mode">
   <div id="hamburger">
   <span class="top-line"></span>
   <span class="bottom-line"></span>
 </div>
 <aside id="left-pane">
+  <div id="night-mode-switch"></div>
   <img id="v" src="/static/images/logo/v-dark.svg" alt="Veronica">
   <h2>Table of Contents</h2>
   <div id="table-of-contents">
@@ -93,6 +95,7 @@
   Made with <span class="green">❤</span> by <a href="https://gioac96.rocks" class="green">Giorgio Acquati.</a>
 </footer>
   </div>
+  <script src="/static/js/night-mode.js"></script>
   <script src="/static/js/left-pane.js"></script>
 </body>
 </html>

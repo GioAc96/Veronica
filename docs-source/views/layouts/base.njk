@@ -23,14 +23,16 @@
     gtag('js', new Date());
     gtag('config', 'UA-85967130-4');
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
 </head>
-<body>
+<body class="night-mode">
   {% include "partials/left-pane.njk" %}
   <div id="content">
     {% block content %}
     {% endblock %}
     {% include "partials/footer.njk" %}
   </div>
+  <script src="/static/js/night-mode.js"></script>
   <script src="/static/js/left-pane.js"></script>
 </body>
 </html>
