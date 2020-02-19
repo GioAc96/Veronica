@@ -11,11 +11,12 @@ body {
   width:100%;
   font-size: 18px;
 
-  > h1, h2, h3, h4, h5, h6 {
+  
+}
 
-    color: $green;
+h1, h2, h3, h4, h5, h6 {
 
-  }
+  color: $green;
 
 }
 
@@ -143,7 +144,30 @@ button {
   height:2.8em;
   padding-top:10px;
   overflow:hidden;
-  font-size:12px;
+  font-size:14px;
+  pointer-events: none;
+
+  li a {
+    pointer-events: auto;
+  }
+
+  .navList::before {
+
+    content: '';
+    
+    cursor: pointer;
+    float: left;
+    margin: 0 30px;
+    width: 50px;
+    height: 2.8em;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/static/images/logo/v-dark.svg');
+    pointer-events: auto;
+
+  }
+
 }
 .bottomNav {
 
@@ -173,10 +197,12 @@ ul.navList, ul.subNavList {
   padding:0;
 }
 ul.navList li{
+
   list-style:none;
   float:left;
-  padding: 5px 6px;
+  padding: 8px 6px;
   text-transform:uppercase;
+
 }
 .subNav .navListSearch {
   float:right;
@@ -188,6 +214,7 @@ ul.navList li{
 
     background: $white;
     color: $black;
+    border: 1px solid $black;
 
     &::placeholder {
 
@@ -212,9 +239,11 @@ ul.subNavList li {
 }
 
 .navBarCell1Rev {
+
   background-color: $black;
   color: $white;
   margin: auto 5px;
+  
 }
 .skipNav {
   position:absolute;
@@ -252,11 +281,14 @@ ul.subNavList li {
 
   font-size: 40px;
   color: $green;
-  margin:10px 0;
+  margin: 30px 0;
 
 }
 .subTitle {
   margin:5px 0 0 0;
+
+
+
 }
 .header ul {
   margin:0 0 15px 0;
@@ -268,6 +300,8 @@ ul.subNavList li {
 .header ul li, .footer ul li {
   list-style:none;
   font-size:13px;
+
+  
 }
 /*
 * Styles for headings.
@@ -277,8 +311,8 @@ body.class-declaration .details h2,
 body.class-use h2,
 body.module-declaration .blockList h2 {
   
-  padding:0;
-  margin:15px 0;
+  padding: 0;
+  margin: 20px 0;
   
 }
 body.class-declaration .summary h3,
@@ -297,9 +331,9 @@ body.class-declaration .summary .inheritedList h2 {
 .contentContainer, .sourceContainer, .classUseContainer, .serializedFormContainer, .constantValuesContainer,
 .allClassesContainer, .allPackagesContainer {
 
-  clear:both;
-  padding:10px 20px;
-  position:relative;
+  clear: both;
+  margin: 10px 20px;
+  position: relative;
 
 }
 
@@ -347,12 +381,7 @@ ul {
   font-size:1.1em;
   display:inline;
 }
-/*
-* Styles for lists.
-*/
-li.circle {
-  list-style:circle;
-}
+
 ul.horizontal li {
   display:inline;
   font-size:0.9em;
@@ -361,6 +390,7 @@ ul.horizontal li {
 div.inheritance {
   
   margin: 20px 0;
+  font-family: $font-code;
 
 }
 div.inheritance div.inheritance {
@@ -368,6 +398,7 @@ div.inheritance div.inheritance {
   margin: 2px 0 0 1em;
 
 }
+
 ul.blockList {
   margin:10px 0 10px 0;
   padding:0;
@@ -377,6 +408,13 @@ ul.blockList li.blockList {
   margin-bottom:15px;
   line-height:1.4;
 }
+
+li.blockList h3 {
+
+  font-family: $font-code;
+
+}
+
 table tr td dl, table tr td dl dt, table tr td dl dd {
   margin-top:0;
   margin-bottom:1px;
@@ -551,6 +589,21 @@ th.colDeprecatedItemName a:link, th.colDeprecatedItemName a:visited,
 /*
 * Styles for contents.
 */
+.description .block{
+
+  &::before {
+
+    content: "Description:";
+    display: block;
+    color: $green;
+    font-size: 28px;
+
+  }
+
+  font-size: 18px;
+  color: $white;
+
+}
 .description pre {
   margin-top:0;
 }
@@ -613,6 +666,13 @@ h1.hidden {
 .throwsLabel, .typeNameLabel, .typeNameLink, .searchTagLink {
   font-weight:bold;
 }
+
+.memberNameLink {
+
+  font-family: $font-code;
+
+}
+
 .deprecationComment, .emphasizedPhrase, .interfaceName {
   font-style:italic;
 }
@@ -870,5 +930,65 @@ table.striped > tbody > tr > th {
   background: $white;
   color: $black;
   border: none !important;
+
+}
+
+section.hierarchy {
+
+  h2 {
+
+    margin: 30px 0;
+
+  }
+
+  ul {
+
+    font-family: $font-code;
+
+    li {
+      margin-top: 8px;
+    }
+
+  }
+
+}
+
+body::after {
+
+  content: ''
+
+}
+
+
+.memberSignature {
+
+  font-family: $font-code;
+
+}
+.memberSummary, .typeSummary, .overviewSummary {
+
+  tbody th.colFirst {
+    
+    font-family: $font-code;
+
+  }
+
+}
+
+code, pre {
+
+  font-family: $font-code;
+
+}
+
+.header h2 {
+
+  margin: 30px 0;
+
+}
+
+.packageHierarchyLabel ~ul.horizontal {
+
+  font-family: $font-code;
 
 }
