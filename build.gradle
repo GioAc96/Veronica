@@ -3,10 +3,11 @@ plugins {
     id "io.freefair.lombok" version "4.1.6"
     id 'jacoco'
     id 'checkstyle'
+    id("maven-publish")
 }
 
-group 'org.gioac96'
-version '1.0-SNAPSHOT'
+group 'rocks.gioac96'
+version '0.2.1-preview'
 
 sourceCompatibility = 1.8
 
@@ -47,4 +48,32 @@ checkstyle {
     ignoreFailures = false
     maxWarnings = 0
     checkstyleTest.enabled = false
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/GioAc96/Veronica")
+            credentials {
+                username = "GioAc96"
+                password = new File('GH_TOKEN').getText()
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
