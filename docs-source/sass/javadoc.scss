@@ -361,10 +361,11 @@ ul {
   padding-top:2px;
 }
 .contentContainer .description dl dt, .contentContainer .details dl dt, .serializedFormContainer dl dt {
-  font-size:12px;
+  
   font-weight:bold;
   margin:10px 0 0 0;
-  color:#4E4E4E;
+  color: $green;
+
 }
 .contentContainer .description dl dd, .contentContainer .details dl dd, .serializedFormContainer dl dd {
   margin:5px 0 10px 0px;
