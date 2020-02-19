@@ -1,8 +1,8 @@
-package org.gioac96.veronica.routing.pipeline;
+package rocks.gioac96.veronica.routing.pipeline;
 
 import lombok.Builder;
 import lombok.NonNull;
-import org.gioac96.veronica.http.Response;
+import rocks.gioac96.veronica.http.Response;
 
 /**
  * Pipeline exception thrown by the {@link ResponseRenderer}.

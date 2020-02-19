@@ -1,6 +1,6 @@
-package org.gioac96.veronica.routing.matching;
+package rocks.gioac96.veronica.routing.matching;
 
-import org.gioac96.veronica.http.Request;
+import rocks.gioac96.veronica.http.Request;
 
 /**
  * Request matching rule.

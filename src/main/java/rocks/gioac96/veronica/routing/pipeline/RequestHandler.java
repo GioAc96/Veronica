@@ -1,7 +1,7 @@
-package org.gioac96.veronica.routing.pipeline;
+package rocks.gioac96.veronica.routing.pipeline;
 
-import org.gioac96.veronica.http.Request;
-import org.gioac96.veronica.http.Response;
+import rocks.gioac96.veronica.http.Request;
+import rocks.gioac96.veronica.http.Response;
 
 /**
  * Stage of the {@link Pipeline} responsible for generating a {@link Response}.

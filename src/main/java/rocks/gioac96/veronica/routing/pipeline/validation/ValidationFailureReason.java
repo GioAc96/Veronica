@@ -1,4 +1,4 @@
-package org.gioac96.veronica.routing.pipeline.validation;
+package rocks.gioac96.veronica.routing.pipeline.validation;
 
 /**
  * Reasons for validation failure.

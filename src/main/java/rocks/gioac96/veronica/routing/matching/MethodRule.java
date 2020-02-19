@@ -1,4 +1,4 @@
-package org.gioac96.veronica.routing.matching;
+package rocks.gioac96.veronica.routing.matching;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,9 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-import org.gioac96.veronica.http.HttpMethod;
-import org.gioac96.veronica.http.Request;
-import org.gioac96.veronica.util.ArraySet;
+import rocks.gioac96.veronica.http.HttpMethod;
+import rocks.gioac96.veronica.http.Request;
+import rocks.gioac96.veronica.util.ArraySet;
 
 /**
  * Request matching rule based on http method of request.

@@ -1,8 +1,8 @@
-package org.gioac96.veronica.routing.pipeline.validation.rules;
+package rocks.gioac96.veronica.routing.pipeline.validation.rules;
 
-import org.gioac96.veronica.routing.pipeline.validation.CommonValidationFailureReason;
-import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
-import org.gioac96.veronica.util.ArraySet;
+import rocks.gioac96.veronica.routing.pipeline.validation.CommonValidationFailureReason;
+import rocks.gioac96.veronica.routing.pipeline.validation.ValidationException;
+import rocks.gioac96.veronica.util.ArraySet;
 
 /**
  * Validation rule that checks that a value represents a boolean.

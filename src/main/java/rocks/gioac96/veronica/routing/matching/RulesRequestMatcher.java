@@ -1,4 +1,4 @@
-package org.gioac96.veronica.routing.matching;
+package rocks.gioac96.veronica.routing.matching;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.gioac96.veronica.http.Request;
-import org.gioac96.veronica.util.ArraySet;
+import rocks.gioac96.veronica.http.Request;
+import rocks.gioac96.veronica.util.ArraySet;
 
 /**
  * Checks that a {@link Request} object matches a set of specified rules.

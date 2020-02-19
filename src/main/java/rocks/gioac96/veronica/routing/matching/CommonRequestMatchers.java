@@ -1,8 +1,8 @@
-package org.gioac96.veronica.routing.matching;
+package rocks.gioac96.veronica.routing.matching;
 
 import lombok.experimental.UtilityClass;
-import org.gioac96.veronica.http.HttpMethod;
-import org.gioac96.veronica.http.Request;
+import rocks.gioac96.veronica.http.HttpMethod;
+import rocks.gioac96.veronica.http.Request;
 
 /**
  * Contains declaration for common instances of {@link RequestMatcher}.

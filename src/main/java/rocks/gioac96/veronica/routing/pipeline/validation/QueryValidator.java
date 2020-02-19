@@ -1,4 +1,4 @@
-package org.gioac96.veronica.routing.pipeline.validation;
+package rocks.gioac96.veronica.routing.pipeline.validation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,9 +8,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.gioac96.veronica.http.Request;
-import org.gioac96.veronica.routing.pipeline.PipelineBreakException;
-import org.gioac96.veronica.routing.pipeline.PreFilter;
+import rocks.gioac96.veronica.http.Request;
+import rocks.gioac96.veronica.routing.pipeline.PipelineBreakException;
+import rocks.gioac96.veronica.routing.pipeline.PreFilter;
 
 /**
  * {@link PreFilter} that validates a {@link Request} query.

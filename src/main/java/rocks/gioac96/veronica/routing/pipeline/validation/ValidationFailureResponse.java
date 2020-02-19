@@ -1,12 +1,12 @@
-package org.gioac96.veronica.routing.pipeline.validation;
+package rocks.gioac96.veronica.routing.pipeline.validation;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.gioac96.veronica.http.HttpStatus;
-import org.gioac96.veronica.http.Response;
+import rocks.gioac96.veronica.http.HttpStatus;
+import rocks.gioac96.veronica.http.Response;
 
 /**
  * {@link Response} generated on validation failure.

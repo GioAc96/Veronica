@@ -1,4 +1,4 @@
-package org.gioac96.veronica.routing.pipeline.validation;
+package rocks.gioac96.veronica.routing.pipeline.validation;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-import org.gioac96.veronica.util.PrioritySet;
+import rocks.gioac96.veronica.util.PrioritySet;
 
 /**
  * Field validator.

@@ -1,10 +1,10 @@
-package org.gioac96.veronica.routing.pipeline.validation.rules;
+package rocks.gioac96.veronica.routing.pipeline.validation.rules;
 
-import org.gioac96.veronica.routing.pipeline.validation.CommonValidationFailureReason;
-import org.gioac96.veronica.routing.pipeline.validation.ValidationException;
-import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureData;
-import org.gioac96.veronica.routing.pipeline.validation.ValidationFailureResponse;
-import org.gioac96.veronica.routing.pipeline.validation.ValidationRule;
+import rocks.gioac96.veronica.routing.pipeline.validation.CommonValidationFailureReason;
+import rocks.gioac96.veronica.routing.pipeline.validation.ValidationException;
+import rocks.gioac96.veronica.routing.pipeline.validation.ValidationFailureData;
+import rocks.gioac96.veronica.routing.pipeline.validation.ValidationFailureResponse;
+import rocks.gioac96.veronica.routing.pipeline.validation.ValidationRule;
 
 /**
  * Validation rule that checks that a value is numeric.

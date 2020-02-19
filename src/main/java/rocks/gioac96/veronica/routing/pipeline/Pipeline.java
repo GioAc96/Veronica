@@ -1,4 +1,4 @@
-package org.gioac96.veronica.routing.pipeline;
+package rocks.gioac96.veronica.routing.pipeline;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,9 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-import org.gioac96.veronica.http.Request;
-import org.gioac96.veronica.http.Response;
-import org.gioac96.veronica.util.PrioritySet;
+import rocks.gioac96.veronica.http.Request;
+import rocks.gioac96.veronica.http.Response;
+import rocks.gioac96.veronica.util.PrioritySet;
 
 /**
  * Request pipeline.
