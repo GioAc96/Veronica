@@ -1,5 +1,9 @@
 @import 'palette.scss';
 
+$font-body: 'Jost', Helvetica, sans-serif;
+$font-header: 'Josefin Sans', Helvetica, sans-serif;
+$font-code: 'Fira Code', monospace;
+
 * {
 
   border: none;
@@ -11,13 +15,13 @@
 
 body {
 
-  font-family: 'Jost', Helvetica, sans-serif;
+  font-family: $font-body;
   
 }
 
 h1, h2, h3, h4, h5, h6 {
 
-  font-family: 'Josefin Sans', Helvetica, sans-serif;
+  font-family: $font-header;
 
 }
 
