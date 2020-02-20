@@ -93,9 +93,9 @@ public class FieldValidator {
         private @NonNull PrioritySet<ValidationRule> validationRules = new PrioritySet<>();
         private @NonNull Boolean nullable = false;
 
-        public B validationRules(ValidationRule... validationRules) {
+        public B validationRule(ValidationRule validationRule) {
 
-            Collections.addAll(this.validationRules, validationRules);
+            this.validationRules.add(validationRule);
 
             return self();
 

@@ -46,9 +46,9 @@ public final class PathRule<Q extends Request> implements RequestMatcher<Q> {
 
         private @NonNull ArraySet<String> allowedPathPatterns = new ArraySet<>();
 
-        public PathRuleBuilder<Q> allowedPathPatterns(String... allowedPathPatterns) {
+        public PathRuleBuilder<Q> allowedPathPattern(String allowedPathPattern) {
 
-            Collections.addAll(this.allowedPathPatterns, allowedPathPatterns);
+            this.allowedPathPatterns.add(allowedPathPattern);
 
             return this;
 

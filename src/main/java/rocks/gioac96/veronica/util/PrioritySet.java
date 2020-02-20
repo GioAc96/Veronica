@@ -26,13 +26,12 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
     /**
      * Initializes an {@link PrioritySet} given its starting elements and their type.
      *
-     * @param type     type of the {@link PrioritySet}
      * @param elements starting elements of the set
      * @param <U>      type of the {@link PrioritySet}
      * @return the initialized {@link PrioritySet}
      */
     @SafeVarargs
-    public static <U> PrioritySet<U> of(Class<U> type, U... elements) {
+    public static <U> PrioritySet<U> of(U... elements) {
 
         PrioritySet<U> result = new PrioritySet<>();
 
