@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.http;
 
+import com.sun.net.httpserver.Headers;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,12 @@ public class Response {
     @Getter
     @Builder.Default
     private String body = null;
+
+    @Getter
+    @NonNull
+    @Builder.Default
+    @Setter
+    private Headers headers = new Headers();
 
     /**
      * Checks whether the response is already rendered.
