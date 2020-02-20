@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'rocks.gioac96'
-version '0.3-preview'
+version '0.4-preview'
 
 sourceCompatibility = 1.8
 
