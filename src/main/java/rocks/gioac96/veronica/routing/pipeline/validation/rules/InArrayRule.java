@@ -69,9 +69,9 @@ public class InArrayRule implements ValidationRule {
 
         private ArraySet<String> allowedValues = new ArraySet<>();
 
-        public InArrayRuleBuilder allowedValues(String... allowedValues) {
+        public InArrayRuleBuilder allowedValue(String allowedValue) {
 
-            Collections.addAll(this.allowedValues, allowedValues);
+            this.allowedValues.add(allowedValue);
 
             return this;
 

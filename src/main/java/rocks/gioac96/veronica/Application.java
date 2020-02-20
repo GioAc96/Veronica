@@ -4,10 +4,12 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import rocks.gioac96.veronica.http.HttpExchangeParser;
+import rocks.gioac96.veronica.http.ExchangeParser;
+import rocks.gioac96.veronica.http.ExchangeParserImpl;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Router;
@@ -15,48 +17,71 @@ import rocks.gioac96.veronica.routing.Router;
 /**
  * Veronica application.
  */
-public class Application {
+public final class Application<Q extends Request, S extends Response> {
 
     @Getter
-    protected final int port;
+    private final int port;
 
-    protected HttpServer server;
+    private final HttpServer server;
 
-    protected HttpExchangeParser httpExchangeParser;
+    @NonNull
+    @Getter
+    @Setter
+    private ExchangeParser<Q> exchangeParser;
 
     @Getter
     @Setter
-    @NonNull
-    protected Router router;
+    private Router<Q, S> router;
 
-    public Application(int port) throws IOException {
-
-        this.port = port;
-        this.httpExchangeParser = new HttpExchangeParser();
-
-        initServer();
-
-    }
-
-    public Application(int port, @NonNull Router router) throws IOException {
+    @Builder
+    protected Application(
+        int port,
+        @NonNull Router<Q, S> router,
+        ExchangeParser<Q> exchangeParser
+    ) throws IOException {
 
         this.port = port;
-        this.httpExchangeParser = new HttpExchangeParser();
+        this.exchangeParser = exchangeParser;
         this.router = router;
+        this.server = HttpServer.create(
+            new InetSocketAddress(port), 0
+        );
+        server.createContext("/", getDefaultHttpHandler());
 
-        initServer();
+        server.setExecutor(null);
 
     }
 
-    private void initServer() throws IOException {
+    /**
+     * Instantiates a basic Application, with support for basic Requests and Responses.
+     *
+     * @param port port to bind to the Http server
+     * @param router router of the application
+     * @return the instantiated Application
+     * @throws IOException on port binding failure
+     */
+    public static Application<Request, Response> basic(
+        int port,
+        Router<Request, Response> router
+    ) throws IOException {
 
-        HttpHandler httpHandler = exchange -> {
+        return new Application<>(
+            port,
+            router,
+            new ExchangeParserImpl()
+        );
+
+    }
+
+    private HttpHandler getDefaultHttpHandler() {
+
+        return exchange -> {
 
             // Parse request
-            Request request = httpExchangeParser.parseExchange(exchange);
+            Q request = exchangeParser.parseExchange(exchange);
 
             // Generate response
-            Response response = router.route(request);
+            S response = router.route(request);
 
             // Setting response headers
             exchange.getResponseHeaders().putAll(response.getHeaders());
@@ -71,13 +96,6 @@ public class Application {
             exchange.close();
 
         };
-
-        server = HttpServer.create(
-            new InetSocketAddress(port), 0
-        );
-        server.createContext("/", httpHandler);
-
-        server.setExecutor(null);
 
     }
 

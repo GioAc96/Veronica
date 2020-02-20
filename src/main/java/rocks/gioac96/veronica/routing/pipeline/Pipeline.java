@@ -150,16 +150,16 @@ public class Pipeline<Q extends Request, S extends Response> {
         private @NonNull PrioritySet<PostProcessor<Q, S>> postProcessors = new PrioritySet<>();
         private ResponseRenderer<S> responseRenderer;
 
-        public B preFilters(@NonNull PrioritySet<PreFilter<Q>> preFilters) {
+        public B preFilter(PreFilter<Q> preFilter) {
 
-            this.preFilters = preFilters;
+            this.preFilters.add(preFilter);
             return self();
 
         }
 
-        public B preFilters(PreFilter<Q>... preFilters) {
+        public B preFilters(@NonNull PrioritySet<PreFilter<Q>> preFilters) {
 
-            Collections.addAll(this.preFilters, preFilters);
+            this.preFilters = preFilters;
             return self();
 
         }
@@ -171,16 +171,16 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         }
 
-        public B postFilters(@NonNull PrioritySet<PostFilter<Q, S>> postFilters) {
+        public B postFilter(PostFilter<Q, S> postFilter) {
 
-            this.postFilters = postFilters;
+            this.postFilters.add(postFilter);
             return self();
 
         }
 
-        public B postFilters(PostFilter<Q, S>... postFilters) {
+        public B postFilters(@NonNull PrioritySet<PostFilter<Q, S>> postFilters) {
 
-            Collections.addAll(this.postFilters, postFilters);
+            this.postFilters = postFilters;
             return self();
 
         }
@@ -192,16 +192,16 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         }
 
-        public B postProcessors(@NonNull PrioritySet<PostProcessor<Q, S>> postProcessors) {
+        public B postProcessor(PostProcessor<Q, S> postProcessor) {
 
-            this.postProcessors = postProcessors;
+            this.postProcessors.add(postProcessor);
             return self();
 
         }
 
-        public B postProcessors(PostProcessor<Q, S>... postProcessors) {
+        public B postProcessors(@NonNull PrioritySet<PostProcessor<Q, S>> postProcessors) {
 
-            Collections.addAll(this.postProcessors, postProcessors);
+            this.postProcessors = postProcessors;
             return self();
 
         }

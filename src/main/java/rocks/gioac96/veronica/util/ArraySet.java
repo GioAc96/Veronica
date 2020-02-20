@@ -24,12 +24,12 @@ public class ArraySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
     /**
      * Initializes an {@link ArraySet} given its starting elements and their type.
      *
-     * @param type     type of the {@link ArraySet}
      * @param elements starting elements of the set
      * @param <U>      type of the {@link ArraySet}
      * @return the initialized {@link ArraySet}
      */
-    public static <U> ArraySet<U> of(Class<U> type, U... elements) {
+    @SafeVarargs
+    public static <U> ArraySet<U> of(U... elements) {
 
         ArraySet<U> result = new ArraySet<>();
 

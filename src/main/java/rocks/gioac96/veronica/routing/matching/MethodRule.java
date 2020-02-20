@@ -48,9 +48,9 @@ public final class MethodRule<Q extends Request> implements RequestMatcher<Q> {
 
         private @NonNull ArraySet<HttpMethod> allowedHttpMethods = new ArraySet<>();
 
-        public MethodRuleBuilder<Q> allowedMethods(HttpMethod... allowedMethods) {
+        public MethodRuleBuilder<Q> allowedMethod(HttpMethod allowedMethod) {
 
-            Collections.addAll(allowedHttpMethods, allowedMethods);
+            this.allowedHttpMethods.add(allowedMethod);
 
             return this;
 

@@ -45,9 +45,9 @@ public final class RulesRequestMatcher<Q extends Request> implements RequestMatc
 
         private ArraySet<RequestMatcher<Q>> requestMatchingRules = new ArraySet<>();
 
-        public RulesRequestMatcherBuilder<Q> requestMatchingRules(RequestMatcher<Q>... requestMatchingRules) {
+        public RulesRequestMatcherBuilder<Q> requestMatchingRule(RequestMatcher<Q> requestMatchingRule) {
 
-            Collections.addAll(this.requestMatchingRules, requestMatchingRules);
+            this.requestMatchingRules.add(requestMatchingRule);
 
             return this;
 

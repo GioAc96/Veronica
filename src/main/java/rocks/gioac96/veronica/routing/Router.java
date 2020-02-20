@@ -81,9 +81,9 @@ public final class Router<Q extends Request, S extends Response> {
 
         }
 
-        public B routes(@NonNull Route<Q, S>... routes) {
+        public B route(@NonNull Route<Q, S> route) {
 
-            Collections.addAll(this.routes, routes);
+            this.routes.add(route);
 
             return self();
 
