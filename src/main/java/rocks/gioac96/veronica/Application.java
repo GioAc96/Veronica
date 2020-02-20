@@ -58,6 +58,9 @@ public class Application {
             // Generate response
             Response response = router.route(request);
 
+            // Setting response headers
+            exchange.getResponseHeaders().putAll(response.getHeaders());
+
             // Send response headers
             exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length());
 
