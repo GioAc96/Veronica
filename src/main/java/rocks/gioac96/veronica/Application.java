@@ -3,7 +3,11 @@ package rocks.gioac96.veronica;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
+import java.net.HttpCookie;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -83,8 +87,19 @@ public final class Application<Q extends Request, S extends Response> {
             // Generate response
             S response = router.route(request);
 
-            // Setting response headers
+            // Writing response headers
             exchange.getResponseHeaders().putAll(response.getHeaders());
+
+            // Cookies
+            List<String> cookieHeaders = new ArrayList<>();
+
+            for (HttpCookie httpCookie : response.getCookies()) {
+
+                cookieHeaders.add(httpCookie.toString());
+
+            }
+
+            exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
 
             // Send response headers
             exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length());
