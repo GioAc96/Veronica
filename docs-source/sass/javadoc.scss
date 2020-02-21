@@ -410,6 +410,12 @@ ul.blockList li.blockList {
   line-height:1.4;
 }
 
+li.blockList .detail dl dt {
+
+  color: $black;
+
+}
+
 li.blockList h3 {
 
   font-family: $font-code;
@@ -840,10 +846,12 @@ section.description {
 
 }
 .inheritedList, section[class$="Details"] .detail {
+
   padding:0 0 5px 8px;
   background-color: $white;
   color: $black;
   border:none;
+
 }
 
 /*
