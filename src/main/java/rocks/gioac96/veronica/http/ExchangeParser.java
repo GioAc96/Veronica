@@ -4,7 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 
 /**
- * {@link HttpExchange} parser. Parses the exchange to generate a {@link Q} request object.
+ * {@link HttpExchange} parser. Parses the exchange to generate a {@link Request} object.
  * @param <Q> Type of the Request
  */
 public interface ExchangeParser<Q extends Request> {
