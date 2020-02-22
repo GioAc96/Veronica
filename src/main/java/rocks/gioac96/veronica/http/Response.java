@@ -1,38 +1,57 @@
 package rocks.gioac96.veronica.http;
 
 import com.sun.net.httpserver.Headers;
+import java.net.HttpCookie;
+import java.util.Collection;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Generated;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import rocks.gioac96.veronica.routing.pipeline.ResponseRenderer;
 import rocks.gioac96.veronica.routing.pipeline.ResponseRenderingException;
+import rocks.gioac96.veronica.util.ArraySet;
 
 /**
  * Http response.
  */
-@SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Response {
 
     @Getter
     @Setter
     @NonNull
-    @Builder.Default
-    protected HttpStatus httpStatus = HttpStatus.OK;
+    protected HttpStatus httpStatus;
 
     @Getter
-    @Builder.Default
-    private String body = null;
+    private String body;
 
     @Getter
     @NonNull
-    @Builder.Default
     @Setter
-    private Headers headers = new Headers();
+    private Headers headers;
+
+    @Getter
+    @Setter
+    private ArraySet<HttpCookie> cookies;
+
+    protected Response(ResponseBuilder<?, ?> builder) {
+
+        this.httpStatus = builder.httpStatus;
+        this.body = builder.body;
+        this.headers = builder.headers;
+        this.cookies = builder.cookies;
+
+    }
+
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    public static ResponseBuilder<?, ?> builder() {
+
+        return new ResponseBuilderImpl();
+
+    }
 
     /**
      * Checks whether the response is already rendered.
@@ -91,6 +110,98 @@ public class Response {
             this.body = body;
 
             return true;
+
+        }
+
+    }
+
+
+    @Generated
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
+    public abstract static class ResponseBuilder<C extends Response, B extends ResponseBuilder<C, B>> {
+
+        private HttpStatus httpStatus = HttpStatus.OK;
+        private String body = null;
+        private Headers headers = new Headers();
+        private ArraySet<HttpCookie> cookies = new ArraySet<>();
+
+        public B httpStatus(@NonNull HttpStatus httpStatus) {
+
+            this.httpStatus = httpStatus;
+
+            return self();
+
+        }
+
+        public B body(String body) {
+
+            this.body = body;
+
+            return self();
+
+        }
+
+        public B headers(@NonNull Headers headers) {
+
+            this.headers = headers;
+
+            return self();
+
+        }
+
+        public B cookies(ArraySet<HttpCookie> cookies) {
+
+            this.cookies = cookies;
+
+            return self();
+
+        }
+
+        public B cookies(Collection<HttpCookie> cookies) {
+
+            this.cookies.addAll(cookies);
+
+            return self();
+
+        }
+
+        public B cookie(HttpCookie cookie) {
+
+            this.cookies.add(cookie);
+
+            return self();
+
+        }
+
+        protected abstract B self();
+
+        public abstract C build();
+
+        public String toString() {
+
+            return
+                "Response.ResponseBuilder(httpStatus=" + this.httpStatus
+                    + ", body=" + this.body
+                    + ", headers=" + this.headers
+                    + ", cookies=" + this.cookies
+                    + ")";
+
+        }
+
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    private static final class ResponseBuilderImpl extends ResponseBuilder<Response, ResponseBuilderImpl> {
+
+        protected Response.ResponseBuilderImpl self() {
+
+            return this;
+
+        }
+
+        public Response build() {
+
+            return new Response(this);
 
         }
 
