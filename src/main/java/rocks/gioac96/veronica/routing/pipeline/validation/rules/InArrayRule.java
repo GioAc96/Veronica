@@ -1,7 +1,6 @@
 package rocks.gioac96.veronica.routing.pipeline.validation.rules;
 
 import java.util.Collection;
-import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +13,6 @@ import rocks.gioac96.veronica.routing.pipeline.validation.ValidationFailureReaso
 import rocks.gioac96.veronica.routing.pipeline.validation.ValidationFailureResponse;
 import rocks.gioac96.veronica.routing.pipeline.validation.ValidationRule;
 import rocks.gioac96.veronica.util.ArraySet;
-
 
 /**
  * Validation rule that checks that a field's value is among the specified valid values.

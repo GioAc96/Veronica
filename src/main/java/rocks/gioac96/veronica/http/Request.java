@@ -1,11 +1,8 @@
 package rocks.gioac96.veronica.http;
 
 import com.sun.net.httpserver.Headers;
-import java.net.HttpCookie;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,7 +37,7 @@ public class Request {
     private final Map<String, String> queryMap = lazyLoadQueryMap();
 
     @Getter(lazy = true)
-    private final List<HttpCookie> cookie = lazyLoadCookie();
+    private final Map<String, String> cookie = lazyLoadCookie();
 
     /**
      * Gets a query parameter's value.
@@ -99,18 +96,33 @@ public class Request {
 
     }
 
-    private List<HttpCookie> lazyLoadCookie() {
+    private Map<String, String> lazyLoadCookie() {
 
-        if (headers == null) {
+        Map<String, String> cookieMap = new HashMap<>();
 
-            return new ArrayList<>(0);
+        String cookieHeader = headers.getFirst("cookie");
 
-        } else {
+        if (cookieHeader == null) {
 
-            return HttpCookie.parse(headers.getFirst("cookie"));
+            return cookieMap;
 
         }
 
+        String[] cookiePairs = cookieHeader.split(";\\s*");
+
+        for (String cookiePair : cookiePairs) {
+
+            String[] pairParts = cookiePair.split("=");
+
+            if (pairParts.length == 2) {
+
+                cookieMap.put(pairParts[0], pairParts[1]);
+
+            }
+
+        }
+
+        return cookieMap;
 
     }
 
