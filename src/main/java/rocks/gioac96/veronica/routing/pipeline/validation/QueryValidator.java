@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -22,13 +23,8 @@ public class QueryValidator<Q extends Request> implements PreFilter<Q> {
     @Getter
     @Setter
     @NonNull
-    private Map<String, FieldValidator> fieldValidators;
-
-    public QueryValidator() {
-
-        fieldValidators = new HashMap<>();
-
-    }
+    @Builder.Default
+    private Map<String, FieldValidator> fieldValidators = new HashMap<>();
 
     @Override
     public void filter(@NonNull Q request) throws PipelineBreakException {
