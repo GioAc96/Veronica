@@ -109,6 +109,14 @@ public class FieldValidator {
 
         }
 
+        public B validationRules(PrioritySet<ValidationRule> validationRules) {
+
+            this.validationRules.addAll(validationRules);
+
+            return self();
+
+        }
+
 
         public B nullable(@NonNull Boolean nullable) {
 
