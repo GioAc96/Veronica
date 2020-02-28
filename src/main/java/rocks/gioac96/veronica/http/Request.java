@@ -66,6 +66,7 @@ public class Request {
 
         Map<String, String> queryMap = new HashMap<>();
 
+        //noinspection ConstantConditions
         String query = uri.getQuery();
 
         if (query == null || query.length() == 0) {
@@ -100,6 +101,7 @@ public class Request {
 
         Map<String, String> cookieMap = new HashMap<>();
 
+        //noinspection ConstantConditions
         String cookieHeader = headers.getFirst("cookie");
 
         if (cookieHeader == null) {

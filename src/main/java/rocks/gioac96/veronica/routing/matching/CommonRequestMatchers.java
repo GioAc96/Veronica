@@ -38,6 +38,7 @@ public final class CommonRequestMatchers {
      * @param pathPattern pattern to check the {@link Request} path against
      * @return the generated request matcher
      */
+    @SuppressWarnings("unused")
     public static <Q extends Request> RequestMatcher<Q> get(String pathPattern) {
 
         return methodAndPathPattern(HttpMethod.GET, pathPattern);
@@ -52,6 +53,7 @@ public final class CommonRequestMatchers {
      * @param pathPattern pattern to check the {@link Request} path against
      * @return the generated request matcher
      */
+    @SuppressWarnings("unused")
     public static <Q extends Request> RequestMatcher<Q> post(String pathPattern) {
 
         return methodAndPathPattern(HttpMethod.POST, pathPattern);

@@ -1,7 +1,6 @@
 package rocks.gioac96.veronica.routing.pipeline.validation;
 
 import java.util.Collection;
-import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
@@ -36,7 +35,7 @@ public class FieldValidator {
     }
 
     @Generated
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
     public static FieldValidatorBuilder<?, ?> builder() {
 
         return new FieldValidatorBuilderImpl();
@@ -50,6 +49,7 @@ public class FieldValidator {
      * @param fieldValue value of the field to validate
      * @throws ValidationException on validation failure
      */
+    @SuppressWarnings("unused")
     public void validateField(String fieldName, String fieldValue) throws ValidationException {
 
         if (fieldValue == null || fieldValue.equals("")) {
@@ -84,15 +84,17 @@ public class FieldValidator {
     }
 
     @Generated
-    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
     public abstract static class FieldValidatorBuilder<
         C extends FieldValidator,
         B extends FieldValidatorBuilder<C, B>
         > {
 
-        private @NonNull PrioritySet<ValidationRule> validationRules = new PrioritySet<>();
+        private @NonNull
+        final PrioritySet<ValidationRule> validationRules = new PrioritySet<>();
         private @NonNull Boolean nullable = false;
 
+        @SuppressWarnings("unused")
         public B validationRule(ValidationRule validationRule) {
 
             this.validationRules.add(validationRule);
@@ -101,6 +103,7 @@ public class FieldValidator {
 
         }
 
+        @SuppressWarnings("unused")
         public B validationRules(Collection<ValidationRule> validationRules) {
 
             this.validationRules.addAll(validationRules);
@@ -109,6 +112,7 @@ public class FieldValidator {
 
         }
 
+        @SuppressWarnings("unused")
         public B validationRules(PrioritySet<ValidationRule> validationRules) {
 
             this.validationRules.addAll(validationRules);
@@ -125,12 +129,14 @@ public class FieldValidator {
 
         }
 
+        @SuppressWarnings("unused")
         public B nullable() {
 
             return nullable(true);
 
         }
 
+        @SuppressWarnings("unused")
         public B notNullable() {
 
             return nullable(false);
@@ -139,6 +145,7 @@ public class FieldValidator {
 
         protected abstract B self();
 
+        @SuppressWarnings("unused")
         public abstract C build();
 
         public String toString() {
@@ -148,6 +155,7 @@ public class FieldValidator {
         }
     }
 
+    @SuppressWarnings("unused")
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     private static final class FieldValidatorBuilderImpl extends FieldValidatorBuilder<
         FieldValidator,

@@ -7,7 +7,6 @@ import java.net.HttpCookie;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -21,6 +20,7 @@ import rocks.gioac96.veronica.routing.Router;
 /**
  * Veronica application.
  */
+@SuppressWarnings("unused")
 public final class Application<Q extends Request, S extends Response> {
 
     @Getter

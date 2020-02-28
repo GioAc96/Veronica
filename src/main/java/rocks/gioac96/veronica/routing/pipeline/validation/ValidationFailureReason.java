@@ -5,6 +5,7 @@ package rocks.gioac96.veronica.routing.pipeline.validation;
  */
 public interface ValidationFailureReason {
 
+    @SuppressWarnings("unused")
     String getMessage();
 
 }

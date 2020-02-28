@@ -9,15 +9,17 @@ import rocks.gioac96.veronica.routing.pipeline.validation.ValidationRule;
 /**
  * Validation rule that checks that a value is numeric.
  */
+@SuppressWarnings("unused")
 public final class NumericRule implements ValidationRule {
 
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
     public static NumericRule build() {
 
         return new NumericRule();
 
     }
 
+    @SuppressWarnings("unused")
     @Override
     public void validate(String fieldName, String fieldValue) throws ValidationException {
 

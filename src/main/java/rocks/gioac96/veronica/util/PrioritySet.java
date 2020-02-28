@@ -15,7 +15,7 @@ import lombok.Getter;
 public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
     private static final int DEFAULT_PRIORITY = 0;
-    private ArrayList<Entry> entries;
+    private final ArrayList<Entry> entries;
 
     public PrioritySet() {
 
@@ -30,6 +30,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
      * @param <U>      type of the {@link PrioritySet}
      * @return the initialized {@link PrioritySet}
      */
+    @SuppressWarnings("unused")
     @SafeVarargs
     public static <U> PrioritySet<U> of(U... elements) {
 
@@ -51,9 +52,9 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
     @Override
     public Iterator<T> iterator() {
 
-        return new Iterator<T>() {
+        return new Iterator<>() {
 
-            Iterator<Entry> entriesIterator = entriesIterator();
+            final Iterator<Entry> entriesIterator = entriesIterator();
 
             @Override
             public boolean hasNext() {
@@ -129,6 +130,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
      * @param element element to get the priority of
      * @return the priority of the specified element, null if the element is not in the set.
      */
+    @SuppressWarnings("unused")
     public Integer getPriority(T element) {
 
         for (Entry entry : entries) {
@@ -223,6 +225,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public boolean addAll(PrioritySet<? extends T> elements) {
 
         if (elements == null) {

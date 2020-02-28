@@ -7,9 +7,9 @@ public enum HttpMethod {
 
     GET,
     POST,
-    PUT,
-    DELETE,
-    HEAD;
+    @SuppressWarnings("unused") PUT,
+    @SuppressWarnings("unused") DELETE,
+    @SuppressWarnings("unused") HEAD;
 
     /**
      * Returns an @{link HttpMethod} by its name.
