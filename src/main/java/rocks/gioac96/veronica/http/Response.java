@@ -115,7 +115,6 @@ public class Response {
 
     }
 
-
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public abstract static class ResponseBuilder<C extends Response, B extends ResponseBuilder<C, B>> {
@@ -144,14 +143,6 @@ public class Response {
         public B headers(@NonNull Headers headers) {
 
             this.headers = headers;
-
-            return self();
-
-        }
-
-        public B cookies(ArraySet<HttpCookie> cookies) {
-
-            this.cookies = cookies;
 
             return self();
 

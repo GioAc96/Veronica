@@ -89,7 +89,15 @@ public final class Router<Q extends Request, S extends Response> {
 
         }
 
-        public B routes(@NonNull Collection<Route<Q, S>> routes) {
+        public B routes(Collection<Route<Q, S>> routes) {
+
+            this.routes.addAll(routes);
+
+            return self();
+
+        }
+
+        public B routes(PrioritySet<Route<Q, S>> routes) {
 
             this.routes.addAll(routes);
 

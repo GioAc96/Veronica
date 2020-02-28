@@ -53,7 +53,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
         return new Iterator<T>() {
 
-            Iterator<Entry> entriesIterator = entries.iterator();
+            Iterator<Entry> entriesIterator = entriesIterator();
 
             @Override
             public boolean hasNext() {
@@ -65,7 +65,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
             @Override
             public T next() {
 
-                return entriesIterator.next().getElement();
+                return entriesIterator.next().element;
 
             }
 
@@ -133,9 +133,9 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
         for (Entry entry : entries) {
 
-            if (entry.getElement().equals(element)) {
+            if (entry.element.equals(element)) {
 
-                return entry.getPriority();
+                return entry.priority;
 
             }
 
@@ -156,15 +156,15 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
      */
     public boolean changePriority(T element, int priority) {
 
-        Iterator<Entry> entriesIterator = entries.iterator();
+        Iterator<Entry> entriesIterator = entriesIterator();
 
         while (entriesIterator.hasNext()) {
 
             Entry next = entriesIterator.next();
 
-            if (next.getElement().equals(element)) {
+            if (next.element.equals(element)) {
 
-                if (priority == next.getPriority()) {
+                if (priority == next.priority) {
 
                     return false;
 
@@ -181,6 +181,82 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
         }
 
         return add(element, priority);
+
+    }
+
+    public Iterator<Entry> entriesIterator() {
+
+        return entries.iterator();
+
+    }
+
+    public boolean addAll(Collection<? extends T> elements) {
+
+        if (elements == null) {
+
+            return false;
+
+        }
+
+        boolean changed = false;
+
+        Iterator<? extends T> elementsIterator = elements.iterator();
+
+        while (elementsIterator.hasNext()) {
+
+            if (add(elementsIterator.next())) {
+
+                changed = true;
+                break;
+
+            }
+
+        }
+
+        while (elementsIterator.hasNext()) {
+
+            add(elementsIterator.next());
+
+        }
+
+        return changed;
+
+    }
+
+    public boolean addAll(PrioritySet<? extends T> elements) {
+
+        if (elements == null) {
+
+            return false;
+
+        }
+
+        boolean changed = false;
+
+        Iterator<Entry> entriesIterator = entriesIterator();
+
+        while (entriesIterator.hasNext()) {
+
+            Entry next = entriesIterator.next();
+
+            if (changePriority(next.element, next.priority)) {
+
+                changed = true;
+
+                break;
+
+            }
+
+        }
+
+        while (entriesIterator.hasNext()) {
+
+            Entry next = entriesIterator.next();
+            changePriority(next.element, next.priority);
+
+        }
+
+        return changed;
 
     }
 

@@ -157,9 +157,9 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         }
 
-        public B preFilters(@NonNull PrioritySet<PreFilter<Q>> preFilters) {
+        public B preFilters(PrioritySet<PreFilter<Q>> preFilters) {
 
-            this.preFilters = preFilters;
+            this.preFilters.addAll(preFilters);
             return self();
 
         }
@@ -178,9 +178,9 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         }
 
-        public B postFilters(@NonNull PrioritySet<PostFilter<Q, S>> postFilters) {
+        public B postFilters(PrioritySet<PostFilter<Q, S>> postFilters) {
 
-            this.postFilters = postFilters;
+            this.postFilters.addAll(postFilters);
             return self();
 
         }
@@ -199,9 +199,9 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         }
 
-        public B postProcessors(@NonNull PrioritySet<PostProcessor<Q, S>> postProcessors) {
+        public B postProcessors(PrioritySet<PostProcessor<Q, S>> postProcessors) {
 
-            this.postProcessors = postProcessors;
+            this.postProcessors.addAll(postProcessors);
             return self();
 
         }
@@ -216,6 +216,22 @@ public class Pipeline<Q extends Request, S extends Response> {
         public B responseRenderer(ResponseRenderer<S> responseRenderer) {
 
             this.responseRenderer = responseRenderer;
+            return self();
+
+        }
+
+        public B pipeline(Pipeline<Q, S> pipeline) {
+
+            preFilters(pipeline.getPreFilters());
+            postFilters(pipeline.getPostFilters());
+            postProcessors(pipeline.getPostProcessors());
+
+            if (pipeline.getResponseRenderer() != null) {
+
+                responseRenderer(pipeline.getResponseRenderer());
+
+            }
+
             return self();
 
         }
