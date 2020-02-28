@@ -226,7 +226,11 @@ public class Pipeline<Q extends Request, S extends Response> {
             postFilters(pipeline.getPostFilters());
             postProcessors(pipeline.getPostProcessors());
 
-            responseRenderer(pipeline.getResponseRenderer());
+            if (pipeline.getResponseRenderer() != null) {
+
+                responseRenderer(pipeline.getResponseRenderer());
+
+            }
 
             return self();
 
