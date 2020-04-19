@@ -18,6 +18,18 @@ public final class CommonRequestMatchers {
      */
     public static <Q extends Request> RequestMatcher<Q> alwaysMatch() {
 
+        return request -> true;
+
+    }
+
+    /**
+     * Always negative {@link RequestMatcher}.
+     *
+     * @param <Q> Type of the request to match
+     * @return an always negative {@link RequestMatcher}
+     */
+    public static <Q extends Request> RequestMatcher<Q> neverMatch() {
+
         return request -> false;
 
     }
