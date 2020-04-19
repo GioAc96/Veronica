@@ -104,7 +104,7 @@ public class Request {
         //noinspection ConstantConditions
         String cookieHeader = headers.getFirst("cookie");
 
-        if (cookieHeader == null) {
+        if (cookieHeader == null || cookieHeader.length() == 0) {
 
             return cookieMap;
 
