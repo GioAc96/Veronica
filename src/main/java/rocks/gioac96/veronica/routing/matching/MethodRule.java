@@ -47,8 +47,8 @@ public final class MethodRule<Q extends Request> implements RequestMatcher<Q> {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
     public static class MethodRuleBuilder<Q extends Request> {
 
-        private @NonNull
-        final ArraySet<HttpMethod> allowedHttpMethods = new ArraySet<>();
+        @NonNull
+        private final ArraySet<HttpMethod> allowedHttpMethods = new ArraySet<>();
 
         @SuppressWarnings("unused")
         public MethodRuleBuilder<Q> allowedMethod(HttpMethod allowedMethod) {

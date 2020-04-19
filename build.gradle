@@ -9,7 +9,7 @@ plugins {
 group 'rocks.gioac96'
 version '0.6-preview'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.9
 
 repositories {
     mavenCentral()

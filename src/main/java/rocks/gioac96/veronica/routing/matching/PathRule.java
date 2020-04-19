@@ -45,8 +45,8 @@ public final class PathRule<Q extends Request> implements RequestMatcher<Q> {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
     public static class PathRuleBuilder<Q extends Request> {
 
-        private @NonNull
-        final ArraySet<String> allowedPathPatterns = new ArraySet<>();
+        @NonNull
+        private final ArraySet<String> allowedPathPatterns = new ArraySet<>();
 
         @SuppressWarnings("unused")
         public PathRuleBuilder<Q> allowedPathPattern(String allowedPathPattern) {

@@ -70,9 +70,11 @@ public final class Router<Q extends Request, S extends Response> {
         B extends RouterBuilder<Q, S, C, B>
         > {
 
-        private @NonNull Route<Q, S> fallbackRoute;
-        private @NonNull
-        final PrioritySet<Route<Q, S>> routes = new PrioritySet<>();
+        @NonNull
+        private Route<Q, S> fallbackRoute;
+
+        @NonNull
+        private final PrioritySet<Route<Q, S>> routes = new PrioritySet<>();
 
         public B fallbackRoute(@NonNull Route<Q, S> fallbackRoute) {
 

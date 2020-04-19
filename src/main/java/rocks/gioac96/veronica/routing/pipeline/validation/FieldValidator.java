@@ -90,9 +90,11 @@ public class FieldValidator {
         B extends FieldValidatorBuilder<C, B>
         > {
 
-        private @NonNull
-        final PrioritySet<ValidationRule> validationRules = new PrioritySet<>();
-        private @NonNull Boolean nullable = false;
+        @NonNull
+        private final PrioritySet<ValidationRule> validationRules = new PrioritySet<>();
+
+        @NonNull
+        private Boolean nullable = false;
 
         @SuppressWarnings("unused")
         public B validationRule(ValidationRule validationRule) {

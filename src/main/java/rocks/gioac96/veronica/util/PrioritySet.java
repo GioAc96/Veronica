@@ -186,12 +186,21 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
     }
 
+    /**
+     * Returns an iterator over the entries contained in this set.
+     * @return an iterator over the entries contained in this set
+     */
     public Iterator<Entry> entriesIterator() {
 
         return entries.iterator();
 
     }
 
+    /**
+     * Adds all elements from the collection specified to this set.
+     * @param elements elements to add to this set
+     * @return true iff new elements were added to the set
+     */
     public boolean addAll(Collection<? extends T> elements) {
 
         if (elements == null) {
@@ -225,6 +234,11 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
     }
 
+    /**
+     * Adds all elements from the PrioritySet specified to this set, with appropriate priorities.
+     * @param elements elements to add to this set
+     * @return true iff this set has changed
+     */
     @SuppressWarnings("UnusedReturnValue")
     public boolean addAll(PrioritySet<? extends T> elements) {
 
