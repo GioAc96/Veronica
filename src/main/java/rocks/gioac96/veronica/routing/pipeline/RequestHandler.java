@@ -8,6 +8,7 @@ import rocks.gioac96.veronica.http.Response;
  */
 public interface RequestHandler<Q extends Request, S extends Response> {
 
+    @SuppressWarnings("RedundantThrows")
     S handle(Q request) throws PipelineBreakException;
 
 }

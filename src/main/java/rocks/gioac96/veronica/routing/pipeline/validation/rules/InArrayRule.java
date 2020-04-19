@@ -17,6 +17,7 @@ import rocks.gioac96.veronica.util.ArraySet;
 /**
  * Validation rule that checks that a field's value is among the specified valid values.
  */
+@SuppressWarnings("unused")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class InArrayRule implements ValidationRule {
 
@@ -25,7 +26,7 @@ public class InArrayRule implements ValidationRule {
     @NonNull
     private ArraySet<String> allowedValues;
 
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
     public static InArrayRuleBuilder builder() {
 
         return new InArrayRuleBuilder();
@@ -55,6 +56,7 @@ public class InArrayRule implements ValidationRule {
 
     }
 
+    @SuppressWarnings("unused")
     @Override
     public void validate(String fieldName, String fieldValue) throws ValidationException {
 
@@ -62,11 +64,12 @@ public class InArrayRule implements ValidationRule {
 
     }
 
-    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
     public static class InArrayRuleBuilder {
 
-        private ArraySet<String> allowedValues = new ArraySet<>();
+        private final ArraySet<String> allowedValues = new ArraySet<>();
 
+        @SuppressWarnings("unused")
         public InArrayRuleBuilder allowedValue(String allowedValue) {
 
             this.allowedValues.add(allowedValue);
@@ -75,6 +78,7 @@ public class InArrayRule implements ValidationRule {
 
         }
 
+        @SuppressWarnings("unused")
         public InArrayRuleBuilder allowedValues(Collection<String> allowedValues) {
 
             this.allowedValues.addAll(allowedValues);
@@ -83,6 +87,7 @@ public class InArrayRule implements ValidationRule {
 
         }
 
+        @SuppressWarnings("unused")
         public InArrayRule build() {
 
             return new InArrayRule(

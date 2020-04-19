@@ -7,6 +7,7 @@ import rocks.gioac96.veronica.util.ArraySet;
 /**
  * Validation rule that checks that a value represents a boolean.
  */
+@SuppressWarnings("unused")
 public final class BooleanRule extends InArrayRule {
 
     public BooleanRule() {
@@ -26,7 +27,7 @@ public final class BooleanRule extends InArrayRule {
 
     }
 
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
     public static BooleanRule build() {
 
         return new BooleanRule();

@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public class ArraySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
-    private ArrayList<T> entries;
+    private final ArrayList<T> entries;
 
     public ArraySet() {
 

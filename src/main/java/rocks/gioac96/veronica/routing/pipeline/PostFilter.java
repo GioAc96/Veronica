@@ -9,6 +9,7 @@ import rocks.gioac96.veronica.http.Response;
  */
 public interface PostFilter<Q extends Request, S extends Response> {
 
+    @SuppressWarnings("RedundantThrows")
     void filter(@NonNull Q request, @NonNull S response) throws PipelineBreakException;
 
 }

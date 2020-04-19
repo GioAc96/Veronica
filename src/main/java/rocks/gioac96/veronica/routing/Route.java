@@ -25,7 +25,7 @@ public class Route<Q extends Request, S extends Response> {
     @Setter
     @NonNull
     @Builder.Default
-    private RequestMatcher<Q> requestMatcher = CommonRequestMatchers.alwaysMatch();
+    private RequestMatcher<Q> requestMatcher = CommonRequestMatchers.neverMatch();
 
     @Getter
     @Setter

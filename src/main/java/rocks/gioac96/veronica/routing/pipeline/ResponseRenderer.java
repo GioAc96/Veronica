@@ -8,6 +8,7 @@ import rocks.gioac96.veronica.http.Response;
  */
 public interface ResponseRenderer<S extends Response> {
 
+    @SuppressWarnings("RedundantThrows")
     String render(@NonNull S response) throws ResponseRenderingException;
 
 }

@@ -18,6 +18,18 @@ public final class CommonRequestMatchers {
      */
     public static <Q extends Request> RequestMatcher<Q> alwaysMatch() {
 
+        return request -> true;
+
+    }
+
+    /**
+     * Always negative {@link RequestMatcher}.
+     *
+     * @param <Q> Type of the request to match
+     * @return an always negative {@link RequestMatcher}
+     */
+    public static <Q extends Request> RequestMatcher<Q> neverMatch() {
+
         return request -> false;
 
     }
@@ -38,6 +50,7 @@ public final class CommonRequestMatchers {
      * @param pathPattern pattern to check the {@link Request} path against
      * @return the generated request matcher
      */
+    @SuppressWarnings("unused")
     public static <Q extends Request> RequestMatcher<Q> get(String pathPattern) {
 
         return methodAndPathPattern(HttpMethod.GET, pathPattern);
@@ -52,6 +65,7 @@ public final class CommonRequestMatchers {
      * @param pathPattern pattern to check the {@link Request} path against
      * @return the generated request matcher
      */
+    @SuppressWarnings("unused")
     public static <Q extends Request> RequestMatcher<Q> post(String pathPattern) {
 
         return methodAndPathPattern(HttpMethod.POST, pathPattern);

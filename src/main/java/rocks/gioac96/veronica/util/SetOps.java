@@ -77,6 +77,7 @@ public abstract class SetOps<T> extends AbstractSet<T> implements Set<T> {
      * @param check check function to run against the set
      * @return true iff the check function returns {@code false} at least once when run against all elements in the set
      */
+    @SuppressWarnings("unused")
     public boolean notEvery(Function<T, Boolean> check) {
 
         return !every(check);
@@ -114,6 +115,7 @@ public abstract class SetOps<T> extends AbstractSet<T> implements Set<T> {
      * @param check criteria to find first matching element of the set
      * @return the first element of the set that matches the specified criteria, or null if none matches
      */
+    @SuppressWarnings("unused")
     public T firstOrNull(Function<T, Boolean> check) {
 
         return firstOrDefault(check, null);

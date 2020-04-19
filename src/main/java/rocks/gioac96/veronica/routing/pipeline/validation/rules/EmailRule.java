@@ -6,15 +6,17 @@ import rocks.gioac96.veronica.routing.pipeline.validation.ValidationException;
 /**
  * Validation rule that checks that a value represents a value email address.
  */
+@SuppressWarnings("unused")
 public final class EmailRule extends RegexRule {
 
+    @SuppressWarnings("unused")
     public EmailRule() {
 
         super("^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$");
 
     }
 
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
     public static EmailRule build() {
 
         return new EmailRule();

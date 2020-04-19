@@ -2,7 +2,9 @@ package rocks.gioac96.veronica.http;
 
 import com.sun.net.httpserver.Headers;
 import java.net.HttpCookie;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
@@ -71,7 +73,7 @@ public class Response {
      * @return true iff the response was not already rendered
      * @throws ResponseRenderingException on rendering failure
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
     public boolean render(@NonNull ResponseRenderer responseRenderer) throws ResponseRenderingException {
 
         /*
@@ -99,6 +101,7 @@ public class Response {
      * @param body body of the response
      * @return true if the response was not already rendered and the body was successfully set
      */
+    @SuppressWarnings("unused")
     public boolean setBody(@NonNull String body) {
 
         if (isRendered()) {
@@ -115,7 +118,6 @@ public class Response {
 
     }
 
-
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public abstract static class ResponseBuilder<C extends Response, B extends ResponseBuilder<C, B>> {
@@ -123,8 +125,9 @@ public class Response {
         private HttpStatus httpStatus = HttpStatus.OK;
         private String body = null;
         private Headers headers = new Headers();
-        private ArraySet<HttpCookie> cookies = new ArraySet<>();
+        private final ArraySet<HttpCookie> cookies = new ArraySet<>();
 
+        @SuppressWarnings("unused")
         public B httpStatus(@NonNull HttpStatus httpStatus) {
 
             this.httpStatus = httpStatus;
@@ -149,14 +152,28 @@ public class Response {
 
         }
 
-        public B cookies(ArraySet<HttpCookie> cookies) {
+        @SuppressWarnings("unused")
+        public B header(@NonNull String key, @NonNull String value) {
 
-            this.cookies = cookies;
+            this.headers.put(key, List.of(value));
 
             return self();
 
         }
 
+        @SuppressWarnings({"checkstyle:RightCurly", "checkstyle:Indentation", "unused"})
+        public B header(@NonNull String key, @NonNull Collection<String> values) {
+
+
+            this.headers.put(key, new ArrayList<>(){{
+                addAll(values);
+            }});
+
+            return self();
+
+        }
+
+        @SuppressWarnings("unused")
         public B cookies(Collection<HttpCookie> cookies) {
 
             this.cookies.addAll(cookies);
@@ -165,7 +182,8 @@ public class Response {
 
         }
 
-        public B cookie(HttpCookie cookie) {
+        @SuppressWarnings("unused")
+        public B cookie(@NonNull HttpCookie cookie) {
 
             this.cookies.add(cookie);
 
@@ -199,6 +217,7 @@ public class Response {
 
         }
 
+        @SuppressWarnings("unused")
         public Response build() {
 
             return new Response(this);

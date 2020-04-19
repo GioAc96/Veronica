@@ -1,7 +1,6 @@
 package rocks.gioac96.veronica.routing;
 
 import java.util.Collection;
-import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
@@ -42,7 +41,7 @@ public final class Router<Q extends Request, S extends Response> {
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static <Q extends Request, S extends Response> RouterBuilder<Q, S, ?, ?> builder() {
 
-        return new RouterBuilderImpl<Q, S>();
+        return new RouterBuilderImpl<>();
 
     }
 
@@ -72,7 +71,8 @@ public final class Router<Q extends Request, S extends Response> {
         > {
 
         private @NonNull Route<Q, S> fallbackRoute;
-        private @NonNull PrioritySet<Route<Q, S>> routes = new PrioritySet<>();
+        private @NonNull
+        final PrioritySet<Route<Q, S>> routes = new PrioritySet<>();
 
         public B fallbackRoute(@NonNull Route<Q, S> fallbackRoute) {
 
@@ -89,7 +89,17 @@ public final class Router<Q extends Request, S extends Response> {
 
         }
 
-        public B routes(@NonNull Collection<Route<Q, S>> routes) {
+        @SuppressWarnings("unused")
+        public B routes(Collection<Route<Q, S>> routes) {
+
+            this.routes.addAll(routes);
+
+            return self();
+
+        }
+
+        @SuppressWarnings("unused")
+        public B routes(PrioritySet<Route<Q, S>> routes) {
 
             this.routes.addAll(routes);
 
@@ -129,9 +139,10 @@ public final class Router<Q extends Request, S extends Response> {
 
         }
 
+        @SuppressWarnings("unused")
         public Router<Q, S> build() {
 
-            return new Router<Q, S>(this);
+            return new Router<>(this);
 
         }
 

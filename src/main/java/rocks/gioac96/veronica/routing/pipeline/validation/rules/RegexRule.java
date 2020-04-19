@@ -16,6 +16,7 @@ import rocks.gioac96.veronica.routing.pipeline.validation.ValidationRule;
 /**
  * {@link ValidationRule} that checks that a field's value matches a specified regex pattern.
  */
+@SuppressWarnings("unused")
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class RegexRule implements ValidationRule {
@@ -48,6 +49,7 @@ public class RegexRule implements ValidationRule {
 
     }
 
+    @SuppressWarnings("unused")
     @Override
     public void validate(String fieldName, String fieldValue) throws ValidationException {
 
