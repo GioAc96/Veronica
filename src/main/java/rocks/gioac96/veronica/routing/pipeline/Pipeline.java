@@ -144,12 +144,15 @@ public class Pipeline<Q extends Request, S extends Response> {
         B extends PipelineBuilder<Q, S, C, B>
         > {
 
-        private @NonNull
-        final PrioritySet<PreFilter<Q>> preFilters = new PrioritySet<>();
-        private @NonNull
-        final PrioritySet<PostFilter<Q, S>> postFilters = new PrioritySet<>();
-        private @NonNull
-        final PrioritySet<PostProcessor<Q, S>> postProcessors = new PrioritySet<>();
+        @NonNull
+        private final PrioritySet<PreFilter<Q>> preFilters = new PrioritySet<>();
+
+        @NonNull
+        private final PrioritySet<PostFilter<Q, S>> postFilters = new PrioritySet<>();
+
+        @NonNull
+        private final PrioritySet<PostProcessor<Q, S>> postProcessors = new PrioritySet<>();
+
         private ResponseRenderer<S> responseRenderer;
 
         @SuppressWarnings("unused")

@@ -1,8 +1,8 @@
 package rocks.gioac96.veronica.samples;
 
 import com.sun.net.httpserver.Headers;
-import com.sun.tools.javac.util.List;
 import java.io.IOException;
+import java.util.List;
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;

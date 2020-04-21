@@ -165,7 +165,7 @@ public class Response {
         public B header(@NonNull String key, @NonNull Collection<String> values) {
 
 
-            this.headers.put(key, new ArrayList<>(){{
+            this.headers.put(key, new ArrayList<>() {{
                 addAll(values);
             }});
 
