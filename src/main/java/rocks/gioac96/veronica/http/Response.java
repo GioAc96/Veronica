@@ -1,7 +1,6 @@
 package rocks.gioac96.veronica.http;
 
 import com.sun.net.httpserver.Headers;
-import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +36,7 @@ public class Response {
 
     @Getter
     @Setter
-    private ArraySet<HttpCookie> cookies;
+    private ArraySet<SetCookieHeader> cookies;
 
     protected Response(ResponseBuilder<?, ?> builder) {
 
@@ -122,10 +121,10 @@ public class Response {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public abstract static class ResponseBuilder<C extends Response, B extends ResponseBuilder<C, B>> {
 
+        private final ArraySet<SetCookieHeader> cookies = new ArraySet<>();
         private HttpStatus httpStatus = HttpStatus.OK;
         private String body = null;
         private Headers headers = new Headers();
-        private final ArraySet<HttpCookie> cookies = new ArraySet<>();
 
         @SuppressWarnings("unused")
         public B httpStatus(@NonNull HttpStatus httpStatus) {
@@ -174,7 +173,7 @@ public class Response {
         }
 
         @SuppressWarnings("unused")
-        public B cookies(Collection<HttpCookie> cookies) {
+        public B cookies(Collection<SetCookieHeader> cookies) {
 
             this.cookies.addAll(cookies);
 
@@ -183,7 +182,7 @@ public class Response {
         }
 
         @SuppressWarnings("unused")
-        public B cookie(@NonNull HttpCookie cookie) {
+        public B cookie(@NonNull SetCookieHeader cookie) {
 
             this.cookies.add(cookie);
 
