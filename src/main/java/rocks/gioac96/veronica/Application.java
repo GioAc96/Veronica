@@ -3,7 +3,6 @@ package rocks.gioac96.veronica;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
-import java.net.HttpCookie;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,7 @@ import rocks.gioac96.veronica.http.ExchangeParser;
 import rocks.gioac96.veronica.http.ExchangeParserImpl;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
+import rocks.gioac96.veronica.http.SetCookieHeader;
 import rocks.gioac96.veronica.routing.Router;
 
 /**
@@ -59,7 +59,7 @@ public final class Application<Q extends Request, S extends Response> {
     /**
      * Instantiates a basic Application, with support for basic Requests and Responses.
      *
-     * @param port port to bind to the Http server
+     * @param port   port to bind to the Http server
      * @param router router of the application
      * @return the instantiated Application
      * @throws IOException on port binding failure
@@ -93,9 +93,9 @@ public final class Application<Q extends Request, S extends Response> {
             // Cookies
             List<String> cookieHeaders = new ArrayList<>();
 
-            for (HttpCookie httpCookie : response.getCookies()) {
+            for (SetCookieHeader httpCookie : response.getCookies()) {
 
-                cookieHeaders.add(httpCookie.toString());
+                cookieHeaders.add(httpCookie.toHeaderString());
 
             }
 

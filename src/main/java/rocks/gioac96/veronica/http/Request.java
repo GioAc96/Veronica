@@ -2,12 +2,16 @@ package rocks.gioac96.veronica.http;
 
 import com.sun.net.httpserver.Headers;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -16,6 +20,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Request {
+
+    @Getter
+    @Setter
+    private static Charset COOKIE_VALUE_CHARSET = StandardCharsets.UTF_8;
 
     @Getter
     @NonNull
@@ -118,7 +126,7 @@ public class Request {
 
             if (pairParts.length == 2) {
 
-                cookieMap.put(pairParts[0], pairParts[1]);
+                cookieMap.put(pairParts[0], URLDecoder.decode(pairParts[1], COOKIE_VALUE_CHARSET));
 
             }
 
