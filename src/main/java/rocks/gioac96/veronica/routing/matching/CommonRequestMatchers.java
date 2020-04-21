@@ -72,4 +72,18 @@ public final class CommonRequestMatchers {
 
     }
 
+    /**
+     * Generates a request matcher that matches all requests that have a pattern matching the specified one.
+     *
+     * @param <Q>         Type of the request to match
+     * @param pathPattern pattern to check the {@link Request} path against
+     * @return the generated request matcher
+     */
+    @SuppressWarnings("unused")
+    public static <Q extends Request> RequestMatcher<Q> path(String pathPattern) {
+
+        return request -> request.getPath().matches(pathPattern);
+
+    }
+
 }
