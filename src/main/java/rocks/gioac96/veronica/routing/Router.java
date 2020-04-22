@@ -72,13 +72,14 @@ public final class Router<Q extends Request, S extends Response> {
 
         @NonNull
         private final PrioritySet<Route<Q, S>> routes = new PrioritySet<>();
-        
+
         @NonNull
         private Route<Q, S> fallbackRoute;
 
         public B fallbackRoute(@NonNull Route<Q, S> fallbackRoute) {
 
             this.fallbackRoute = fallbackRoute;
+
             return self();
 
         }
