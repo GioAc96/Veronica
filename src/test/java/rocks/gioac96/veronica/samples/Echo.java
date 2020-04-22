@@ -36,7 +36,10 @@ public class Echo {
             )
             .build();
 
-        Application<Request, Response> application = Application.basic(80, router);
+        Application<Request, Response> application = Application.basic()
+            .port(80)
+            .router(router)
+            .build();
 
         application.start();
 

@@ -3,23 +3,21 @@ package rocks.gioac96.veronica.tutorials;
 import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.get;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.http.HttpStatus;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.http.SetCookieHeader;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.Router;
-import rocks.gioac96.veronica.routing.matching.RequestMatcher;
 
 public class Cookies {
 
     public static void main(String[] args) {
 
         Route<Request, Response> route = Route.builder()
-            .requestMatcher(get("/"))
             .requestHandler(req -> {
 
                 Map<String, String> cookie = req.getCookie();
@@ -36,25 +34,35 @@ public class Cookies {
                     .cookie(SetCookieHeader.builder()
                         .name("hit-counter")
                         .value(String.valueOf(hitCounter + 1))
-                        .expires(ZonedDateTime.now().plusSeconds(1))
                         .build()
                     )
-                    .body("You have visited this page " + String.valueOf(hitCounter) + " times before")
+                    .body("You have visited this page " + hitCounter + " times before")
                     .build();
 
             })
             .build();
 
         Router<Request, Response> router = Router.builder()
-            .route(route)
-            .fallbackRoute(Route.builder().requestHandler(request -> Response.builder().body("").build()).build())
+            .route(Route.builder()
+                .requestMatcher(get("/favicon.ico"))
+                .requestHandler(request -> Response.builder()
+                    .body("")
+                    .httpStatus(HttpStatus.NOT_FOUND)
+                    .build()
+                )
+                .build()
+            )
+            .fallbackRoute(route)
             .build();
 
         int port = 8000;
 
         try {
 
-            Application<Request, Response> app = Application.basic(port, router);
+            Application<Request, Response> app = Application.basic()
+                .port(port)
+                .router(router)
+                .build();
             app.start();
 
         } catch (IOException e) {
