@@ -46,7 +46,10 @@ public class HttpHeaders {
 
         try {
 
-            Application<Request, Response> app = Application.basic(port, router);
+            Application<Request, Response> app = Application.basic()
+                .port(port)
+                .router(router)
+                .build();
             app.start();
 
         } catch (IOException e) {

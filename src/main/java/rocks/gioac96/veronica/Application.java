@@ -1,15 +1,15 @@
 package rocks.gioac96.veronica;
 
-import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import rocks.gioac96.veronica.http.ExceptionHandler;
 import rocks.gioac96.veronica.http.ExchangeParser;
 import rocks.gioac96.veronica.http.ExchangeParserImpl;
 import rocks.gioac96.veronica.http.Request;
@@ -28,65 +28,87 @@ public final class Application<Q extends Request, S extends Response> {
 
     private final HttpServer server;
 
-    @NonNull
     @Getter
     @Setter
+    @NonNull
+    private Router<Q, S> router;
+
+    @Getter
+    @Setter
+    @NonNull
     private ExchangeParser<Q> exchangeParser;
 
     @Getter
     @Setter
-    private Router<Q, S> router;
+    @NonNull
+    private ExceptionHandler exceptionHandler;
 
-    @Builder
     protected Application(
         int port,
         @NonNull Router<Q, S> router,
-        ExchangeParser<Q> exchangeParser
+        @NonNull ExchangeParser<Q> exchangeParser,
+        @NonNull ExceptionHandler exceptionHandler
     ) throws IOException {
 
         this.port = port;
-        this.exchangeParser = exchangeParser;
         this.router = router;
+        this.exchangeParser = exchangeParser;
+        this.exceptionHandler = exceptionHandler;
+
         this.server = HttpServer.create(
             new InetSocketAddress(port), 0
         );
-        server.createContext("/", getDefaultHttpHandler());
+        server.createContext("/", this::handleExchange);
 
         server.setExecutor(null);
 
     }
 
     /**
-     * Instantiates a basic Application, with support for basic Requests and Responses.
-     *
-     * @param port   port to bind to the Http server
-     * @param router router of the application
-     * @return the instantiated Application
-     * @throws IOException on port binding failure
+     * Instantiates a generic application builder.
+     * @param <Q> Request type
+     * @param <S> Response type
+     * @return the instantiated generic application builder
      */
-    public static Application<Request, Response> basic(
-        int port,
-        Router<Request, Response> router
-    ) throws IOException {
+    public static <Q extends Request, S extends Response> ApplicationBuilder<Q, S> builder() {
 
-        return new Application<>(
-            port,
-            router,
-            new ExchangeParserImpl()
-        );
+        return new ApplicationBuilder<Q, S>();
 
     }
 
-    private HttpHandler getDefaultHttpHandler() {
 
-        return exchange -> {
+    /**
+     * Instantiates a basic application builder.
+     * @return the instantiated basic application builder
+     */
+    public static ApplicationBuilder<Request, Response> basic() {
+
+        return new ApplicationBuilder<Request, Response>()
+            .exchangeParser(new ExchangeParserImpl())
+            .exceptionHandler(new ExceptionHandler() {});
+
+    }
+
+    private void handleExchange(HttpExchange exchange) {
+
+        Response response;
+
+        try {
 
             // Parse request
             Q request = exchangeParser.parseExchange(exchange);
 
             // Generate response
-            S response = router.route(request);
+            response = router.route(request);
 
+
+        } catch (Exception e) {
+
+            response = exceptionHandler.handle(e);
+
+        }
+
+        try {
             // Writing response headers
             exchange.getResponseHeaders().putAll(response.getHeaders());
 
@@ -110,7 +132,11 @@ public final class Application<Q extends Request, S extends Response> {
             // Close response
             exchange.close();
 
-        };
+        } catch (IOException e) {
+
+            exceptionHandler.handleExchangeException(e);
+
+        }
 
     }
 
@@ -135,6 +161,53 @@ public final class Application<Q extends Request, S extends Response> {
     public void stop() {
 
         server.stop(1);
+
+    }
+
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
+    public static class ApplicationBuilder<Q extends Request, S extends Response> {
+
+        private int port;
+        private @NonNull Router<Q, S> router;
+        private @NonNull ExchangeParser<Q> exchangeParser;
+        private @NonNull ExceptionHandler exceptionHandler;
+
+        ApplicationBuilder() {
+        }
+
+        public ApplicationBuilder<Q, S> port(int port) {
+
+            this.port = port;
+            return this;
+
+        }
+
+        public ApplicationBuilder<Q, S> router(@NonNull Router<Q, S> router) {
+
+            this.router = router;
+            return this;
+
+        }
+
+        public ApplicationBuilder<Q, S> exchangeParser(ExchangeParser<Q> exchangeParser) {
+
+            this.exchangeParser = exchangeParser;
+            return this;
+
+        }
+
+        public ApplicationBuilder<Q, S> exceptionHandler(ExceptionHandler exceptionHandler) {
+
+            this.exceptionHandler = exceptionHandler;
+            return this;
+
+        }
+
+        public Application<Q, S> build() throws IOException {
+
+            return new Application<Q, S>(port, router, exchangeParser, exceptionHandler);
+
+        }
 
     }
 

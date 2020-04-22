@@ -13,19 +13,28 @@ public final class ExchangeParserImpl implements ExchangeParser<Request> {
      *
      * @param httpExchange httpExchange to parse
      * @return the generated {@link Request}
-     * @throws IOException on parsing failure
+     * @throws ExchangeParseException on parsing failure
      */
-    public Request parseExchange(HttpExchange httpExchange) throws IOException {
+    public Request parseExchange(HttpExchange httpExchange) throws ExchangeParseException {
 
-        HttpMethod httpMethod = HttpMethod.fromName(httpExchange.getRequestMethod());
-        String body = new String(httpExchange.getRequestBody().readAllBytes());
+        try {
 
-        return Request.builder()
-            .httpMethod(httpMethod)
-            .uri(httpExchange.getRequestURI())
-            .headers(httpExchange.getRequestHeaders())
-            .body(body)
-            .build();
+            HttpMethod httpMethod = HttpMethod.fromName(httpExchange.getRequestMethod());
+
+            String body = new String(httpExchange.getRequestBody().readAllBytes());
+
+            return Request.builder()
+                .httpMethod(httpMethod)
+                .uri(httpExchange.getRequestURI())
+                .headers(httpExchange.getRequestHeaders())
+                .body(body)
+                .build();
+
+        } catch (Exception e) {
+
+            throw new ExchangeParseException("Failed to parse request", e);
+
+        }
 
     }
 
