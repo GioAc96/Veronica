@@ -6,7 +6,6 @@ import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.Router;
-import rocks.gioac96.veronica.routing.pipeline.PipelineBreakException;
 import rocks.gioac96.veronica.routing.pipeline.RequestHandler;
 
 public class HelloWorld {
@@ -29,7 +28,10 @@ public class HelloWorld {
 
         try {
 
-            Application<Request, Response> app = Application.basic(port, router);
+            Application<Request, Response> app = Application.basic()
+                .port(port)
+                .router(router)
+                .build();
             app.start();
 
         } catch (IOException e) {
