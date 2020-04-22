@@ -64,12 +64,23 @@ public final class Application<Q extends Request, S extends Response> {
 
     }
 
+    /**
+     * Instantiates a generic application builder.
+     * @param <Q> Request type
+     * @param <S> Response type
+     * @return the instantiated generic application builder
+     */
     public static <Q extends Request, S extends Response> ApplicationBuilder<Q, S> builder() {
 
         return new ApplicationBuilder<Q, S>();
 
     }
 
+
+    /**
+     * Instantiates a basic application builder.
+     * @return the instantiated basic application builder
+     */
     public static ApplicationBuilder<Request, Response> basic() {
 
         return new ApplicationBuilder<Request, Response>()
@@ -153,6 +164,7 @@ public final class Application<Q extends Request, S extends Response> {
 
     }
 
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
     public static class ApplicationBuilder<Q extends Request, S extends Response> {
 
         private int port;
