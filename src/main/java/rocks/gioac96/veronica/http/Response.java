@@ -154,7 +154,15 @@ public class Response {
         @SuppressWarnings("unused")
         public B header(@NonNull String key, @NonNull String value) {
 
-            this.headers.put(key, List.of(value));
+            if (this.headers.containsKey(key)) {
+
+                this.headers.get(key).add(value);
+
+            } else {
+
+                this.headers.put(key, List.of(value));
+
+            }
 
             return self();
 
@@ -163,10 +171,17 @@ public class Response {
         @SuppressWarnings({"checkstyle:RightCurly", "checkstyle:Indentation", "unused"})
         public B header(@NonNull String key, @NonNull Collection<String> values) {
 
+            if (this.headers.containsKey(key)) {
 
-            this.headers.put(key, new ArrayList<>() {{
-                addAll(values);
-            }});
+                this.headers.get(key).addAll(values);
+
+            } else {
+
+                this.headers.put(key, new ArrayList<>() {{
+                    addAll(values);
+                }});
+
+            }
 
             return self();
 
