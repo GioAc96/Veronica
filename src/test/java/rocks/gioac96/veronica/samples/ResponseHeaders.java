@@ -13,7 +13,6 @@ public class ResponseHeaders {
 
     public static void main(String[] args) throws IOException {
 
-
         Headers jsonResponseHeaders = new Headers();
 
         jsonResponseHeaders.put("content-type", List.of("application/json"));
@@ -27,7 +26,10 @@ public class ResponseHeaders {
                 .build())
             .build();
 
-        Application<Request, Response> application = Application.basic(80, router);
+        Application<Request, Response> application = Application.basic()
+            .port(80)
+            .router(router)
+            .build();
 
         application.start();
 

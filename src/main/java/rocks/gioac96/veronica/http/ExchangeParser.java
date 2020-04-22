@@ -10,6 +10,6 @@ import java.io.IOException;
  */
 public interface ExchangeParser<Q extends Request> {
 
-    Q parseExchange(HttpExchange httpExchange) throws IOException;
+    Q parseExchange(HttpExchange httpExchange) throws ExchangeParseException;
 
 }
