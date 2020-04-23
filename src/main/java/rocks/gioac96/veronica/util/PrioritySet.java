@@ -253,11 +253,11 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
         boolean changed = false;
 
-        Iterator<Entry> entriesIterator = entriesIterator();
+        Iterator<? extends PrioritySet<? extends T>.Entry> entriesIterator = elements.entriesIterator();
 
         while (entriesIterator.hasNext()) {
 
-            Entry next = entriesIterator.next();
+            PrioritySet<? extends T>.Entry next = entriesIterator.next();
 
             if (changePriority(next.element, next.priority)) {
 
@@ -271,7 +271,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
         while (entriesIterator.hasNext()) {
 
-            Entry next = entriesIterator.next();
+            PrioritySet<? extends T>.Entry next = entriesIterator.next();
             changePriority(next.element, next.priority);
 
         }
