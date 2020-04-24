@@ -92,6 +92,15 @@ public final class Router<Q extends Request, S extends Response> {
 
         }
 
+        public B route(@NonNull Route<Q, S> route, Integer priority) {
+
+            this.routes.add(route, priority);
+
+            return self();
+
+        }
+
+
         @SuppressWarnings("unused")
         public B routes(Collection<Route<Q, S>> routes) {
 
