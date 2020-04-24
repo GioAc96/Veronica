@@ -14,7 +14,7 @@ import lombok.Getter;
  */
 public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
-    private static final int DEFAULT_PRIORITY = 0;
+    public static final int DEFAULT_PRIORITY = 0;
     private final ArrayList<Entry> entries;
 
     public PrioritySet() {
@@ -39,6 +39,12 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
         Collections.addAll(result, elements);
 
         return result;
+
+    }
+
+    private static int coalescePriority(Integer priority) {
+
+        return priority == null ? DEFAULT_PRIORITY : priority;
 
     }
 
@@ -93,10 +99,12 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
      * element, the element is ignored and the method returns false.
      *
      * @param element  element to add to the set
-     * @param priority priority to assign to the element
+     * @param priority priority to assign to the element, if null defaults to DEFAULT_PRIORITY
      * @return true iff the element was not already in the set.
      */
     public boolean add(T element, int priority) {
+
+        int realPriority = coalescePriority(priority);
 
         if (contains(element)) {
 
@@ -108,7 +116,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
         for (Entry entry : entries) {
 
-            if (entry.priority > priority) {
+            if (entry.priority > realPriority) {
 
                 break;
 
@@ -118,7 +126,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
         }
 
-        entries.add(insertIndex, new Entry(priority, element));
+        entries.add(insertIndex, new Entry(realPriority, element));
 
         return true;
 
@@ -152,11 +160,13 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
      * is added to the set.
      *
      * @param element  element to change the priority of
-     * @param priority priority to assign to the element
+     * @param priority priority to assign to the element. If null, defaults to DEFAULT_PRIORITY
      * @return true iff the element was not in the set already or if the element had a different
      *      priority prior to the call.
      */
-    public boolean changePriority(T element, int priority) {
+    public boolean changePriority(T element, Integer priority) {
+
+        int realPriority = coalescePriority(priority);
 
         Iterator<Entry> entriesIterator = entriesIterator();
 
@@ -166,7 +176,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
             if (next.element.equals(element)) {
 
-                if (priority == next.priority) {
+                if (realPriority == next.priority) {
 
                     return false;
 
@@ -174,7 +184,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
                     entriesIterator.remove();
 
-                    return add(element, priority);
+                    return add(element, realPriority);
 
                 }
 
@@ -182,7 +192,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
         }
 
-        return add(element, priority);
+        return add(element, realPriority);
 
     }
 
