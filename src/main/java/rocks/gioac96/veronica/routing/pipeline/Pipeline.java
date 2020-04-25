@@ -163,6 +163,14 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         }
 
+        @SuppressWarnings("unused")
+        public B preFilter(PreFilter<Q> preFilter, Integer priority) {
+
+            this.preFilters.add(preFilter, priority);
+            return self();
+
+        }
+
         public B preFilters(PrioritySet<PreFilter<Q>> preFilters) {
 
             this.preFilters.addAll(preFilters);
@@ -186,6 +194,14 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         }
 
+        @SuppressWarnings("unused")
+        public B postFilter(PostFilter<Q, S> postFilter, Integer priority) {
+
+            this.postFilters.add(postFilter, priority);
+            return self();
+
+        }
+
         public B postFilters(PrioritySet<PostFilter<Q, S>> postFilters) {
 
             this.postFilters.addAll(postFilters);
@@ -205,6 +221,14 @@ public class Pipeline<Q extends Request, S extends Response> {
         public B postProcessor(PostProcessor<Q, S> postProcessor) {
 
             this.postProcessors.add(postProcessor);
+            return self();
+
+        }
+
+        @SuppressWarnings("unused")
+        public B postProcessor(PostProcessor<Q, S> postProcessor, Integer priority) {
+
+            this.postProcessors.add(postProcessor, priority);
             return self();
 
         }
