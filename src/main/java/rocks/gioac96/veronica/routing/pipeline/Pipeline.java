@@ -92,15 +92,15 @@ public class Pipeline<Q extends Request, S extends Response> {
         S response = preRender(request, requestHandler);
 
         // Rendering
-        if (responseRenderer != null) {
+        if (responseRenderer != null && ! response.isRendered()) {
 
             try {
 
-                response.render(responseRenderer);
+                response.writeBody(responseRenderer.render(response));
 
             } catch (ResponseRenderingException e) {
 
-                response = (S) e.getResponse();
+                response = (S) e.getFallbackResponse();
 
             }
 
@@ -129,7 +129,7 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         } catch (PipelineBreakException e) {
 
-            return (S) e.getResponse();
+            return (S) e.getFallbackResponse();
 
         }
 

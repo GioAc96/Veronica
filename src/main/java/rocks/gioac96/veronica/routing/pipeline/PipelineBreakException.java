@@ -13,8 +13,12 @@ import rocks.gioac96.veronica.http.Response;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class PipelineBreakException extends Exception {
 
-    @Getter
     @NonNull
-    private final Response response;
+    private final Response fallbackResponse;
 
+    public <S extends Response> S getFallbackResponse() {
+
+        return (S) fallbackResponse;
+
+    }
 }

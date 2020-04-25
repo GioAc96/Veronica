@@ -66,42 +66,13 @@ public class Response {
     }
 
     /**
-     * Renders the response with the specified renderer, if the response is not already rendered.
-     *
-     * @param responseRenderer renderer to use to rendered the response
-     * @return true iff the response was not already rendered
-     * @throws ResponseRenderingException on rendering failure
-     */
-    @SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
-    public boolean render(@NonNull ResponseRenderer responseRenderer) throws ResponseRenderingException {
-
-        /*
-         * Not calling the setBody method to avoid rendering the response with the responseRenderer
-         * if it is already rendered.
-         */
-
-        if (isRendered()) {
-
-            return false;
-
-        } else {
-
-            this.body = responseRenderer.render(this);
-
-            return true;
-
-        }
-
-    }
-
-    /**
-     * Sets the body of the response if the response is not already rendered.
+     * Writes the body of the response if the response is not already rendered.
      *
      * @param body body of the response
      * @return true if the response was not already rendered and the body was successfully set
      */
-    @SuppressWarnings("unused")
-    public boolean setBody(@NonNull String body) {
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean writeBody(@NonNull String body) {
 
         if (isRendered()) {
 
