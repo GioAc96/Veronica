@@ -12,7 +12,7 @@ import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.matching.CommonRequestMatchers;
 import rocks.gioac96.veronica.routing.matching.RequestMatcher;
 import rocks.gioac96.veronica.routing.pipeline.Pipeline;
-import rocks.gioac96.veronica.routing.pipeline.RequestHandler;
+import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
 
 /**
  * Application route.

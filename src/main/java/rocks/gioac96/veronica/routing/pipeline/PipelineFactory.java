@@ -4,6 +4,10 @@ import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.factories.Factory;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
+import rocks.gioac96.veronica.routing.pipeline.stages.PostFilter;
+import rocks.gioac96.veronica.routing.pipeline.stages.PostProcessor;
+import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
+import rocks.gioac96.veronica.routing.pipeline.stages.ResponseRenderer;
 
 public abstract class PipelineFactory<
         Q extends Request,

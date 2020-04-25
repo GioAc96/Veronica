@@ -2,17 +2,12 @@ package rocks.gioac96.veronica.tutorials;
 
 import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.path;
 
-import java.io.IOException;
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.factories.CreationException;
-import rocks.gioac96.veronica.http.HttpStatus;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.Router;
-import rocks.gioac96.veronica.routing.matching.CommonRequestMatchers;
-import rocks.gioac96.veronica.routing.matching.RequestMatcher;
-import rocks.gioac96.veronica.routing.pipeline.RequestHandler;
 
 public class Routing {
 

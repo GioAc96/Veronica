@@ -10,8 +10,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.routing.pipeline.PipelineBreakException;
-import rocks.gioac96.veronica.routing.pipeline.PreFilter;
+import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
 
 /**
  * {@link PreFilter} that validates a {@link Request} query.

@@ -11,8 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-import rocks.gioac96.veronica.routing.pipeline.ResponseRenderer;
-import rocks.gioac96.veronica.routing.pipeline.ResponseRenderingException;
 import rocks.gioac96.veronica.util.ArraySet;
 
 /**

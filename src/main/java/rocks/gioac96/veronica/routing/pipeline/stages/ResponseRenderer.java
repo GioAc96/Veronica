@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.routing.pipeline;
+package rocks.gioac96.veronica.routing.pipeline.stages;
 
 import lombok.NonNull;
 import rocks.gioac96.veronica.http.Response;
@@ -8,7 +8,6 @@ import rocks.gioac96.veronica.http.Response;
  */
 public interface ResponseRenderer<S extends Response> {
 
-    @SuppressWarnings("RedundantThrows")
-    String render(@NonNull S response) throws ResponseRenderingException;
+    String render(@NonNull S response);
 
 }
