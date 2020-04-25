@@ -12,7 +12,7 @@ import lombok.Setter;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.ExceptionHandler;
 import rocks.gioac96.veronica.http.ExchangeParser;
-import rocks.gioac96.veronica.http.ExchangeParserImpl;
+import rocks.gioac96.veronica.http.BasicExchangeParser;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.http.SetCookieHeader;
@@ -85,7 +85,7 @@ public final class Application<Q extends Request, S extends Response> {
     public static ApplicationBuilder<Request, Response> basic() {
 
         return new ApplicationBuilder<Request, Response>()
-            .exchangeParser(new ExchangeParserImpl())
+            .exchangeParser(new BasicExchangeParser())
             .exceptionHandler(new ExceptionHandler() {});
 
     }

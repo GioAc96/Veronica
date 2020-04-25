@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * {@link HttpExchange} parser that generates a {@link Request} output object.
  */
-public final class ExchangeParserImpl implements ExchangeParser<Request> {
+public final class BasicExchangeParser implements ExchangeParser<Request> {
 
     /**
      * Parses an {@link HttpExchange} to generate a {@link Request} object.
