@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.HttpStatus;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
@@ -65,7 +66,7 @@ public class Cookies {
                 .build();
             app.start();
 
-        } catch (IOException e) {
+        } catch (CreationException e) {
 
             System.out.println("Unable to start the application: " + e.getMessage());
 

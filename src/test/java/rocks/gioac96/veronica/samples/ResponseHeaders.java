@@ -4,6 +4,7 @@ import com.sun.net.httpserver.Headers;
 import java.io.IOException;
 import java.util.List;
 import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Route;
@@ -11,7 +12,7 @@ import rocks.gioac96.veronica.routing.Router;
 
 public class ResponseHeaders {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, CreationException {
 
         Headers jsonResponseHeaders = new Headers();
 
