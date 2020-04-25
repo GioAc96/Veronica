@@ -7,7 +7,7 @@ import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.matching.RequestMatcher;
 import rocks.gioac96.veronica.routing.pipeline.Pipeline;
-import rocks.gioac96.veronica.routing.pipeline.RequestHandler;
+import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
 
 public abstract class RouteFactory<
         Q extends Request,
