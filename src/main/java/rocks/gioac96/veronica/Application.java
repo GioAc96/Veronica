@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.ExceptionHandler;
 import rocks.gioac96.veronica.http.ExchangeParser;
 import rocks.gioac96.veronica.http.ExchangeParserImpl;
@@ -203,9 +204,17 @@ public final class Application<Q extends Request, S extends Response> {
 
         }
 
-        public Application<Q, S> build() throws IOException {
+        public Application<Q, S> build() {
 
-            return new Application<Q, S>(port, router, exchangeParser, exceptionHandler);
+            try {
+
+                return new Application<Q, S>(port, router, exchangeParser, exceptionHandler);
+
+            } catch (IOException e) {
+
+                throw new CreationException(e);
+
+            }
 
         }
 
