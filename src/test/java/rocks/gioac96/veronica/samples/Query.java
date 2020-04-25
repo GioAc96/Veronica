@@ -32,7 +32,7 @@ public class Query {
             )
             .build();
 
-        Application<Request, Response> application =  Application.basic()
+        Application<Request, Response> application = Application.basic()
             .port(80)
             .router(router)
             .build();

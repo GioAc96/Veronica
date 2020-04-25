@@ -14,15 +14,15 @@ public class HelloWorld {
 
 
         Router<Request, Response> router = Router.builder()
-                .fallbackRoute(
-                    Route.builder()
-                        .requestHandler(request -> Response.builder()
-                            .body("Hello, world!")
-                            .build()
-                        )
+            .fallbackRoute(
+                Route.builder()
+                    .requestHandler(request -> Response.builder()
+                        .body("Hello, world!")
                         .build()
-                )
-                .build();
+                    )
+                    .build()
+            )
+            .build();
 
         Application<Request, Response> application = Application.basic()
             .port(80)

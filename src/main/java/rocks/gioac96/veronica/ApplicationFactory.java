@@ -9,18 +9,25 @@ import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Router;
 
+/**
+ * Application factory.
+ * @param <Q> Request type
+ * @param <S> Response type
+ */
 public abstract class ApplicationFactory<Q extends Request, S extends Response>
 
     extends ApplicationBuilder<Q, S>
     implements Factory<Application<Q, S>> {
 
-    protected ApplicationBuilder<Q, S> exchangeParser(Factory<ExchangeParser<Q>> exchangeParserFactory) throws CreationException {
+    protected ApplicationBuilder<Q, S> exchangeParser(Factory<ExchangeParser<Q>> exchangeParserFactory)
+        throws CreationException {
 
         return exchangeParser(exchangeParserFactory.build());
 
     }
 
-    protected ApplicationBuilder<Q, S> exceptionHandler(Factory<ExceptionHandler> exceptionHandlerFactory) throws CreationException {
+    protected ApplicationBuilder<Q, S> exceptionHandler(Factory<ExceptionHandler> exceptionHandlerFactory)
+        throws CreationException {
 
         return exceptionHandler(exceptionHandlerFactory.build());
 
@@ -38,7 +45,7 @@ public abstract class ApplicationFactory<Q extends Request, S extends Response>
         return router(routerFactory.build());
 
     }
-    
+
     @Override
     public Application<Q, S> build() throws CreationException {
 

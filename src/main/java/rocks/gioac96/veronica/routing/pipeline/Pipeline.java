@@ -11,7 +11,6 @@ import lombok.Setter;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.pipeline.stages.FilterPayload;
-import rocks.gioac96.veronica.routing.pipeline.stages.PipelineFailureException;
 import rocks.gioac96.veronica.routing.pipeline.stages.PostFilter;
 import rocks.gioac96.veronica.routing.pipeline.stages.PostProcessor;
 import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
@@ -63,7 +62,7 @@ public class Pipeline<Q extends Request, S extends Response> {
 
             FilterPayload<S> filterPayload = preFilter.filter(request);
 
-            if (! filterPayload.shouldContinue()) {
+            if (!filterPayload.shouldContinue()) {
                 return filterPayload.getResponse();
             }
 
@@ -72,7 +71,7 @@ public class Pipeline<Q extends Request, S extends Response> {
         RequestHandlerPayload<S> requestHandlerPayload = requestHandler.handle(request);
         S response = requestHandlerPayload.getResponse();
 
-        if (! requestHandlerPayload.shouldContinue()) {
+        if (!requestHandlerPayload.shouldContinue()) {
 
             return response;
 
@@ -82,7 +81,7 @@ public class Pipeline<Q extends Request, S extends Response> {
 
             FilterPayload<S> filterPayload = postFilter.filter(request, response);
 
-            if (! filterPayload.shouldContinue()) {
+            if (!filterPayload.shouldContinue()) {
 
                 return filterPayload.getResponse();
 
@@ -105,7 +104,7 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         S response = preRender(request, requestHandler);
 
-        if (! response.isRendered()) {
+        if (!response.isRendered()) {
 
             if (responseRenderer == null) {
 
@@ -128,7 +127,6 @@ public class Pipeline<Q extends Request, S extends Response> {
         return response;
 
     }
-
 
 
     @Generated

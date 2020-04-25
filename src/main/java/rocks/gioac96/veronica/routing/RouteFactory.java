@@ -9,23 +9,30 @@ import rocks.gioac96.veronica.routing.matching.RequestMatcher;
 import rocks.gioac96.veronica.routing.pipeline.Pipeline;
 import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
 
+/**
+ * Route factory.
+ * @param <Q> Request type
+ * @param <S> Response type
+ */
 public abstract class RouteFactory<
-        Q extends Request,
-        S extends Response
+    Q extends Request,
+    S extends Response
     > extends Route.RouteBuilder<
-        Q,
-        S,
-        Route<Q, S>,
-        RouteFactory<Q, S>
+    Q,
+    S,
+    Route<Q, S>,
+    RouteFactory<Q, S>
     > implements Factory<Route<Q, S>> {
 
-    protected RouteFactory<Q, S> requestMatcher(@NonNull Factory<RequestMatcher<Q>> requestMatcherFactory) throws CreationException {
+    protected RouteFactory<Q, S> requestMatcher(@NonNull Factory<RequestMatcher<Q>> requestMatcherFactory)
+        throws CreationException {
 
         return super.requestMatcher(requestMatcherFactory.build());
 
     }
 
-    protected RouteFactory<Q, S> requestHandler(@NonNull Factory<RequestHandler<Q, S>> requestHandlerFactory) throws CreationException {
+    protected RouteFactory<Q, S> requestHandler(@NonNull Factory<RequestHandler<Q, S>> requestHandlerFactory)
+        throws CreationException {
 
         return super.requestHandler(requestHandlerFactory.build());
 

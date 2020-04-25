@@ -8,6 +8,12 @@ import rocks.gioac96.veronica.routing.Router;
 
 public class MyApplication extends BasicApplicationFactory {
 
+    public static void main(String[] args) throws CreationException {
+
+        new MyApplication().build().start();
+
+    }
+
     @Override
     public void configure() {
 
@@ -23,12 +29,6 @@ public class MyApplication extends BasicApplicationFactory {
             )
             .build()
         );
-
-    }
-
-    public static void main(String[] args) throws CreationException {
-
-        new MyApplication().build().start();
 
     }
 

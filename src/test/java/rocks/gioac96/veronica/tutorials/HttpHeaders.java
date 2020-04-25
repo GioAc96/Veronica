@@ -1,6 +1,5 @@
 package rocks.gioac96.veronica.tutorials;
 
-import java.io.IOException;
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.Request;
@@ -15,7 +14,7 @@ public class HttpHeaders {
         Route<Request, Response> route = Route.builder()
             .requestHandler(req -> {
 
-                switch(req.getHeaders().getFirst("accept").toLowerCase()) {
+                switch (req.getHeaders().getFirst("accept").toLowerCase()) {
 
                     case "application/json":
                         return Response.builder()
@@ -58,7 +57,6 @@ public class HttpHeaders {
             System.out.println("Unable to start the application: " + e.getMessage());
 
         }
-
 
 
     }

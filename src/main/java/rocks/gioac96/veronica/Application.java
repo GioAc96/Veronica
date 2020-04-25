@@ -10,9 +10,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.factories.CreationException;
+import rocks.gioac96.veronica.http.BasicExchangeParser;
 import rocks.gioac96.veronica.http.ExceptionHandler;
 import rocks.gioac96.veronica.http.ExchangeParser;
-import rocks.gioac96.veronica.http.BasicExchangeParser;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.http.SetCookieHeader;
@@ -67,6 +67,7 @@ public final class Application<Q extends Request, S extends Response> {
 
     /**
      * Instantiates a generic application builder.
+     *
      * @param <Q> Request type
      * @param <S> Response type
      * @return the instantiated generic application builder
@@ -80,13 +81,15 @@ public final class Application<Q extends Request, S extends Response> {
 
     /**
      * Instantiates a basic application builder.
+     *
      * @return the instantiated basic application builder
      */
     public static ApplicationBuilder<Request, Response> basic() {
 
         return new ApplicationBuilder<Request, Response>()
             .exchangeParser(new BasicExchangeParser())
-            .exceptionHandler(new ExceptionHandler() {});
+            .exceptionHandler(new ExceptionHandler() {
+            });
 
     }
 

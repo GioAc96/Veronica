@@ -9,17 +9,22 @@ import rocks.gioac96.veronica.routing.pipeline.stages.PostProcessor;
 import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
 import rocks.gioac96.veronica.routing.pipeline.stages.ResponseRenderer;
 
+/**
+ * Pipeline factory.
+ * @param <Q> Request type
+ * @param <S> Response type
+ */
 public abstract class PipelineFactory<
-        Q extends Request,
-        S extends Response
+    Q extends Request,
+    S extends Response
     > extends Pipeline.PipelineBuilder<
-        Q,
-        S,
-        Pipeline<Q, S>,
-        PipelineFactory<Q, S>
+    Q,
+    S,
+    Pipeline<Q, S>,
+    PipelineFactory<Q, S>
     > implements Factory<Pipeline<Q, S>> {
 
-    protected PipelineFactory<Q, S> preFilter(Factory<PreFilter<Q>> preFilterFactory) throws CreationException {
+    protected PipelineFactory<Q, S> preFilter(Factory<PreFilter<Q, S>> preFilterFactory) throws CreationException {
 
         return super.preFilter(preFilterFactory.build(), preFilterFactory.priority());
 
@@ -31,13 +36,15 @@ public abstract class PipelineFactory<
 
     }
 
-    protected PipelineFactory<Q, S> postProcessor(Factory<PostProcessor<Q, S>> postProcessorFactory) throws CreationException {
+    protected PipelineFactory<Q, S> postProcessor(Factory<PostProcessor<Q, S>> postProcessorFactory)
+        throws CreationException {
 
         return super.postProcessor(postProcessorFactory.build(), postProcessorFactory.priority());
 
     }
 
-    protected PipelineFactory<Q, S> responseRenderer(Factory<ResponseRenderer<S>> responseRendererFactory) throws CreationException {
+    protected PipelineFactory<Q, S> responseRenderer(Factory<ResponseRenderer<S>> responseRendererFactory)
+        throws CreationException {
 
         return super.responseRenderer(responseRendererFactory.build());
 

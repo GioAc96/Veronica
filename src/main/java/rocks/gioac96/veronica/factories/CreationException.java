@@ -1,5 +1,8 @@
 package rocks.gioac96.veronica.factories;
 
+/**
+ * Thrown by factories on creation failure.
+ */
 public class CreationException extends RuntimeException {
 
     public CreationException() {

@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,7 @@ class PrioritySetTest {
 
         PrioritySet<String> a = new PrioritySet<>();
 
-        PrioritySet<String> b = new PrioritySet<>(){{
+        PrioritySet<String> b = new PrioritySet<>() {{
             add("test");
             add("ciao");
         }};

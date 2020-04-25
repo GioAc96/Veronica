@@ -1,6 +1,5 @@
 package rocks.gioac96.veronica.tutorials;
 
-import java.io.IOException;
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.ExceptionHandler;

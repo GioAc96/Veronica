@@ -2,8 +2,6 @@ package rocks.gioac96.veronica.tutorials;
 
 import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.get;
 
-import java.io.IOException;
-import java.time.ZonedDateTime;
 import java.util.Map;
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.factories.CreationException;

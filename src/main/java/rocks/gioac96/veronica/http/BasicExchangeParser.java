@@ -1,7 +1,6 @@
 package rocks.gioac96.veronica.http;
 
 import com.sun.net.httpserver.HttpExchange;
-import java.io.IOException;
 
 /**
  * {@link HttpExchange} parser that generates a {@link Request} output object.
