@@ -11,6 +11,7 @@ import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
 
 /**
  * Route factory.
+ *
  * @param <Q> Request type
  * @param <S> Response type
  */

@@ -8,6 +8,7 @@ import rocks.gioac96.veronica.http.Response;
 
 /**
  * Router factory.
+ *
  * @param <Q> Request type
  * @param <S> Response type
  */
