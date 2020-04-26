@@ -8,7 +8,7 @@ import rocks.gioac96.veronica.http.Response;
 /**
  * Exception thrown by validation filters on request validation failure.
  */
-public class ValidationException extends PipelineBreakException {
+public class ValidationException extends Exception {
 
     @Getter
     @NonNull
@@ -20,7 +20,7 @@ public class ValidationException extends PipelineBreakException {
         @NonNull ValidationFailureData validationFailureData
     ) {
 
-        super(response);
+        super();
         this.validationFailureData = validationFailureData;
 
     }
