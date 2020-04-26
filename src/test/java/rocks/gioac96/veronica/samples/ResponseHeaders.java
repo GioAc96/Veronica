@@ -1,5 +1,7 @@
 package rocks.gioac96.veronica.samples;
 
+import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
+
 import com.sun.net.httpserver.Headers;
 import java.io.IOException;
 import java.util.List;
@@ -20,10 +22,10 @@ public class ResponseHeaders {
 
         Router<Request, Response> router = Router.builder()
             .fallbackRoute(Route.builder()
-                .requestHandler(request -> Response.builder()
+                .requestHandler(request -> ok(Response.builder()
                     .body("{\"hello\": \"world\"}")
                     .headers(jsonResponseHeaders)
-                    .build())
+                    .build()))
                 .build())
             .build();
 

@@ -1,5 +1,7 @@
 package rocks.gioac96.veronica.tutorials;
 
+import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
+
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.ExceptionHandler;
@@ -20,18 +22,18 @@ public class ExceptionHandling {
 
                 if (numberQueryString == null) {
 
-                    return Response.builder()
+                    return ok(Response.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
                         .body("Try setting the query parameter for \"number\"")
-                        .build();
+                        .build());
 
                 } else {
 
                     int number = Integer.parseInt(numberQueryString);
 
-                    return Response.builder()
+                    return ok(Response.builder()
                         .body(String.valueOf(number * 2))
-                        .build();
+                        .build());
 
                 }
 

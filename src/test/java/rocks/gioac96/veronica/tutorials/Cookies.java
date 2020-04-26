@@ -1,5 +1,7 @@
 package rocks.gioac96.veronica.tutorials;
 
+import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
+
 import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.get;
 
 import java.util.Map;
@@ -29,14 +31,14 @@ public class Cookies {
 
                 }
 
-                return Response.builder()
+                return ok(Response.builder()
                     .cookie(SetCookieHeader.builder()
                         .name("hit-counter")
                         .value(String.valueOf(hitCounter + 1))
                         .build()
                     )
                     .body("You have visited this page " + hitCounter + " times before")
-                    .build();
+                    .build());
 
             })
             .build();
@@ -44,10 +46,10 @@ public class Cookies {
         Router<Request, Response> router = Router.builder()
             .route(Route.builder()
                 .requestMatcher(get("/favicon.ico"))
-                .requestHandler(request -> Response.builder()
+                .requestHandler(request -> ok(Response.builder()
                     .body("")
                     .httpStatus(HttpStatus.NOT_FOUND)
-                    .build()
+                    .build())
                 )
                 .build()
             )

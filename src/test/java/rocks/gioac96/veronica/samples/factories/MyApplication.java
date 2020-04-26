@@ -1,5 +1,7 @@
 package rocks.gioac96.veronica.samples.factories;
 
+import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
+
 import rocks.gioac96.veronica.BasicApplicationFactory;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.Response;
@@ -21,9 +23,9 @@ public class MyApplication extends BasicApplicationFactory {
 
         router(Router.builder()
             .fallbackRoute(Route.builder()
-                .requestHandler(request -> Response.builder()
+                .requestHandler(request -> ok(Response.builder()
                     .body("test")
-                    .build()
+                    .build())
                 )
                 .build()
             )

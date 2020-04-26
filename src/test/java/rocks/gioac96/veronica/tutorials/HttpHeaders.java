@@ -1,5 +1,7 @@
 package rocks.gioac96.veronica.tutorials;
 
+import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
+
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.Request;
@@ -14,27 +16,31 @@ public class HttpHeaders {
         Route<Request, Response> route = Route.builder()
             .requestHandler(req -> {
 
+                Response response;
+
                 switch (req.getHeaders().getFirst("accept").toLowerCase()) {
 
                     case "application/json":
-                        return Response.builder()
+                        response = Response.builder()
                             .body("{\"message\": \"Hello, world!\"}")
                             .header("Content-Type", "application/json")
                             .build();
 
                     case "text/html":
-                        return Response.builder()
+                        response = Response.builder()
                             .body("<h1>Hello, world!</h1>")
                             .header("Content-Type", "text/html")
                             .build();
 
                     default:
-                        return Response.builder()
+                        response = Response.builder()
                             .body("Hello, world!")
                             .header("Content-Type", "text/plain")
                             .build();
 
                 }
+
+                return ok(response);
             })
             .build();
 

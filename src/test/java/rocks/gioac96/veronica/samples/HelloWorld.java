@@ -1,5 +1,7 @@
 package rocks.gioac96.veronica.samples;
 
+import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
+
 import java.io.IOException;
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.factories.CreationException;
@@ -16,9 +18,9 @@ public class HelloWorld {
         Router<Request, Response> router = Router.builder()
             .fallbackRoute(
                 Route.builder()
-                    .requestHandler(request -> Response.builder()
+                    .requestHandler(request -> ok(Response.builder()
                         .body("Hello, world!")
-                        .build()
+                        .build())
                     )
                     .build()
             )
