@@ -8,7 +8,7 @@ import rocks.gioac96.veronica.http.Request;
  * Contains declaration for common instances of {@link RequestMatcher}.
  */
 @UtilityClass
-public final class CommonRequestMatchers {
+public class CommonRequestMatchers {
 
     /**
      * Always positive {@link RequestMatcher}.
@@ -16,7 +16,7 @@ public final class CommonRequestMatchers {
      * @param <Q> Type of the request to match
      * @return an always positive {@link RequestMatcher}
      */
-    public static <Q extends Request> RequestMatcher<Q> alwaysMatch() {
+    public <Q extends Request> RequestMatcher<Q> alwaysMatch() {
 
         return request -> true;
 
@@ -28,13 +28,13 @@ public final class CommonRequestMatchers {
      * @param <Q> Type of the request to match
      * @return an always negative {@link RequestMatcher}
      */
-    public static <Q extends Request> RequestMatcher<Q> neverMatch() {
+    public <Q extends Request> RequestMatcher<Q> neverMatch() {
 
         return request -> false;
 
     }
 
-    private static <Q extends Request> RequestMatcher<Q> methodAndPathPattern(
+    private <Q extends Request> RequestMatcher<Q> methodAndPathPattern(
         HttpMethod httpMethod,
         String pathPattern
     ) {
@@ -51,7 +51,7 @@ public final class CommonRequestMatchers {
      * @return the generated request matcher
      */
     @SuppressWarnings("unused")
-    public static <Q extends Request> RequestMatcher<Q> get(String pathPattern) {
+    public <Q extends Request> RequestMatcher<Q> get(String pathPattern) {
 
         return methodAndPathPattern(HttpMethod.GET, pathPattern);
 
@@ -66,7 +66,7 @@ public final class CommonRequestMatchers {
      * @return the generated request matcher
      */
     @SuppressWarnings("unused")
-    public static <Q extends Request> RequestMatcher<Q> post(String pathPattern) {
+    public <Q extends Request> RequestMatcher<Q> post(String pathPattern) {
 
         return methodAndPathPattern(HttpMethod.POST, pathPattern);
 
@@ -80,7 +80,7 @@ public final class CommonRequestMatchers {
      * @return the generated request matcher
      */
     @SuppressWarnings("unused")
-    public static <Q extends Request> RequestMatcher<Q> path(String pathPattern) {
+    public <Q extends Request> RequestMatcher<Q> path(String pathPattern) {
 
         return request -> request.getPath().matches(pathPattern);
 
