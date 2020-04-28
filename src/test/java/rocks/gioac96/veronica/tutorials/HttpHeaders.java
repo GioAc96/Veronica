@@ -3,7 +3,6 @@ package rocks.gioac96.veronica.tutorials;
 import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
 
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Route;
@@ -26,11 +25,15 @@ public class HttpHeaders {
                             .header("Content-Type", "application/json")
                             .build();
 
+                        break;
+
                     case "text/html":
                         response = Response.builder()
                             .body("<h1>Hello, world!</h1>")
                             .header("Content-Type", "text/html")
                             .build();
+
+                        break;
 
                     default:
                         response = Response.builder()
@@ -50,19 +53,12 @@ public class HttpHeaders {
 
         int port = 8000;
 
-        try {
+        Application<Request, Response> app = Application.basic()
+            .port(port)
+            .router(router)
+            .build();
 
-            Application<Request, Response> app = Application.basic()
-                .port(port)
-                .router(router)
-                .build();
-            app.start();
-
-        } catch (CreationException e) {
-
-            System.out.println("Unable to start the application: " + e.getMessage());
-
-        }
+        app.start();
 
 
     }

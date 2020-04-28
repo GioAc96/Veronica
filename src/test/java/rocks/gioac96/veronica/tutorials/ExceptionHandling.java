@@ -20,22 +20,12 @@ public class ExceptionHandling {
 
                 String numberQueryString = request.getQueryParam("number");
 
-                if (numberQueryString == null) {
+                int number = Integer.parseInt(numberQueryString);
 
-                    return ok(Response.builder()
-                        .httpStatus(HttpStatus.BAD_REQUEST)
-                        .body("Try setting the query parameter for \"number\"")
-                        .build());
+                return ok(Response.builder()
+                    .body(String.valueOf(number * 2))
+                    .build());
 
-                } else {
-
-                    int number = Integer.parseInt(numberQueryString);
-
-                    return ok(Response.builder()
-                        .body(String.valueOf(number * 2))
-                        .build());
-
-                }
 
             })
             .build();

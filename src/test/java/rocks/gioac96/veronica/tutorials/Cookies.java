@@ -1,8 +1,7 @@
 package rocks.gioac96.veronica.tutorials;
 
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
-
 import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.get;
+import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
 
 import java.util.Map;
 import rocks.gioac96.veronica.Application;
