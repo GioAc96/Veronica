@@ -74,7 +74,7 @@ public final class Application<Q extends Request, S extends Response> {
      */
     public static <Q extends Request, S extends Response> ApplicationBuilder<Q, S> builder() {
 
-        return new ApplicationBuilder<Q, S>();
+        return new ApplicationBuilder<>();
 
     }
 
@@ -86,7 +86,7 @@ public final class Application<Q extends Request, S extends Response> {
      */
     public static ApplicationBuilder<Request, Response> basic() {
 
-        return new ApplicationBuilder<Request, Response>()
+        return new ApplicationBuilder<>()
             .exchangeParser(new BasicExchangeParser())
             .exceptionHandler(new ExceptionHandler() {
             });
@@ -211,7 +211,7 @@ public final class Application<Q extends Request, S extends Response> {
 
             try {
 
-                return new Application<Q, S>(port, router, exchangeParser, exceptionHandler);
+                return new Application<>(port, router, exchangeParser, exceptionHandler);
 
             } catch (IOException e) {
 
