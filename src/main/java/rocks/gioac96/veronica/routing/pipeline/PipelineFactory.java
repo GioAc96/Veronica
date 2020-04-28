@@ -61,6 +61,8 @@ public abstract class PipelineFactory<
     @Override
     public Pipeline<Q, S> build() {
 
+        configure();
+
         return new Pipeline<>(this);
 
     }

@@ -56,6 +56,8 @@ public abstract class RouterFactory<
     @Override
     public Router<Q, S> build() {
 
+        configure();
+
         return new Router<>(this);
 
     }

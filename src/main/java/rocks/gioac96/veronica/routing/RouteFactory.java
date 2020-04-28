@@ -55,7 +55,9 @@ public abstract class RouteFactory<
     @Override
     public Route<Q, S> build() {
 
-        return new Route<Q, S>(this);
+        configure();
+
+        return new Route<>(this);
 
     }
 }
