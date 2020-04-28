@@ -10,15 +10,15 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.routing.pipeline.PipelineBreakException;
-import rocks.gioac96.veronica.routing.pipeline.PreFilter;
+import rocks.gioac96.veronica.routing.pipeline.stages.FilterPayload;
+import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
 
 /**
  * {@link PreFilter} that validates a {@link Request} query.
  */
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class QueryValidator<Q extends Request> implements PreFilter<Q> {
+public class QueryValidator<Q extends Request> implements PreFilter<Q, ValidationFailureResponse> {
 
     @Getter
     @Setter
@@ -26,15 +26,33 @@ public class QueryValidator<Q extends Request> implements PreFilter<Q> {
     @Builder.Default
     private Map<String, FieldValidator> fieldValidators = new HashMap<>();
 
+    protected static ValidationFailureResponse generateValidationFailureResponse(ValidationException e) {
+
+        return ValidationFailureResponse.builder()
+            .validationFailureData(e.getValidationFailureData())
+            .build();
+
+    }
+
     @Override
-    public void filter(@NonNull Q request) throws PipelineBreakException {
+    public FilterPayload<ValidationFailureResponse> filter(@NonNull Q request) {
 
-        for (Map.Entry<String, FieldValidator> entry : fieldValidators.entrySet()) {
+        try {
 
-            String fieldName = entry.getKey();
-            FieldValidator fieldValidator = entry.getValue();
+            for (Map.Entry<String, FieldValidator> entry : fieldValidators.entrySet()) {
 
-            fieldValidator.validateField(fieldName, request.getQueryParam(fieldName));
+                String fieldName = entry.getKey();
+                FieldValidator fieldValidator = entry.getValue();
+
+                fieldValidator.validateField(fieldName, request.getQueryParam(fieldName));
+
+            }
+
+            return FilterPayload.ok();
+
+        } catch (ValidationException e) {
+
+            return FilterPayload.fail(generateValidationFailureResponse(e));
 
         }
 

@@ -1,20 +1,21 @@
 package rocks.gioac96.veronica.tutorials;
 
-import java.io.IOException;
+import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
+
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.Router;
-import rocks.gioac96.veronica.routing.pipeline.RequestHandler;
+import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
 
 public class HelloWorld {
 
     public static void main(String[] args) {
 
-        RequestHandler<Request, Response> helloWorldHandler = request -> Response.builder()
+        RequestHandler<Request, Response> helloWorldHandler = request -> ok(Response.builder()
             .body("Hello World")
-            .build();
+            .build());
 
         Route<Request, Response> helloWorldRoute = Route.builder()
             .requestHandler(helloWorldHandler)
@@ -26,19 +27,13 @@ public class HelloWorld {
 
         int port = 8000;
 
-        try {
+        Application<Request, Response> app = Application.basic()
+            .port(port)
+            .router(router)
+            .build();
 
-            Application<Request, Response> app = Application.basic()
-                .port(port)
-                .router(router)
-                .build();
-            app.start();
+        app.start();
 
-        } catch (IOException e) {
-
-            System.out.println("Unable to start the application: " + e.getMessage());
-
-        }
 
     }
 

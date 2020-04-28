@@ -18,36 +18,47 @@ public final class SetCookieHeader {
 
     protected static final boolean DEFAULT_SECURE = false;
     protected static final boolean DEFAULT_HTTPONLY = false;
+
     private static final String INVALID_NAME_SPECIAL_CHARS = "()<>@,;:\\\"/[]?={}";
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("E, dd MMM yyyy HH:mm:ss");
+
     @Getter
     @Setter
     private static Charset COOKIE_VALUE_CHARSET = StandardCharsets.UTF_8;
+
     @Getter
     @NonNull
     private String name;
+
     @Getter
     @Setter
     @NonNull
     private String value;
+
     @Getter
     @Setter
     private ZonedDateTime expires;
+
     @Getter
     @Setter
     private Long maxAge;
+
     @Getter
     @Setter
     private String domain;
+
     @Getter
     @Setter
     private String path;
+
     @Getter
     @Setter
     private Boolean secure;
+
     @Getter
     @Setter
     private Boolean httpOnly;
+
     @Getter
     @Setter
     private SameSitePolicy sameSite;

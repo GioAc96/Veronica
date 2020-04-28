@@ -9,9 +9,10 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import rocks.gioac96.veronica.factories.CreationException;
+import rocks.gioac96.veronica.http.BasicExchangeParser;
 import rocks.gioac96.veronica.http.ExceptionHandler;
 import rocks.gioac96.veronica.http.ExchangeParser;
-import rocks.gioac96.veronica.http.ExchangeParserImpl;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.http.SetCookieHeader;
@@ -66,26 +67,29 @@ public final class Application<Q extends Request, S extends Response> {
 
     /**
      * Instantiates a generic application builder.
+     *
      * @param <Q> Request type
      * @param <S> Response type
      * @return the instantiated generic application builder
      */
     public static <Q extends Request, S extends Response> ApplicationBuilder<Q, S> builder() {
 
-        return new ApplicationBuilder<Q, S>();
+        return new ApplicationBuilder<>();
 
     }
 
 
     /**
      * Instantiates a basic application builder.
+     *
      * @return the instantiated basic application builder
      */
     public static ApplicationBuilder<Request, Response> basic() {
 
-        return new ApplicationBuilder<Request, Response>()
-            .exchangeParser(new ExchangeParserImpl())
-            .exceptionHandler(new ExceptionHandler() {});
+        return new ApplicationBuilder<>()
+            .exchangeParser(new BasicExchangeParser())
+            .exceptionHandler(new ExceptionHandler() {
+            });
 
     }
 
@@ -203,9 +207,17 @@ public final class Application<Q extends Request, S extends Response> {
 
         }
 
-        public Application<Q, S> build() throws IOException {
+        public Application<Q, S> build() {
 
-            return new Application<Q, S>(port, router, exchangeParser, exceptionHandler);
+            try {
+
+                return new Application<>(port, router, exchangeParser, exceptionHandler);
+
+            } catch (IOException e) {
+
+                throw new CreationException(e);
+
+            }
 
         }
 

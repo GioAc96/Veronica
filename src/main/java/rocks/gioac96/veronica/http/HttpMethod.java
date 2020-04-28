@@ -3,13 +3,18 @@ package rocks.gioac96.veronica.http;
 /**
  * Http methods.
  */
+@SuppressWarnings("unused")
 public enum HttpMethod {
 
     GET,
+    HEAD,
     POST,
-    @SuppressWarnings("unused") PUT,
-    @SuppressWarnings("unused") DELETE,
-    @SuppressWarnings("unused") HEAD;
+    PUT,
+    DELETE,
+    TRACE,
+    OPTIONS,
+    CONNECT,
+    PATCH;
 
     /**
      * Returns an @{link HttpMethod} by its name.

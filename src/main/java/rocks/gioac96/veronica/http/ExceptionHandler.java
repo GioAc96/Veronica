@@ -24,6 +24,7 @@ public interface ExceptionHandler {
 
     /**
      * Handles internal server fatal exceptions.
+     *
      * @param e exception to handle
      */
     default void handleExchangeException(IOException e) {

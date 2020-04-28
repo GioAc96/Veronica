@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.tutorials;
 
-import java.io.IOException;
+import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
+
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
@@ -14,27 +15,35 @@ public class HttpHeaders {
         Route<Request, Response> route = Route.builder()
             .requestHandler(req -> {
 
-                switch(req.getHeaders().getFirst("accept").toLowerCase()) {
+                Response response;
+
+                switch (req.getHeaders().getFirst("accept").toLowerCase()) {
 
                     case "application/json":
-                        return Response.builder()
+                        response = Response.builder()
                             .body("{\"message\": \"Hello, world!\"}")
                             .header("Content-Type", "application/json")
                             .build();
 
+                        break;
+
                     case "text/html":
-                        return Response.builder()
+                        response = Response.builder()
                             .body("<h1>Hello, world!</h1>")
                             .header("Content-Type", "text/html")
                             .build();
 
+                        break;
+
                     default:
-                        return Response.builder()
+                        response = Response.builder()
                             .body("Hello, world!")
                             .header("Content-Type", "text/plain")
                             .build();
 
                 }
+
+                return ok(response);
             })
             .build();
 
@@ -44,20 +53,12 @@ public class HttpHeaders {
 
         int port = 8000;
 
-        try {
+        Application<Request, Response> app = Application.basic()
+            .port(port)
+            .router(router)
+            .build();
 
-            Application<Request, Response> app = Application.basic()
-                .port(port)
-                .router(router)
-                .build();
-            app.start();
-
-        } catch (IOException e) {
-
-            System.out.println("Unable to start the application: " + e.getMessage());
-
-        }
-
+        app.start();
 
 
     }

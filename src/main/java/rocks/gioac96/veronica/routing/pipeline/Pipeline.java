@@ -10,6 +10,14 @@ import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
+import rocks.gioac96.veronica.routing.pipeline.stages.FilterPayload;
+import rocks.gioac96.veronica.routing.pipeline.stages.PostFilter;
+import rocks.gioac96.veronica.routing.pipeline.stages.PostProcessor;
+import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
+import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
+import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload;
+import rocks.gioac96.veronica.routing.pipeline.stages.ResponseRenderer;
+import rocks.gioac96.veronica.routing.pipeline.stages.UnrenderedResponseException;
 import rocks.gioac96.veronica.util.PrioritySet;
 
 /**
@@ -21,7 +29,7 @@ public class Pipeline<Q extends Request, S extends Response> {
     @Getter
     @Setter
     @NonNull
-    private PrioritySet<PreFilter<Q>> preFilters;
+    private PrioritySet<PreFilter<Q, S>> preFilters;
 
     @Getter
     @Setter
@@ -48,27 +56,67 @@ public class Pipeline<Q extends Request, S extends Response> {
         return new PipelineBuilderImpl<>();
     }
 
-    private void applyPreFilters(Q request) throws PipelineBreakException {
+    private S preRender(Q request, RequestHandler<Q, S> requestHandler) {
 
-        for (PreFilter<Q> preFilter : preFilters) {
+        for (PreFilter<Q, S> preFilter : preFilters) {
 
-            preFilter.filter(request);
+            FilterPayload<S> filterPayload = preFilter.filter(request);
+
+            if (!filterPayload.shouldContinue()) {
+                return filterPayload.getResponse();
+            }
 
         }
 
-    }
+        RequestHandlerPayload<S> requestHandlerPayload = requestHandler.handle(request);
+        S response = requestHandlerPayload.getResponse();
 
-    private void applyPostFilters(Q request, S response) throws PipelineBreakException {
+        if (!requestHandlerPayload.shouldContinue()) {
+
+            return response;
+
+        }
 
         for (PostFilter<Q, S> postFilter : postFilters) {
 
-            postFilter.filter(request, response);
+            FilterPayload<S> filterPayload = postFilter.filter(request, response);
+
+            if (!filterPayload.shouldContinue()) {
+
+                return filterPayload.getResponse();
+
+            }
 
         }
 
+        return response;
+
     }
 
-    private void applyPostProcessors(Q request, S response) {
+    /**
+     * Handles a request by passing it through the pipeline.
+     *
+     * @param request        request to handle
+     * @param requestHandler request handler that performs the requested action
+     * @return the generated response
+     */
+    public S handle(@NonNull Q request, @NonNull RequestHandler<Q, S> requestHandler) {
+
+        S response = preRender(request, requestHandler);
+
+        if (!response.isRendered()) {
+
+            if (responseRenderer == null) {
+
+                throw new UnrenderedResponseException(response);
+
+            } else {
+
+                response.writeBody(responseRenderer.render(response));
+
+            }
+
+        }
 
         for (PostProcessor<Q, S> postProcessor : postProcessors) {
 
@@ -76,64 +124,10 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         }
 
-    }
-
-    /**
-     * Handles a request by passing through the pipeline.
-     *
-     * @param request        request to handle
-     * @param requestHandler request handler that performs the requested action
-     * @return the generated response
-     */
-    @SuppressWarnings("unchecked")
-    public S handle(@NonNull Q request, @NonNull RequestHandler<Q, S> requestHandler) {
-
-        // Pre-render
-        S response = preRender(request, requestHandler);
-
-        // Rendering
-        if (responseRenderer != null) {
-
-            try {
-
-                response.render(responseRenderer);
-
-            } catch (ResponseRenderingException e) {
-
-                response = (S) e.getResponse();
-
-            }
-
-        }
-
-        // Post-render
-        applyPostProcessors(request, response);
-
         return response;
 
     }
 
-
-    @SuppressWarnings("unchecked")
-    private S preRender(Q request, RequestHandler<Q, S> requestHandler) {
-
-        try {
-
-            applyPreFilters(request);
-
-            S response = requestHandler.handle(request);
-
-            applyPostFilters(request, response);
-
-            return response;
-
-        } catch (PipelineBreakException e) {
-
-            return (S) e.getResponse();
-
-        }
-
-    }
 
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
@@ -145,7 +139,7 @@ public class Pipeline<Q extends Request, S extends Response> {
         > {
 
         @NonNull
-        private final PrioritySet<PreFilter<Q>> preFilters = new PrioritySet<>();
+        private final PrioritySet<PreFilter<Q, S>> preFilters = new PrioritySet<>();
 
         @NonNull
         private final PrioritySet<PostFilter<Q, S>> postFilters = new PrioritySet<>();
@@ -156,14 +150,22 @@ public class Pipeline<Q extends Request, S extends Response> {
         private ResponseRenderer<S> responseRenderer;
 
         @SuppressWarnings("unused")
-        public B preFilter(PreFilter<Q> preFilter) {
+        public B preFilter(PreFilter<Q, S> preFilter) {
 
             this.preFilters.add(preFilter);
             return self();
 
         }
 
-        public B preFilters(PrioritySet<PreFilter<Q>> preFilters) {
+        @SuppressWarnings("unused")
+        public B preFilter(PreFilter<Q, S> preFilter, Integer priority) {
+
+            this.preFilters.add(preFilter, priority);
+            return self();
+
+        }
+
+        public B preFilters(PrioritySet<PreFilter<Q, S>> preFilters) {
 
             this.preFilters.addAll(preFilters);
             return self();
@@ -171,7 +173,7 @@ public class Pipeline<Q extends Request, S extends Response> {
         }
 
         @SuppressWarnings("unused")
-        public B preFilters(Collection<PreFilter<Q>> preFilters) {
+        public B preFilters(Collection<PreFilter<Q, S>> preFilters) {
 
             this.preFilters.addAll(preFilters);
             return self();
@@ -182,6 +184,14 @@ public class Pipeline<Q extends Request, S extends Response> {
         public B postFilter(PostFilter<Q, S> postFilter) {
 
             this.postFilters.add(postFilter);
+            return self();
+
+        }
+
+        @SuppressWarnings("unused")
+        public B postFilter(PostFilter<Q, S> postFilter, Integer priority) {
+
+            this.postFilters.add(postFilter, priority);
             return self();
 
         }
@@ -205,6 +215,14 @@ public class Pipeline<Q extends Request, S extends Response> {
         public B postProcessor(PostProcessor<Q, S> postProcessor) {
 
             this.postProcessors.add(postProcessor);
+            return self();
+
+        }
+
+        @SuppressWarnings("unused")
+        public B postProcessor(PostProcessor<Q, S> postProcessor, Integer priority) {
+
+            this.postProcessors.add(postProcessor, priority);
             return self();
 
         }
