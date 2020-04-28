@@ -1,5 +1,7 @@
 package rocks.gioac96.veronica.factories;
 
+import static rocks.gioac96.veronica.util.PrioritySet.DEFAULT_PRIORITY;
+
 /**
  * Factory interface.
  *
@@ -18,7 +20,7 @@ public interface Factory<T> {
      */
     default Integer priority() {
 
-        return null;
+        return DEFAULT_PRIORITY;
 
     }
 

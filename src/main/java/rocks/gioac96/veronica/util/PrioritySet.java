@@ -139,7 +139,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
      * @return the priority of the specified element, null if the element is not in the set.
      */
     @SuppressWarnings("unused")
-    public Integer getPriority(T element) {
+    public Integer getPriority(T element) throws ElementNotFoundException {
 
         for (Entry entry : entries) {
 
@@ -151,7 +151,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
 
         }
 
-        return null;
+        throw new ElementNotFoundException();
 
     }
 
