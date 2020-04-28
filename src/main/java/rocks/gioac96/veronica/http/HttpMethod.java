@@ -7,10 +7,14 @@ package rocks.gioac96.veronica.http;
 public enum HttpMethod {
 
     GET,
+    HEAD,
     POST,
     PUT,
     DELETE,
-    HEAD;
+    TRACE,
+    OPTIONS,
+    CONNECT,
+    PATCH;
 
     /**
      * Returns an @{link HttpMethod} by its name.
