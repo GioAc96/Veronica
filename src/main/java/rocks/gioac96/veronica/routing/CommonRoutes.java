@@ -21,7 +21,7 @@ public class CommonRoutes {
 
         return Route.builder()
             .requestMatcher(request -> !request.isSecure())
-            .requestHandler(request -> RequestHandlerPayload.fail(Response.builder()
+            .requestHandler(request -> RequestHandlerPayload.ok(Response.builder()
                 .httpStatus(HttpStatus.MOVED_PERMANENTLY)
                 .header("Location", request.getUri().toString().replaceFirst("^http", "https"))
                 .body("")
