@@ -1,6 +1,8 @@
 package rocks.gioac96.veronica;
 
+import javax.net.ssl.SSLContext;
 import rocks.gioac96.veronica.Application.ApplicationBuilder;
+import rocks.gioac96.veronica.factories.ConfigurableFactory;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.factories.Factory;
 import rocks.gioac96.veronica.http.ExceptionHandler;
@@ -18,7 +20,7 @@ import rocks.gioac96.veronica.routing.Router;
 public abstract class ApplicationFactory<Q extends Request, S extends Response>
 
     extends ApplicationBuilder<Q, S>
-    implements Factory<Application<Q, S>> {
+    implements ConfigurableFactory<Application<Q, S>> {
 
     protected ApplicationBuilder<Q, S> exchangeParser(Factory<ExchangeParser<Q>> exchangeParserFactory)
         throws CreationException {
@@ -41,9 +43,17 @@ public abstract class ApplicationFactory<Q extends Request, S extends Response>
 
     }
 
-    protected ApplicationBuilder<Q, S> router(Factory<Router<Q, S>> routerFactory) throws CreationException {
+    protected ApplicationBuilder<Q, S> router(Factory<Router<Q, S>> routerFactory)
+        throws CreationException {
 
         return router(routerFactory.build());
+
+    }
+
+    protected ApplicationBuilder<Q, S> sslContext(Factory<SSLContext> sslContextFactory)
+        throws CreationException {
+
+        return sslContext(sslContextFactory.build());
 
     }
 

@@ -41,6 +41,9 @@ public class Request {
     @NonNull
     protected final URI uri;
 
+    @Getter
+    protected final boolean secure;
+
     @Getter(lazy = true)
     private final Map<String, String> queryMap = lazyLoadQueryMap();
 
