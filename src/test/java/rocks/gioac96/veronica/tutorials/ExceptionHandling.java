@@ -3,6 +3,7 @@ package rocks.gioac96.veronica.tutorials;
 import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
 
 import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.Server;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.ExceptionHandler;
 import rocks.gioac96.veronica.http.HttpStatus;
@@ -53,7 +54,7 @@ public class ExceptionHandling {
         try {
 
             Application<Request, Response> app = Application.basic()
-                .port(port)
+                .server(Server.builder().port(port).build())
                 .router(router)
                 .exceptionHandler(exceptionHandler)
                 .build();

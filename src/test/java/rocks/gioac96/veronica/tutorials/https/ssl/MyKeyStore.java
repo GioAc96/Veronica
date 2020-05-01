@@ -13,7 +13,7 @@ public class MyKeyStore implements Factory<KeyStore> {
 
     public String password() {
 
-        return "my keystore password";
+        return "";
 
     }
 
@@ -23,7 +23,7 @@ public class MyKeyStore implements Factory<KeyStore> {
         try {
 
             KeyStore keyStore = KeyStore.getInstance("JKS");
-            keyStore.load(new FileInputStream("Path to jks keystore"), password().toCharArray());
+            keyStore.load(new FileInputStream("D:\\certs\\dev.gioac96.rocks\\test.jks"), password().toCharArray());
 
             return keyStore;
 
