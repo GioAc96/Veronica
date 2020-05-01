@@ -5,6 +5,7 @@ import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPaylo
 
 import java.util.Map;
 import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.Server;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.HttpStatus;
 import rocks.gioac96.veronica.http.Request;
@@ -60,7 +61,7 @@ public class Cookies {
         try {
 
             Application<Request, Response> app = Application.basic()
-                .port(port)
+                .server(Server.builder().port(port).build())
                 .router(router)
                 .build();
             app.start();

@@ -18,7 +18,6 @@ import rocks.gioac96.veronica.routing.Router;
  * @param <S> Response type
  */
 public abstract class ApplicationFactory<Q extends Request, S extends Response>
-
     extends ApplicationBuilder<Q, S>
     implements ConfigurableFactory<Application<Q, S>> {
 
@@ -37,12 +36,6 @@ public abstract class ApplicationFactory<Q extends Request, S extends Response>
     }
 
 
-    protected ApplicationBuilder<Q, S> port(Factory<Integer> portFactory) throws CreationException {
-
-        return port(portFactory.build());
-
-    }
-
     protected ApplicationBuilder<Q, S> router(Factory<Router<Q, S>> routerFactory)
         throws CreationException {
 
@@ -50,12 +43,12 @@ public abstract class ApplicationFactory<Q extends Request, S extends Response>
 
     }
 
-    protected ApplicationBuilder<Q, S> sslContext(Factory<SSLContext> sslContextFactory)
-        throws CreationException {
+    protected ApplicationBuilder<Q, S> server(Factory<? extends Server> serverFactory) {
 
-        return sslContext(sslContextFactory.build());
+        return server(serverFactory.build());
 
     }
+
 
     @Override
     public Application<Q, S> build() throws CreationException {

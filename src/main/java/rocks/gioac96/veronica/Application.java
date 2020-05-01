@@ -8,7 +8,9 @@ import com.sun.net.httpserver.HttpsServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
@@ -23,17 +25,13 @@ import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.http.SetCookieHeader;
 import rocks.gioac96.veronica.routing.Router;
+import rocks.gioac96.veronica.util.ArraySet;
 
 /**
  * Veronica application.
  */
 @SuppressWarnings("unused")
 public final class Application<Q extends Request, S extends Response> {
-
-    @Getter
-    private final int port;
-
-    private final HttpServer server;
 
     @Getter
     @Setter
@@ -50,28 +48,27 @@ public final class Application<Q extends Request, S extends Response> {
     @NonNull
     private ExceptionHandler exceptionHandler;
 
+    private Set<HttpServer> httpServers;
+
     protected Application(
-        int port,
+        @NonNull Set<Server> servers,
         @NonNull Router<Q, S> router,
         @NonNull ExchangeParser<Q> exchangeParser,
-        @NonNull ExceptionHandler exceptionHandler,
-        SSLContext sslContext
+        @NonNull ExceptionHandler exceptionHandler
     ) throws IOException {
 
-        this.port = port;
-        this.router = router;
         this.exchangeParser = exchangeParser;
+        this.router = router;
         this.exceptionHandler = exceptionHandler;
 
-        if (sslContext == null) {
+        this.httpServers = new ArraySet<>();
 
-            this.server = initHttpServer(port);
+        for (Server server : servers) {
 
-        } else {
-
-            this.server = initHttpsServer(port, sslContext);
+            this.httpServers.add(server.toHttpServer(this::handleExchange));
 
         }
+
 
     }
 
@@ -99,52 +96,6 @@ public final class Application<Q extends Request, S extends Response> {
             .exchangeParser(new BasicExchangeParser())
             .exceptionHandler(new ExceptionHandler() {
             });
-
-    }
-
-    private HttpServer initHttpServer(int port) throws IOException {
-
-        HttpServer server = HttpServer.create(
-            new InetSocketAddress(port), 0
-        );
-        server.createContext("/", this::handleExchange);
-
-        server.setExecutor(null);
-
-        return server;
-
-    }
-
-    private HttpsServer initHttpsServer(int port, SSLContext sslContext) throws IOException {
-
-        HttpsServer server = HttpsServer.create(
-            new InetSocketAddress(port), 0
-        );
-
-        server.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
-
-            @Override
-            public void configure(HttpsParameters params) {
-
-                // initialise the SSL context
-                SSLContext context = getSSLContext();
-                SSLEngine engine = context.createSSLEngine();
-                params.setNeedClientAuth(false);
-                params.setCipherSuites(engine.getEnabledCipherSuites());
-                params.setProtocols(engine.getEnabledProtocols());
-
-                // Set the SSL parameters
-                SSLParameters sslParameters = context.getSupportedSSLParameters();
-                params.setSSLParameters(sslParameters);
-
-            }
-        });
-
-        server.createContext("/", this::handleExchange);
-
-        server.setExecutor(null);
-
-        return server;
 
     }
 
@@ -204,13 +155,11 @@ public final class Application<Q extends Request, S extends Response> {
      */
     public void start() {
 
-        if (router == null) {
+        for (HttpServer httpServer : httpServers) {
 
-            throw new NullPointerException("Application router must be set before starting the application");
+            httpServer.start();
 
         }
-
-        server.start();
 
     }
 
@@ -219,27 +168,23 @@ public final class Application<Q extends Request, S extends Response> {
      */
     public void stop() {
 
-        server.stop(1);
+        for (HttpServer httpServer : httpServers) {
+
+            httpServer.stop(1);
+
+        }
 
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
     public static class ApplicationBuilder<Q extends Request, S extends Response> {
 
-        private int port;
-        private @NonNull Router<Q, S> router;
-        private @NonNull ExchangeParser<Q> exchangeParser;
-        private @NonNull ExceptionHandler exceptionHandler;
-        private SSLContext sslContext;
+        private Router<Q, S> router;
+        private ExchangeParser<Q> exchangeParser;
+        private ExceptionHandler exceptionHandler;
+        private final Set<Server> servers = new HashSet<>();
 
         ApplicationBuilder() {
-        }
-
-        public ApplicationBuilder<Q, S> port(int port) {
-
-            this.port = port;
-            return this;
-
         }
 
         public ApplicationBuilder<Q, S> router(@NonNull Router<Q, S> router) {
@@ -263,9 +208,9 @@ public final class Application<Q extends Request, S extends Response> {
 
         }
 
-        public ApplicationBuilder<Q, S> sslContext(SSLContext sslContext) {
+        public ApplicationBuilder<Q, S> server(Server server) {
 
-            this.sslContext = sslContext;
+            this.servers.add(server);
             return this;
 
         }
@@ -274,7 +219,7 @@ public final class Application<Q extends Request, S extends Response> {
 
             try {
 
-                return new Application<>(port, router, exchangeParser, exceptionHandler, sslContext);
+                return new Application<>(servers, router, exchangeParser, exceptionHandler);
 
             } catch (IOException e) {
 

@@ -1,23 +1,22 @@
-package rocks.gioac96.veronica.tutorials.https;
+package rocks.gioac96.veronica.tutorials.multiple_servers;
 
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.BasicApplicationFactory;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Router;
-import rocks.gioac96.veronica.tutorials.https.routes.RouteA;
 
 public class MyApplication extends BasicApplicationFactory {
 
     @Override
     public void configure() {
 
-        server(new MyServer());
-
         router(Router.builder()
             .fallbackRoute(new RouteA().build())
-            .build()
-        );
+            .build());
+
+        server(new MyNotSecureServer());
+        server(new MySecureServer());
 
     }
 
@@ -28,6 +27,5 @@ public class MyApplication extends BasicApplicationFactory {
         app.start();
 
     }
-
 
 }
