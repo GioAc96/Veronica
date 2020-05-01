@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.routing.pipeline;
 
+import rocks.gioac96.veronica.factories.ConfigurableFactory;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.factories.Factory;
 import rocks.gioac96.veronica.factories.PriorityFactory;
@@ -24,7 +25,7 @@ public abstract class PipelineFactory<
     S,
     Pipeline<Q, S>,
     PipelineFactory<Q, S>
-    > implements Factory<Pipeline<Q, S>> {
+    > implements ConfigurableFactory<Pipeline<Q, S>> {
 
     protected PipelineFactory<Q, S> preFilter(Factory<PreFilter<Q, S>> preFilterFactory) throws CreationException {
 

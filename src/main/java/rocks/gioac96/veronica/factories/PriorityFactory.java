@@ -4,6 +4,7 @@ import static rocks.gioac96.veronica.util.PrioritySet.DEFAULT_PRIORITY;
 
 /**
  * Factory with priority.
+ *
  * @param <T> type of the object instantiated by the factory
  */
 public interface PriorityFactory<T> extends Factory<T> {
