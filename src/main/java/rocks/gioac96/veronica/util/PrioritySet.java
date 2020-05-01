@@ -136,6 +136,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
      * Gets priority of the specified element.
      *
      * @param element element to get the priority of
+     * @throws ElementNotFoundException when element is not found
      * @return the priority of the specified element, null if the element is not in the set.
      */
     @SuppressWarnings("unused")

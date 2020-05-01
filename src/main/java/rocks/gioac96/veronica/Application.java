@@ -2,10 +2,16 @@ package rocks.gioac96.veronica;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpsConfigurator;
+import com.sun.net.httpserver.HttpsParameters;
+import com.sun.net.httpserver.HttpsServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLParameters;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -48,7 +54,8 @@ public final class Application<Q extends Request, S extends Response> {
         int port,
         @NonNull Router<Q, S> router,
         @NonNull ExchangeParser<Q> exchangeParser,
-        @NonNull ExceptionHandler exceptionHandler
+        @NonNull ExceptionHandler exceptionHandler,
+        SSLContext sslContext
     ) throws IOException {
 
         this.port = port;
@@ -56,12 +63,15 @@ public final class Application<Q extends Request, S extends Response> {
         this.exchangeParser = exchangeParser;
         this.exceptionHandler = exceptionHandler;
 
-        this.server = HttpServer.create(
-            new InetSocketAddress(port), 0
-        );
-        server.createContext("/", this::handleExchange);
+        if (sslContext == null) {
 
-        server.setExecutor(null);
+            this.server = initHttpServer(port);
+
+        } else {
+
+            this.server = initHttpsServer(port, sslContext);
+
+        }
 
     }
 
@@ -78,7 +88,6 @@ public final class Application<Q extends Request, S extends Response> {
 
     }
 
-
     /**
      * Instantiates a basic application builder.
      *
@@ -90,6 +99,52 @@ public final class Application<Q extends Request, S extends Response> {
             .exchangeParser(new BasicExchangeParser())
             .exceptionHandler(new ExceptionHandler() {
             });
+
+    }
+
+    private HttpServer initHttpServer(int port) throws IOException {
+
+        HttpServer server = HttpServer.create(
+            new InetSocketAddress(port), 0
+        );
+        server.createContext("/", this::handleExchange);
+
+        server.setExecutor(null);
+
+        return server;
+
+    }
+
+    private HttpsServer initHttpsServer(int port, SSLContext sslContext) throws IOException {
+
+        HttpsServer server = HttpsServer.create(
+            new InetSocketAddress(port), 0
+        );
+
+        server.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
+
+            @Override
+            public void configure(HttpsParameters params) {
+
+                // initialise the SSL context
+                SSLContext context = getSSLContext();
+                SSLEngine engine = context.createSSLEngine();
+                params.setNeedClientAuth(false);
+                params.setCipherSuites(engine.getEnabledCipherSuites());
+                params.setProtocols(engine.getEnabledProtocols());
+
+                // Set the SSL parameters
+                SSLParameters sslParameters = context.getSupportedSSLParameters();
+                params.setSSLParameters(sslParameters);
+
+            }
+        });
+
+        server.createContext("/", this::handleExchange);
+
+        server.setExecutor(null);
+
+        return server;
 
     }
 
@@ -175,6 +230,7 @@ public final class Application<Q extends Request, S extends Response> {
         private @NonNull Router<Q, S> router;
         private @NonNull ExchangeParser<Q> exchangeParser;
         private @NonNull ExceptionHandler exceptionHandler;
+        private SSLContext sslContext;
 
         ApplicationBuilder() {
         }
@@ -207,11 +263,18 @@ public final class Application<Q extends Request, S extends Response> {
 
         }
 
+        public ApplicationBuilder<Q, S> sslContext(SSLContext sslContext) {
+
+            this.sslContext = sslContext;
+            return this;
+
+        }
+
         public Application<Q, S> build() {
 
             try {
 
-                return new Application<>(port, router, exchangeParser, exceptionHandler);
+                return new Application<>(port, router, exchangeParser, exceptionHandler, sslContext);
 
             } catch (IOException e) {
 

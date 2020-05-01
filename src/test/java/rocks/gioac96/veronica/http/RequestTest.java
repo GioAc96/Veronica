@@ -84,7 +84,7 @@ class RequestTest {
         when(uriMock.getPath())
             .thenReturn(path);
 
-        Request request = new Request(HttpMethod.GET, "", headersMock, uriMock);
+        Request request = new Request(HttpMethod.GET, "", headersMock, uriMock, false);
 
         assertEquals(path, request.getPath());
 
@@ -101,7 +101,8 @@ class RequestTest {
             HttpMethod.GET,
             "",
             headersMock,
-            uriMock
+            uriMock,
+            false
         );
 
         assertEquals(expected.size(), request.getQueryMap().size());

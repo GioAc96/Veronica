@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.http;
 
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpsExchange;
 
 /**
  * {@link HttpExchange} parser that generates a {@link Request} output object.
@@ -23,6 +24,7 @@ public final class BasicExchangeParser implements ExchangeParser<Request> {
             String body = new String(httpExchange.getRequestBody().readAllBytes());
 
             return Request.builder()
+                .secure(httpExchange instanceof HttpsExchange)
                 .httpMethod(httpMethod)
                 .uri(httpExchange.getRequestURI())
                 .headers(httpExchange.getRequestHeaders())
