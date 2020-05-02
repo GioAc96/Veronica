@@ -1,8 +1,10 @@
 package rocks.gioac96.veronica.routing;
 
 import lombok.NonNull;
+import rocks.gioac96.veronica.factories.ConfigurableFactory;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.factories.Factory;
+import rocks.gioac96.veronica.factories.PriorityFactory;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.matching.RequestMatcher;
@@ -23,7 +25,9 @@ public abstract class RouteFactory<
     S,
     Route<Q, S>,
     RouteFactory<Q, S>
-    > implements Factory<Route<Q, S>> {
+    > implements
+    PriorityFactory<Route<Q, S>>,
+    ConfigurableFactory<Route<Q, S>> {
 
     protected RouteFactory<Q, S> requestMatcher(@NonNull Factory<RequestMatcher<Q>> requestMatcherFactory)
         throws CreationException {

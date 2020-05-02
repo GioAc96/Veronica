@@ -4,6 +4,7 @@ import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPaylo
 
 import java.io.IOException;
 import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.Server;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
@@ -40,7 +41,7 @@ public class Echo {
             .build();
 
         Application<Request, Response> application = Application.basic()
-            .port(80)
+            .server(Server.builder().port(80).build())
             .router(router)
             .build();
 

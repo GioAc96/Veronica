@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica;
 
 import rocks.gioac96.veronica.Application.ApplicationBuilder;
+import rocks.gioac96.veronica.factories.ConfigurableFactory;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.factories.Factory;
 import rocks.gioac96.veronica.http.ExceptionHandler;
@@ -16,36 +17,40 @@ import rocks.gioac96.veronica.routing.Router;
  * @param <S> Response type
  */
 public abstract class ApplicationFactory<Q extends Request, S extends Response>
-
     extends ApplicationBuilder<Q, S>
-    implements Factory<Application<Q, S>> {
+    implements ConfigurableFactory<Application<Q, S>> {
 
-    protected ApplicationBuilder<Q, S> exchangeParser(Factory<ExchangeParser<Q>> exchangeParserFactory)
-        throws CreationException {
+    protected ApplicationBuilder<Q, S> exchangeParser(Factory<ExchangeParser<Q>> exchangeParserFactory) {
 
         return exchangeParser(exchangeParserFactory.build());
 
     }
 
-    protected ApplicationBuilder<Q, S> exceptionHandler(Factory<ExceptionHandler> exceptionHandlerFactory)
-        throws CreationException {
+    protected ApplicationBuilder<Q, S> exceptionHandler(Factory<ExceptionHandler> exceptionHandlerFactory) {
 
         return exceptionHandler(exceptionHandlerFactory.build());
 
     }
 
 
-    protected ApplicationBuilder<Q, S> port(Factory<Integer> portFactory) throws CreationException {
-
-        return port(portFactory.build());
-
-    }
-
-    protected ApplicationBuilder<Q, S> router(Factory<Router<Q, S>> routerFactory) throws CreationException {
+    protected ApplicationBuilder<Q, S> router(Factory<Router<Q, S>> routerFactory) {
 
         return router(routerFactory.build());
 
     }
+
+    protected ApplicationBuilder<Q, S> server(Factory<? extends Server> serverFactory) {
+
+        return server(serverFactory.build());
+
+    }
+
+    protected ApplicationBuilder<Q, S> threads(Factory<Integer> threadsFactory) {
+
+        return threads(threadsFactory.build());
+
+    }
+
 
     @Override
     public Application<Q, S> build() throws CreationException {

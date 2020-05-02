@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.routing;
 
 import lombok.NonNull;
+import rocks.gioac96.veronica.factories.ConfigurableFactory;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.factories.Factory;
 import rocks.gioac96.veronica.http.Request;
@@ -20,7 +21,7 @@ public abstract class RouterFactory<
     S,
     Router<Q, S>,
     RouterFactory<Q, S>
-    > implements Factory<Router<Q, S>> {
+    > implements ConfigurableFactory<Router<Q, S>> {
 
     @NonNull
     private Route<Q, S> fallbackRoute;

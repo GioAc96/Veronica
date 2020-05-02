@@ -136,8 +136,8 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
      * Gets priority of the specified element.
      *
      * @param element element to get the priority of
-     * @throws ElementNotFoundException when element is not found
      * @return the priority of the specified element, null if the element is not in the set.
+     * @throws ElementNotFoundException when element is not found
      */
     @SuppressWarnings("unused")
     public Integer getPriority(T element) throws ElementNotFoundException {
@@ -162,8 +162,8 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
      *
      * @param element  element to change the priority of
      * @param priority priority to assign to the element. If null, defaults to DEFAULT_PRIORITY
-     * @return true iff the element was not in the set already or if the element had a different
-     *       priority prior to the call.
+     * @return true iff the element was not in the set already or if the element had a different priority prior to the
+     *      call.
      */
     public boolean changePriority(T element, Integer priority) {
 
