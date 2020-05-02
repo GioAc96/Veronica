@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
@@ -48,18 +50,24 @@ public final class Application<Q extends Request, S extends Response> {
     @NonNull
     private ExceptionHandler exceptionHandler;
 
-    private Set<HttpServer> httpServers;
+    private final ThreadPoolExecutor threadPool;
+
+    private final Set<HttpServer> httpServers;
 
     protected Application(
         @NonNull Set<Server> servers,
         @NonNull Router<Q, S> router,
         @NonNull ExchangeParser<Q> exchangeParser,
-        @NonNull ExceptionHandler exceptionHandler
+        @NonNull ExceptionHandler exceptionHandler,
+        int threads
     ) throws IOException {
 
         this.exchangeParser = exchangeParser;
         this.router = router;
         this.exceptionHandler = exceptionHandler;
+
+        validateThreads(threads);
+        this.threadPool = (ThreadPoolExecutor)Executors.newFixedThreadPool(threads);
 
         this.httpServers = new ArraySet<>();
 
@@ -68,7 +76,6 @@ public final class Application<Q extends Request, S extends Response> {
             this.httpServers.add(server.toHttpServer(this::handleExchange));
 
         }
-
 
     }
 
@@ -99,54 +106,68 @@ public final class Application<Q extends Request, S extends Response> {
 
     }
 
-    private void handleExchange(HttpExchange exchange) {
+    private static void validateThreads(int threads) {
 
-        Response response;
+        if (threads < 1) {
 
-        try {
-
-            // Parse request
-            Q request = exchangeParser.parseExchange(exchange);
-
-            // Generate response
-            response = router.route(request);
-
-
-        } catch (Exception e) {
-
-            response = exceptionHandler.handle(e);
+            throw new IllegalArgumentException("Threads count must be >= 1");
 
         }
 
-        try {
-            // Writing response headers
-            exchange.getResponseHeaders().putAll(response.getHeaders());
+    }
 
-            // Cookies
-            List<String> cookieHeaders = new ArrayList<>();
+    private void handleExchange(HttpExchange exchange) {
 
-            for (SetCookieHeader httpCookie : response.getCookies()) {
+        threadPool.submit(() -> {
 
-                cookieHeaders.add(httpCookie.toHeaderString());
+            Response response;
+
+            try {
+
+                // Parse request
+                Q request = exchangeParser.parseExchange(exchange);
+
+                // Generate response
+                response = router.route(request);
+
+
+            } catch (Exception e) {
+
+                response = exceptionHandler.handle(e);
 
             }
 
-            exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
+            try {
+                // Writing response headers
+                exchange.getResponseHeaders().putAll(response.getHeaders());
 
-            // Send response headers
-            exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length());
+                // Cookies
+                List<String> cookieHeaders = new ArrayList<>();
 
-            // Send response body
-            exchange.getResponseBody().write(response.getBody().getBytes());
+                for (SetCookieHeader httpCookie : response.getCookies()) {
 
-            // Close response
-            exchange.close();
+                    cookieHeaders.add(httpCookie.toHeaderString());
 
-        } catch (IOException e) {
+                }
 
-            exceptionHandler.handleExchangeException(e);
+                exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
 
-        }
+                // Send response headers
+                exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length());
+
+                // Send response body
+                exchange.getResponseBody().write(response.getBody().getBytes());
+
+                // Close response
+                exchange.close();
+
+            } catch (IOException e) {
+
+                exceptionHandler.handleExchangeException(e);
+
+            }
+
+        });
 
     }
 
@@ -183,6 +204,7 @@ public final class Application<Q extends Request, S extends Response> {
         private ExchangeParser<Q> exchangeParser;
         private ExceptionHandler exceptionHandler;
         private final Set<Server> servers = new HashSet<>();
+        private int threads = Runtime.getRuntime().availableProcessors();
 
         ApplicationBuilder() {
         }
@@ -215,11 +237,20 @@ public final class Application<Q extends Request, S extends Response> {
 
         }
 
+        public ApplicationBuilder<Q, S> threads(int threads) {
+
+            validateThreads(threads);
+
+            this.threads = threads;
+            return this;
+
+        }
+
         public Application<Q, S> build() {
 
             try {
 
-                return new Application<>(servers, router, exchangeParser, exceptionHandler);
+                return new Application<>(servers, router, exchangeParser, exceptionHandler, threads);
 
             } catch (IOException e) {
 
