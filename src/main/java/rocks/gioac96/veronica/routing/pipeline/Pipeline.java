@@ -270,17 +270,6 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         public abstract C build();
 
-        public String toString() {
-
-            return
-                "Pipeline.PipelineBuilder(preFilters=" + this.preFilters
-                    + ", postFilters=" + this.postFilters
-                    + ", postProcessors=" + this.postProcessors
-                    + ", responseRenderer=" + this.responseRenderer
-                    + ")";
-
-        }
-
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

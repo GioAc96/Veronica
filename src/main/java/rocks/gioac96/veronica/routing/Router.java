@@ -123,15 +123,6 @@ public final class Router<Q extends Request, S extends Response> {
 
         public abstract C build();
 
-        public String toString() {
-
-            return
-                "Router.RouterBuilder(fallbackRoute=" + this.fallbackRoute
-                    + ", routes=" + this.routes
-                    + ")";
-
-        }
-
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

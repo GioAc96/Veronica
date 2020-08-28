@@ -1,6 +1,8 @@
 package rocks.gioac96.veronica.routing.matching;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
@@ -68,18 +70,16 @@ public final class MethodRule<Q extends Request> implements RequestMatcher<Q> {
 
         }
 
+        public MethodRuleBuilder allowedMethods(HttpMethod... allowedMethods) {
+
+            return allowedMethods(Arrays.asList(allowedMethods));
+
+        }
+
         @SuppressWarnings("unused")
         public MethodRule<Q> build() {
 
             return new MethodRule<>(allowedHttpMethods);
-
-        }
-
-        public String toString() {
-
-            return
-                "MethodRule.MethodRuleBuilder(allowedHttpMethods="
-                    + this.allowedHttpMethods + ")";
 
         }
 

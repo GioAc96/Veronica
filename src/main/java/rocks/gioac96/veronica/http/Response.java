@@ -178,17 +178,6 @@ public class Response {
 
         public abstract C build();
 
-        public String toString() {
-
-            return
-                "Response.ResponseBuilder(httpStatus=" + this.httpStatus
-                    + ", body=" + this.body
-                    + ", headers=" + this.headers
-                    + ", cookies=" + this.cookies
-                    + ")";
-
-        }
-
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

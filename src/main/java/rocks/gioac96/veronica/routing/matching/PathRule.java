@@ -73,14 +73,6 @@ public final class PathRule<Q extends Request> implements RequestMatcher<Q> {
 
         }
 
-        public String toString() {
-
-            return
-                "PathRule.PathRuleBuilder(allowedPathPatterns=" + this.allowedPathPatterns
-                    + ")";
-
-        }
-
     }
 
 }
