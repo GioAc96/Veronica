@@ -7,6 +7,7 @@ import java.util.Map;
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.Server;
 import rocks.gioac96.veronica.factories.CreationException;
+import rocks.gioac96.veronica.http.CommonResponses;
 import rocks.gioac96.veronica.http.HttpStatus;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
@@ -46,10 +47,7 @@ public class Cookies {
         Router<Request, Response> router = Router.builder()
             .route(Route.builder()
                 .requestMatcher(get("/favicon.ico"))
-                .requestHandler(request -> ok(Response.builder()
-                    .body("")
-                    .httpStatus(HttpStatus.NOT_FOUND)
-                    .build())
+                .requestHandler(request -> ok(CommonResponses.notFound())
                 )
                 .build()
             )
