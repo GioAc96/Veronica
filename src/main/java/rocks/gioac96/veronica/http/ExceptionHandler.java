@@ -15,10 +15,7 @@ public interface ExceptionHandler {
      */
     default Response handle(Exception e) {
 
-        return Response.builder()
-            .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-            .emptyBody()
-            .build();
+        return CommonResponses.internalError();
 
     }
 
