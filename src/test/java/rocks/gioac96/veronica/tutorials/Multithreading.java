@@ -22,10 +22,13 @@ public class Multithreading {
                     .requestHandler(request -> {
 
                         try {
-                            Thread.sleep(1);
+                            Thread.sleep(10000);
                         } catch (InterruptedException ignored){}
 
-                        return ok(Response.builder().body("Hello, there!").build());
+                        return ok(Response.builder()
+                            .body("Hello, there!")
+                            .build()
+                        );
 
                     })
                     .build())

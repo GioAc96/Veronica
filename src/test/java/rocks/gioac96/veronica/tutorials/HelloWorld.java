@@ -29,8 +29,10 @@ public class HelloWorld {
         int port = 8000;
 
         Application<Request, Response> app = Application.basic()
-            .server(Server.builder().port(port).build())
-            .router(router)
+            .server(Server.builder()
+                .port(port)
+                .build()
+            ).router(router)
             .build();
 
         app.start();
