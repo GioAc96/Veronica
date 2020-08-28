@@ -17,7 +17,7 @@ public interface ExceptionHandler {
 
         return Response.builder()
             .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body("")
+            .emptyBody()
             .build();
 
     }

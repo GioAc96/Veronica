@@ -112,6 +112,12 @@ public class Response {
 
         }
 
+        public B emptyBody() {
+
+            return body("");
+
+        }
+
         public B headers(@NonNull Headers headers) {
 
             this.headers = headers;
