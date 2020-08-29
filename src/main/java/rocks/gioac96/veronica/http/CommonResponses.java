@@ -23,6 +23,16 @@ public class CommonResponses {
     }
 
     /**
+     * Instantiates an http "OK" response with an empty body.
+     * @return the instantiated response
+     */
+    public Response ok() {
+
+        return empty(HttpStatus.OK);
+
+    }
+
+    /**
      * Instantiates an http "NOT FOUND" response with an empty body.
      * @return the instantiated response
      */
