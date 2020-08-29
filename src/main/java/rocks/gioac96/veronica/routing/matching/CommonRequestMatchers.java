@@ -57,6 +57,18 @@ public class CommonRequestMatchers {
 
     }
 
+    /**
+     * Generates a request matcher that matches favicon requests.
+     *
+     * @param <Q> Type of the request to match
+     * @return the generated request matcher
+     */
+    public <Q extends Request> RequestMatcher<Q> favicon() {
+
+        return request -> request.getHttpMethod() == HttpMethod.GET && request.getPath().equals("/favicon.ico");
+
+    }
+
 
     /**
      * Generates a request matcher that matches POST requests that have a pattern matching the specified one.
