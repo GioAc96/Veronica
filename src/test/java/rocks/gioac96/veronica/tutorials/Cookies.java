@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.tutorials;
 
+import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.favicon;
 import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.get;
 import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
 
@@ -46,7 +47,7 @@ public class Cookies {
 
         Router<Request, Response> router = Router.builder()
             .route(Route.builder()
-                .requestMatcher(get("/favicon.ico"))
+                .requestMatcher(favicon())
                 .requestHandler(request -> ok(CommonResponses.notFound())
                 )
                 .build()
