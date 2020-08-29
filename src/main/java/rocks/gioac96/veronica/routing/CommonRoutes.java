@@ -15,7 +15,7 @@ import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload;
 @UtilityClass
 public class CommonRoutes {
 
-    private Route<? extends Request, ? extends Response> emptyError(HttpStatus httpStatus) {
+    private Route<Request, Response> emptyError(HttpStatus httpStatus) {
 
         return Route.builder()
             .alwaysMatch()
@@ -29,7 +29,7 @@ public class CommonRoutes {
      *
      * @return the instantiated route
      */
-    public Route<? extends Request, ? extends Response> redirectToSecure() {
+    public Route<Request, Response> redirectToSecure() {
 
         return Route.builder()
             .requestMatcher(request -> !request.isSecure())
@@ -48,7 +48,7 @@ public class CommonRoutes {
      *
      * @return the instantiated route
      */
-    public Route<? extends Request, ? extends Response> notFound() {
+    public Route<Request, Response> notFound() {
 
         return emptyError(HttpStatus.NOT_FOUND);
 

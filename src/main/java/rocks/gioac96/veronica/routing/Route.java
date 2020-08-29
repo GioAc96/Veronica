@@ -23,7 +23,7 @@ public class Route<Q extends Request, S extends Response> {
     @Getter
     @Setter
     @NonNull
-    private RequestMatcher<Q> requestMatcher = CommonRequestMatchers.neverMatch();
+    private RequestMatcher<Q> requestMatcher;
 
     @Getter
     @Setter
@@ -33,7 +33,7 @@ public class Route<Q extends Request, S extends Response> {
     @Getter
     @Setter
     @NonNull
-    private Pipeline<Q, S> pipeline = Pipeline.<Q, S>builder().build();
+    private Pipeline<Q, S> pipeline;
 
     protected Route(RouteBuilder<Q, S, ?, ?> b) {
         this.requestMatcher = b.requestMatcher;
@@ -78,13 +78,13 @@ public class Route<Q extends Request, S extends Response> {
         > {
 
         @NonNull
-        private RequestMatcher<Q> requestMatcher;
+        private RequestMatcher<Q> requestMatcher = CommonRequestMatchers.neverMatch();
 
         @NonNull
         private RequestHandler<Q, S> requestHandler;
 
         @NonNull
-        private Pipeline<Q, S> pipeline;
+        private Pipeline<Q, S> pipeline = Pipeline.<Q, S>builder().build();
 
         public B requestMatcher(@NonNull RequestMatcher<Q> requestMatcher) {
 
