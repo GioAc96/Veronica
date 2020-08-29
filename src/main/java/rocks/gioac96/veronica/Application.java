@@ -99,7 +99,7 @@ public final class Application<Q extends Request, S extends Response> {
      */
     public static ApplicationBuilder<Request, Response> basic() {
 
-        return new ApplicationBuilder<>()
+        return builder()
             .exchangeParser(new BasicExchangeParser())
             .exceptionHandler(new ExceptionHandler() {
             });

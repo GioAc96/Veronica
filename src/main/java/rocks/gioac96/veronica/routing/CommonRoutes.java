@@ -54,15 +54,4 @@ public class CommonRoutes {
 
     }
 
-    /**
-     * Instantiates a {@link Route} that always returns an http "INTERNAL SERVER ERROR" error.
-     *
-     * @return the instantiated route
-     */
-    public Route<? extends Request, ? extends Response> internalError() {
-
-        return emptyError(HttpStatus.INTERNAL_SERVER_ERROR);
-
-    }
-
 }
