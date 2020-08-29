@@ -10,6 +10,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
+import rocks.gioac96.veronica.routing.pipeline.stages.AsynchronousPostProcessor;
 import rocks.gioac96.veronica.routing.pipeline.stages.FilterPayload;
 import rocks.gioac96.veronica.routing.pipeline.stages.PostFilter;
 import rocks.gioac96.veronica.routing.pipeline.stages.PostProcessor;
@@ -120,7 +121,18 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         for (PostProcessor<Q, S> postProcessor : postProcessors) {
 
-            postProcessor.process(request, response);
+            if (postProcessor instanceof AsynchronousPostProcessor) {
+
+                Thread postProcessorThread = new Thread(() -> postProcessor.process(request, response));
+                postProcessorThread.setPriority(((AsynchronousPostProcessor<Q, S>) postProcessor).getThreadPriority());
+
+                postProcessorThread.start();
+
+            } else {
+
+                postProcessor.process(request, response);
+
+            }
 
         }
 
