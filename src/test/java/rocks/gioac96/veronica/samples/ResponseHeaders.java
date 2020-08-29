@@ -17,21 +17,17 @@ public class ResponseHeaders {
 
     public static void main(String[] args) throws IOException, CreationException {
 
-        Headers jsonResponseHeaders = new Headers();
-
-        jsonResponseHeaders.put("content-type", List.of("application/json"));
-
         Router<Request, Response> router = Router.builder()
             .fallbackRoute(Route.builder()
                 .requestHandler(request -> ok(Response.builder()
                     .body("{\"hello\": \"world\"}")
-                    .headers(jsonResponseHeaders)
+                    .header("content-type", "application/json")
                     .build()))
                 .build())
             .build();
 
         Application<Request, Response> application = Application.basic()
-            .server(Server.builder().port(80).build())
+            .port(80)
             .router(router)
             .build();
 

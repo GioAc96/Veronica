@@ -45,13 +45,6 @@ public abstract class ApplicationFactory<Q extends Request, S extends Response>
 
     }
 
-    protected ApplicationBuilder<Q, S> threads(Factory<Integer> threadsFactory) {
-
-        return threads(threadsFactory.build());
-
-    }
-
-
     @Override
     public Application<Q, S> build() throws CreationException {
 

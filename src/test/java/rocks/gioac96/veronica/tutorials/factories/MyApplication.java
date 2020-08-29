@@ -10,7 +10,7 @@ public class MyApplication extends BasicApplicationFactory {
     public void configure() {
 
         router(new MyRouter());
-        server(new MyServer());
+        port(80);
 
     }
 

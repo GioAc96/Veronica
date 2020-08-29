@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.routing.pipeline;
 
 import java.util.Collection;
+import java.util.concurrent.ThreadPoolExecutor;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
@@ -10,7 +11,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.pipeline.stages.AsynchronousPostProcessor;
 import rocks.gioac96.veronica.routing.pipeline.stages.FilterPayload;
 import rocks.gioac96.veronica.routing.pipeline.stages.PostFilter;
 import rocks.gioac96.veronica.routing.pipeline.stages.PostProcessor;
@@ -46,11 +46,16 @@ public class Pipeline<Q extends Request, S extends Response> {
     @Setter
     private ResponseRenderer<S> responseRenderer;
 
+    @Setter
+    protected ThreadPoolExecutor threadPool;
+
     protected Pipeline(PipelineBuilder<Q, S, ?, ?> b) {
+
         this.preFilters = b.preFilters;
         this.postFilters = b.postFilters;
         this.postProcessors = b.postProcessors;
         this.responseRenderer = b.responseRenderer;
+
     }
 
     public static <Q extends Request, S extends Response> PipelineBuilder<Q, S, ?, ?> builder() {
@@ -105,6 +110,45 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         S response = preRender(request, requestHandler);
 
+        render(response);
+
+        postRender(request, response);
+
+        return response;
+
+    }
+
+    private void postRender(@NonNull Q request, S response) {
+
+        for (PostProcessor<Q, S> postProcessor : postProcessors) {
+
+            if (postProcessor instanceof PostProcessor.Asynchronous) {
+
+                Runnable postProcessorTask = () -> postProcessor.process(request, response);
+
+                if (this.threadPool == null) {
+
+                    new Thread(postProcessorTask).start();
+
+                } else {
+
+                    this.threadPool.execute(postProcessorTask);
+
+                }
+
+
+            } else {
+
+                postProcessor.process(request, response);
+
+            }
+
+        }
+
+    }
+    
+    private void render(S response) {
+
         if (!response.isRendered()) {
 
             if (responseRenderer == null) {
@@ -119,27 +163,7 @@ public class Pipeline<Q extends Request, S extends Response> {
 
         }
 
-        for (PostProcessor<Q, S> postProcessor : postProcessors) {
-
-            if (postProcessor instanceof AsynchronousPostProcessor) {
-
-                Thread postProcessorThread = new Thread(() -> postProcessor.process(request, response));
-                postProcessorThread.setPriority(((AsynchronousPostProcessor<Q, S>) postProcessor).getThreadPriority());
-
-                postProcessorThread.start();
-
-            } else {
-
-                postProcessor.process(request, response);
-
-            }
-
-        }
-
-        return response;
-
     }
-
 
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})

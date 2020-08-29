@@ -27,7 +27,7 @@ public class Path {
             .build();
 
         Application<Request, Response> application = Application.basic()
-            .server(Server.builder().port(80).build())
+            .port(80)
             .router(router)
             .build();
 

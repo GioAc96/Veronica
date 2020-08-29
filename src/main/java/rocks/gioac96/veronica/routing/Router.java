@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.routing;
 
 import java.util.Collection;
+import java.util.concurrent.ThreadPoolExecutor;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
@@ -30,10 +31,20 @@ public final class Router<Q extends Request, S extends Response> {
     @NonNull
     protected PrioritySet<Route<Q, S>> routes;
 
+    protected ThreadPoolExecutor threadPool;
+
     @Generated
     protected Router(RouterBuilder<Q, S, ?, ?> b) {
+
         this.fallbackRoute = b.fallbackRoute;
         this.routes = b.routes;
+
+        for (Route<Q, S> route : routes) {
+
+            route.setThreadPool(threadPool);
+
+        }
+
     }
 
 
@@ -42,6 +53,18 @@ public final class Router<Q extends Request, S extends Response> {
     public static <Q extends Request, S extends Response> RouterBuilder<Q, S, ?, ?> builder() {
 
         return new RouterBuilderImpl<>();
+
+    }
+
+    public void setThreadPool(ThreadPoolExecutor threadPool) {
+
+        this.threadPool = threadPool;
+
+        for (Route<Q, S> route : routes) {
+
+            route.setThreadPool(threadPool);
+
+        }
 
     }
 
@@ -58,6 +81,14 @@ public final class Router<Q extends Request, S extends Response> {
             route -> route.shouldHandle(request),
             fallbackRoute
         ).handle(request);
+
+    }
+
+    public void addRoute(Route<Q, S> route) {
+
+        route.setThreadPool(this.threadPool);
+
+        this.routes.add(route);
 
     }
 

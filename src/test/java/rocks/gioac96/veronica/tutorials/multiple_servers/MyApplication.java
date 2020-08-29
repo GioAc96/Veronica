@@ -15,7 +15,7 @@ public class MyApplication extends BasicApplicationFactory {
             .fallbackRoute(new RouteA().build())
             .build());
 
-        server(new MyNotSecureServer());
+        server(new MyServer());
         server(new MySecureServer());
 
     }

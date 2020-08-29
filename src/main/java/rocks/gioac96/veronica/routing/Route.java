@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.routing;
 
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,18 +32,38 @@ public class Route<Q extends Request, S extends Response> {
     private RequestHandler<Q, S> requestHandler;
 
     @Getter
-    @Setter
     @NonNull
     private Pipeline<Q, S> pipeline;
 
+    protected ThreadPoolExecutor threadPool;
+
     protected Route(RouteBuilder<Q, S, ?, ?> b) {
+
         this.requestMatcher = b.requestMatcher;
         this.requestHandler = b.requestHandler;
-        this.pipeline = b.pipeline;
+
+        setPipeline(b.pipeline);
+
     }
 
     public static <Q extends Request, S extends Response> RouteBuilder<Q, S, ?, ?> builder() {
         return new RouteBuilderImpl<Q, S>();
+    }
+
+    public void setThreadPool(ThreadPoolExecutor threadPool) {
+
+        this.threadPool = threadPool;
+
+        this.pipeline.setThreadPool(threadPool);
+
+    }
+
+    public void setPipeline(Pipeline<Q, S> pipeline) {
+
+        this.pipeline = pipeline;
+
+        pipeline.setThreadPool(this.threadPool);
+
     }
 
     /**
@@ -106,6 +127,14 @@ public class Route<Q extends Request, S extends Response> {
 
         }
 
+        public B handler(@NonNull Function<Q, S> handlerFunction) {
+
+            this.requestHandler = request -> RequestHandlerPayload.ok(handlerFunction.apply(request));
+
+            return self();
+
+        }
+
         public B pipeline(@NonNull Pipeline<Q, S> pipeline) {
 
             this.pipeline = pipeline;
@@ -133,11 +162,17 @@ public class Route<Q extends Request, S extends Response> {
         }
 
         protected Route.RouteBuilderImpl<Q, S> self() {
+
             return this;
+
         }
 
         public Route<Q, S> build() {
+
             return new Route<Q, S>(this);
+
         }
+
     }
+
 }

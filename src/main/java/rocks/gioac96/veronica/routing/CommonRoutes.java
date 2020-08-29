@@ -1,6 +1,5 @@
 package rocks.gioac96.veronica.routing;
 
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
 
 import lombok.experimental.UtilityClass;
 import rocks.gioac96.veronica.http.CommonResponses;
@@ -15,11 +14,11 @@ import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload;
 @UtilityClass
 public class CommonRoutes {
 
-    private Route<Request, Response> emptyError(HttpStatus httpStatus) {
+    private Route<Request, Response> empty(HttpStatus httpStatus) {
 
         return Route.builder()
             .alwaysMatch()
-            .requestHandler(request -> ok(CommonResponses.empty(httpStatus)))
+            .requestHandler(request -> RequestHandlerPayload.ok(CommonResponses.empty(httpStatus)))
             .build();
 
     }
@@ -44,13 +43,24 @@ public class CommonRoutes {
     }
 
     /**
-     * Instantiates a {@link Route} that always returns an http "NOT FOUND" error.
+     * Instantiates a {@link Route} that always returns an http "OK" response.
+     *
+     * @return the instantiated route
+     */
+    public Route<Request, Response> ok() {
+
+        return empty(HttpStatus.OK);
+
+    }
+
+    /**
+     * Instantiates a {@link Route} that always returns an http "NOT FOUND" response.
      *
      * @return the instantiated route
      */
     public Route<Request, Response> notFound() {
 
-        return emptyError(HttpStatus.NOT_FOUND);
+        return empty(HttpStatus.NOT_FOUND);
 
     }
 

@@ -14,9 +14,9 @@ public class RouteB extends RouteFactory<Request, Response> {
 
         requestMatcher(get("/b"));
 
-        requestHandler(request -> ok(Response.builder()
-            .body("And is route B")
-            .build())
+        handler(request -> Response.builder()
+            .body("And this is route B")
+            .build()
         );
 
     }

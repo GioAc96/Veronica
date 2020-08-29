@@ -16,7 +16,6 @@ public class Query {
 
     public static void main(String[] args) throws IOException, CreationException {
 
-
         Router<Request, Response> router = Router.builder()
             .route(Route.builder()
                 .requestMatcher(request -> request.getQueryMap().size() > 0)
@@ -37,7 +36,7 @@ public class Query {
             .build();
 
         Application<Request, Response> application = Application.basic()
-            .server(Server.builder().port(80).build())
+            .port(80)
             .router(router)
             .build();
 

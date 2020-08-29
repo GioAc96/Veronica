@@ -54,7 +54,7 @@ public class ExceptionHandling {
         try {
 
             Application<Request, Response> app = Application.basic()
-                .server(Server.builder().port(port).build())
+                .port(port)
                 .router(router)
                 .exceptionHandler(exceptionHandler)
                 .build();

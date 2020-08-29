@@ -55,7 +55,7 @@ public class HttpHeaders {
         int port = 8000;
 
         Application<Request, Response> app = Application.basic()
-            .server(Server.builder().port(port).build())
+            .port(port)
             .router(router)
             .build();
 

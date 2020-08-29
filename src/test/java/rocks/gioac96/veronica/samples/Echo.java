@@ -15,17 +15,16 @@ public class Echo {
 
     public static void main(String[] args) throws IOException, CreationException {
 
-
         Router<Request, Response> router = Router.builder()
             .route(
                 Route.builder()
+                    .requestMatcher(
+                        request -> request.getBody().length() > 0
+                    )
                     .requestHandler(
                         request -> ok(Response.builder()
                             .body(request.getBody())
                             .build())
-                    )
-                    .requestMatcher(
-                        request -> request.getBody().length() > 0
                     )
                     .build()
             )
@@ -41,7 +40,7 @@ public class Echo {
             .build();
 
         Application<Request, Response> application = Application.basic()
-            .server(Server.builder().port(80).build())
+            .port(80)
             .router(router)
             .build();
 

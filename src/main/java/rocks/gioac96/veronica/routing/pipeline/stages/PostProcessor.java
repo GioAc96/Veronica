@@ -12,4 +12,6 @@ public interface PostProcessor<Q extends Request, S extends Response> {
 
     void process(@NonNull Q request, @NonNull S response);
 
+    interface Asynchronous<Q extends Request, S extends Response> extends PostProcessor<Q, S> {}
+
 }

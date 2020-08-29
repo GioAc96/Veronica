@@ -60,7 +60,7 @@ public class Cookies {
         try {
 
             Application<Request, Response> app = Application.basic()
-                .server(Server.builder().port(port).build())
+                .port(port)
                 .router(router)
                 .build();
             app.start();
