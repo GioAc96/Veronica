@@ -50,6 +50,10 @@ public class Route<Q extends Request, S extends Response> {
         return new RouteBuilderImpl<Q, S>();
     }
 
+    /**
+     * Sets the thread pool.
+     * @param threadPool thread pool value
+     */
     public void setThreadPool(ThreadPoolExecutor threadPool) {
 
         this.threadPool = threadPool;
@@ -58,6 +62,10 @@ public class Route<Q extends Request, S extends Response> {
 
     }
 
+    /**
+     * Sets the pipeline of the route.
+     * @param pipeline the pipeline
+     */
     public void setPipeline(Pipeline<Q, S> pipeline) {
 
         this.pipeline = pipeline;

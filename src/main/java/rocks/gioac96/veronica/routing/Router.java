@@ -56,6 +56,10 @@ public final class Router<Q extends Request, S extends Response> {
 
     }
 
+    /**
+     * Sets the thread pool.
+     * @param threadPool the thread pool
+     */
     public void setThreadPool(ThreadPoolExecutor threadPool) {
 
         this.threadPool = threadPool;
@@ -84,11 +88,28 @@ public final class Router<Q extends Request, S extends Response> {
 
     }
 
+    /**
+     * Adds a route to the router.
+     * @param route the route to add
+     */
     public void addRoute(Route<Q, S> route) {
 
         route.setThreadPool(this.threadPool);
 
         this.routes.add(route);
+
+    }
+
+    /**
+     * Adds a route to the router, with the specified priority.
+     * @param route the route to add
+     * @param priority the priority of the route
+     */
+    public void addRoute(Route<Q, S> route, int priority) {
+
+        route.setThreadPool(this.threadPool);
+
+        this.routes.add(route, priority);
 
     }
 

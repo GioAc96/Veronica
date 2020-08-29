@@ -12,6 +12,11 @@ public interface PostProcessor<Q extends Request, S extends Response> {
 
     void process(@NonNull Q request, @NonNull S response);
 
+    /**
+     * Marker for PostProcessors that are executed asynchronously.
+     * @param <Q> type of the request
+     * @param <S> type of the response
+     */
     interface Asynchronous<Q extends Request, S extends Response> extends PostProcessor<Q, S> {}
 
 }

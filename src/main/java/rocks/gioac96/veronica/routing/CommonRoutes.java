@@ -1,6 +1,5 @@
 package rocks.gioac96.veronica.routing;
 
-
 import lombok.experimental.UtilityClass;
 import rocks.gioac96.veronica.http.CommonResponses;
 import rocks.gioac96.veronica.http.HttpStatus;
