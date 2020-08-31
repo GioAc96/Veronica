@@ -4,17 +4,17 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
-class PermissionTree {
+class PermissionTree<P> {
 
-    protected final Set<PermissionTree> children;
-    protected Object permissions;
+    protected final Set<PermissionTree<P>> children;
+    protected P permissions;
     protected final Path path;
 
     int getTreeSize() {
 
         int counter = 1;
 
-        for (PermissionTree child : children) {
+        for (PermissionTree<P> child : children) {
 
             counter += child.getTreeSize();
 
@@ -25,7 +25,7 @@ class PermissionTree {
 
     }
 
-    protected PermissionTree(Path path, Object permissions) {
+    protected PermissionTree(Path path, P permissions) {
 
         this.children = new HashSet<>();
         this.path = path;
@@ -33,7 +33,7 @@ class PermissionTree {
 
     }
 
-    public void overwritePermissions(Object permissions) {
+    public void overwritePermissions(P permissions) {
 
         this.permissions = permissions;
 

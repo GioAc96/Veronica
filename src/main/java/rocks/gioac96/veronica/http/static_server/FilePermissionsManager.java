@@ -5,28 +5,26 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class FilePermissionsManager {
+public class FilePermissionsManager<P> {
 
-    public static final Object DEFAULT_PERMISSIONS = null;
+    private final Set<PermissionTree<P>> rootTrees = new HashSet<>();
 
-    private final Set<PermissionTree> rootTrees = new HashSet<>();
-
-    private PermissionTree getClosestParent(Path path) {
+    private PermissionTree<P> getClosestParent(Path path) {
 
         assert !isRoot(path);
 
-        for (PermissionTree rootTree : rootTrees) {
+        for (PermissionTree<P> rootTree : rootTrees) {
 
             if (path.getRoot().equals(rootTree.path)) {
 
                 // Root is already known. Descending tree
 
-                PermissionTree pointer = rootTree;
+                PermissionTree<P> pointer = rootTree;
 
                 loop:
                 while (pointer.path.getNameCount() < path.getNameCount()) {
 
-                    for (PermissionTree node : pointer.children) {
+                    for (PermissionTree<P> node : pointer.children) {
 
                         if (path.equals(node.path)) {
 
@@ -53,7 +51,7 @@ public class FilePermissionsManager {
 
         // Root is unknown
 
-        PermissionTree rootTree = new PermissionTree(path.getRoot(), DEFAULT_PERMISSIONS);
+        PermissionTree<P> rootTree = new PermissionTree<>(path.getRoot(), null);
         rootTrees.add(rootTree);
 
         return rootTree;
@@ -66,33 +64,34 @@ public class FilePermissionsManager {
 
     }
 
+    public void setPermissions(Path path, P permissions) {
 
-    public void setPermissions(Path path, Object permissions) {
+        Path normalizedPath = path.normalize();
 
-        if (isRoot(path)) {
+        if (isRoot(normalizedPath)) {
 
-            setRootPermissions(path, permissions);
+            setRootPermissions(normalizedPath, permissions);
 
         } else {
 
-            setNonRootPermissions(path, permissions);
+            setNonRootPermissions(normalizedPath, permissions);
 
         }
 
 
     }
 
-    private void setNonRootPermissions(Path path, Object permissions) {
+    private void setNonRootPermissions(Path path, P permissions) {
 
         assert !isRoot(path);
 
-        PermissionTree closestParent = getClosestParent(path);
+        PermissionTree<P> closestParent = getClosestParent(path);
 
         closestParent.children.removeIf(child -> child.path.startsWith(path));
 
        if (! Objects.equals(permissions, closestParent.permissions)) {
 
-            PermissionTree leaf = new PermissionTree(path, DEFAULT_PERMISSIONS);
+            PermissionTree<P> leaf = new PermissionTree<>(path, null);
             leaf.overwritePermissions(permissions);
 
             closestParent.children.add(leaf);
@@ -101,11 +100,11 @@ public class FilePermissionsManager {
 
     }
 
-    private void setRootPermissions(Path root, Object permissions) {
+    private void setRootPermissions(Path root, P permissions) {
 
         assert isRoot(root);
 
-        for (PermissionTree rootTree : rootTrees) {
+        for (PermissionTree<P> rootTree : rootTrees) {
 
             if (rootTree.path.equals(root)) {
 
@@ -120,34 +119,35 @@ public class FilePermissionsManager {
 
         // Root is unknown
 
-        PermissionTree rootTree = new PermissionTree(root, DEFAULT_PERMISSIONS);
+        PermissionTree<P> rootTree = new PermissionTree<>(root, null);
         rootTrees.add(rootTree);
 
         rootTree.overwritePermissions(permissions);
 
     }
 
-    public Object getPermissions(Path path) {
+    public P getPermissions(Path path) {
 
-       if (isRoot(path)) {
+        Path normalizedPath = path.normalize();
 
-           return getRootPermissions(path);
+        if (isRoot(normalizedPath)) {
 
-       } else {
+            return getRootPermissions(normalizedPath);
+        } else {
 
-           return getNonRootPermissions(path);
+            return getNonRootPermissions(normalizedPath);
 
-       }
+        }
 
     }
 
-    private Object getNonRootPermissions(Path path) {
+    private P getNonRootPermissions(Path path) {
 
         assert !isRoot(path);
 
-        PermissionTree closestParent = getClosestParent(path);
+        PermissionTree<P> closestParent = getClosestParent(path);
 
-        for (PermissionTree child : closestParent.children) {
+        for (PermissionTree<P> child : closestParent.children) {
 
             if (child.path.equals(path)) {
 
@@ -161,11 +161,11 @@ public class FilePermissionsManager {
 
     }
 
-    private Object getRootPermissions(Path rootPath) {
+    private P getRootPermissions(Path rootPath) {
 
         assert isRoot(rootPath);
 
-        for (PermissionTree rootTree : rootTrees) {
+        for (PermissionTree<P> rootTree : rootTrees) {
 
             if (rootTree.path.equals(rootPath)) {
 
@@ -175,7 +175,7 @@ public class FilePermissionsManager {
 
         }
 
-        return DEFAULT_PERMISSIONS;
+        return null;
 
     }
 

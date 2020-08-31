@@ -2,13 +2,11 @@ package rocks.gioac96.veronica.http.static_server;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
@@ -16,8 +14,8 @@ import org.junit.jupiter.api.Test;
 class FilePermissionsManagerTest {
 
     private static void assertTree(
-        FilePermissionsManager filePermissionsManager,
-        Consumer<Set<PermissionTree>> assertionsOnTree
+        FilePermissionsManager<String> filePermissionsManager,
+        Consumer<Set<PermissionTree<String>>> assertionsOnTree
     ) {
 
         try {
@@ -25,7 +23,7 @@ class FilePermissionsManagerTest {
             Field rootTreesField = FilePermissionsManager.class.getDeclaredField("rootTrees");
             rootTreesField.setAccessible(true);
 
-            Set<PermissionTree> permissionTrees = (Set<PermissionTree>) rootTreesField.get(filePermissionsManager);
+            Set<PermissionTree<String>> permissionTrees = (Set<PermissionTree<String>>) rootTreesField.get(filePermissionsManager);
 
             assertionsOnTree.accept(permissionTrees);
 
@@ -42,12 +40,12 @@ class FilePermissionsManagerTest {
 
         Path root = Paths.get("A:\\");
 
-        FilePermissionsManager filePermissionsManager = new FilePermissionsManager();
+        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
 
-        filePermissionsManager.setPermissions(root, 1);
+        filePermissionsManager.setPermissions(root, "A");
 
         assertEquals(
-            1,
+            "A",
             filePermissionsManager.getPermissions(root)
         );
 
@@ -58,13 +56,13 @@ class FilePermissionsManagerTest {
 
         Path root = Paths.get("A:\\");
 
-        FilePermissionsManager filePermissionsManager = new FilePermissionsManager();
+        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
 
-        filePermissionsManager.setPermissions(root, 1);
-        filePermissionsManager.setPermissions(root, 2);
+        filePermissionsManager.setPermissions(root, "A");
+        filePermissionsManager.setPermissions(root, "B");
 
         assertEquals(
-            2,
+            "B",
             filePermissionsManager.getPermissions(root)
         );
 
@@ -74,19 +72,9 @@ class FilePermissionsManagerTest {
 
         Path root = Paths.get("A:\\");
 
-        FilePermissionsManager filePermissionsManager = new FilePermissionsManager();
+        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
 
-        if (FilePermissionsManager.DEFAULT_PERMISSIONS  == null) {
-            assertNull(filePermissionsManager.getPermissions(root));
-
-        } else {
-
-            assertEquals(
-                FilePermissionsManager.DEFAULT_PERMISSIONS,
-                filePermissionsManager.getPermissions(root)
-            );
-
-        }
+        assertNull(filePermissionsManager.getPermissions(root));
 
     }
 
@@ -96,7 +84,7 @@ class FilePermissionsManagerTest {
         Path rootA = Paths.get("A:\\");
         Path rootB = Paths.get("B:\\");
 
-        FilePermissionsManager filePermissionsManager = new FilePermissionsManager();
+        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
 
         filePermissionsManager.setPermissions(rootA, "A");
         filePermissionsManager.setPermissions(rootB, "B");
@@ -117,7 +105,7 @@ class FilePermissionsManagerTest {
 
         Path pathA = Paths.get("A:\\path");
 
-        FilePermissionsManager filePermissionsManager = new FilePermissionsManager();
+        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
 
         filePermissionsManager.setPermissions(pathA, "A");
 
@@ -133,14 +121,13 @@ class FilePermissionsManagerTest {
 
         Path pathA = Paths.get("A:\\parent\\child");
 
-        FilePermissionsManager filePermissionsManager = new FilePermissionsManager();
+        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
 
         filePermissionsManager.setPermissions(pathA, "A");
 
-        assertTrue(Objects.equals(
-            FilePermissionsManager.DEFAULT_PERMISSIONS,
+        assertNull(
             filePermissionsManager.getPermissions(pathA.getParent())
-        ));
+        );
 
 
     }
@@ -150,7 +137,7 @@ class FilePermissionsManagerTest {
 
         Path pathA = Paths.get("A:\\parent");
 
-        FilePermissionsManager filePermissionsManager = new FilePermissionsManager();
+        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
 
         filePermissionsManager.setPermissions(pathA, "A");
 
@@ -167,7 +154,7 @@ class FilePermissionsManagerTest {
         Path parent = Paths.get("A:\\parent");
         Path child = Paths.get("A:\\parent\\child");
 
-        FilePermissionsManager filePermissionsManager = new FilePermissionsManager();
+        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
 
         filePermissionsManager.setPermissions(child, "A");
         filePermissionsManager.setPermissions(parent, "B");
@@ -189,7 +176,7 @@ class FilePermissionsManagerTest {
         Path parent = Paths.get("A:\\parent");
         Path child = Paths.get("A:\\parent\\child");
 
-        FilePermissionsManager filePermissionsManager = new FilePermissionsManager();
+        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
 
         filePermissionsManager.setPermissions(parent, "B");
         filePermissionsManager.setPermissions(child, "A");
@@ -211,7 +198,7 @@ class FilePermissionsManagerTest {
         Path parent = Paths.get("A:\\parent");
         Path child = Paths.get("A:\\parent\\child");
 
-        FilePermissionsManager filePermissionsManager = new FilePermissionsManager();
+        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
 
         filePermissionsManager.setPermissions(child, "A");
         filePermissionsManager.setPermissions(parent, "A");
@@ -243,7 +230,7 @@ class FilePermissionsManagerTest {
         Path c = Paths.get("A:\\parent\\a\\b\\c");
         Path d = Paths.get("A:\\parent\\a\\d");
 
-        FilePermissionsManager filePermissionsManager = new FilePermissionsManager();
+        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
 
         filePermissionsManager.setPermissions(a, "A");
         filePermissionsManager.setPermissions(b, "B");
@@ -309,6 +296,32 @@ class FilePermissionsManagerTest {
             rootTrees -> assertEquals(
                 2,
                 rootTrees.size()
+            )
+        );
+
+    }
+
+    @Test
+    public void testPathNormalization() {
+
+        Path pathA = Paths.get("A:\\parent\\.");
+        Path pathB = Paths.get("B:\\parent\\child\\..");
+
+        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
+
+        filePermissionsManager.setPermissions(pathA, "A");
+        filePermissionsManager.setPermissions(pathB, "B");
+
+        assertEquals(
+            "B",
+            filePermissionsManager.getPermissions(pathB)
+        );
+
+        assertTree(
+            filePermissionsManager,
+            rootTrees -> assertEquals(
+                2,
+                rootTrees.stream().findFirst().get().getTreeSize()
             )
         );
 
