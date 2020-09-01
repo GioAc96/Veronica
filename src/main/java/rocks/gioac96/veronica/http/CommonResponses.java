@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
-import rocks.gioac96.veronica.http.static_server.MimeResolver;
+import rocks.gioac96.veronica.static_server.MimeResolver;
 
 /**
  * Utility class for instantiating common Response objects.
@@ -26,6 +26,9 @@ public class CommonResponses {
     @Setter
     private Response internalError = null;
 
+    @Setter
+    private Response forbidden = null;
+
     private MimeResolver getMimeResolver() {
 
         if (mimeResolver == null) {
@@ -40,6 +43,7 @@ public class CommonResponses {
 
     /**
      * Instantiates a response with a blank body.
+     *
      * @param httpStatus the http status of the response
      * @return the instantiated response
      */
@@ -121,14 +125,47 @@ public class CommonResponses {
 
     }
 
-    public Response embeddedFile(String filePath) {
+    /**
+     * Instantiates an http "FORBIDDEN" response with an empty body.
+     * @return the instantiated response
+     */
+    public Response forbidden() {
 
-        Path path = Paths.get(filePath);
+        if (forbidden == null) {
+
+            forbidden = empty(HttpStatus.UNAUTHORIZED);
+
+        }
+
+        return forbidden;
+
+    }
+
+    /**
+     * Instantiates an http containing a file disposed inline.
+     *
+     * @param filePath the path of the file
+     * @return the instantiated response
+     */
+    public Response inlineFile(String filePath) {
+
+        return inlineFile(Paths.get(filePath));
+
+
+    }
+
+    /**
+     * Instantiates an http containing a file disposed inline.
+     *
+     * @param filePath the path of the file
+     * @return the instantiated response
+     */
+    public Response inlineFile(Path filePath) {
 
         try {
 
-            return file(path)
-                .header("Content-Disposition", "inline; filename=" + path.getFileName())
+            return file(filePath)
+                .header("Content-Disposition", "inline; filename=" + filePath.getFileName())
                 .build();
 
         } catch (IOException e) {
@@ -139,14 +176,30 @@ public class CommonResponses {
 
     }
 
-    public Response downloadFile(String filePath) {
+    /**
+     * Instantiates an http containing a file disposed as attachment.
+     *
+     * @param filePath the path of the file
+     * @return the instantiated response
+     */
+    public Response attachmentFile(String filePath) {
 
-        Path path = Paths.get(filePath);
+        return attachmentFile(Paths.get(filePath));
+
+    }
+
+    /**
+     * Instantiates an http containing a file disposed as attachment.
+     *
+     * @param filePath the path of the file
+     * @return the instantiated response
+     */
+    public Response attachmentFile(Path filePath) {
 
         try {
 
-            return file(path)
-                .header("Content-Disposition", "attachment; filename=" + path.getFileName())
+            return file(filePath)
+                .header("Content-Disposition", "attachment; filename=" + filePath.getFileName())
                 .build();
 
         } catch (IOException e) {
@@ -154,6 +207,38 @@ public class CommonResponses {
             return notFound();
 
         }
+
+    }
+
+    /**
+     * Instantiates an http containing a raw file.
+     *
+     * @param filePath the path of the file
+     * @return the instantiated response
+     */
+    public Response rawFile(Path filePath) {
+
+        try {
+
+            return file(filePath).build();
+
+        } catch (IOException e) {
+
+            return notFound();
+
+        }
+
+    }
+
+    /**
+     * Instantiates an http containing a raw file.
+     *
+     * @param filePath the path of the file
+     * @return the instantiated response
+     */
+    public Response rawFile(String filePath) {
+
+        return rawFile(Paths.get(filePath));
 
     }
 
