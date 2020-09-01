@@ -1,7 +1,11 @@
 package rocks.gioac96.veronica.static_server;
 
 import java.util.Set;
+import lombok.Getter;
 
+/**
+ * Interface for associating file extensions to MIME types.
+ */
 public interface MimeType {
 
     Set<String> getExtensions();
@@ -9,7 +13,7 @@ public interface MimeType {
     String getMime();
 
     /**
-     * Enum of common MIME types
+     * Enum of common MIME types.
      */
     enum CommonMimeTypes implements MimeType {
 
@@ -26,7 +30,10 @@ public interface MimeType {
         CSS(Set.of(".css"), "text/css"),
         CSV(Set.of(".csv"), "text/csv"),
         MICROSOFT_WORD(Set.of(".doc"), "application/msword"),
-        MICROSOFT_WORD_OPENXML(Set.of(".docx"), "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
+        MICROSOFT_WORD_OPENXML(
+            Set.of(".docx"),
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ),
         MICROSOFT_EMBEDDED_OPENTYPE(Set.of(".eot"), "application/vnd.ms-fontobject"),
         EPUB(Set.of(".epub"), "application/epub+zip"),
         GZIP(Set.of(".gz"), "application/gzip"),
@@ -55,7 +62,10 @@ public interface MimeType {
         PDF(Set.of(".pdf"), "application/pdf"),
         PHP(Set.of(".php"), "application/x-httpd-php"),
         MICROSOFT_POWERPOINT(Set.of(".ppt"), "application/vnd.ms-powerpoint"),
-        MICROSOFT_POWERPOINT_OPENXML(Set.of(".pptx"), "application/vnd.openxmlformats-officedocument.presentationml.presentation"),
+        MICROSOFT_POWERPOINT_OPENXML(
+            Set.of(".pptx"),
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        ),
         RAR(Set.of(".rar"), "application/vnd.rar"),
         RICH_TEXT_FORMAT(Set.of(".rtf"), "application/rtf"),
         BOURNE_SHELL_SCRIPT(Set.of(".sh"), "application/x-sh"),
@@ -85,22 +95,17 @@ public interface MimeType {
         _3G2_AUDIO(Set.of(".3gp"),"audio/3gpp2"),
         _7ZIP(Set.of(".7z"), "application/x-7z-compressed");
 
+        @Getter
         private final Set<String> extensions;
+
+        @Getter
         private final String mime;
 
         CommonMimeTypes(Set<String> extensions, String mime) {
             this.extensions = extensions;
             this.mime = mime;
         }
-        @Override
-        public Set<String> getExtensions() {
-            return extensions;
-        }
 
-        @Override
-        public String getMime() {
-            return mime;
-        }
     }
 
 }

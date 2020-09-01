@@ -9,6 +9,12 @@ import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.pipeline.Pipeline;
 
+/**
+ * Builder for static server routes.
+ * @param <Q> the type of the request
+ * @param <P> the type of the file permissions
+ */
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
 public class StaticRouteBuilder<
         Q extends Request,
         P
@@ -25,7 +31,7 @@ public class StaticRouteBuilder<
 
     @NonNull
     private String basePath;
-    
+
     @NonNull
     private Response accessDeniedResponse = CommonResponses.forbidden();
 

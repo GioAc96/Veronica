@@ -13,7 +13,7 @@ public class File {
             .port(80)
             .router(Router.builder()
                 .fallbackRoute(Route.builder()
-                    .handler(request -> CommonResponses.embeddedFile("D:\\OneDrive\\zb13bup\\Desktop\\pgamento-universita-2020-2021.pdf"))
+                    .handler(request -> CommonResponses.inlineFile("D:\\OneDrive\\zb13bup\\Desktop\\pagamento-universita-2020-2021.pdf"))
                     .build())
                 .build())
             .build()

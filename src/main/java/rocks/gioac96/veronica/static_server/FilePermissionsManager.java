@@ -6,6 +6,11 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Class that manages permissions of file directories. Used to set and get permissions of directories.
+ *
+ * @param <P> type of the permissions
+ */
 public class FilePermissionsManager<P> {
 
     private final Set<PermissionTree<P>> rootTrees = new HashSet<>();
@@ -65,6 +70,11 @@ public class FilePermissionsManager<P> {
 
     }
 
+    /**
+     * Sets the permissions of the specified path.
+     * @param path path to set the permissions of
+     * @param permissions permissions tos set
+     */
     public void setPermissions(Path path, P permissions) {
 
         Path normalizedPath = path.normalize();
@@ -90,7 +100,7 @@ public class FilePermissionsManager<P> {
 
         closestParent.children.removeIf(child -> child.path.startsWith(path));
 
-       if (! Objects.equals(permissions, closestParent.permissions)) {
+        if (! Objects.equals(permissions, closestParent.permissions)) {
 
             PermissionTree<P> leaf = new PermissionTree<>(path, null);
             leaf.overwritePermissions(permissions);
@@ -127,6 +137,11 @@ public class FilePermissionsManager<P> {
 
     }
 
+    /**
+     * Gets the permissions of the specified path.
+     * @param path path to get the permissions of
+     * @return the permissions
+     */
     public P getPermissions(Path path) {
 
         Path normalizedPath = path.normalize();
@@ -180,12 +195,14 @@ public class FilePermissionsManager<P> {
 
     }
 
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static <P> Builder<P> builder() {
 
         return new Builder<>();
 
     }
 
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public static class Builder<P> {
 
         FilePermissionsManager<P> filePermissionsManager = new FilePermissionsManager<>();

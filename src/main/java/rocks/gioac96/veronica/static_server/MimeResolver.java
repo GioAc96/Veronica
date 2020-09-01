@@ -2,7 +2,9 @@ package rocks.gioac96.veronica.static_server;
 
 import java.util.HashMap;
 
-
+/**
+ * Class used to resolve file extensions to MIME types.
+ */
 public class MimeResolver {
 
     private final HashMap<String, String> extensionMimeMap;
@@ -13,12 +15,17 @@ public class MimeResolver {
 
     }
 
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static MimeResolverBuilder<?, ?> builder() {
 
         return new MimeResolverBuilderImpl();
 
     }
 
+    /**
+     * Instantiates a MimeResolver builder with already all common MIME types configured.
+     * @return the instantiated MimeResolver builder
+     */
     public static MimeResolverBuilder<?, ?> basic() {
 
         MimeResolverBuilder builder = builder();
@@ -33,6 +40,11 @@ public class MimeResolver {
 
     }
 
+    /**
+     * Resolves the MIME type of a file given its file name.
+     * @param fileName the name of the file to resolve the MIME type of
+     * @return the MIME type
+     */
     public String resolveMime(String fileName) {
 
         int lastDotPosition = fileName.lastIndexOf('.');
@@ -50,9 +62,10 @@ public class MimeResolver {
     }
 
 
-    public static abstract class MimeResolverBuilder<C extends MimeResolver, B extends MimeResolverBuilder<C, B>> {
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
+    public abstract static class MimeResolverBuilder<C extends MimeResolver, B extends MimeResolverBuilder<C, B>> {
 
-        private HashMap<String, String> extensionMimeMap = new HashMap<>();
+        private final HashMap<String, String> extensionMimeMap = new HashMap<>();
 
         public B mime(MimeType... mimeType) {
 
@@ -88,16 +101,25 @@ public class MimeResolver {
 
     }
 
-    private static final class MimeResolverBuilderImpl extends MimeResolverBuilder<MimeResolver, MimeResolverBuilderImpl> {
+    private static final class MimeResolverBuilderImpl
+        extends MimeResolverBuilder<MimeResolver, MimeResolverBuilderImpl> {
+
         private MimeResolverBuilderImpl() {
+
         }
 
         protected MimeResolver.MimeResolverBuilderImpl self() {
+
             return this;
+
         }
 
         public MimeResolver build() {
+
             return new MimeResolver(this);
+
         }
+
     }
+
 }

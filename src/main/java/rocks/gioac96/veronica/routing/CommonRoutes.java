@@ -25,6 +25,7 @@ public class CommonRoutes {
     /**
      * Instantiates a {@link Route} that redirects http requests to https.
      *
+     * @param <Q> type of the request
      * @return the instantiated route
      */
     public <Q extends Request> Route<Q, Response> redirectToSecure() {
@@ -44,6 +45,7 @@ public class CommonRoutes {
     /**
      * Instantiates a {@link Route} that always returns an http "OK" response.
      *
+     * @param <Q> type of the request
      * @return the instantiated route
      */
     public <Q extends Request> Route<Q, Response> ok() {
@@ -55,6 +57,7 @@ public class CommonRoutes {
     /**
      * Instantiates a {@link Route} that always returns an http "NOT FOUND" response.
      *
+     * @param <Q> type of the request
      * @return the instantiated route
      */
     public <Q extends Request> Route<Q, Response> notFound() {

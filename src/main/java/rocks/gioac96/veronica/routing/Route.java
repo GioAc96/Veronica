@@ -47,12 +47,19 @@ public class Route<Q extends Request, S extends Response> {
 
     }
 
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static <Q extends Request, S extends Response> RouteBuilder<Q, S, ?, ?> builder() {
 
         return new RouteBuilderImpl<Q, S>();
 
     }
 
+    /**
+     * Instantiates a builder for static server routes.
+     * @param <Q> the type of the request
+     * @param <P> the type of the file permissions
+     * @return the instantiated builder
+     */
     public static <Q extends Request, P> StaticRouteBuilder<Q, P> staticRouteBuilder() {
 
         return new StaticRouteBuilder<>();
