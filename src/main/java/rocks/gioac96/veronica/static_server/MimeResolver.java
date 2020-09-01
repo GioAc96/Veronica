@@ -43,9 +43,9 @@ public class MimeResolver {
 
         }
 
-        String extension = fileName.substring(lastDotPosition + 1);
+        String extension = fileName.substring(lastDotPosition);
 
-        return resolveMime(extension);
+        return extensionMimeMap.get(extension);
 
     }
 
