@@ -94,7 +94,7 @@ public final class Application<Q extends Request, S extends Response> {
     public static ApplicationBuilder<Request, Response> basic() {
 
         return builder()
-            .exchangeParser(new BasicExchangeParser())
+            .exchangeParser(BasicExchangeParser.getInstance())
             .exceptionHandler(new ExceptionHandler() {
             });
 
