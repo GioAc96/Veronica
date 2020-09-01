@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.http.static_server;
+package rocks.gioac96.veronica.static_server;
 
 import java.nio.file.Path;
 import java.util.HashSet;
