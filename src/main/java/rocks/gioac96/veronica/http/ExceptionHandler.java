@@ -15,6 +15,8 @@ public interface ExceptionHandler {
      */
     default Response handle(Exception e) {
 
+        e.printStackTrace();
+
         return CommonResponses.internalError();
 
     }
