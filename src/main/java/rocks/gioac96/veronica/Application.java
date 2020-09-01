@@ -94,7 +94,7 @@ public final class Application<Q extends Request, S extends Response> {
     public static ApplicationBuilder<Request, Response> basic() {
 
         return builder()
-            .exchangeParser(new BasicExchangeParser())
+            .exchangeParser(BasicExchangeParser.getInstance())
             .exceptionHandler(new ExceptionHandler() {
             });
 
@@ -137,10 +137,10 @@ public final class Application<Q extends Request, S extends Response> {
                 exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
 
                 // Send response headers
-                exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length());
+                exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length);
 
                 // Send response body
-                exchange.getResponseBody().write(response.getBody().getBytes());
+                exchange.getResponseBody().write(response.getBody());
 
                 // Close response
                 exchange.close();

@@ -14,9 +14,9 @@ public abstract class BasicApplicationFactory extends ApplicationFactory<Request
     @Override
     public Application<Request, Response> build() throws CreationException {
 
-        exchangeParser(new BasicExchangeParser());
-        exceptionHandler(new ExceptionHandler() {
-        });
+        exchangeParser(BasicExchangeParser.getInstance());
+
+        exceptionHandler(new ExceptionHandler() {});
 
         return super.build();
 

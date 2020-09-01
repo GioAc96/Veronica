@@ -25,7 +25,7 @@ public class Response {
     protected HttpStatus httpStatus;
 
     @Getter
-    private String body;
+    private byte[] body;
 
     @Getter
     @NonNull
@@ -67,10 +67,23 @@ public class Response {
      * Writes the body of the response if the response is not already rendered.
      *
      * @param body body of the response
-     * @return true if the response was not already rendered and the body was successfully set
+     * @return true if the response was not already rendered and the body was successfully written
      */
     @SuppressWarnings("UnusedReturnValue")
     public boolean writeBody(@NonNull String body) {
+
+        return writeBody(body.getBytes());
+
+    }
+
+    /**
+     * Writes the body of the response if the response is not already rendered.
+     *
+     * @param body body of the response
+     * @return true if the response was not already rendered and the body was successfully written
+     */
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean writeBody(@NonNull byte[] body) {
 
         if (isRendered()) {
 
@@ -92,10 +105,9 @@ public class Response {
 
         private final ArraySet<SetCookieHeader> cookies = new ArraySet<>();
         private HttpStatus httpStatus = HttpStatus.OK;
-        private String body = null;
+        private byte[] body = null;
         private Headers headers = new Headers();
 
-        @SuppressWarnings("unused")
         public B httpStatus(@NonNull HttpStatus httpStatus) {
 
             this.httpStatus = httpStatus;
@@ -105,6 +117,12 @@ public class Response {
         }
 
         public B body(String body) {
+
+            return body(body.getBytes());
+
+        }
+
+        public B body(byte[] body) {
 
             this.body = body;
 

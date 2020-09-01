@@ -2,21 +2,16 @@ package rocks.gioac96.veronica.http;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpsExchange;
+import lombok.Getter;
 
 /**
  * {@link HttpExchange} parser that generates a {@link Request} output object.
  */
-public final class BasicExchangeParser implements ExchangeParser<Request> {
+@SuppressWarnings("checkstyle:RightCurly")
+public final class BasicExchangeParser {
 
-    /**
-     * Parses an {@link HttpExchange} to generate a {@link Request} object.
-     *
-     * @param httpExchange httpExchange to parse
-     * @return the generated {@link Request}
-     * @throws ExchangeParseException on parsing failure
-     */
-    public Request parseExchange(HttpExchange httpExchange) throws ExchangeParseException {
-
+    @Getter()
+    private static final ExchangeParser<Request> instance = httpExchange -> {
         try {
 
             HttpMethod httpMethod = HttpMethod.fromName(httpExchange.getRequestMethod());
@@ -36,7 +31,9 @@ public final class BasicExchangeParser implements ExchangeParser<Request> {
             throw new ExchangeParseException("Failed to parse request", e);
 
         }
+    };
 
-    }
+    @SuppressWarnings("CheckStyle:RightCurly")
+    private BasicExchangeParser() {}
 
 }

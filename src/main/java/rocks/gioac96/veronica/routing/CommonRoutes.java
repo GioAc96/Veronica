@@ -13,9 +13,9 @@ import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload;
 @UtilityClass
 public class CommonRoutes {
 
-    private Route<Request, Response> empty(HttpStatus httpStatus) {
+    private <Q extends Request> Route<Q, Response> empty(HttpStatus httpStatus) {
 
-        return Route.builder()
+        return Route.<Q, Response>builder()
             .alwaysMatch()
             .requestHandler(request -> RequestHandlerPayload.ok(CommonResponses.empty(httpStatus)))
             .build();
@@ -25,11 +25,12 @@ public class CommonRoutes {
     /**
      * Instantiates a {@link Route} that redirects http requests to https.
      *
+     * @param <Q> type of the request
      * @return the instantiated route
      */
-    public Route<Request, Response> redirectToSecure() {
+    public <Q extends Request> Route<Q, Response> redirectToSecure() {
 
-        return Route.builder()
+        return Route.<Q, Response>builder()
             .requestMatcher(request -> !request.isSecure())
             .requestHandler(request -> RequestHandlerPayload.ok(Response.builder()
                 .httpStatus(HttpStatus.MOVED_PERMANENTLY)
@@ -44,9 +45,10 @@ public class CommonRoutes {
     /**
      * Instantiates a {@link Route} that always returns an http "OK" response.
      *
+     * @param <Q> type of the request
      * @return the instantiated route
      */
-    public Route<Request, Response> ok() {
+    public <Q extends Request> Route<Q, Response> ok() {
 
         return empty(HttpStatus.OK);
 
@@ -55,9 +57,10 @@ public class CommonRoutes {
     /**
      * Instantiates a {@link Route} that always returns an http "NOT FOUND" response.
      *
+     * @param <Q> type of the request
      * @return the instantiated route
      */
-    public Route<Request, Response> notFound() {
+    public <Q extends Request> Route<Q, Response> notFound() {
 
         return empty(HttpStatus.NOT_FOUND);
 
