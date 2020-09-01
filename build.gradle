@@ -27,11 +27,16 @@ jacocoTestReport {
 
 dependencies {
 
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.2.4'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.6.0'
-    testCompile group: 'org.mockito', name: 'mockito-inline', version: '3.2.4'
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0-M1'
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.7.0-M1'
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0-M1'
+
+
+    implementation("org.mockito:mockito-core:3.5.7")
+    implementation("org.mockito:mockito-inline:3.5.7")
 
 }
 
