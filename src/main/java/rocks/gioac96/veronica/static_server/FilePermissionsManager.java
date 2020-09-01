@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.static_server;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -179,4 +180,39 @@ public class FilePermissionsManager<P> {
 
     }
 
+    public static <P> Builder<P> builder() {
+
+        return new Builder<>();
+
+    }
+
+    public static class Builder<P> {
+
+        FilePermissionsManager<P> filePermissionsManager = new FilePermissionsManager<>();
+
+        private Builder() {
+
+        }
+
+        public Builder<P> setPermissions(String path, P permissions) {
+
+            return setPermissions(Paths.get(path), permissions);
+
+        }
+
+        public Builder<P> setPermissions(Path path, P permissions) {
+
+            filePermissionsManager.setPermissions(path, permissions);
+
+            return this;
+
+        }
+
+        public FilePermissionsManager<P> build() {
+
+            return filePermissionsManager;
+
+        }
+
+    }
 }
