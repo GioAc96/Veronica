@@ -11,12 +11,11 @@ import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.pipeline.stages.FilterPayload;
+import rocks.gioac96.veronica.routing.pipeline.stages.PipelineBreakException;
 import rocks.gioac96.veronica.routing.pipeline.stages.PostFilter;
 import rocks.gioac96.veronica.routing.pipeline.stages.PostProcessor;
 import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
 import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
-import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload;
 import rocks.gioac96.veronica.routing.pipeline.stages.ResponseRenderer;
 import rocks.gioac96.veronica.routing.pipeline.stages.UnrenderedResponseException;
 import rocks.gioac96.veronica.util.PrioritySet;
@@ -66,32 +65,15 @@ public class Pipeline {
 
         for (PreFilter preFilter : preFilters) {
 
-            FilterPayload filterPayload = preFilter.filter(request);
-
-            if (!filterPayload.shouldContinue()) {
-                return filterPayload.getResponse();
-            }
+            preFilter.filter(request);
 
         }
 
-        RequestHandlerPayload requestHandlerPayload = requestHandler.handle(request);
-        Response response = requestHandlerPayload.getResponse();
-
-        if (!requestHandlerPayload.shouldContinue()) {
-
-            return response;
-
-        }
+        Response response = requestHandler.handle(request);
 
         for (PostFilter postFilter : postFilters) {
 
-            FilterPayload filterPayload = postFilter.filter(request, response);
-
-            if (!filterPayload.shouldContinue()) {
-
-                return filterPayload.getResponse();
-
-            }
+            postFilter.filter(request, response);
 
         }
 
@@ -108,7 +90,17 @@ public class Pipeline {
      */
     public Response handle(@NonNull Request request, @NonNull RequestHandler requestHandler) {
 
-        Response response = preRender(request, requestHandler);
+        Response response;
+
+        try {
+
+            response = preRender(request, requestHandler);
+
+        } catch (PipelineBreakException e) {
+
+            response = e.getResponse();
+
+        }
 
         render(response);
 

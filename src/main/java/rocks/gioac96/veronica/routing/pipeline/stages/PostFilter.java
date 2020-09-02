@@ -10,6 +10,6 @@ import rocks.gioac96.veronica.routing.pipeline.Pipeline;
  */
 public interface PostFilter {
 
-    FilterPayload filter(@NonNull Request request, @NonNull Response response);
+    void filter(@NonNull Request request, @NonNull Response response);
 
 }

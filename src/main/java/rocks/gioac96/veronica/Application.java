@@ -83,20 +83,6 @@ public final class Application {
 
     }
 
-    /**
-     * Instantiates a basic application builder.
-     *
-     * @return the instantiated basic application builder
-     */
-    public static ApplicationBuilder basic() {
-
-        return builder()
-            .exchangeParser(new ExchangeParser() {})
-            .exceptionHandler(new ExceptionHandler() {
-            });
-
-    }
-
     private void handleExchange(HttpExchange exchange) {
 
         threadPool.submit(() -> {
@@ -182,8 +168,8 @@ public final class Application {
     public static class ApplicationBuilder {
 
         private Router router;
-        private ExchangeParser exchangeParser;
-        private ExceptionHandler exceptionHandler;
+        private ExchangeParser exchangeParser = new ExchangeParser() {};
+        private ExceptionHandler exceptionHandler = new ExceptionHandler() {};
         private final Set<Server> servers = new HashSet<>();
         private ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 

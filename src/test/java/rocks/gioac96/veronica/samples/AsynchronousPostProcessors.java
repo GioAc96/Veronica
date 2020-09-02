@@ -26,7 +26,7 @@ public class AsynchronousPostProcessors {
 
     public static void main(String[] args) {
 
-        Application.basic()
+        Application.builder()
             .port(80)
             .router(Router.builder()
                 .route(Route.builder()

@@ -1,7 +1,5 @@
 package rocks.gioac96.veronica.samples;
 
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
-
 import java.io.IOException;
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.factories.CreationException;
@@ -15,14 +13,14 @@ public class ResponseHeaders {
 
         Router router = Router.builder()
             .fallbackRoute(Route.builder()
-                .requestHandler(request -> ok(Response.builder()
+                .requestHandler(request -> Response.builder()
                     .body("{\"hello\": \"world\"}")
                     .header("content-type", "application/json")
-                    .build()))
+                    .build())
                 .build())
             .build();
 
-        Application application = Application.basic()
+        Application application = Application.builder()
             .port(80)
             .router(router)
             .build();

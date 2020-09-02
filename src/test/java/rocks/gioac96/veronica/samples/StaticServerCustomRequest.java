@@ -11,7 +11,6 @@ import rocks.gioac96.veronica.http.ExchangeParseException;
 import rocks.gioac96.veronica.http.ExchangeParser;
 import rocks.gioac96.veronica.http.HttpMethod;
 import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.CommonRoutes;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.Router;
@@ -21,9 +20,34 @@ public class StaticServerCustomRequest {
 
     private static final String PASSWORD = "veronica<3";
 
+    public static void main(String[] args) {
+
+        Application.builder()
+            .port(80)
+            .exceptionHandler(new ExceptionHandler() {
+            })
+            .exchangeParser(AuthenticatedRequest.parser)
+            .router(Router.builder()
+                .route(Route.<Boolean>staticRouteBuilder()
+                    .permissionManager(FilePermissionsManager.<Boolean>builder()
+                        .setPermissions("D:\\projects\\veronica\\src", true)
+                        .setPermissions("D:\\projects\\veronica\\src\\test", false)
+                        .build())
+                    .permissionDecider((request, filePermissions) -> AuthenticationService.isAuthenticated(request) && filePermissions)
+                    .basePath("")
+                    .baseDir("D:\\projects\\veronica\\src")
+                    .build())
+                .fallbackRoute(CommonRoutes.notFound())
+                .build())
+            .build()
+            .start();
+
+
+    }
+
     private static class AuthenticatedRequest extends Request {
 
-        private static final ExchangeParser basicParser  = new ExchangeParser() {
+        private static final ExchangeParser basicParser = new ExchangeParser() {
         };
 
         private static final ExchangeParser parser = new ExchangeParser() {
@@ -35,7 +59,7 @@ public class StaticServerCustomRequest {
                 return new AuthenticatedRequest(
                     request.getHttpMethod(),
                     request.getBody(),
-                    request .getHeaders(),
+                    request.getHeaders(),
                     request.getUri(),
                     request.isSecure()
                 );
@@ -79,30 +103,6 @@ public class StaticServerCustomRequest {
             return request instanceof AuthenticatedRequest && ((AuthenticatedRequest) request).isAuthenticated();
 
         }
-
-    }
-
-    public static void main(String[] args) {
-
-        Application.<AuthenticatedRequest, Response>builder()
-            .port(80)
-            .exceptionHandler(new ExceptionHandler() {})
-            .exchangeParser(AuthenticatedRequest.parser)
-            .router(Router.<AuthenticatedRequest, Response>builder()
-                .route(Route.<AuthenticatedRequest, Boolean>staticRouteBuilder()
-                    .permissionManager(FilePermissionsManager.<Boolean>builder()
-                        .setPermissions("D:\\projects\\veronica\\src", true)
-                        .setPermissions("D:\\projects\\veronica\\src\\test", false)
-                        .build())
-                    .permissionDecider((request, filePermissions) -> AuthenticationService.isAuthenticated(request) && filePermissions)
-                    .basePath("")
-                    .baseDir("D:\\projects\\veronica\\src")
-                    .build())
-                .fallbackRoute(CommonRoutes.notFound())
-                .build())
-            .build()
-            .start();
-
 
     }
 

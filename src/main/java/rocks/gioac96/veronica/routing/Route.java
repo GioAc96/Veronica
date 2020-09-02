@@ -1,7 +1,6 @@
 package rocks.gioac96.veronica.routing;
 
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.function.Function;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -13,7 +12,6 @@ import rocks.gioac96.veronica.routing.matching.CommonRequestMatchers;
 import rocks.gioac96.veronica.routing.matching.RequestMatcher;
 import rocks.gioac96.veronica.routing.pipeline.Pipeline;
 import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
-import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload;
 import rocks.gioac96.veronica.statics.StaticRouteBuilder;
 
 /**
@@ -148,10 +146,9 @@ public class Route {
 
         }
 
-        public B handler(@NonNull Function<Request, Response> handlerFunction) {
+        public B handler(@NonNull RequestHandler requestHandler) {
 
-            this.requestHandler = request -> RequestHandlerPayload.ok(handlerFunction.apply(request));
-            return self();
+            return requestHandler(requestHandler);
 
         }
 

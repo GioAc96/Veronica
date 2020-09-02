@@ -1,10 +1,7 @@
 package rocks.gioac96.veronica.tutorials;
 
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
-
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.Server;
-import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.Router;
@@ -14,9 +11,9 @@ public class HelloWorld {
 
     public static void main(String[] args) {
 
-        RequestHandler helloWorldHandler = request -> ok(Response.builder()
+        RequestHandler helloWorldHandler = request -> Response.builder()
             .body("Hello World")
-            .build());
+            .build();
 
         Route helloWorldRoute = Route.builder()
             .requestHandler(helloWorldHandler)
@@ -28,7 +25,7 @@ public class HelloWorld {
 
         int port = 8000;
 
-        Application app = Application.basic()
+        Application app = Application.builder()
             .server(Server.builder()
                 .port(port)
                 .build()

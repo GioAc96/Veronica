@@ -1,13 +1,9 @@
 package rocks.gioac96.veronica.tutorials;
 
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
-
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.Server;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.ExceptionHandler;
 import rocks.gioac96.veronica.http.HttpStatus;
-import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.Router;
@@ -23,11 +19,9 @@ public class ExceptionHandling {
 
                 int number = Integer.parseInt(numberQueryString);
 
-                return ok(Response.builder()
+                return Response.builder()
                     .body(String.valueOf(number * 2))
-                    .build());
-
-
+                    .build();
             })
             .build();
 
@@ -53,7 +47,7 @@ public class ExceptionHandling {
 
         try {
 
-            Application app = Application.basic()
+            Application app = Application.builder()
                 .port(port)
                 .router(router)
                 .exceptionHandler(exceptionHandler)

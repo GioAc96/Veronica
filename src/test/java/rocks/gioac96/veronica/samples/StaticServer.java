@@ -11,9 +11,9 @@ public class StaticServer {
 
     public static void main(String[] args) {
 
-        Application.basic()
+        Application.builder()
             .router(Router.builder()
-                .route(Route.<Request, Boolean>staticRouteBuilder()
+                .route(Route.<Boolean>staticRouteBuilder()
                     .permissionManager(FilePermissionsManager.<Boolean>builder()
                         .setPermissions("D:\\projects\\veronica\\src",true)
                         .setPermissions("D:\\projects\\veronica\\src\\test",false)

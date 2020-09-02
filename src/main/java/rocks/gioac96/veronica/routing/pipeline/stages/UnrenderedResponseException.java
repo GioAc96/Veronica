@@ -9,7 +9,7 @@ import rocks.gioac96.veronica.http.Response;
  * response draft.
  */
 @AllArgsConstructor
-public class UnrenderedResponseException extends PipelineFailureException {
+public class UnrenderedResponseException extends RuntimeException {
 
     @Getter
     private final Response draftResponse;

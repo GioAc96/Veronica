@@ -9,6 +9,6 @@ import rocks.gioac96.veronica.routing.pipeline.Pipeline;
  */
 public interface RequestHandler {
 
-    RequestHandlerPayload handle(Request request);
+    Response handle(Request request);
 
 }

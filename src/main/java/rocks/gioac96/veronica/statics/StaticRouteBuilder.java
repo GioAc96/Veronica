@@ -44,7 +44,7 @@ public class StaticRouteBuilder<
     private enum ContentDisposition {
 
         INLINE,
-        ATTACHMENT;
+        ATTACHMENT
 
     }
 

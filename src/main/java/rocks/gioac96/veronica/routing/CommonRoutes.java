@@ -4,7 +4,6 @@ import lombok.experimental.UtilityClass;
 import rocks.gioac96.veronica.http.CommonResponses;
 import rocks.gioac96.veronica.http.HttpStatus;
 import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload;
 
 /**
  * Helper class for common routes.
@@ -16,7 +15,7 @@ public class CommonRoutes {
 
         return Route.builder()
             .alwaysMatch()
-            .requestHandler(request -> RequestHandlerPayload.ok(CommonResponses.empty(httpStatus)))
+            .requestHandler(request -> CommonResponses.empty(httpStatus))
             .build();
 
     }
@@ -30,11 +29,11 @@ public class CommonRoutes {
 
         return Route.builder()
             .requestMatcher(request -> !request.isSecure())
-            .requestHandler(request -> RequestHandlerPayload.ok(Response.builder()
+            .requestHandler(request -> Response.builder()
                 .httpStatus(HttpStatus.MOVED_PERMANENTLY)
                 .header("Location", request.getUri().toString().replaceFirst("^http", "https"))
                 .emptyBody()
-                .build())
+                .build()
             )
             .build();
 

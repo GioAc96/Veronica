@@ -10,6 +10,6 @@ import rocks.gioac96.veronica.http.Response;
  */
 public interface PreFilter {
 
-    FilterPayload filter(@NonNull Request request);
+    void filter(@NonNull Request request);
 
 }

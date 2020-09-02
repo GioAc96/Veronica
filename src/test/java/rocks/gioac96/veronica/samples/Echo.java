@@ -1,7 +1,5 @@
 package rocks.gioac96.veronica.samples;
 
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
-
 import java.io.IOException;
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.factories.CreationException;
@@ -20,24 +18,24 @@ public class Echo {
                         request -> request.getBody().length() > 0
                     )
                     .requestHandler(
-                        request -> ok(Response.builder()
+                        request -> Response.builder()
                             .body(request.getBody())
-                            .build())
+                            .build()
                     )
                     .build()
             )
             .fallbackRoute(
                 Route.builder()
                     .requestHandler(
-                        request -> ok(Response.builder()
+                        request -> Response.builder()
                             .body("Try to insert something in the request body")
-                            .build())
+                            .build()
                     )
                     .build()
             )
             .build();
 
-        Application application = Application.basic()
+        Application application = Application.builder()
             .port(80)
             .router(router)
             .build();

@@ -18,7 +18,7 @@ public class Benchmark {
 
     public static void main(String[] args) {
 
-        Application.basic()
+        Application.builder()
             .port(80)
             .router(Router.builder()
                 .fallbackRoute(Route.builder().handler(request -> CommonResponses.ok()).build())
