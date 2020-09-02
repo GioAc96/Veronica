@@ -2,7 +2,6 @@ package rocks.gioac96.veronica.routing.matching;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
@@ -19,7 +18,7 @@ import rocks.gioac96.veronica.util.ArraySet;
  */
 @SuppressWarnings("unused")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public final class MethodRule<Q extends Request> implements RequestMatcher<Q> {
+public final class MethodRule implements RequestMatcher {
 
     @Getter
     @Setter
@@ -28,15 +27,15 @@ public final class MethodRule<Q extends Request> implements RequestMatcher<Q> {
 
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
-    public static <Q extends Request> MethodRuleBuilder<Q> builder() {
+    public static MethodRuleBuilder builder() {
 
-        return new MethodRuleBuilder<>();
+        return new MethodRuleBuilder();
 
     }
 
     @SuppressWarnings("unused")
     @Override
-    public boolean matches(Q request) {
+    public boolean matches(Request request) {
 
         return allowedHttpMethods.any(
             allowedHttpMethod -> allowedHttpMethod.equals(request.getHttpMethod())
@@ -47,13 +46,13 @@ public final class MethodRule<Q extends Request> implements RequestMatcher<Q> {
     @Generated
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
-    public static class MethodRuleBuilder<Q extends Request> {
+    public static class MethodRuleBuilder {
 
         @NonNull
         private final ArraySet<HttpMethod> allowedHttpMethods = new ArraySet<>();
 
         @SuppressWarnings("unused")
-        public MethodRuleBuilder<Q> allowedMethod(HttpMethod allowedMethod) {
+        public MethodRuleBuilder allowedMethod(HttpMethod allowedMethod) {
 
             this.allowedHttpMethods.add(allowedMethod);
 
@@ -62,7 +61,7 @@ public final class MethodRule<Q extends Request> implements RequestMatcher<Q> {
         }
 
         @SuppressWarnings("unused")
-        public MethodRuleBuilder<Q> allowedMethods(Collection<HttpMethod> allowedMethods) {
+        public MethodRuleBuilder allowedMethods(Collection<HttpMethod> allowedMethods) {
 
             this.allowedHttpMethods.addAll(allowedMethods);
 
@@ -77,9 +76,9 @@ public final class MethodRule<Q extends Request> implements RequestMatcher<Q> {
         }
 
         @SuppressWarnings("unused")
-        public MethodRule<Q> build() {
+        public MethodRule build() {
 
-            return new MethodRule<>(allowedHttpMethods);
+            return new MethodRule(allowedHttpMethods);
 
         }
 

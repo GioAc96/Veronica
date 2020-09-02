@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.static_server;
+package rocks.gioac96.veronica.statics;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,12 +11,10 @@ import rocks.gioac96.veronica.routing.pipeline.Pipeline;
 
 /**
  * Builder for static server routes.
- * @param <Q> the type of the request
  * @param <P> the type of the file permissions
  */
 @SuppressWarnings("checkstyle:MissingJavadocMethod")
 public class StaticRouteBuilder<
-        Q extends Request,
         P
     > {
 
@@ -24,7 +22,7 @@ public class StaticRouteBuilder<
     private FilePermissionsManager<P> permissionsManager = new FilePermissionsManager<>();
 
     @NonNull
-    private FilePermissionsDecider<Q, P> permissionDecider = ((request, filePermissions) -> false);
+    private FilePermissionsDecider<P> permissionDecider = ((request, filePermissions) -> false);
 
     @NonNull
     private Path baseDir;
@@ -39,7 +37,7 @@ public class StaticRouteBuilder<
     private Response fileNotFoundResponse = CommonResponses.notFound();
 
     @NonNull
-    private Pipeline<Q, Response> pipeline = Pipeline.<Q, Response>builder().build();
+    private Pipeline pipeline = Pipeline.builder().build();
 
     private ContentDisposition contentDisposition = null;
 
@@ -50,7 +48,7 @@ public class StaticRouteBuilder<
 
     }
 
-    public StaticRouteBuilder<Q, P> basePath(@NonNull String basePath) {
+    public StaticRouteBuilder<P> basePath(@NonNull String basePath) {
 
         if (basePath.endsWith("/")) {
 
@@ -68,63 +66,63 @@ public class StaticRouteBuilder<
 
 
 
-    public StaticRouteBuilder<Q, P> baseDir(@NonNull String baseDir) {
+    public StaticRouteBuilder<P> baseDir(@NonNull String baseDir) {
 
         return baseDir(Paths.get(baseDir));
 
     }
 
 
-    public StaticRouteBuilder<Q, P> baseDir(@NonNull Path baseDir) {
+    public StaticRouteBuilder<P> baseDir(@NonNull Path baseDir) {
 
         this.baseDir = baseDir.normalize();
         return this;
 
     }
 
-    public StaticRouteBuilder<Q, P> permissionDecider(@NonNull FilePermissionsDecider<Q, P> permissionDecider) {
+    public StaticRouteBuilder<P> permissionDecider(@NonNull FilePermissionsDecider<P> permissionDecider) {
 
         this.permissionDecider = permissionDecider;
         return this;
 
     }
 
-    public StaticRouteBuilder<Q, P> permissionManager(@NonNull FilePermissionsManager<P> permissionsManager) {
+    public StaticRouteBuilder<P> permissionManager(@NonNull FilePermissionsManager<P> permissionsManager) {
 
         this.permissionsManager = permissionsManager;
         return this;
 
     }
 
-    public StaticRouteBuilder<Q, P> pipeline(@NonNull Pipeline<Q, Response> pipeline) {
+    public StaticRouteBuilder<P> pipeline(@NonNull Pipeline pipeline) {
 
         this.pipeline = pipeline;
         return this;
 
     }
 
-    public StaticRouteBuilder<Q, P> disposeInline() {
+    public StaticRouteBuilder<P> disposeInline() {
 
         this.contentDisposition = ContentDisposition.INLINE;
         return this;
 
     }
 
-    public StaticRouteBuilder<Q, P> disposeAsAttachment() {
+    public StaticRouteBuilder<P> disposeAsAttachment() {
 
         this.contentDisposition = ContentDisposition.ATTACHMENT;
         return this;
 
     }
 
-    public StaticRouteBuilder<Q, P> accessDeniedResponse(Response accessDeniedResponse) {
+    public StaticRouteBuilder<P> accessDeniedResponse(Response accessDeniedResponse) {
 
         this.accessDeniedResponse = accessDeniedResponse;
         return this;
 
     }
 
-    public StaticRouteBuilder<Q, P> fileNotFoundResponse(Response fileNotFoundResponse) {
+    public StaticRouteBuilder<P> fileNotFoundResponse(Response fileNotFoundResponse) {
 
         this.fileNotFoundResponse = fileNotFoundResponse;
         return this;
@@ -138,7 +136,7 @@ public class StaticRouteBuilder<
         
     }
     
-    private boolean canAccess(Q request, Path file) {
+    private boolean canAccess(Request request, Path file) {
         
         P filePermissions = permissionsManager.getPermissions(file);
         
@@ -164,7 +162,7 @@ public class StaticRouteBuilder<
 
     }
 
-    public Route<Q, Response> build() {
+    public Route build() {
 
         if (
             baseDir == null || basePath == null
@@ -174,7 +172,7 @@ public class StaticRouteBuilder<
 
         }
 
-        return Route.<Q, Response>builder()
+        return Route.builder()
             .pipeline(pipeline)
             .requestMatcher(request -> request.getPath().startsWith(basePath))
             .handler(request -> {

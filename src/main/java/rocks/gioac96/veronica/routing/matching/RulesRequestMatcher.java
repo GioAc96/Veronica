@@ -14,17 +14,17 @@ import rocks.gioac96.veronica.util.ArraySet;
  */
 @SuppressWarnings("unused")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public final class RulesRequestMatcher<Q extends Request> implements RequestMatcher<Q> {
+public final class RulesRequestMatcher implements RequestMatcher {
 
     @Getter
     @Setter
     @NonNull
-    private ArraySet<RequestMatcher<Q>> matchingRules;
+    private ArraySet<RequestMatcher> matchingRules;
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
-    public static <Q extends Request> RulesRequestMatcherBuilder<Q> builder() {
+    public static  RulesRequestMatcherBuilder builder() {
 
-        return new RulesRequestMatcherBuilder<>();
+        return new RulesRequestMatcherBuilder();
 
     }
 
@@ -35,19 +35,19 @@ public final class RulesRequestMatcher<Q extends Request> implements RequestMatc
      * @return true iff the request matches the matching rules
      */
     @SuppressWarnings("unused")
-    public boolean matches(Q request) {
+    public boolean matches(Request request) {
 
         return matchingRules.every(matchingRule -> matchingRule.matches(request));
 
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
-    public static class RulesRequestMatcherBuilder<Q extends Request> {
+    public static class RulesRequestMatcherBuilder {
 
-        private final ArraySet<RequestMatcher<Q>> requestMatchingRules = new ArraySet<>();
+        private final ArraySet<RequestMatcher> requestMatchingRules = new ArraySet<>();
 
         @SuppressWarnings("unused")
-        public RulesRequestMatcherBuilder<Q> requestMatchingRule(RequestMatcher<Q> requestMatchingRule) {
+        public RulesRequestMatcherBuilder requestMatchingRule(RequestMatcher requestMatchingRule) {
 
             this.requestMatchingRules.add(requestMatchingRule);
 
@@ -56,7 +56,7 @@ public final class RulesRequestMatcher<Q extends Request> implements RequestMatc
         }
 
         @SuppressWarnings("unused")
-        public RulesRequestMatcherBuilder<Q> requestMatchingRules(Collection<RequestMatcher<Q>> requestMatchingRules) {
+        public RulesRequestMatcherBuilder requestMatchingRules(Collection<RequestMatcher> requestMatchingRules) {
 
             this.requestMatchingRules.addAll(requestMatchingRules);
 
@@ -65,9 +65,9 @@ public final class RulesRequestMatcher<Q extends Request> implements RequestMatc
         }
 
         @SuppressWarnings("unused")
-        public RulesRequestMatcher<Q> build() {
+        public RulesRequestMatcher build() {
 
-            return new RulesRequestMatcher<>(
+            return new RulesRequestMatcher(
                 requestMatchingRules
             );
 

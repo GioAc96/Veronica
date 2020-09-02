@@ -15,7 +15,7 @@ public class Multithreading {
 
         int port = 8000;
 
-        Application<Request, Response> app = Application.basic()
+        Application app = Application.basic()
             .port(port)
             .router(Router.builder()
                 .fallbackRoute(Route.builder()

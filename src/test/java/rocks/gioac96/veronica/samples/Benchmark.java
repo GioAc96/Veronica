@@ -26,7 +26,6 @@ public class Benchmark {
             .build()
             .start();
 
-
     }
 
 }

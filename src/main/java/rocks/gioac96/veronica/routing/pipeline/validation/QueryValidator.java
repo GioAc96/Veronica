@@ -18,7 +18,7 @@ import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
  */
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class QueryValidator<Q extends Request> implements PreFilter<Q, ValidationFailureResponse> {
+public class QueryValidator implements PreFilter {
 
     @Getter
     @Setter
@@ -35,7 +35,7 @@ public class QueryValidator<Q extends Request> implements PreFilter<Q, Validatio
     }
 
     @Override
-    public FilterPayload<ValidationFailureResponse> filter(@NonNull Q request) {
+    public FilterPayload filter(@NonNull Request request) {
 
         try {
 

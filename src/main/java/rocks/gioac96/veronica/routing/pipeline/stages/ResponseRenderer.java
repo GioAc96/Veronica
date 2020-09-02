@@ -6,8 +6,8 @@ import rocks.gioac96.veronica.http.Response;
 /**
  * Used to render a {@link Response} and generate the string that is sent as the http response body.
  */
-public interface ResponseRenderer<S extends Response> {
+public interface ResponseRenderer {
 
-    String render(@NonNull S response);
+    String render(@NonNull Response response);
 
 }

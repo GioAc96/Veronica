@@ -16,7 +16,7 @@ public class ExceptionHandling {
 
     public static void main(String[] args) {
 
-        Route<Request, Response> route = Route.builder()
+        Route route = Route.builder()
             .requestHandler(request -> {
 
                 String numberQueryString = request.getQueryParam("number");
@@ -31,7 +31,7 @@ public class ExceptionHandling {
             })
             .build();
 
-        Router<Request, Response> router = Router.builder()
+        Router router = Router.builder()
             .fallbackRoute(route)
             .build();
 
@@ -53,7 +53,7 @@ public class ExceptionHandling {
 
         try {
 
-            Application<Request, Response> app = Application.basic()
+            Application app = Application.basic()
                 .port(port)
                 .router(router)
                 .exceptionHandler(exceptionHandler)

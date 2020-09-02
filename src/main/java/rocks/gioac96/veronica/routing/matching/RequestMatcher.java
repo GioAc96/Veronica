@@ -5,8 +5,8 @@ import rocks.gioac96.veronica.http.Request;
 /**
  * Request matching rule.
  */
-public interface RequestMatcher<Q extends Request> {
+public interface RequestMatcher {
 
-    boolean matches(Q request);
+    boolean matches(Request request);
 
 }

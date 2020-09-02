@@ -20,7 +20,7 @@ public class Cookies {
 
     public static void main(String[] args) {
 
-        Route<Request, Response> route = Route.builder()
+        Route route = Route.builder()
             .requestHandler(req -> {
 
                 Map<String, String> cookie = req.getCookie();
@@ -45,7 +45,7 @@ public class Cookies {
             })
             .build();
 
-        Router<Request, Response> router = Router.builder()
+        Router router = Router.builder()
             .route(Route.builder()
                 .requestMatcher(favicon())
                 .requestHandler(request -> ok(CommonResponses.notFound())
@@ -59,7 +59,7 @@ public class Cookies {
 
         try {
 
-            Application<Request, Response> app = Application.basic()
+            Application app = Application.basic()
                 .port(port)
                 .router(router)
                 .build();

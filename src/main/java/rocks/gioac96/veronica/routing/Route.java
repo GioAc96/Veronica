@@ -14,31 +14,31 @@ import rocks.gioac96.veronica.routing.matching.RequestMatcher;
 import rocks.gioac96.veronica.routing.pipeline.Pipeline;
 import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
 import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload;
-import rocks.gioac96.veronica.static_server.StaticRouteBuilder;
+import rocks.gioac96.veronica.statics.StaticRouteBuilder;
 
 /**
  * Application route.
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class Route<Q extends Request, S extends Response> {
+public class Route {
 
     @Getter
     @Setter
     @NonNull
-    private RequestMatcher<Q> requestMatcher;
+    private RequestMatcher requestMatcher;
 
     @Getter
     @Setter
     @NonNull
-    private RequestHandler<Q, S> requestHandler;
+    private RequestHandler requestHandler;
 
     @Getter
     @NonNull
-    private Pipeline<Q, S> pipeline;
+    private Pipeline pipeline;
 
     protected ThreadPoolExecutor threadPool;
 
-    protected Route(RouteBuilder<Q, S, ?, ?> b) {
+    protected Route(RouteBuilder<?, ?> b) {
 
         this.requestMatcher = b.requestMatcher;
         this.requestHandler = b.requestHandler;
@@ -48,19 +48,18 @@ public class Route<Q extends Request, S extends Response> {
     }
 
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static <Q extends Request, S extends Response> RouteBuilder<Q, S, ?, ?> builder() {
+    public static RouteBuilder<?, ?> builder() {
 
-        return new RouteBuilderImpl<Q, S>();
+        return new RouteBuilderImpl();
 
     }
 
     /**
      * Instantiates a builder for static server routes.
-     * @param <Q> the type of the request
      * @param <P> the type of the file permissions
      * @return the instantiated builder
      */
-    public static <Q extends Request, P> StaticRouteBuilder<Q, P> staticRouteBuilder() {
+    public static <P> StaticRouteBuilder<P> staticRouteBuilder() {
 
         return new StaticRouteBuilder<>();
 
@@ -82,7 +81,7 @@ public class Route<Q extends Request, S extends Response> {
      * Sets the pipeline of the route.
      * @param pipeline the pipeline
      */
-    public void setPipeline(Pipeline<Q, S> pipeline) {
+    public void setPipeline(Pipeline pipeline) {
 
         this.pipeline = pipeline;
 
@@ -96,7 +95,7 @@ public class Route<Q extends Request, S extends Response> {
      * @param request request to handle
      * @return true iff the route should handle the specified {@link Request}
      */
-    public boolean shouldHandle(@NonNull Q request) {
+    public boolean shouldHandle(@NonNull Request request) {
 
         return requestMatcher.matches(request);
 
@@ -108,7 +107,7 @@ public class Route<Q extends Request, S extends Response> {
      * @param request request to handle
      * @return the generated {@link Response}
      */
-    public S handle(@NonNull Q request) {
+    public Response handle(@NonNull Request request) {
 
         return pipeline.handle(request, requestHandler);
 
@@ -116,22 +115,20 @@ public class Route<Q extends Request, S extends Response> {
 
     @SuppressWarnings({"checkstyle:ModifierOrder", "checkstyle:MissingJavadocType", "checkstyle:MissingJavadocMethod"})
     public static abstract class RouteBuilder<
-        Q extends Request,
-        S extends Response,
-        C extends Route<Q, S>,
-        B extends RouteBuilder<Q, S, C, B>
+        C extends Route,
+        B extends RouteBuilder<C, B>
         > {
 
         @NonNull
-        private RequestMatcher<Q> requestMatcher = CommonRequestMatchers.neverMatch();
+        private RequestMatcher requestMatcher = CommonRequestMatchers.neverMatch();
 
         @NonNull
-        private RequestHandler<Q, S> requestHandler;
+        private RequestHandler requestHandler;
 
         @NonNull
-        private Pipeline<Q, S> pipeline = Pipeline.<Q, S>builder().build();
+        private Pipeline pipeline = Pipeline.builder().build();
 
-        public B requestMatcher(@NonNull RequestMatcher<Q> requestMatcher) {
+        public B requestMatcher(@NonNull RequestMatcher requestMatcher) {
 
             this.requestMatcher = requestMatcher;
             return self();
@@ -144,21 +141,21 @@ public class Route<Q extends Request, S extends Response> {
 
         }
 
-        public B requestHandler(@NonNull RequestHandler<Q, S> requestHandler) {
+        public B requestHandler(@NonNull RequestHandler requestHandler) {
 
             this.requestHandler = requestHandler;
             return self();
 
         }
 
-        public B handler(@NonNull Function<Q, S> handlerFunction) {
+        public B handler(@NonNull Function<Request, Response> handlerFunction) {
 
             this.requestHandler = request -> RequestHandlerPayload.ok(handlerFunction.apply(request));
             return self();
 
         }
 
-        public B pipeline(@NonNull Pipeline<Q, S> pipeline) {
+        public B pipeline(@NonNull Pipeline pipeline) {
 
             this.pipeline = pipeline;
             return self();
@@ -171,28 +168,23 @@ public class Route<Q extends Request, S extends Response> {
 
     }
 
-    private static final class RouteBuilderImpl<
-        Q extends Request,
-        S extends Response
-        > extends RouteBuilder<
-        Q,
-        S,
-        Route<Q, S>,
-        RouteBuilderImpl<Q, S>
+    private static final class RouteBuilderImpl extends RouteBuilder<
+        Route,
+        RouteBuilderImpl
         > {
 
         private RouteBuilderImpl() {
         }
 
-        protected Route.RouteBuilderImpl<Q, S> self() {
+        protected Route.RouteBuilderImpl self() {
 
             return this;
 
         }
 
-        public Route<Q, S> build() {
+        public Route build() {
 
-            return new Route<Q, S>(this);
+            return new Route(this);
 
         }
 

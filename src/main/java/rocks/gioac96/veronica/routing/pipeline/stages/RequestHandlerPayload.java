@@ -9,14 +9,13 @@ import rocks.gioac96.veronica.http.Response;
 /**
  * RequestHandler payload.
  *
- * @param <S> type of the response
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class RequestHandlerPayload<S extends Response> {
+public class RequestHandlerPayload {
 
     @Getter
     @NonNull
-    private final S response;
+    private final Response response;
 
     private final boolean shouldContinue;
 
@@ -24,12 +23,11 @@ public class RequestHandlerPayload<S extends Response> {
      * Instantiates a "continue pipeline" request handler payload.
      *
      * @param response the response
-     * @param <S>      type of the response
      * @return the instantiated "continue pipeline" payload
      */
-    public static <S extends Response> RequestHandlerPayload<S> ok(S response) {
+    public static  RequestHandlerPayload ok(Response response) {
 
-        return new RequestHandlerPayload<>(response, true);
+        return new RequestHandlerPayload(response, true);
 
     }
 
@@ -37,12 +35,11 @@ public class RequestHandlerPayload<S extends Response> {
      * Instantiates a "break pipeline" request handler payload.
      *
      * @param response the response
-     * @param <S>      type of the response
      * @return the instantiated "break pipeline" payload
      */
-    public static <S extends Response> RequestHandlerPayload<S> fail(S response) {
+    public static  RequestHandlerPayload fail(Response response) {
 
-        return new RequestHandlerPayload<>(response, false);
+        return new RequestHandlerPayload(response, false);
 
     }
 

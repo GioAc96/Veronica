@@ -13,7 +13,7 @@ public class HttpHeaders {
 
     public static void main(String[] args) {
 
-        Route<Request, Response> route = Route.builder()
+        Route route = Route.builder()
             .requestHandler(req -> {
 
                 Response response;
@@ -48,13 +48,13 @@ public class HttpHeaders {
             })
             .build();
 
-        Router<Request, Response> router = Router.builder()
+        Router router = Router.builder()
             .fallbackRoute(route)
             .build();
 
         int port = 8000;
 
-        Application<Request, Response> app = Application.basic()
+        Application app = Application.basic()
             .port(port)
             .router(router)
             .build();

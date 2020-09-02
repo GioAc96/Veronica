@@ -9,25 +9,23 @@ import rocks.gioac96.veronica.http.Response;
 /**
  * Payload of pipeline filters.
  *
- * @param <S> Type of Response
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class FilterPayload<S extends Response> {
+public class FilterPayload {
 
     @Getter
-    private final S response;
+    private final Response response;
 
     private final boolean shouldContinue;
 
     /**
      * Instantiates a "continue pipeline" filter payload.
      *
-     * @param <S> Type of the response
      * @return the instantiated"continue pipeline" payload
      */
-    public static <S extends Response> FilterPayload<S> ok() {
+    public static  FilterPayload ok() {
 
-        return new FilterPayload<>(null, true);
+        return new FilterPayload(null, true);
 
     }
 
@@ -35,12 +33,11 @@ public class FilterPayload<S extends Response> {
      * Instantiates a "break pipeline" filter payload.
      *
      * @param response the response
-     * @param <S>      type of the response
      * @return the instantiated "break pipeline" payload
      */
-    public static <S extends Response> FilterPayload<S> fail(@NonNull S response) {
+    public static  FilterPayload fail(@NonNull Response response) {
 
-        return new FilterPayload<>(response, false);
+        return new FilterPayload(response, false);
 
     }
 

@@ -14,21 +14,21 @@ public class HelloWorld {
 
     public static void main(String[] args) {
 
-        RequestHandler<Request, Response> helloWorldHandler = request -> ok(Response.builder()
+        RequestHandler helloWorldHandler = request -> ok(Response.builder()
             .body("Hello World")
             .build());
 
-        Route<Request, Response> helloWorldRoute = Route.builder()
+        Route helloWorldRoute = Route.builder()
             .requestHandler(helloWorldHandler)
             .build();
 
-        Router<Request, Response> router = Router.builder()
+        Router router = Router.builder()
             .fallbackRoute(helloWorldRoute)
             .build();
 
         int port = 8000;
 
-        Application<Request, Response> app = Application.basic()
+        Application app = Application.basic()
             .server(Server.builder()
                 .port(port)
                 .build()

@@ -5,63 +5,53 @@ import rocks.gioac96.veronica.factories.ConfigurableFactory;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.factories.Factory;
 import rocks.gioac96.veronica.factories.PriorityFactory;
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.matching.RequestMatcher;
 import rocks.gioac96.veronica.routing.pipeline.Pipeline;
 import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
 
 /**
  * Route factory.
- *
- * @param <Q> Request type
- * @param <S> Response type
  */
-public abstract class RouteFactory<
-    Q extends Request,
-    S extends Response
-    > extends Route.RouteBuilder<
-    Q,
-    S,
-    Route<Q, S>,
-    RouteFactory<Q, S>
+public abstract class RouteFactory extends Route.RouteBuilder<
+    Route,
+    RouteFactory
     > implements
-    PriorityFactory<Route<Q, S>>,
-    ConfigurableFactory<Route<Q, S>> {
+    PriorityFactory<Route>,
+    ConfigurableFactory<Route> {
 
-    protected RouteFactory<Q, S> requestMatcher(@NonNull Factory<RequestMatcher<Q>> requestMatcherFactory)
+    protected RouteFactory requestMatcher(@NonNull Factory<RequestMatcher> requestMatcherFactory)
         throws CreationException {
 
         return super.requestMatcher(requestMatcherFactory.build());
 
     }
 
-    protected RouteFactory<Q, S> requestHandler(@NonNull Factory<RequestHandler<Q, S>> requestHandlerFactory)
+    protected RouteFactory requestHandler(@NonNull Factory<RequestHandler> requestHandlerFactory)
         throws CreationException {
 
         return super.requestHandler(requestHandlerFactory.build());
 
     }
 
-    protected RouteFactory<Q, S> pipeline(@NonNull Factory<Pipeline<Q, S>> pipelineFactory) throws CreationException {
+    protected RouteFactory pipeline(@NonNull Factory<Pipeline> pipelineFactory) throws CreationException {
 
         return super.pipeline(pipelineFactory.build());
 
     }
 
     @Override
-    protected RouteFactory<Q, S> self() {
+    protected RouteFactory self() {
 
         return this;
 
     }
 
     @Override
-    public Route<Q, S> build() {
+    public Route build() {
 
         configure();
 
-        return new Route<>(this);
+        return new Route(this);
 
     }
 }

@@ -14,7 +14,7 @@ public class Routing {
 
     public static void main(String[] args) {
 
-        Router<Request, Response> router = Router.builder()
+        Router router = Router.builder()
             .route(Route.builder()
                 .requestMatcher(path("/home"))
                 .requestHandler(req -> ok(Response.builder()
@@ -42,7 +42,7 @@ public class Routing {
 
         int port = 8000;
 
-        Application<Request, Response> app = Application.basic()
+        Application app = Application.basic()
             .port(port)
             .router(router)
             .build();

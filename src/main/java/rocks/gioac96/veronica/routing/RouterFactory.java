@@ -4,42 +4,35 @@ import lombok.NonNull;
 import rocks.gioac96.veronica.factories.ConfigurableFactory;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.factories.Factory;
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
 
 /**
  * Router factory.
  *
- * @param <Q> Request type
- * @param <S> Response type
+ * @param  Request type
+ * @param  Response type
  */
-public abstract class RouterFactory<
-    Q extends Request,
-    S extends Response
-    > extends Router.RouterBuilder<
-    Q,
-    S,
-    Router<Q, S>,
-    RouterFactory<Q, S>
-    > implements ConfigurableFactory<Router<Q, S>> {
+public abstract class RouterFactory extends Router.RouterBuilder<
+    Router,
+    RouterFactory
+    > implements ConfigurableFactory<Router> {
 
     @NonNull
-    private Route<Q, S> fallbackRoute;
+    private Route fallbackRoute;
 
-    protected RouterFactory<Q, S> fallbackRoute(@NonNull Factory<Route<Q, S>> fallbackRouteFactory)
+    protected RouterFactory fallbackRoute(@NonNull Factory<Route> fallbackRouteFactory)
         throws CreationException {
 
         return super.fallbackRoute(fallbackRouteFactory.build());
 
     }
 
-    protected RouterFactory<Q, S> route(@NonNull Factory<Route<Q, S>> routeFactory) throws CreationException {
+    protected RouterFactory route(@NonNull Factory<Route> routeFactory) throws CreationException {
 
         return super.route(routeFactory.build());
 
     }
 
-    protected RouterFactory<Q, S> route(@NonNull Factory<Route<Q, S>> routeFactory, Integer priority)
+    protected RouterFactory route(@NonNull Factory<Route> routeFactory, Integer priority)
         throws CreationException {
 
         return super.route(routeFactory.build(), priority);
@@ -48,18 +41,18 @@ public abstract class RouterFactory<
 
 
     @Override
-    protected RouterFactory<Q, S> self() {
+    protected RouterFactory self() {
 
         return this;
 
     }
 
     @Override
-    public Router<Q, S> build() {
+    public Router build() {
 
         configure();
 
-        return new Router<>(this);
+        return new Router(this);
 
     }
 
