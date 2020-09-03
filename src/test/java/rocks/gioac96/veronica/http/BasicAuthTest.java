@@ -5,11 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Base64;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import rocks.gioac96.veronica.http.auth.BasicAuth;
+import rocks.gioac96.veronica.http.auth.Credentials;
 
-class BasicAuthCredentialsTest {
+class BasicAuthTest {
 
     private static String generateCredentials(String user, String password) {
 
@@ -19,7 +22,7 @@ class BasicAuthCredentialsTest {
 
     private static String generateValidAuthHeader(String user, String password) {
 
-        return " Basic " + generateCredentials(user, password);
+        return "Basic " + generateCredentials(user, password);
 
     }
 
@@ -29,17 +32,17 @@ class BasicAuthCredentialsTest {
         "user, password",
         "user, p:assword",
         "aladin, letmein",
-        "WeiRdUsernamenciajsoifjaio183)(!£$/£(£!(/$#òàè\uD83D\uDC09, WeirderPassword+è+-....-:301934829\uD83D\uDC19",
+        "WeiRdUsernamenciajsoifjaio183)(!£$/£(£!(/$#òàè\uD83D\uDC09, WeirderPassword+è+-.-:301934829\uD83D\uDC19",
     })
-    public void testValidCredentials(String user, String password) throws BasicAuthCredentials.BasicAuthCredentialsParsingException {
+    public void testValidCredentials(String user, String password) throws BasicAuth.BasicAuthCredentialsParsingException {
 
         String authHeader = generateValidAuthHeader(user, password);
 
-        BasicAuthCredentials parsedCredentials = BasicAuthCredentials.fromAuthorizationHeader(authHeader);
+        Credentials parsedCredentials = BasicAuth.fromAuthorizationHeader(authHeader);
 
         assertEquals(
             user,
-            parsedCredentials.getUser()
+            parsedCredentials.getUsername()
         );
         assertEquals(
             password,
@@ -53,15 +56,15 @@ class BasicAuthCredentialsTest {
         "user:, test",
         ":user, test",
     })
-    public void testInvalidCredentials(String user, String password) throws BasicAuthCredentials.BasicAuthCredentialsParsingException {
+    public void testInvalidCredentials(String user, String password) throws BasicAuth.BasicAuthCredentialsParsingException {
 
         String authHeader = generateValidAuthHeader(user, password);
 
-        BasicAuthCredentials parsedCredentials = BasicAuthCredentials.fromAuthorizationHeader(authHeader);
+        Credentials parsedCredentials = BasicAuth.fromAuthorizationHeader(authHeader);
 
         assertNotEquals(
             user,
-            parsedCredentials.getUser()
+            parsedCredentials.getUsername()
         );
         assertNotEquals(
             password,
@@ -78,11 +81,21 @@ class BasicAuthCredentialsTest {
         "some random text",
         " Basic someinvalidbase64"
     })
-    public void testInvalidHeaders(String header) {
+    public void testInvalidHeader(String header) {
 
         assertThrows(
-            BasicAuthCredentials.BasicAuthCredentialsParsingException.class,
-            () -> BasicAuthCredentials.fromAuthorizationHeader(header)
+            BasicAuth.BasicAuthCredentialsParsingException.class,
+            () -> BasicAuth.fromAuthorizationHeader(header)
+        );
+
+    }
+
+    @Test
+    public void testNullHeader() {
+
+        assertThrows(
+            BasicAuth.BasicAuthCredentialsParsingException.class,
+            () -> BasicAuth.fromAuthorizationHeader(null)
         );
 
     }
