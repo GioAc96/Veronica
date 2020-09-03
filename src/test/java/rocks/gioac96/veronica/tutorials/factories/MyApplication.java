@@ -1,16 +1,15 @@
 package rocks.gioac96.veronica.tutorials.factories;
 
 
-import rocks.gioac96.veronica.BasicApplicationFactory;
-import rocks.gioac96.veronica.Server;
+import rocks.gioac96.veronica.Application;
 
-public class MyApplication extends BasicApplicationFactory {
+public class MyApplication extends Application.ApplicationBuilder {
 
     @Override
     public void configure() {
 
         router(new MyRouter());
-        server(new MyServer());
+        port(80);
 
     }
 

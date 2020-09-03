@@ -1,9 +1,9 @@
 package rocks.gioac96.veronica.tutorials.https;
 
-import rocks.gioac96.veronica.SecureServerFactory;
+import rocks.gioac96.veronica.core.SecureServer;
 import rocks.gioac96.veronica.tutorials.https.ssl.MyContext;
 
-public class MyServer extends SecureServerFactory {
+public class MyServer extends SecureServer.SecureServerBuilder {
 
     @Override
     public void configure() {

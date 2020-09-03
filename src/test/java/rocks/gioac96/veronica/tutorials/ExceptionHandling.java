@@ -1,37 +1,31 @@
 package rocks.gioac96.veronica.tutorials;
 
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
-
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.Server;
-import rocks.gioac96.veronica.factories.CreationException;
-import rocks.gioac96.veronica.http.ExceptionHandler;
-import rocks.gioac96.veronica.http.HttpStatus;
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.Route;
-import rocks.gioac96.veronica.routing.Router;
+import rocks.gioac96.veronica.providers.CreationException;
+import rocks.gioac96.veronica.core.ExceptionHandler;
+import rocks.gioac96.veronica.core.HttpStatus;
+import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.core.Router;
 
 public class ExceptionHandling {
 
     public static void main(String[] args) {
 
-        Route<Request, Response> route = Route.builder()
+        Route route = Route.builder()
             .requestHandler(request -> {
 
                 String numberQueryString = request.getQueryParam("number");
 
                 int number = Integer.parseInt(numberQueryString);
 
-                return ok(Response.builder()
+                return Response.builder()
                     .body(String.valueOf(number * 2))
-                    .build());
-
-
+                    .build();
             })
             .build();
 
-        Router<Request, Response> router = Router.builder()
+        Router router = Router.builder()
             .fallbackRoute(route)
             .build();
 
@@ -53,8 +47,8 @@ public class ExceptionHandling {
 
         try {
 
-            Application<Request, Response> app = Application.basic()
-                .server(Server.builder().port(port).build())
+            Application app = Application.builder()
+                .port(port)
                 .router(router)
                 .exceptionHandler(exceptionHandler)
                 .build();

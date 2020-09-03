@@ -2,72 +2,64 @@ package rocks.gioac96.veronica;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpsConfigurator;
-import com.sun.net.httpserver.HttpsParameters;
-import com.sun.net.httpserver.HttpsServer;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLParameters;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import rocks.gioac96.veronica.factories.CreationException;
-import rocks.gioac96.veronica.http.BasicExchangeParser;
-import rocks.gioac96.veronica.http.ExceptionHandler;
-import rocks.gioac96.veronica.http.ExchangeParser;
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.http.SetCookieHeader;
-import rocks.gioac96.veronica.routing.Router;
+import rocks.gioac96.veronica.core.ExceptionHandler;
+import rocks.gioac96.veronica.core.ExchangeParser;
+import rocks.gioac96.veronica.core.Request;
+import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.core.Server;
+import rocks.gioac96.veronica.core.SetCookieHeader;
+import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.CreationException;
+import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.ArraySet;
 
 /**
  * Veronica application.
  */
 @SuppressWarnings("unused")
-public final class Application<Q extends Request, S extends Response> {
+public final class Application {
 
+    private final ThreadPoolExecutor threadPool;
+    private final Set<HttpServer> httpServers;
     @Getter
     @Setter
     @NonNull
-    private Router<Q, S> router;
-
+    private Router router;
     @Getter
     @Setter
     @NonNull
-    private ExchangeParser<Q> exchangeParser;
-
+    private ExchangeParser exchangeParser;
     @Getter
     @Setter
     @NonNull
     private ExceptionHandler exceptionHandler;
 
-    private final ThreadPoolExecutor threadPool;
-
-    private final Set<HttpServer> httpServers;
-
     protected Application(
         @NonNull Set<Server> servers,
-        @NonNull Router<Q, S> router,
-        @NonNull ExchangeParser<Q> exchangeParser,
+        @NonNull Router router,
+        @NonNull ExchangeParser exchangeParser,
         @NonNull ExceptionHandler exceptionHandler,
-        int threads
+        @NonNull ThreadPoolExecutor threadPool
     ) throws IOException {
 
-        this.exchangeParser = exchangeParser;
-        this.router = router;
-        this.exceptionHandler = exceptionHandler;
+        this.threadPool = threadPool;
 
-        validateThreads(threads);
-        this.threadPool = (ThreadPoolExecutor)Executors.newFixedThreadPool(threads);
+        this.router = router;
+        this.router.setThreadPool(threadPool);
+
+        this.exceptionHandler = exceptionHandler;
+        this.exchangeParser = exchangeParser;
 
         this.httpServers = new ArraySet<>();
 
@@ -82,37 +74,11 @@ public final class Application<Q extends Request, S extends Response> {
     /**
      * Instantiates a generic application builder.
      *
-     * @param <Q> Request type
-     * @param <S> Response type
      * @return the instantiated generic application builder
      */
-    public static <Q extends Request, S extends Response> ApplicationBuilder<Q, S> builder() {
+    public static ApplicationBuilder builder() {
 
-        return new ApplicationBuilder<>();
-
-    }
-
-    /**
-     * Instantiates a basic application builder.
-     *
-     * @return the instantiated basic application builder
-     */
-    public static ApplicationBuilder<Request, Response> basic() {
-
-        return new ApplicationBuilder<>()
-            .exchangeParser(new BasicExchangeParser())
-            .exceptionHandler(new ExceptionHandler() {
-            });
-
-    }
-
-    private static void validateThreads(int threads) {
-
-        if (threads < 1) {
-
-            throw new IllegalArgumentException("Threads count must be >= 1");
-
-        }
+        return new ApplicationBuilder();
 
     }
 
@@ -125,7 +91,7 @@ public final class Application<Q extends Request, S extends Response> {
             try {
 
                 // Parse request
-                Q request = exchangeParser.parseExchange(exchange);
+                Request request = exchangeParser.parseExchange(exchange);
 
                 // Generate response
                 response = router.route(request);
@@ -153,10 +119,10 @@ public final class Application<Q extends Request, S extends Response> {
                 exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
 
                 // Send response headers
-                exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length());
+                exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length);
 
                 // Send response body
-                exchange.getResponseBody().write(response.getBody().getBytes());
+                exchange.getResponseBody().write(response.getBody());
 
                 // Close response
                 exchange.close();
@@ -198,66 +164,105 @@ public final class Application<Q extends Request, S extends Response> {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
-    public static class ApplicationBuilder<Q extends Request, S extends Response> {
+    public static class ApplicationBuilder extends Builder<Application> {
 
-        private Router<Q, S> router;
-        private ExchangeParser<Q> exchangeParser;
-        private ExceptionHandler exceptionHandler;
         private final Set<Server> servers = new HashSet<>();
-        private int threads = Runtime.getRuntime().availableProcessors();
+        private Router router;
+        private ExchangeParser exchangeParser = new ExchangeParser() {
+        };
+        private ExceptionHandler exceptionHandler = new ExceptionHandler() {
+        };
+        private ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
-        ApplicationBuilder() {
-        }
-
-        public ApplicationBuilder<Q, S> router(@NonNull Router<Q, S> router) {
+        public ApplicationBuilder router(@NonNull Router router) {
 
             this.router = router;
             return this;
 
         }
 
-        public ApplicationBuilder<Q, S> exchangeParser(ExchangeParser<Q> exchangeParser) {
+        public ApplicationBuilder router(@NonNull Provider<Router> routerProvider) {
+
+            return router(routerProvider.provide());
+
+        }
+
+        public ApplicationBuilder exchangeParser(@NonNull ExchangeParser exchangeParser) {
 
             this.exchangeParser = exchangeParser;
             return this;
 
         }
 
-        public ApplicationBuilder<Q, S> exceptionHandler(ExceptionHandler exceptionHandler) {
+        public ApplicationBuilder exchangeParser(@NonNull Provider<ExchangeParser> exchangeParserProvider) {
+
+            return exchangeParser(exchangeParserProvider.provide());
+
+        }
+
+        public ApplicationBuilder exceptionHandler(@NonNull ExceptionHandler exceptionHandler) {
 
             this.exceptionHandler = exceptionHandler;
             return this;
 
         }
 
-        public ApplicationBuilder<Q, S> server(Server server) {
+        public ApplicationBuilder exceptionHandler(@NonNull Provider<ExceptionHandler> exceptionHandlerProvider) {
+
+            return exceptionHandler(exceptionHandlerProvider.provide());
+
+        }
+
+        public ApplicationBuilder port(int port) {
+
+            return server(Server.builder().port(port).build());
+
+        }
+
+        public ApplicationBuilder port(@NonNull Provider<Integer> portProvider) {
+
+            return server(Server.builder().port(portProvider.provide()).build());
+
+        }
+
+        public ApplicationBuilder server(@NonNull Server server) {
 
             this.servers.add(server);
             return this;
 
         }
 
-        public ApplicationBuilder<Q, S> threads(int threads) {
+        public ApplicationBuilder server(@NonNull Provider<Server> serverProvider) {
 
-            validateThreads(threads);
+            return server(serverProvider.provide());
 
-            this.threads = threads;
+        }
+
+        public ApplicationBuilder threadPool(@NonNull ThreadPoolExecutor threadPool) {
+
+            this.threadPool = threadPool;
             return this;
 
         }
 
-        public Application<Q, S> build() {
+        @Override
+        protected Application instantiate() {
 
             try {
 
-                return new Application<>(servers, router, exchangeParser, exceptionHandler, threads);
+                return new Application(
+                    servers,
+                    router,
+                    exchangeParser,
+                    exceptionHandler,
+                    threadPool
+                );
 
             } catch (IOException e) {
 
                 throw new CreationException(e);
 
             }
-
         }
 
     }
