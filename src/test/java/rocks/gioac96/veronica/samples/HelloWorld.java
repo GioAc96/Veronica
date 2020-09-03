@@ -1,34 +1,30 @@
 package rocks.gioac96.veronica.samples;
 
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
-
 import java.io.IOException;
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.Server;
-import rocks.gioac96.veronica.factories.CreationException;
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.Route;
-import rocks.gioac96.veronica.routing.Router;
+import rocks.gioac96.veronica.providers.CreationException;
+import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.core.Router;
 
 public class HelloWorld {
 
     public static void main(String[] args) throws IOException, CreationException {
 
 
-        Router<Request, Response> router = Router.builder()
+        Router router = Router.builder()
             .fallbackRoute(
                 Route.builder()
-                    .requestHandler(request -> ok(Response.builder()
+                    .requestHandler(request -> Response.builder()
                         .body("Hello, world!")
-                        .build())
+                        .build()
                     )
                     .build()
             )
             .build();
 
-        Application<Request, Response> application = Application.basic()
-            .server(Server.builder().port(80).build())
+        Application application = Application.builder()
+            .port(80)
             .router(router)
             .build();
 

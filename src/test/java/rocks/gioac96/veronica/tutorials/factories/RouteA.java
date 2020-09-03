@@ -1,22 +1,20 @@
 package rocks.gioac96.veronica.tutorials.factories;
 
-import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.get;
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
+import static rocks.gioac96.veronica.common.CommonRequestMatchers.get;
 
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.RouteFactory;
+import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.Route;
 
-public class RouteA extends RouteFactory<Request, Response> {
+public class RouteA extends Route.RouteBuilder {
 
     @Override
     public void configure() {
 
         requestMatcher(get("/a"));
 
-        requestHandler(request -> ok(Response.builder()
+        requestHandler(request -> Response.builder()
             .body("This is route A")
-            .build())
+            .build()
         );
 
     }

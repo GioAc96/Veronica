@@ -1,8 +1,8 @@
 package rocks.gioac96.veronica.tutorials.https.ssl;
 
-import rocks.gioac96.veronica.SSLContextFactory;
+import rocks.gioac96.veronica.core.SSLContextBuilder;
 
-public class MyContext extends SSLContextFactory {
+public class MyContext extends SSLContextBuilder {
 
     @Override
     public void configure() {

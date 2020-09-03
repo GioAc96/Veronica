@@ -6,10 +6,10 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-import rocks.gioac96.veronica.factories.CreationException;
-import rocks.gioac96.veronica.factories.Factory;
+import rocks.gioac96.veronica.providers.CreationException;
+import rocks.gioac96.veronica.providers.Provider;
 
-public class MyKeyStore implements Factory<KeyStore> {
+public class MyKeyStore implements Provider<KeyStore> {
 
     public String password() {
 
@@ -18,7 +18,7 @@ public class MyKeyStore implements Factory<KeyStore> {
     }
 
     @Override
-    public KeyStore build() throws CreationException {
+    public KeyStore provide() throws CreationException {
 
         try {
 

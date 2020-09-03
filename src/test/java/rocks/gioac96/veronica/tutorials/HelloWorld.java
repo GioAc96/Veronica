@@ -1,36 +1,35 @@
 package rocks.gioac96.veronica.tutorials;
 
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
-
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.Server;
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.Route;
-import rocks.gioac96.veronica.routing.Router;
-import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
+import rocks.gioac96.veronica.core.Server;
+import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.core.RequestHandler;
 
 public class HelloWorld {
 
     public static void main(String[] args) {
 
-        RequestHandler<Request, Response> helloWorldHandler = request -> ok(Response.builder()
+        RequestHandler helloWorldHandler = request -> Response.builder()
             .body("Hello World")
-            .build());
+            .build();
 
-        Route<Request, Response> helloWorldRoute = Route.builder()
+        Route helloWorldRoute = Route.builder()
             .requestHandler(helloWorldHandler)
             .build();
 
-        Router<Request, Response> router = Router.builder()
+        Router router = Router.builder()
             .fallbackRoute(helloWorldRoute)
             .build();
 
         int port = 8000;
 
-        Application<Request, Response> app = Application.basic()
-            .server(Server.builder().port(port).build())
-            .router(router)
+        Application app = Application.builder()
+            .server(Server.builder()
+                .port(port)
+                .build()
+            ).router(router)
             .build();
 
         app.start();
