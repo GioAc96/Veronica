@@ -12,13 +12,16 @@ import java.util.concurrent.ThreadPoolExecutor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import rocks.gioac96.veronica.factories.CreationException;
-import rocks.gioac96.veronica.http.ExceptionHandler;
-import rocks.gioac96.veronica.http.ExchangeParser;
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.http.SetCookieHeader;
-import rocks.gioac96.veronica.routing.Router;
+import rocks.gioac96.veronica.core.ExceptionHandler;
+import rocks.gioac96.veronica.core.ExchangeParser;
+import rocks.gioac96.veronica.core.Request;
+import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.core.Server;
+import rocks.gioac96.veronica.core.SetCookieHeader;
+import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.CreationException;
+import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.ArraySet;
 
 /**
@@ -27,24 +30,20 @@ import rocks.gioac96.veronica.util.ArraySet;
 @SuppressWarnings("unused")
 public final class Application {
 
+    private final ThreadPoolExecutor threadPool;
+    private final Set<HttpServer> httpServers;
     @Getter
     @Setter
     @NonNull
     private Router router;
-
     @Getter
     @Setter
     @NonNull
     private ExchangeParser exchangeParser;
-
     @Getter
     @Setter
     @NonNull
     private ExceptionHandler exceptionHandler;
-
-    private final ThreadPoolExecutor threadPool;
-
-    private final Set<HttpServer> httpServers;
 
     protected Application(
         @NonNull Set<Server> servers,
@@ -77,7 +76,7 @@ public final class Application {
      *
      * @return the instantiated generic application builder
      */
-    public static  ApplicationBuilder builder() {
+    public static ApplicationBuilder builder() {
 
         return new ApplicationBuilder();
 
@@ -165,16 +164,15 @@ public final class Application {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
-    public static class ApplicationBuilder {
+    public static class ApplicationBuilder extends Builder<Application> {
 
-        private Router router;
-        private ExchangeParser exchangeParser = new ExchangeParser() {};
-        private ExceptionHandler exceptionHandler = new ExceptionHandler() {};
         private final Set<Server> servers = new HashSet<>();
+        private Router router;
+        private ExchangeParser exchangeParser = new ExchangeParser() {
+        };
+        private ExceptionHandler exceptionHandler = new ExceptionHandler() {
+        };
         private ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-
-        ApplicationBuilder() {
-        }
 
         public ApplicationBuilder router(@NonNull Router router) {
 
@@ -183,23 +181,47 @@ public final class Application {
 
         }
 
-        public ApplicationBuilder exchangeParser(ExchangeParser exchangeParser) {
+        public ApplicationBuilder router(@NonNull Provider<Router> routerProvider) {
+
+            return router(routerProvider.provide());
+
+        }
+
+        public ApplicationBuilder exchangeParser(@NonNull ExchangeParser exchangeParser) {
 
             this.exchangeParser = exchangeParser;
             return this;
 
         }
 
-        public ApplicationBuilder exceptionHandler(ExceptionHandler exceptionHandler) {
+        public ApplicationBuilder exchangeParser(@NonNull Provider<ExchangeParser> exchangeParserProvider) {
+
+            return exchangeParser(exchangeParserProvider.provide());
+
+        }
+
+        public ApplicationBuilder exceptionHandler(@NonNull ExceptionHandler exceptionHandler) {
 
             this.exceptionHandler = exceptionHandler;
             return this;
 
         }
 
+        public ApplicationBuilder exceptionHandler(@NonNull Provider<ExceptionHandler> exceptionHandlerProvider) {
+
+            return exceptionHandler(exceptionHandlerProvider.provide());
+
+        }
+
         public ApplicationBuilder port(int port) {
 
             return server(Server.builder().port(port).build());
+
+        }
+
+        public ApplicationBuilder port(@NonNull Provider<Integer> portProvider) {
+
+            return server(Server.builder().port(portProvider.provide()).build());
 
         }
 
@@ -210,6 +232,12 @@ public final class Application {
 
         }
 
+        public ApplicationBuilder server(@NonNull Provider<Server> serverProvider) {
+
+            return server(serverProvider.provide());
+
+        }
+
         public ApplicationBuilder threadPool(@NonNull ThreadPoolExecutor threadPool) {
 
             this.threadPool = threadPool;
@@ -217,7 +245,8 @@ public final class Application {
 
         }
 
-        public Application build() {
+        @Override
+        protected Application instantiate() {
 
             try {
 
@@ -234,7 +263,6 @@ public final class Application {
                 throw new CreationException(e);
 
             }
-
         }
 
     }

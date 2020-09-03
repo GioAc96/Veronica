@@ -1,11 +1,11 @@
 package rocks.gioac96.veronica.tutorials;
 
-import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.path;
+import static rocks.gioac96.veronica.common.CommonRequestMatchers.path;
 
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.Route;
-import rocks.gioac96.veronica.routing.Router;
+import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.core.Router;
 
 public class Routing {
 

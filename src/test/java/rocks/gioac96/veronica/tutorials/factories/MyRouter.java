@@ -1,7 +1,7 @@
 package rocks.gioac96.veronica.tutorials.factories;
 
-import rocks.gioac96.veronica.routing.CommonRoutes;
-import rocks.gioac96.veronica.routing.RouterFactory;
+import rocks.gioac96.veronica.common.CommonRoutes;
+import rocks.gioac96.veronica.core.RouterFactory;
 
 public class MyRouter extends RouterFactory {
 

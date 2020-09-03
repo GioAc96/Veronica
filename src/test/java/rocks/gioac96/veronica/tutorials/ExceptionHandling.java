@@ -1,12 +1,12 @@
 package rocks.gioac96.veronica.tutorials;
 
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.factories.CreationException;
-import rocks.gioac96.veronica.http.ExceptionHandler;
-import rocks.gioac96.veronica.http.HttpStatus;
-import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.Route;
-import rocks.gioac96.veronica.routing.Router;
+import rocks.gioac96.veronica.providers.CreationException;
+import rocks.gioac96.veronica.core.ExceptionHandler;
+import rocks.gioac96.veronica.core.HttpStatus;
+import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.core.Router;
 
 public class ExceptionHandling {
 

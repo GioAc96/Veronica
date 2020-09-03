@@ -13,6 +13,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
+import rocks.gioac96.veronica.core.HttpMethod;
+import rocks.gioac96.veronica.core.Request;
 
 class RequestTest {
 
@@ -84,7 +86,13 @@ class RequestTest {
         when(uriMock.getPath())
             .thenReturn(path);
 
-        Request request = new Request(HttpMethod.GET, "", headersMock, uriMock, false);
+        Request request = Request.builder()
+            .httpMethod(HttpMethod.GET)
+            .body("")
+            .headers(headersMock)
+            .uri(uriMock)
+            .secure(false)
+            .build();
 
         assertEquals(path, request.getPath());
 
@@ -97,13 +105,13 @@ class RequestTest {
         when(uriMock.getQuery())
             .thenReturn(queryString);
 
-        Request request = new Request(
-            HttpMethod.GET,
-            "",
-            headersMock,
-            uriMock,
-            false
-        );
+        Request request = Request.builder()
+            .httpMethod(HttpMethod.GET)
+            .body("")
+            .headers(headersMock)
+            .uri(uriMock)
+            .secure(false)
+            .build();
 
         assertEquals(expected.size(), request.getQueryMap().size());
 

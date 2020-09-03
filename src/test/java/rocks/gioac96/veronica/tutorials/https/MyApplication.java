@@ -1,10 +1,7 @@
 package rocks.gioac96.veronica.tutorials.https;
 
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.BasicApplicationFactory;
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.Router;
+import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.tutorials.https.routes.RouteA;
 
 public class MyApplication extends BasicApplicationFactory {

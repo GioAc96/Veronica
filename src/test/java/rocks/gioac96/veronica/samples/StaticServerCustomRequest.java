@@ -6,15 +6,15 @@ import java.net.URI;
 import java.util.Objects;
 import lombok.NonNull;
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.http.ExceptionHandler;
-import rocks.gioac96.veronica.http.ExchangeParseException;
-import rocks.gioac96.veronica.http.ExchangeParser;
-import rocks.gioac96.veronica.http.HttpMethod;
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.routing.CommonRoutes;
-import rocks.gioac96.veronica.routing.Route;
-import rocks.gioac96.veronica.routing.Router;
-import rocks.gioac96.veronica.statics.FilePermissionsManager;
+import rocks.gioac96.veronica.core.ExceptionHandler;
+import rocks.gioac96.veronica.core.ExchangeParseException;
+import rocks.gioac96.veronica.core.ExchangeParser;
+import rocks.gioac96.veronica.core.HttpMethod;
+import rocks.gioac96.veronica.core.Request;
+import rocks.gioac96.veronica.common.CommonRoutes;
+import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.static_server.FilePermissionsManager;
 
 public class StaticServerCustomRequest {
 

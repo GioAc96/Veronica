@@ -1,11 +1,11 @@
 package rocks.gioac96.veronica.tutorials;
 
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.Server;
-import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.Route;
-import rocks.gioac96.veronica.routing.Router;
-import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
+import rocks.gioac96.veronica.core.Server;
+import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.core.RequestHandler;
 
 public class HelloWorld {
 

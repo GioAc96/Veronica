@@ -1,9 +1,9 @@
 package rocks.gioac96.veronica.samples;
 
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.http.CommonResponses;
-import rocks.gioac96.veronica.routing.Route;
-import rocks.gioac96.veronica.routing.Router;
+import rocks.gioac96.veronica.common.CommonResponses;
+import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.core.Router;
 
 public class Benchmark {
 
@@ -21,7 +21,7 @@ public class Benchmark {
         Application.builder()
             .port(80)
             .router(Router.builder()
-                .fallbackRoute(Route.builder().handler(request -> CommonResponses.ok()).build())
+                .fallbackRoute(Route.builder().requestHandler(request -> CommonResponses.ok()).build())
                 .build())
             .build()
             .start();

@@ -1,14 +1,14 @@
 package rocks.gioac96.veronica.samples;
 
-import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.get;
+import static rocks.gioac96.veronica.common.CommonRequestMatchers.get;
 
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.http.CommonResponses;
-import rocks.gioac96.veronica.routing.CommonRoutes;
-import rocks.gioac96.veronica.routing.Route;
-import rocks.gioac96.veronica.routing.Router;
-import rocks.gioac96.veronica.routing.pipeline.Pipeline;
-import rocks.gioac96.veronica.routing.pipeline.stages.PostProcessor;
+import rocks.gioac96.veronica.common.CommonResponses;
+import rocks.gioac96.veronica.common.CommonRoutes;
+import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.core.Pipeline;
+import rocks.gioac96.veronica.core.PostProcessor;
 
 public class AsynchronousPostProcessors {
 
@@ -31,17 +31,17 @@ public class AsynchronousPostProcessors {
             .router(Router.builder()
                 .route(Route.builder()
                     .requestMatcher(get("/async"))
-                    .handler(request -> CommonResponses.ok())
+                    .requestHandler(request -> CommonResponses.ok())
                     .pipeline(Pipeline.builder()
                         .postProcessor((PostProcessor.Asynchronous)((request, response) -> sleep()))
-                        .build())
+                        .provide())
                     .build())
                 .route(Route.builder()
                     .requestMatcher(get("/sync"))
-                    .handler(request -> CommonResponses.ok())
+                    .requestHandler(request -> CommonResponses.ok())
                     .pipeline(Pipeline.builder()
                         .postProcessor((request, response) -> sleep())
-                        .build())
+                        .provide())
                     .build())
                 .fallbackRoute(CommonRoutes.notFound())
                 .build())

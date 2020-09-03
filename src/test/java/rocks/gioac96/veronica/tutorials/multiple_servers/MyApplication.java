@@ -1,10 +1,7 @@
 package rocks.gioac96.veronica.tutorials.multiple_servers;
 
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.BasicApplicationFactory;
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.Router;
+import rocks.gioac96.veronica.core.Router;
 
 public class MyApplication extends BasicApplicationFactory {
 
