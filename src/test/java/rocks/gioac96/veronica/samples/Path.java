@@ -1,15 +1,14 @@
 package rocks.gioac96.veronica.samples;
 
-import java.io.IOException;
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Route;
 import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.providers.CreationException;
 
 public class Path {
 
-    public static void main(String[] args) throws IOException, CreationException {
+    public static void main(String[] args) throws CreationException {
 
         Router router = Router.builder()
             .fallbackRoute(Route.builder()

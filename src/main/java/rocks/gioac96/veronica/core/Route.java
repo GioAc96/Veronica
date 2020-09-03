@@ -29,7 +29,6 @@ public class Route {
     private RequestHandler requestHandler;
 
     @Getter
-    @Setter
     @NonNull
     private Pipeline pipeline;
 
