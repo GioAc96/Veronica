@@ -8,8 +8,8 @@ import rocks.gioac96.veronica.routing.pipeline.Pipeline;
 /**
  * {@link Pipeline} stage that filters a {@link Request} after a {@link Response} was generated.
  */
-public interface PostFilter<Q extends Request, S extends Response> {
+public interface PostFilter {
 
-    FilterPayload<S> filter(@NonNull Q request, @NonNull S response);
+    void filter(@NonNull Request request, @NonNull Response response);
 
 }

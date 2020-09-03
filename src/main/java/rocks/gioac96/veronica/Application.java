@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.factories.CreationException;
-import rocks.gioac96.veronica.http.BasicExchangeParser;
 import rocks.gioac96.veronica.http.ExceptionHandler;
 import rocks.gioac96.veronica.http.ExchangeParser;
 import rocks.gioac96.veronica.http.Request;
@@ -26,17 +25,17 @@ import rocks.gioac96.veronica.util.ArraySet;
  * Veronica application.
  */
 @SuppressWarnings("unused")
-public final class Application<Q extends Request, S extends Response> {
+public final class Application {
 
     @Getter
     @Setter
     @NonNull
-    private Router<Q, S> router;
+    private Router router;
 
     @Getter
     @Setter
     @NonNull
-    private ExchangeParser<Q> exchangeParser;
+    private ExchangeParser exchangeParser;
 
     @Getter
     @Setter
@@ -49,8 +48,8 @@ public final class Application<Q extends Request, S extends Response> {
 
     protected Application(
         @NonNull Set<Server> servers,
-        @NonNull Router<Q, S> router,
-        @NonNull ExchangeParser<Q> exchangeParser,
+        @NonNull Router router,
+        @NonNull ExchangeParser exchangeParser,
         @NonNull ExceptionHandler exceptionHandler,
         @NonNull ThreadPoolExecutor threadPool
     ) throws IOException {
@@ -76,27 +75,11 @@ public final class Application<Q extends Request, S extends Response> {
     /**
      * Instantiates a generic application builder.
      *
-     * @param <Q> Request type
-     * @param <S> Response type
      * @return the instantiated generic application builder
      */
-    public static <Q extends Request, S extends Response> ApplicationBuilder<Q, S> builder() {
+    public static  ApplicationBuilder builder() {
 
-        return new ApplicationBuilder<>();
-
-    }
-
-    /**
-     * Instantiates a basic application builder.
-     *
-     * @return the instantiated basic application builder
-     */
-    public static ApplicationBuilder<Request, Response> basic() {
-
-        return builder()
-            .exchangeParser(BasicExchangeParser.getInstance())
-            .exceptionHandler(new ExceptionHandler() {
-            });
+        return new ApplicationBuilder();
 
     }
 
@@ -109,7 +92,7 @@ public final class Application<Q extends Request, S extends Response> {
             try {
 
                 // Parse request
-                Q request = exchangeParser.parseExchange(exchange);
+                Request request = exchangeParser.parseExchange(exchange);
 
                 // Generate response
                 response = router.route(request);
@@ -182,63 +165,63 @@ public final class Application<Q extends Request, S extends Response> {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
-    public static class ApplicationBuilder<Q extends Request, S extends Response> {
+    public static class ApplicationBuilder {
 
-        private Router<Q, S> router;
-        private ExchangeParser<Q> exchangeParser;
-        private ExceptionHandler exceptionHandler;
+        private Router router;
+        private ExchangeParser exchangeParser = new ExchangeParser() {};
+        private ExceptionHandler exceptionHandler = new ExceptionHandler() {};
         private final Set<Server> servers = new HashSet<>();
         private ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
         ApplicationBuilder() {
         }
 
-        public ApplicationBuilder<Q, S> router(@NonNull Router<Q, S> router) {
+        public ApplicationBuilder router(@NonNull Router router) {
 
             this.router = router;
             return this;
 
         }
 
-        public ApplicationBuilder<Q, S> exchangeParser(ExchangeParser<Q> exchangeParser) {
+        public ApplicationBuilder exchangeParser(ExchangeParser exchangeParser) {
 
             this.exchangeParser = exchangeParser;
             return this;
 
         }
 
-        public ApplicationBuilder<Q, S> exceptionHandler(ExceptionHandler exceptionHandler) {
+        public ApplicationBuilder exceptionHandler(ExceptionHandler exceptionHandler) {
 
             this.exceptionHandler = exceptionHandler;
             return this;
 
         }
 
-        public ApplicationBuilder<Q, S> port(int port) {
+        public ApplicationBuilder port(int port) {
 
             return server(Server.builder().port(port).build());
 
         }
 
-        public ApplicationBuilder<Q, S> server(@NonNull Server server) {
+        public ApplicationBuilder server(@NonNull Server server) {
 
             this.servers.add(server);
             return this;
 
         }
 
-        public ApplicationBuilder<Q, S> threadPool(@NonNull ThreadPoolExecutor threadPool) {
+        public ApplicationBuilder threadPool(@NonNull ThreadPoolExecutor threadPool) {
 
             this.threadPool = threadPool;
             return this;
 
         }
 
-        public Application<Q, S> build() {
+        public Application build() {
 
             try {
 
-                return new Application<>(
+                return new Application(
                     servers,
                     router,
                     exchangeParser,

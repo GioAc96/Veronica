@@ -4,8 +4,6 @@ import rocks.gioac96.veronica.factories.ConfigurableFactory;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.factories.Factory;
 import rocks.gioac96.veronica.factories.PriorityFactory;
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.pipeline.stages.PostFilter;
 import rocks.gioac96.veronica.routing.pipeline.stages.PostProcessor;
 import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
@@ -14,60 +12,52 @@ import rocks.gioac96.veronica.routing.pipeline.stages.ResponseRenderer;
 /**
  * Pipeline factory.
  *
- * @param <Q> Request type
- * @param <S> Response type
  */
-public abstract class PipelineFactory<
-    Q extends Request,
-    S extends Response
-    > extends Pipeline.PipelineBuilder<
-    Q,
-    S,
-    Pipeline<Q, S>,
-    PipelineFactory<Q, S>
-    > implements ConfigurableFactory<Pipeline<Q, S>> {
+public abstract class PipelineFactory
+    extends Pipeline.PipelineBuilder<Pipeline, PipelineFactory>
+    implements ConfigurableFactory<Pipeline> {
 
-    protected PipelineFactory<Q, S> preFilter(Factory<PreFilter<Q, S>> preFilterFactory) throws CreationException {
+    protected PipelineFactory preFilter(Factory<PreFilter> preFilterFactory) throws CreationException {
 
         return super.preFilter(preFilterFactory.build());
 
     }
 
-    protected PipelineFactory<Q, S> preFilter(PriorityFactory<PreFilter<Q, S>> preFilterFactory)
+    protected PipelineFactory preFilter(PriorityFactory<PreFilter> preFilterFactory)
         throws CreationException {
 
         return super.preFilter(preFilterFactory.build(), preFilterFactory.priority());
 
     }
 
-    protected PipelineFactory<Q, S> postFilter(Factory<PostFilter<Q, S>> postFilterFactory) throws CreationException {
+    protected PipelineFactory postFilter(Factory<PostFilter> postFilterFactory) throws CreationException {
 
         return super.postFilter(postFilterFactory.build());
 
     }
 
-    protected PipelineFactory<Q, S> postFilter(PriorityFactory<PostFilter<Q, S>> postFilterFactory)
+    protected PipelineFactory postFilter(PriorityFactory<PostFilter> postFilterFactory)
         throws CreationException {
 
         return super.postFilter(postFilterFactory.build(), postFilterFactory.priority());
 
     }
 
-    protected PipelineFactory<Q, S> postProcessor(Factory<PostProcessor<Q, S>> postProcessorFactory)
+    protected PipelineFactory postProcessor(Factory<PostProcessor> postProcessorFactory)
         throws CreationException {
 
         return super.postProcessor(postProcessorFactory.build());
 
     }
 
-    protected PipelineFactory<Q, S> postProcessor(PriorityFactory<PostProcessor<Q, S>> postProcessorFactory)
+    protected PipelineFactory postProcessor(PriorityFactory<PostProcessor> postProcessorFactory)
         throws CreationException {
 
         return super.postProcessor(postProcessorFactory.build(), postProcessorFactory.priority());
 
     }
 
-    protected PipelineFactory<Q, S> responseRenderer(Factory<ResponseRenderer<S>> responseRendererFactory)
+    protected PipelineFactory responseRenderer(Factory<ResponseRenderer> responseRendererFactory)
         throws CreationException {
 
         return super.responseRenderer(responseRendererFactory.build());
@@ -75,18 +65,18 @@ public abstract class PipelineFactory<
     }
 
     @Override
-    protected PipelineFactory<Q, S> self() {
+    protected PipelineFactory self() {
 
         return this;
 
     }
 
     @Override
-    public Pipeline<Q, S> build() {
+    public Pipeline build() {
 
         configure();
 
-        return new Pipeline<>(this);
+        return new Pipeline(this);
 
     }
 

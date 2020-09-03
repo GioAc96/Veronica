@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.static_server;
+package rocks.gioac96.veronica.statics;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

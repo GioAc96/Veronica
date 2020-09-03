@@ -1,14 +1,13 @@
-package rocks.gioac96.veronica.static_server;
+package rocks.gioac96.veronica.statics;
 
 import rocks.gioac96.veronica.http.Request;
 
 /**
  * Interface for object that decides access to a file, given a Request and file permissions.
- * @param <Q> Type of the request
  * @param <P> Type of the file permissions.
  */
-public interface FilePermissionsDecider<Q extends Request, P> {
+public interface FilePermissionsDecider<P> {
 
-    boolean decide(Q request, P filePermissions);
+    boolean decide(Request request, P filePermissions);
 
 }

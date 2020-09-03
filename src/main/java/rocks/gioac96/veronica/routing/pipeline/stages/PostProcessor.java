@@ -8,15 +8,14 @@ import rocks.gioac96.veronica.routing.pipeline.Pipeline;
 /**
  * {@link Pipeline} stage that processes a {@link Request} after the {@link Response} was already sent.
  */
-public interface PostProcessor<Q extends Request, S extends Response> {
+public interface PostProcessor {
 
-    void process(@NonNull Q request, @NonNull S response);
+    void process(@NonNull Request request, @NonNull Response response);
 
     /**
      * Marker for PostProcessors that are executed asynchronously.
-     * @param <Q> type of the request
-     * @param <S> type of the response
+     * @param  type of the request
      */
-    interface Asynchronous<Q extends Request, S extends Response> extends PostProcessor<Q, S> {}
+    interface Asynchronous extends PostProcessor {}
 
 }

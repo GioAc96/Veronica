@@ -7,8 +7,8 @@ import rocks.gioac96.veronica.routing.pipeline.Pipeline;
 /**
  * Stage of the {@link Pipeline} responsible for generating a {@link Response}.
  */
-public interface RequestHandler<Q extends Request, S extends Response> {
+public interface RequestHandler {
 
-    RequestHandlerPayload<S> handle(Q request);
+    Response handle(Request request);
 
 }

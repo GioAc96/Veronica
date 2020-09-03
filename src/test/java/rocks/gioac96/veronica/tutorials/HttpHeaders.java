@@ -1,10 +1,6 @@
 package rocks.gioac96.veronica.tutorials;
 
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
-
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.Server;
-import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.Router;
@@ -13,7 +9,7 @@ public class HttpHeaders {
 
     public static void main(String[] args) {
 
-        Route<Request, Response> route = Route.builder()
+        Route route = Route.builder()
             .requestHandler(req -> {
 
                 Response response;
@@ -44,17 +40,17 @@ public class HttpHeaders {
 
                 }
 
-                return ok(response);
+                return response;
             })
             .build();
 
-        Router<Request, Response> router = Router.builder()
+        Router router = Router.builder()
             .fallbackRoute(route)
             .build();
 
         int port = 8000;
 
-        Application<Request, Response> app = Application.basic()
+        Application app = Application.builder()
             .port(port)
             .router(router)
             .build();

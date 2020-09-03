@@ -8,8 +8,8 @@ import rocks.gioac96.veronica.http.Response;
  * Pipeline stage that filters a {@link Request} before a {@link Response}
  * is generated.
  */
-public interface PreFilter<Q extends Request, S extends Response> {
+public interface PreFilter {
 
-    FilterPayload<S> filter(@NonNull Q request);
+    void filter(@NonNull Request request);
 
 }

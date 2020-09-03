@@ -10,7 +10,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.routing.pipeline.stages.FilterPayload;
+import rocks.gioac96.veronica.routing.pipeline.stages.PipelineBreakException;
 import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
 
 /**
@@ -18,7 +18,7 @@ import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
  */
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class QueryValidator<Q extends Request> implements PreFilter<Q, ValidationFailureResponse> {
+public class QueryValidator implements PreFilter {
 
     @Getter
     @Setter
@@ -35,7 +35,7 @@ public class QueryValidator<Q extends Request> implements PreFilter<Q, Validatio
     }
 
     @Override
-    public FilterPayload<ValidationFailureResponse> filter(@NonNull Q request) {
+    public void filter(@NonNull Request request) {
 
         try {
 
@@ -48,11 +48,12 @@ public class QueryValidator<Q extends Request> implements PreFilter<Q, Validatio
 
             }
 
-            return FilterPayload.ok();
-
         } catch (ValidationException e) {
 
-            return FilterPayload.fail(generateValidationFailureResponse(e));
+            throw new PipelineBreakException(
+                e,
+                generateValidationFailureResponse(e)
+            );
 
         }
 

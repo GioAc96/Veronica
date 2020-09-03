@@ -11,12 +11,11 @@ import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
-import rocks.gioac96.veronica.routing.pipeline.stages.FilterPayload;
+import rocks.gioac96.veronica.routing.pipeline.stages.PipelineBreakException;
 import rocks.gioac96.veronica.routing.pipeline.stages.PostFilter;
 import rocks.gioac96.veronica.routing.pipeline.stages.PostProcessor;
 import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
 import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
-import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload;
 import rocks.gioac96.veronica.routing.pipeline.stages.ResponseRenderer;
 import rocks.gioac96.veronica.routing.pipeline.stages.UnrenderedResponseException;
 import rocks.gioac96.veronica.util.PrioritySet;
@@ -25,31 +24,31 @@ import rocks.gioac96.veronica.util.PrioritySet;
  * Request pipeline.
  */
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Pipeline<Q extends Request, S extends Response> {
+public class Pipeline {
 
     @Getter
     @Setter
     @NonNull
-    private PrioritySet<PreFilter<Q, S>> preFilters;
+    private PrioritySet<PreFilter> preFilters;
 
     @Getter
     @Setter
     @NonNull
-    private PrioritySet<PostFilter<Q, S>> postFilters;
+    private PrioritySet<PostFilter> postFilters;
 
     @Getter
     @Setter
     @NonNull
-    private PrioritySet<PostProcessor<Q, S>> postProcessors;
+    private PrioritySet<PostProcessor> postProcessors;
 
     @Getter
     @Setter
-    private ResponseRenderer<S> responseRenderer;
+    private ResponseRenderer responseRenderer;
 
     @Setter
     protected ThreadPoolExecutor threadPool;
 
-    protected Pipeline(PipelineBuilder<Q, S, ?, ?> b) {
+    protected Pipeline(PipelineBuilder<?, ?> b) {
 
         this.preFilters = b.preFilters;
         this.postFilters = b.postFilters;
@@ -58,40 +57,23 @@ public class Pipeline<Q extends Request, S extends Response> {
 
     }
 
-    public static <Q extends Request, S extends Response> PipelineBuilder<Q, S, ?, ?> builder() {
-        return new PipelineBuilderImpl<>();
+    public static  PipelineBuilder<?, ?> builder() {
+        return new PipelineBuilderImpl();
     }
 
-    private S preRender(Q request, RequestHandler<Q, S> requestHandler) {
+    private Response preRender(Request request, RequestHandler requestHandler) {
 
-        for (PreFilter<Q, S> preFilter : preFilters) {
+        for (PreFilter preFilter : preFilters) {
 
-            FilterPayload<S> filterPayload = preFilter.filter(request);
-
-            if (!filterPayload.shouldContinue()) {
-                return filterPayload.getResponse();
-            }
+            preFilter.filter(request);
 
         }
 
-        RequestHandlerPayload<S> requestHandlerPayload = requestHandler.handle(request);
-        S response = requestHandlerPayload.getResponse();
+        Response response = requestHandler.handle(request);
 
-        if (!requestHandlerPayload.shouldContinue()) {
+        for (PostFilter postFilter : postFilters) {
 
-            return response;
-
-        }
-
-        for (PostFilter<Q, S> postFilter : postFilters) {
-
-            FilterPayload<S> filterPayload = postFilter.filter(request, response);
-
-            if (!filterPayload.shouldContinue()) {
-
-                return filterPayload.getResponse();
-
-            }
+            postFilter.filter(request, response);
 
         }
 
@@ -106,9 +88,19 @@ public class Pipeline<Q extends Request, S extends Response> {
      * @param requestHandler request handler that performs the requested action
      * @return the generated response
      */
-    public S handle(@NonNull Q request, @NonNull RequestHandler<Q, S> requestHandler) {
+    public Response handle(@NonNull Request request, @NonNull RequestHandler requestHandler) {
 
-        S response = preRender(request, requestHandler);
+        Response response;
+
+        try {
+
+            response = preRender(request, requestHandler);
+
+        } catch (PipelineBreakException e) {
+
+            response = e.getResponse();
+
+        }
 
         render(response);
 
@@ -118,9 +110,9 @@ public class Pipeline<Q extends Request, S extends Response> {
 
     }
 
-    private void postRender(@NonNull Q request, S response) {
+    private void postRender(@NonNull Request request, Response response) {
 
-        for (PostProcessor<Q, S> postProcessor : postProcessors) {
+        for (PostProcessor postProcessor : postProcessors) {
 
             if (postProcessor instanceof PostProcessor.Asynchronous) {
 
@@ -147,7 +139,7 @@ public class Pipeline<Q extends Request, S extends Response> {
 
     }
     
-    private void render(S response) {
+    private void render(Response response) {
 
         if (!response.isRendered()) {
 
@@ -168,25 +160,23 @@ public class Pipeline<Q extends Request, S extends Response> {
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
     public abstract static class PipelineBuilder<
-        Q extends Request,
-        S extends Response,
-        C extends Pipeline<Q, S>,
-        B extends PipelineBuilder<Q, S, C, B>
+        C extends Pipeline,
+        B extends PipelineBuilder<C, B>
         > {
 
         @NonNull
-        private final PrioritySet<PreFilter<Q, S>> preFilters = new PrioritySet<>();
+        private final PrioritySet<PreFilter> preFilters = new PrioritySet<>();
 
         @NonNull
-        private final PrioritySet<PostFilter<Q, S>> postFilters = new PrioritySet<>();
+        private final PrioritySet<PostFilter> postFilters = new PrioritySet<>();
 
         @NonNull
-        private final PrioritySet<PostProcessor<Q, S>> postProcessors = new PrioritySet<>();
+        private final PrioritySet<PostProcessor> postProcessors = new PrioritySet<>();
 
-        private ResponseRenderer<S> responseRenderer;
+        private ResponseRenderer responseRenderer;
 
         @SuppressWarnings("unused")
-        public B preFilter(PreFilter<Q, S> preFilter) {
+        public B preFilter(PreFilter preFilter) {
 
             this.preFilters.add(preFilter);
             return self();
@@ -194,14 +184,14 @@ public class Pipeline<Q extends Request, S extends Response> {
         }
 
         @SuppressWarnings("unused")
-        public B preFilter(PreFilter<Q, S> preFilter, Integer priority) {
+        public B preFilter(PreFilter preFilter, Integer priority) {
 
             this.preFilters.add(preFilter, priority);
             return self();
 
         }
 
-        public B preFilters(PrioritySet<PreFilter<Q, S>> preFilters) {
+        public B preFilters(PrioritySet<PreFilter> preFilters) {
 
             this.preFilters.addAll(preFilters);
             return self();
@@ -209,7 +199,7 @@ public class Pipeline<Q extends Request, S extends Response> {
         }
 
         @SuppressWarnings("unused")
-        public B preFilters(Collection<PreFilter<Q, S>> preFilters) {
+        public B preFilters(Collection<PreFilter> preFilters) {
 
             this.preFilters.addAll(preFilters);
             return self();
@@ -217,7 +207,7 @@ public class Pipeline<Q extends Request, S extends Response> {
         }
 
         @SuppressWarnings("unused")
-        public B postFilter(PostFilter<Q, S> postFilter) {
+        public B postFilter(PostFilter postFilter) {
 
             this.postFilters.add(postFilter);
             return self();
@@ -225,14 +215,14 @@ public class Pipeline<Q extends Request, S extends Response> {
         }
 
         @SuppressWarnings("unused")
-        public B postFilter(PostFilter<Q, S> postFilter, Integer priority) {
+        public B postFilter(PostFilter postFilter, Integer priority) {
 
             this.postFilters.add(postFilter, priority);
             return self();
 
         }
 
-        public B postFilters(PrioritySet<PostFilter<Q, S>> postFilters) {
+        public B postFilters(PrioritySet<PostFilter> postFilters) {
 
             this.postFilters.addAll(postFilters);
             return self();
@@ -240,7 +230,7 @@ public class Pipeline<Q extends Request, S extends Response> {
         }
 
         @SuppressWarnings("unused")
-        public B postFilters(Collection<PostFilter<Q, S>> postFilters) {
+        public B postFilters(Collection<PostFilter> postFilters) {
 
             this.postFilters.addAll(postFilters);
             return self();
@@ -248,7 +238,7 @@ public class Pipeline<Q extends Request, S extends Response> {
         }
 
         @SuppressWarnings("unused")
-        public B postProcessor(PostProcessor<Q, S> postProcessor) {
+        public B postProcessor(PostProcessor postProcessor) {
 
             this.postProcessors.add(postProcessor);
             return self();
@@ -256,14 +246,14 @@ public class Pipeline<Q extends Request, S extends Response> {
         }
 
         @SuppressWarnings("unused")
-        public B postProcessor(PostProcessor<Q, S> postProcessor, Integer priority) {
+        public B postProcessor(PostProcessor postProcessor, Integer priority) {
 
             this.postProcessors.add(postProcessor, priority);
             return self();
 
         }
 
-        public B postProcessors(PrioritySet<PostProcessor<Q, S>> postProcessors) {
+        public B postProcessors(PrioritySet<PostProcessor> postProcessors) {
 
             this.postProcessors.addAll(postProcessors);
             return self();
@@ -271,14 +261,14 @@ public class Pipeline<Q extends Request, S extends Response> {
         }
 
         @SuppressWarnings("unused")
-        public B postProcessors(Collection<PostProcessor<Q, S>> postProcessors) {
+        public B postProcessors(Collection<PostProcessor> postProcessors) {
 
             this.postProcessors.addAll(postProcessors);
             return self();
 
         }
 
-        public B responseRenderer(ResponseRenderer<S> responseRenderer) {
+        public B responseRenderer(ResponseRenderer responseRenderer) {
 
             this.responseRenderer = responseRenderer;
             return self();
@@ -286,7 +276,7 @@ public class Pipeline<Q extends Request, S extends Response> {
         }
 
         @SuppressWarnings("unused")
-        public B pipeline(Pipeline<Q, S> pipeline) {
+        public B pipeline(Pipeline pipeline) {
 
             preFilters(pipeline.getPreFilters());
             postFilters(pipeline.getPostFilters());
@@ -309,20 +299,17 @@ public class Pipeline<Q extends Request, S extends Response> {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static final class PipelineBuilderImpl<
-        Q extends Request,
-        S extends Response
-        > extends PipelineBuilder<Q, S, Pipeline<Q, S>, PipelineBuilderImpl<Q, S>> {
+    private static final class PipelineBuilderImpl extends PipelineBuilder<Pipeline, PipelineBuilderImpl> {
 
-        protected Pipeline.PipelineBuilderImpl<Q, S> self() {
+        protected Pipeline.PipelineBuilderImpl self() {
 
             return this;
 
         }
 
-        public Pipeline<Q, S> build() {
+        public Pipeline build() {
 
-            return new Pipeline<>(this);
+            return new Pipeline(this);
 
         }
 

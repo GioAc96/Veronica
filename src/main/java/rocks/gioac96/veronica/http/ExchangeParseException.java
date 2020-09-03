@@ -1,11 +1,9 @@
 package rocks.gioac96.veronica.http;
 
-import java.io.IOException;
-
 /**
  * Exception for exchange parsing. Thrown by {@link ExchangeParser} on parsing failure.
  */
-public class ExchangeParseException extends IOException {
+public class ExchangeParseException extends RuntimeException {
 
     public ExchangeParseException() {
 

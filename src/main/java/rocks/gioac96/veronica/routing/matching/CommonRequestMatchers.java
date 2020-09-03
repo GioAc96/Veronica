@@ -13,10 +13,9 @@ public class CommonRequestMatchers {
     /**
      * Always positive {@link RequestMatcher}.
      *
-     * @param <Q> Type of the request to match
      * @return an always positive {@link RequestMatcher}
      */
-    public <Q extends Request> RequestMatcher<Q> alwaysMatch() {
+    public RequestMatcher alwaysMatch() {
 
         return request -> true;
 
@@ -25,16 +24,15 @@ public class CommonRequestMatchers {
     /**
      * Always negative {@link RequestMatcher}.
      *
-     * @param <Q> Type of the request to match
      * @return an always negative {@link RequestMatcher}
      */
-    public <Q extends Request> RequestMatcher<Q> neverMatch() {
+    public  RequestMatcher neverMatch() {
 
         return request -> false;
 
     }
 
-    private <Q extends Request> RequestMatcher<Q> methodAndPathPattern(
+    private  RequestMatcher methodAndPathPattern(
         HttpMethod httpMethod,
         String pathPattern
     ) {
@@ -46,12 +44,11 @@ public class CommonRequestMatchers {
     /**
      * Generates a request matcher that matches GET requests that have a pattern matching the specified one.
      *
-     * @param <Q>         Type of the request to match
      * @param pathPattern pattern to check the {@link Request} path against
      * @return the generated request matcher
      */
     @SuppressWarnings("unused")
-    public <Q extends Request> RequestMatcher<Q> get(String pathPattern) {
+    public  RequestMatcher get(String pathPattern) {
 
         return methodAndPathPattern(HttpMethod.GET, pathPattern);
 
@@ -60,10 +57,9 @@ public class CommonRequestMatchers {
     /**
      * Generates a request matcher that matches favicon requests.
      *
-     * @param <Q> Type of the request to match
      * @return the generated request matcher
      */
-    public <Q extends Request> RequestMatcher<Q> favicon() {
+    public RequestMatcher favicon() {
 
         return request -> request.getHttpMethod() == HttpMethod.GET && request.getPath().equals("/favicon.ico");
 
@@ -73,12 +69,11 @@ public class CommonRequestMatchers {
     /**
      * Generates a request matcher that matches POST requests that have a pattern matching the specified one.
      *
-     * @param <Q>         Type of the request to match
      * @param pathPattern pattern to check the {@link Request} path against
      * @return the generated request matcher
      */
     @SuppressWarnings("unused")
-    public <Q extends Request> RequestMatcher<Q> post(String pathPattern) {
+    public RequestMatcher post(String pathPattern) {
 
         return methodAndPathPattern(HttpMethod.POST, pathPattern);
 
@@ -87,12 +82,11 @@ public class CommonRequestMatchers {
     /**
      * Generates a request matcher that matches all requests that have a pattern matching the specified one.
      *
-     * @param <Q>         Type of the request to match
      * @param pathPattern pattern to check the {@link Request} path against
      * @return the generated request matcher
      */
     @SuppressWarnings("unused")
-    public <Q extends Request> RequestMatcher<Q> path(String pathPattern) {
+    public RequestMatcher path(String pathPattern) {
 
         return request -> request.getPath().matches(pathPattern);
 

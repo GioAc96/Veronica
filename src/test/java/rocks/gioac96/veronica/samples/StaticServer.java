@@ -5,15 +5,15 @@ import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.routing.CommonRoutes;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.Router;
-import rocks.gioac96.veronica.static_server.FilePermissionsManager;
+import rocks.gioac96.veronica.statics.FilePermissionsManager;
 
 public class StaticServer {
 
     public static void main(String[] args) {
 
-        Application.basic()
+        Application.builder()
             .router(Router.builder()
-                .route(Route.<Request, Boolean>staticRouteBuilder()
+                .route(Route.<Boolean>staticRouteBuilder()
                     .permissionManager(FilePermissionsManager.<Boolean>builder()
                         .setPermissions("D:\\projects\\veronica\\src",true)
                         .setPermissions("D:\\projects\\veronica\\src\\test",false)

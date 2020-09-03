@@ -16,7 +16,7 @@ import rocks.gioac96.veronica.util.ArraySet;
  */
 @SuppressWarnings("unused")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public final class PathRule<Q extends Request> implements RequestMatcher<Q> {
+public final class PathRule implements RequestMatcher {
 
     @Getter
     @Setter
@@ -25,15 +25,15 @@ public final class PathRule<Q extends Request> implements RequestMatcher<Q> {
 
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
-    public static <Q extends Request> PathRuleBuilder<Q> builder() {
+    public static  PathRuleBuilder builder() {
 
-        return new PathRuleBuilder<>();
+        return new PathRuleBuilder();
 
     }
 
     @SuppressWarnings("unused")
     @Override
-    public boolean matches(Q request) {
+    public boolean matches(Request request) {
 
         return allowedPathPatterns.any(
             allowedPathPattern -> allowedPathPattern.matches(request.getPath())
@@ -43,13 +43,13 @@ public final class PathRule<Q extends Request> implements RequestMatcher<Q> {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
-    public static class PathRuleBuilder<Q extends Request> {
+    public static class PathRuleBuilder {
 
         @NonNull
         private final ArraySet<String> allowedPathPatterns = new ArraySet<>();
 
         @SuppressWarnings("unused")
-        public PathRuleBuilder<Q> allowedPathPattern(String allowedPathPattern) {
+        public PathRuleBuilder allowedPathPattern(String allowedPathPattern) {
 
             this.allowedPathPatterns.add(allowedPathPattern);
 
@@ -58,7 +58,7 @@ public final class PathRule<Q extends Request> implements RequestMatcher<Q> {
         }
 
         @SuppressWarnings("unused")
-        public PathRuleBuilder<Q> allowedPathPatterns(Collection<String> allowedPathPatterns) {
+        public PathRuleBuilder allowedPathPatterns(Collection<String> allowedPathPatterns) {
 
             this.allowedPathPatterns.addAll(allowedPathPatterns);
 
@@ -67,9 +67,9 @@ public final class PathRule<Q extends Request> implements RequestMatcher<Q> {
         }
 
         @SuppressWarnings("unused")
-        public PathRule<Q> build() {
+        public PathRule build() {
 
-            return new PathRule<>(allowedPathPatterns);
+            return new PathRule(allowedPathPatterns);
 
         }
 

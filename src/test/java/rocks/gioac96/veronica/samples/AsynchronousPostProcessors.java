@@ -1,14 +1,9 @@
 package rocks.gioac96.veronica.samples;
 
 import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.get;
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.http.CommonResponses;
-import rocks.gioac96.veronica.http.Request;
-import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.CommonRoutes;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.Router;
@@ -31,14 +26,14 @@ public class AsynchronousPostProcessors {
 
     public static void main(String[] args) {
 
-        Application.basic()
+        Application.builder()
             .port(80)
             .router(Router.builder()
                 .route(Route.builder()
                     .requestMatcher(get("/async"))
                     .handler(request -> CommonResponses.ok())
                     .pipeline(Pipeline.builder()
-                        .postProcessor((PostProcessor.Asynchronous<Request, Response>)((request, response) -> sleep()))
+                        .postProcessor((PostProcessor.Asynchronous)((request, response) -> sleep()))
                         .build())
                     .build())
                 .route(Route.builder()

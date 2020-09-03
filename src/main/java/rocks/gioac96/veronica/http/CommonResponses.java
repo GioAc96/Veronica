@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
-import rocks.gioac96.veronica.static_server.MimeResolver;
+import rocks.gioac96.veronica.statics.MimeResolver;
 
 /**
  * Utility class for instantiating common Response objects.

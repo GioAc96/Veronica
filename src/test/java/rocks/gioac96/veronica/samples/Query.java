@@ -1,13 +1,8 @@
 package rocks.gioac96.veronica.samples;
 
-
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
-
 import java.io.IOException;
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.Server;
 import rocks.gioac96.veronica.factories.CreationException;
-import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.Router;
@@ -16,26 +11,26 @@ public class Query {
 
     public static void main(String[] args) throws IOException, CreationException {
 
-        Router<Request, Response> router = Router.builder()
+        Router router = Router.builder()
             .route(Route.builder()
                 .requestMatcher(request -> request.getQueryMap().size() > 0)
                 .requestHandler(
-                    request -> ok(Response.builder()
+                    request -> Response.builder()
                         .body(request.getQueryMap().toString())
-                        .build())
+                        .build()
                 )
                 .build()
             )
             .fallbackRoute(Route.builder()
-                .requestHandler(request -> ok(Response.builder()
+                .requestHandler(request -> Response.builder()
                     .body("Request is empty")
-                    .build())
+                    .build()
                 )
                 .build()
             )
             .build();
 
-        Application<Request, Response> application = Application.basic()
+        Application application = Application.builder()
             .port(80)
             .router(router)
             .build();

@@ -19,27 +19,27 @@ import rocks.gioac96.veronica.util.PrioritySet;
  * Builder is extensible with lombok's {@link lombok.experimental.SuperBuilder}.
  */
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public final class Router<Q extends Request, S extends Response> {
+public final class Router {
 
     @Getter
     @Setter
     @NonNull
-    protected Route<Q, S> fallbackRoute;
+    protected Route fallbackRoute;
 
     @Getter
     @Setter
     @NonNull
-    protected PrioritySet<Route<Q, S>> routes;
+    protected PrioritySet<Route> routes;
 
     protected ThreadPoolExecutor threadPool;
 
     @Generated
-    protected Router(RouterBuilder<Q, S, ?, ?> b) {
+    protected Router(RouterBuilder<?, ?> b) {
 
         this.fallbackRoute = b.fallbackRoute;
         this.routes = b.routes;
 
-        for (Route<Q, S> route : routes) {
+        for (Route route : routes) {
 
             route.setThreadPool(threadPool);
 
@@ -50,9 +50,9 @@ public final class Router<Q extends Request, S extends Response> {
 
     @Generated
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static <Q extends Request, S extends Response> RouterBuilder<Q, S, ?, ?> builder() {
+    public static  RouterBuilder<?, ?> builder() {
 
-        return new RouterBuilderImpl<>();
+        return new RouterBuilderImpl();
 
     }
 
@@ -64,7 +64,7 @@ public final class Router<Q extends Request, S extends Response> {
 
         this.threadPool = threadPool;
 
-        for (Route<Q, S> route : routes) {
+        for (Route route : routes) {
 
             route.setThreadPool(threadPool);
 
@@ -79,7 +79,7 @@ public final class Router<Q extends Request, S extends Response> {
      * @param request request to route
      * @return generated {@link Response}
      */
-    public S route(Q request) {
+    public Response route(Request request) {
 
         return routes.firstOrDefault(
             route -> route.shouldHandle(request),
@@ -92,7 +92,7 @@ public final class Router<Q extends Request, S extends Response> {
      * Adds a route to the router.
      * @param route the route to add
      */
-    public void addRoute(Route<Q, S> route) {
+    public void addRoute(Route route) {
 
         route.setThreadPool(this.threadPool);
 
@@ -105,7 +105,7 @@ public final class Router<Q extends Request, S extends Response> {
      * @param route the route to add
      * @param priority the priority of the route
      */
-    public void addRoute(Route<Q, S> route, int priority) {
+    public void addRoute(Route route, int priority) {
 
         route.setThreadPool(this.threadPool);
 
@@ -116,19 +116,17 @@ public final class Router<Q extends Request, S extends Response> {
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public abstract static class RouterBuilder<
-        Q extends Request,
-        S extends Response,
-        C extends Router<Q, S>,
-        B extends RouterBuilder<Q, S, C, B>
+        C extends Router,
+        B extends RouterBuilder<C, B>
         > {
 
         @NonNull
-        private final PrioritySet<Route<Q, S>> routes = new PrioritySet<>();
+        private final PrioritySet<Route> routes = new PrioritySet<>();
 
         @NonNull
-        private Route<Q, S> fallbackRoute;
+        private Route fallbackRoute;
 
-        public B fallbackRoute(@NonNull Route<Q, S> fallbackRoute) {
+        public B fallbackRoute(@NonNull Route fallbackRoute) {
 
             this.fallbackRoute = fallbackRoute;
 
@@ -136,7 +134,7 @@ public final class Router<Q extends Request, S extends Response> {
 
         }
 
-        public B route(@NonNull Route<Q, S> route) {
+        public B route(@NonNull Route route) {
 
             this.routes.add(route);
 
@@ -144,7 +142,7 @@ public final class Router<Q extends Request, S extends Response> {
 
         }
 
-        public B route(@NonNull Route<Q, S> route, Integer priority) {
+        public B route(@NonNull Route route, Integer priority) {
 
             this.routes.add(route, priority);
 
@@ -154,7 +152,7 @@ public final class Router<Q extends Request, S extends Response> {
 
 
         @SuppressWarnings("unused")
-        public B routes(Collection<Route<Q, S>> routes) {
+        public B routes(Collection<Route> routes) {
 
             this.routes.addAll(routes);
 
@@ -163,7 +161,7 @@ public final class Router<Q extends Request, S extends Response> {
         }
 
         @SuppressWarnings("unused")
-        public B routes(PrioritySet<Route<Q, S>> routes) {
+        public B routes(PrioritySet<Route> routes) {
 
             this.routes.addAll(routes);
 
@@ -178,26 +176,21 @@ public final class Router<Q extends Request, S extends Response> {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static final class RouterBuilderImpl<
-        Q extends Request,
-        S extends Response
-        > extends RouterBuilder<
-        Q,
-        S,
-        Router<Q, S>,
-        RouterBuilderImpl<Q, S>
+    private static final class RouterBuilderImpl extends RouterBuilder<
+        Router,
+        RouterBuilderImpl
         > {
 
-        protected Router.RouterBuilderImpl<Q, S> self() {
+        protected Router.RouterBuilderImpl self() {
 
             return this;
 
         }
 
         @SuppressWarnings("unused")
-        public Router<Q, S> build() {
+        public Router build() {
 
-            return new Router<>(this);
+            return new Router(this);
 
         }
 

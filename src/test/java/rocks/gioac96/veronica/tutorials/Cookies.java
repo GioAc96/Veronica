@@ -1,16 +1,11 @@
 package rocks.gioac96.veronica.tutorials;
 
 import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.favicon;
-import static rocks.gioac96.veronica.routing.matching.CommonRequestMatchers.get;
-import static rocks.gioac96.veronica.routing.pipeline.stages.RequestHandlerPayload.ok;
 
 import java.util.Map;
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.Server;
 import rocks.gioac96.veronica.factories.CreationException;
 import rocks.gioac96.veronica.http.CommonResponses;
-import rocks.gioac96.veronica.http.HttpStatus;
-import rocks.gioac96.veronica.http.Request;
 import rocks.gioac96.veronica.http.Response;
 import rocks.gioac96.veronica.http.SetCookieHeader;
 import rocks.gioac96.veronica.routing.Route;
@@ -20,7 +15,7 @@ public class Cookies {
 
     public static void main(String[] args) {
 
-        Route<Request, Response> route = Route.builder()
+        Route route = Route.builder()
             .requestHandler(req -> {
 
                 Map<String, String> cookie = req.getCookie();
@@ -33,22 +28,22 @@ public class Cookies {
 
                 }
 
-                return ok(Response.builder()
+                return Response.builder()
                     .cookie(SetCookieHeader.builder()
                         .name("hit-counter")
                         .value(String.valueOf(hitCounter + 1))
                         .build()
                     )
                     .body("You have visited this page " + hitCounter + " times before")
-                    .build());
+                    .build();
 
             })
             .build();
 
-        Router<Request, Response> router = Router.builder()
+        Router router = Router.builder()
             .route(Route.builder()
                 .requestMatcher(favicon())
-                .requestHandler(request -> ok(CommonResponses.notFound())
+                .requestHandler(request -> CommonResponses.notFound()
                 )
                 .build()
             )
@@ -59,7 +54,7 @@ public class Cookies {
 
         try {
 
-            Application<Request, Response> app = Application.basic()
+            Application app = Application.builder()
                 .port(port)
                 .router(router)
                 .build();
