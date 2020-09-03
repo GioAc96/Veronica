@@ -11,16 +11,24 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
 import lombok.NonNull;
-import lombok.experimental.SuperBuilder;
+import rocks.gioac96.veronica.providers.Provider;
 
 /**
  * Https server initializer.
  */
-@SuperBuilder
 public final class SecureServer extends Server {
 
     @NonNull
     private final SSLContext sslContext;
+
+    protected SecureServer(SecureServerBuilder b) {
+        super(b);
+        this.sslContext = b.sslContext;
+    }
+
+    public static SecureServerBuilder builder() {
+        return new SecureServerBuilder();
+    }
 
     @Override
     public HttpServer toHttpServer(HttpHandler httpHandler) throws IOException {
@@ -54,5 +62,31 @@ public final class SecureServer extends Server {
 
     }
 
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
+    public static class SecureServerBuilder extends ServerBuilder {
+
+        private @NonNull SSLContext sslContext;
+
+        public SecureServerBuilder sslContext(@NonNull SSLContext sslContext) {
+
+            this.sslContext = sslContext;
+            return this;
+
+        }
+
+        protected SecureServerBuilder sslContext(@NonNull Provider<SSLContext> sslContextProvider) {
+
+            return sslContext(sslContextProvider.provide());
+
+        }
+
+        @Override
+        protected Server instantiate() {
+
+            return new SecureServer(this);
+
+        }
+
+    }
 
 }

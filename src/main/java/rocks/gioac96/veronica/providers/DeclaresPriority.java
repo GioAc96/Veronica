@@ -1,7 +1,8 @@
-package rocks.gioac96.veronica.factories;
+package rocks.gioac96.veronica.providers;
 
-import static rocks.gioac96.veronica.util.PrioritySet.DEFAULT_PRIORITY;
-
+/**
+ * Interface for providers that declare priorities of the provided objects.
+ */
 public interface DeclaresPriority {
 
     /**
@@ -9,10 +10,6 @@ public interface DeclaresPriority {
      *
      * @return the priority assigned to the instantiated object.
      */
-    default Integer priority() {
-
-        return DEFAULT_PRIORITY;
-
-    }
+    Integer priority();
 
 }

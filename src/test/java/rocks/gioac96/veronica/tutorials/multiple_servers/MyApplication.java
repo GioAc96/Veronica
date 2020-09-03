@@ -3,13 +3,13 @@ package rocks.gioac96.veronica.tutorials.multiple_servers;
 import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.core.Router;
 
-public class MyApplication extends BasicApplicationFactory {
+public class MyApplication extends Application.ApplicationBuilder {
 
     @Override
     public void configure() {
 
         router(Router.builder()
-            .fallbackRoute(new RouteA().build())
+            .fallbackRoute(new RouteA())
             .build());
 
         server(new MyServer());

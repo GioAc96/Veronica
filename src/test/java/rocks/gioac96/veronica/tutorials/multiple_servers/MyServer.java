@@ -1,8 +1,8 @@
 package rocks.gioac96.veronica.tutorials.multiple_servers;
 
-import rocks.gioac96.veronica.core.ServerFactory;
+import rocks.gioac96.veronica.core.Server;
 
-public class MyServer extends ServerFactory {
+public class MyServer extends Server.ServerBuilder {
 
     @Override
     public void configure() {

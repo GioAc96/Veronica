@@ -1,17 +1,12 @@
-package rocks.gioac96.veronica.factories;
+package rocks.gioac96.veronica.providers;
 
 /**
  * Factory interface.
  *
  * @param <T> Type to instantiate
  */
-public interface Factory<T> {
+public interface Provider<T> {
 
-    T build() throws CreationException;
-
-
-    default void configure() {
-
-    }
+    T provide() throws CreationException;
 
 }

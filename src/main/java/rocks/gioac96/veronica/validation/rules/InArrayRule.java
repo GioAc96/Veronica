@@ -6,13 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import rocks.gioac96.veronica.util.ArraySet;
 import rocks.gioac96.veronica.validation.CommonValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationFailureResponse;
 import rocks.gioac96.veronica.validation.ValidationRule;
-import rocks.gioac96.veronica.util.ArraySet;
 
 /**
  * Validation rule that checks that a field's value is among the specified valid values.

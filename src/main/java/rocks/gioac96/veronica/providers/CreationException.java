@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.factories;
+package rocks.gioac96.veronica.providers;
 
 /**
  * Thrown by factories on creation failure.

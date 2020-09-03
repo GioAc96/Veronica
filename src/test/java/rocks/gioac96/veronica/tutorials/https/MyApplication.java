@@ -4,7 +4,7 @@ import rocks.gioac96.veronica.Application;
 import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.tutorials.https.routes.RouteA;
 
-public class MyApplication extends BasicApplicationFactory {
+public class MyApplication extends Application.ApplicationBuilder {
 
     @Override
     public void configure() {
@@ -12,7 +12,7 @@ public class MyApplication extends BasicApplicationFactory {
         server(new MyServer());
 
         router(Router.builder()
-            .fallbackRoute(new RouteA().build())
+            .fallbackRoute(new RouteA())
             .build()
         );
 

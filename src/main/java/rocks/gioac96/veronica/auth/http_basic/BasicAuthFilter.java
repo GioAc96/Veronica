@@ -7,7 +7,8 @@ import rocks.gioac96.veronica.auth.CredentialsChecker;
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.core.PreFilter;
 import rocks.gioac96.veronica.core.Request;
-import rocks.gioac96.veronica.factories.Factory;
+import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.Provider;
 
 /**
  * Http basic authentication filter.
@@ -19,13 +20,14 @@ public class BasicAuthFilter implements PreFilter {
 
     private final String realm;
 
-    protected BasicAuthFilter(BasicAuthFilterBuilder<?, ?> b) {
+    protected BasicAuthFilter(BasicAuthFilterBuilder b) {
         this.credentialsChecker = b.credentialsChecker;
         this.realm = b.realm;
     }
 
-    public static BasicAuthFilterBuilder<?, ?> builder() {
-        return new BasicAuthFilterBuilderImpl();
+    public static BasicAuthFilterBuilder builder() {
+        return new BasicAuthFilterBuilder() {
+        };
     }
 
     @Override
@@ -49,56 +51,46 @@ public class BasicAuthFilter implements PreFilter {
 
     }
 
-    public abstract static class BasicAuthFilterBuilder<
-        C extends BasicAuthFilter,
-        B extends BasicAuthFilterBuilder<C, B>
-    > implements Factory<BasicAuthFilter> {
+    
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
+    public static class BasicAuthFilterBuilder extends Builder<BasicAuthFilter> {
 
         private @NonNull CredentialsChecker credentialsChecker;
         private String realm;
 
-        public B credentialsChecker(@NonNull Factory<CredentialsChecker> credentialsCheckerFactory) {
+        public BasicAuthFilterBuilder credentialsChecker(
+            @NonNull Provider<CredentialsChecker> credentialsCheckerFactory
+        ) {
 
-            return credentialsChecker(credentialsCheckerFactory.build());
+            return credentialsChecker(credentialsCheckerFactory.provide());
 
         }
 
-        public B credentialsChecker(@NonNull CredentialsChecker credentialsChecker) {
+        public BasicAuthFilterBuilder credentialsChecker(@NonNull CredentialsChecker credentialsChecker) {
 
             this.credentialsChecker = credentialsChecker;
-            return self();
+            return this;
 
         }
 
-        public B realm(@NonNull Factory<String> realmFactory) {
+        public BasicAuthFilterBuilder realm(@NonNull Provider<String> realmFactory) {
 
-            return realm(realmFactory.build());
+            return realm(realmFactory.provide());
 
         }
 
-        public B realm(String realm) {
+        public BasicAuthFilterBuilder realm(String realm) {
 
             this.realm = realm;
-            return self();
-
-        }
-
-        protected abstract B self();
-
-        public abstract C build();
-
-    }
-
-    private static final class BasicAuthFilterBuilderImpl extends BasicAuthFilterBuilder<BasicAuthFilter, BasicAuthFilterBuilderImpl> {
-        private BasicAuthFilterBuilderImpl() {
-        }
-
-        protected BasicAuthFilter.BasicAuthFilterBuilderImpl self() {
             return this;
+
         }
 
-        public BasicAuthFilter build() {
+        @Override
+        protected BasicAuthFilter instantiate() {
             return new BasicAuthFilter(this);
         }
+
     }
+    
 }

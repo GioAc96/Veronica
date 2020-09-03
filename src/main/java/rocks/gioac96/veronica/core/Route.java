@@ -6,8 +6,11 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import rocks.gioac96.veronica.static_server.StaticRouteBuilder;
 import rocks.gioac96.veronica.common.CommonRequestMatchers;
+import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.CreationException;
+import rocks.gioac96.veronica.providers.Provider;
+import rocks.gioac96.veronica.static_server.StaticRouteBuilder;
 
 /**
  * Application route.
@@ -26,12 +29,13 @@ public class Route {
     private RequestHandler requestHandler;
 
     @Getter
+    @Setter
     @NonNull
     private Pipeline pipeline;
 
     protected ThreadPoolExecutor threadPool;
 
-    protected Route(RouteBuilder<?, ?> b) {
+    protected Route(RouteBuilder b) {
 
         this.requestMatcher = b.requestMatcher;
         this.requestHandler = b.requestHandler;
@@ -41,9 +45,9 @@ public class Route {
     }
 
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static RouteBuilder<?, ?> builder() {
+    public static RouteBuilder builder() {
 
-        return new RouteBuilderImpl();
+        return new RouteBuilder();
 
     }
 
@@ -106,11 +110,8 @@ public class Route {
 
     }
 
-    @SuppressWarnings({"checkstyle:ModifierOrder", "checkstyle:MissingJavadocType", "checkstyle:MissingJavadocMethod"})
-    public static abstract class RouteBuilder<
-        C extends Route,
-        B extends RouteBuilder<C, B>
-        > {
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
+    public static class RouteBuilder extends Builder<Route> {
 
         @NonNull
         private RequestMatcher requestMatcher = CommonRequestMatchers.neverMatch();
@@ -121,65 +122,62 @@ public class Route {
         @NonNull
         private Pipeline pipeline = Pipeline.builder().build();
 
-        public B requestMatcher(@NonNull RequestMatcher requestMatcher) {
+        public RouteBuilder requestMatcher(@NonNull RequestMatcher requestMatcher) {
 
             this.requestMatcher = requestMatcher;
-            return self();
+            return this;
+
+        }
+        
+        protected RouteBuilder requestMatcher(@NonNull Provider<RequestMatcher> requestMatcherProvider)
+            throws CreationException {
+
+            return requestMatcher(requestMatcherProvider.provide());
 
         }
 
-        public B alwaysMatch() {
+
+        public RouteBuilder alwaysMatch() {
 
             return requestMatcher(CommonRequestMatchers.alwaysMatch());
 
         }
 
-        public B requestHandler(@NonNull RequestHandler requestHandler) {
+        public RouteBuilder requestHandler(@NonNull RequestHandler requestHandler) {
 
             this.requestHandler = requestHandler;
-            return self();
-
-        }
-
-        public B handler(@NonNull RequestHandler requestHandler) {
-
-            return requestHandler(requestHandler);
-
-        }
-
-        public B pipeline(@NonNull Pipeline pipeline) {
-
-            this.pipeline = pipeline;
-            return self();
-
-        }
-
-        protected abstract B self();
-
-        public abstract C build();
-
-    }
-
-    private static final class RouteBuilderImpl extends RouteBuilder<
-        Route,
-        RouteBuilderImpl
-        > {
-
-        private RouteBuilderImpl() {
-        }
-
-        protected Route.RouteBuilderImpl self() {
-
             return this;
 
         }
 
-        public Route build() {
+        protected RouteBuilder requestHandler(@NonNull Provider<RequestHandler> requestHandlerProvider)
+            throws CreationException {
+
+            return requestHandler(requestHandlerProvider.provide());
+
+        }
+
+        public RouteBuilder pipeline(@NonNull Pipeline pipeline) {
+
+            this.pipeline = pipeline;
+            return this;
+
+        }
+
+        protected RouteBuilder pipeline(@NonNull Provider<Pipeline> pipelineProvider) throws CreationException {
+
+            return pipeline(pipelineProvider.provide());
+
+        }
+
+
+        @Override
+        protected Route instantiate() {
 
             return new Route(this);
 
         }
 
     }
-
+    
 }

@@ -1,14 +1,16 @@
 package rocks.gioac96.veronica.core;
 
-import java.util.Collection;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
+import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.CreationException;
+import rocks.gioac96.veronica.providers.DeclaresPriority;
+import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.PrioritySet;
 
 /**
@@ -32,7 +34,7 @@ public final class Router {
     protected ThreadPoolExecutor threadPool;
 
     @Generated
-    protected Router(RouterBuilder<?, ?> b) {
+    protected Router(RouterBuilder b) {
 
         this.fallbackRoute = b.fallbackRoute;
         this.routes = b.routes;
@@ -48,9 +50,9 @@ public final class Router {
 
     @Generated
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static  RouterBuilder<?, ?> builder() {
+    public static RouterBuilder builder() {
 
-        return new RouterBuilderImpl();
+        return new RouterBuilder();
 
     }
 
@@ -113,10 +115,7 @@ public final class Router {
 
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public abstract static class RouterBuilder<
-        C extends Router,
-        B extends RouterBuilder<C, B>
-        > {
+    public static class RouterBuilder extends Builder<Router> {
 
         @NonNull
         private final PrioritySet<Route> routes = new PrioritySet<>();
@@ -124,69 +123,53 @@ public final class Router {
         @NonNull
         private Route fallbackRoute;
 
-        public B fallbackRoute(@NonNull Route fallbackRoute) {
+        public RouterBuilder fallbackRoute(@NonNull Route fallbackRoute) {
 
             this.fallbackRoute = fallbackRoute;
-
-            return self();
-
-        }
-
-        public B route(@NonNull Route route) {
-
-            this.routes.add(route);
-
-            return self();
-
-        }
-
-        public B route(@NonNull Route route, Integer priority) {
-
-            this.routes.add(route, priority);
-
-            return self();
-
-        }
-
-
-        @SuppressWarnings("unused")
-        public B routes(Collection<Route> routes) {
-
-            this.routes.addAll(routes);
-
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B routes(PrioritySet<Route> routes) {
-
-            this.routes.addAll(routes);
-
-            return self();
-
-        }
-
-        protected abstract B self();
-
-        public abstract C build();
-
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static final class RouterBuilderImpl extends RouterBuilder<
-        Router,
-        RouterBuilderImpl
-        > {
-
-        protected Router.RouterBuilderImpl self() {
 
             return this;
 
         }
 
-        @SuppressWarnings("unused")
-        public Router build() {
+        public RouterBuilder fallbackRoute(@NonNull Provider<Route> fallbackRouteProvider)
+            throws CreationException {
+
+            return fallbackRoute(fallbackRouteProvider.provide());
+
+        }
+
+        public RouterBuilder route(@NonNull Route route) {
+
+            this.routes.add(route);
+
+            return this;
+
+        }
+
+        public RouterBuilder route(@NonNull Route route, Integer priority) {
+
+            this.routes.add(route, priority);
+
+            return this;
+
+        }
+
+        public RouterBuilder route(@NonNull Provider<Route> routeProvider) throws CreationException {
+
+            if (routeProvider instanceof DeclaresPriority) {
+
+                return route(routeProvider.provide(), ((DeclaresPriority) routeProvider).priority());
+
+            } else {
+
+                return route(routeProvider.provide());
+
+            }
+
+        }
+        
+        @Override
+        protected Router instantiate() {
 
             return new Router(this);
 

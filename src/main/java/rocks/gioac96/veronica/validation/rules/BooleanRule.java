@@ -1,8 +1,8 @@
 package rocks.gioac96.veronica.validation.rules;
 
+import rocks.gioac96.veronica.util.ArraySet;
 import rocks.gioac96.veronica.validation.CommonValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.util.ArraySet;
 
 /**
  * Validation rule that checks that a value represents a boolean.

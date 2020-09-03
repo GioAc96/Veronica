@@ -1,7 +1,9 @@
 package rocks.gioac96.veronica.tutorials.factories;
 
 
-public class MyApplication extends BasicApplicationFactory {
+import rocks.gioac96.veronica.Application;
+
+public class MyApplication extends Application.ApplicationBuilder {
 
     @Override
     public void configure() {

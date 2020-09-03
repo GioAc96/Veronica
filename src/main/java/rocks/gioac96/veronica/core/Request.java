@@ -13,7 +13,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import rocks.gioac96.veronica.core.HttpMethod;
 
 /**
  * Http Request.

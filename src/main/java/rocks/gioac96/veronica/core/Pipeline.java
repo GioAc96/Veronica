@@ -1,36 +1,36 @@
 package rocks.gioac96.veronica.core;
 
-import java.util.Collection;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-import rocks.gioac96.veronica.factories.Factory;
+import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.DeclaresPriority;
+import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.PrioritySet;
 
 /**
  * Request pipeline.
  */
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Pipeline {
+public final class Pipeline {
 
+    @NonNull
     @Getter
     @Setter
-    @NonNull
     private PrioritySet<PreFilter> preFilters;
 
+    @NonNull
     @Getter
     @Setter
-    @NonNull
     private PrioritySet<PostFilter> postFilters;
 
+    @NonNull
     @Getter
     @Setter
-    @NonNull
     private PrioritySet<PostProcessor> postProcessors;
 
     @Getter
@@ -40,7 +40,7 @@ public class Pipeline {
     @Setter
     protected ThreadPoolExecutor threadPool;
 
-    protected Pipeline(PipelineBuilder<?, ?> b) {
+    protected Pipeline(PipelineBuilder b) {
 
         this.preFilters = b.preFilters;
         this.postFilters = b.postFilters;
@@ -49,8 +49,8 @@ public class Pipeline {
 
     }
 
-    public static  PipelineBuilder<?, ?> builder() {
-        return new PipelineBuilderImpl();
+    public static PipelineBuilder builder() {
+        return new PipelineBuilder();
     }
 
     private Response preRender(Request request, RequestHandler requestHandler) {
@@ -164,10 +164,7 @@ public class Pipeline {
 
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
-    public abstract static class PipelineBuilder<
-        C extends Pipeline,
-        B extends PipelineBuilder<C, B>
-        > {
+    public static class PipelineBuilder extends Builder<Pipeline> {
 
         @NonNull
         private final PrioritySet<PreFilter> preFilters = new PrioritySet<>();
@@ -180,156 +177,126 @@ public class Pipeline {
 
         private ResponseRenderer responseRenderer;
 
-        public B preFilter(Factory<PreFilter> preFilterFactory) {
-
-            return preFilter(preFilterFactory.build(), preFilterFactory.priority());
-
-        }
-        
-        public B preFilter(Collection<Factory<PreFilter>> preFilters) {
-
-            preFilters.forEach(this::preFilter);
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B preFilter(PreFilter preFilter) {
+        public PipelineBuilder preFilter(PreFilter preFilter) {
 
             this.preFilters.add(preFilter);
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B preFilter(PreFilter preFilter, Integer priority) {
-
-            this.preFilters.add(preFilter, priority);
-            return self();
-
-        }
-
-        public B preFilters(PrioritySet<PreFilter> preFilters) {
-
-            this.preFilters.addAll(preFilters);
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B preFilters(Collection<PreFilter> preFilters) {
-
-            this.preFilters.addAll(preFilters);
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B postFilter(PostFilter postFilter) {
-
-            this.postFilters.add(postFilter);
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B postFilter(PostFilter postFilter, Integer priority) {
-
-            this.postFilters.add(postFilter, priority);
-            return self();
-
-        }
-
-        public B postFilters(PrioritySet<PostFilter> postFilters) {
-
-            this.postFilters.addAll(postFilters);
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B postFilters(Collection<PostFilter> postFilters) {
-
-            this.postFilters.addAll(postFilters);
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B postProcessor(PostProcessor postProcessor) {
-
-            this.postProcessors.add(postProcessor);
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B postProcessor(PostProcessor postProcessor, Integer priority) {
-
-            this.postProcessors.add(postProcessor, priority);
-            return self();
-
-        }
-
-        public B postProcessors(PrioritySet<PostProcessor> postProcessors) {
-
-            this.postProcessors.addAll(postProcessors);
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B postProcessors(Collection<PostProcessor> postProcessors) {
-
-            this.postProcessors.addAll(postProcessors);
-            return self();
-
-        }
-
-        public B responseRenderer(ResponseRenderer responseRenderer) {
-
-            this.responseRenderer = responseRenderer;
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B pipeline(Pipeline pipeline) {
-
-            preFilters(pipeline.getPreFilters());
-            postFilters(pipeline.getPostFilters());
-            postProcessors(pipeline.getPostProcessors());
-
-            if (pipeline.getResponseRenderer() != null) {
-
-                responseRenderer(pipeline.getResponseRenderer());
-
-            }
-
-            return self();
-
-        }
-
-        protected abstract B self();
-
-        public abstract C build();
-
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static final class PipelineBuilderImpl extends PipelineBuilder<Pipeline, PipelineBuilderImpl> {
-
-        protected Pipeline.PipelineBuilderImpl self() {
-
             return this;
 
         }
 
-        public Pipeline build() {
+        public PipelineBuilder preFilter(PreFilter preFilter, Integer priority) {
 
+            this.preFilters.add(preFilter, priority);
+            return this;
+
+        }
+
+        public PipelineBuilder preFilter(Provider<PreFilter> preFilterProvider) {
+
+            if (preFilterProvider instanceof DeclaresPriority) {
+
+                this.preFilters.add(preFilterProvider.provide(), ((DeclaresPriority)preFilterProvider).priority());
+
+            } else {
+
+                this.preFilters.add(preFilterProvider.provide());
+
+            }
+            return this;
+
+        }
+
+        public PipelineBuilder postFilter(PostFilter postFilter) {
+
+            this.postFilters.add(postFilter);
+            return this;
+
+        }
+
+        public PipelineBuilder postFilter(PostFilter postFilter, Integer priority) {
+
+            this.postFilters.add(postFilter, priority);
+            return this;
+
+        }
+
+        public PipelineBuilder postFilters(Provider<PostFilter> postFilterProvider) {
+
+            if (postFilterProvider instanceof DeclaresPriority) {
+                
+                return this.postFilter(
+                    postFilterProvider.provide(),
+                    ((DeclaresPriority) postFilterProvider
+                ).priority());
+                
+            } else {
+                
+                return this.postFilter(postFilterProvider.provide());
+                
+            }
+            
+        }
+
+        public PipelineBuilder postProcessor(PostProcessor postProcessor) {
+
+            this.postProcessors.add(postProcessor);
+            return this;
+
+        }
+
+        public PipelineBuilder postProcessor(PostProcessor postProcessor, Integer priority) {
+
+            this.postProcessors.add(postProcessor, priority);
+            return this;
+
+        }
+
+        public PipelineBuilder postProcessor(Provider<PostProcessor> postProcessorProvider) {
+
+            if (postProcessorProvider instanceof DeclaresPriority) {
+                
+                return postProcessor(
+                    postProcessorProvider.provide(),
+                    ((DeclaresPriority) postProcessorProvider).priority()
+                );
+                
+            } else {
+                
+                return postProcessor(postProcessorProvider.provide());
+                
+            }
+
+        }
+
+        public PipelineBuilder responseRenderer(ResponseRenderer responseRenderer) {
+
+            this.responseRenderer = responseRenderer;
+            return this;
+
+        }
+
+        public PipelineBuilder combinePipeline(Pipeline pipeline) {
+
+            preFilters.addAll(pipeline.preFilters);
+            postFilters.addAll(pipeline.postFilters);
+            postProcessors.addAll(pipeline.postProcessors);
+
+            if (pipeline.responseRenderer != null) {
+
+                responseRenderer(pipeline.responseRenderer);
+
+            }
+
+            return this;
+
+        }
+        
+        protected Pipeline instantiate() {
+            
             return new Pipeline(this);
 
         }
 
     }
+
 }

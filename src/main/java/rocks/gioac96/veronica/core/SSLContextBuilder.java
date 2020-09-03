@@ -4,14 +4,15 @@ import java.security.KeyStore;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
-import rocks.gioac96.veronica.factories.CreationException;
-import rocks.gioac96.veronica.factories.Factory;
+import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.CreationException;
+import rocks.gioac96.veronica.providers.Provider;
 
 /**
  * Factory for SSLContext.
  */
 @SuppressWarnings({"checkstyle:AbbreviationAsWordInName"})
-public abstract class SSLContextFactory implements Factory<SSLContext> {
+public abstract class SSLContextBuilder extends Builder<SSLContext> {
 
     private KeyStore keyStore;
 
@@ -23,9 +24,9 @@ public abstract class SSLContextFactory implements Factory<SSLContext> {
 
     }
 
-    protected void keyStore(Factory<KeyStore> keyStoreFactory) {
+    protected void keyStore(Provider<KeyStore> keyStoreProvider) {
 
-        keyStore(keyStoreFactory.build());
+        keyStore(keyStoreProvider.provide());
 
     }
 
@@ -35,9 +36,9 @@ public abstract class SSLContextFactory implements Factory<SSLContext> {
 
     }
 
-    protected void password(Factory<String> passwordFactory) {
+    protected void password(Provider<String> passwordProvider) {
 
-        password(passwordFactory.build());
+        password(passwordProvider.provide());
 
     }
 
@@ -54,11 +55,7 @@ public abstract class SSLContextFactory implements Factory<SSLContext> {
     }
 
     @Override
-    public SSLContext build() throws CreationException {
-
-        configure();
-
-        validate();
+    public SSLContext instantiate() throws CreationException {
 
         try {
 
