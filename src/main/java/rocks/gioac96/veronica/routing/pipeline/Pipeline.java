@@ -17,7 +17,6 @@ import rocks.gioac96.veronica.routing.pipeline.stages.PostProcessor;
 import rocks.gioac96.veronica.routing.pipeline.stages.PreFilter;
 import rocks.gioac96.veronica.routing.pipeline.stages.RequestHandler;
 import rocks.gioac96.veronica.routing.pipeline.stages.ResponseRenderer;
-import rocks.gioac96.veronica.routing.pipeline.stages.UnrenderedResponseException;
 import rocks.gioac96.veronica.util.PrioritySet;
 
 /**
@@ -145,11 +144,24 @@ public class Pipeline {
 
             if (responseRenderer == null) {
 
-                throw new UnrenderedResponseException(response);
+                response.writeBody("");
 
             } else {
 
-                response.writeBody(responseRenderer.render(response));
+                String body;
+
+                try {
+
+                    body = responseRenderer.render(response);
+
+                } catch (Exception e) {
+
+                    response.writeBody("");
+                    throw e;
+
+                }
+
+                response.writeBody(body);
 
             }
 
