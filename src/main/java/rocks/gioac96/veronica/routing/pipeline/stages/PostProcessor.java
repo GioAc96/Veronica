@@ -14,7 +14,6 @@ public interface PostProcessor {
 
     /**
      * Marker for PostProcessors that are executed asynchronously.
-     * @param  type of the request
      */
     interface Asynchronous extends PostProcessor {}
 
