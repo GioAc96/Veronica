@@ -73,6 +73,22 @@ public class CommonResponses {
     }
 
     /**
+     * Instantiates an http "OK" response.
+     * @param body body of the response
+     * @return the instantiated response
+     */
+    public Response ok(String body) {
+
+        return Response.builder()
+            .httpStatus(HttpStatus.OK)
+            .body(body)
+            .build();
+
+    }
+
+
+
+    /**
      * Instantiates an http "NOT FOUND" response with an empty body.
      * @return the instantiated response
      */
@@ -239,6 +255,41 @@ public class CommonResponses {
     public Response rawFile(String filePath) {
 
         return rawFile(Paths.get(filePath));
+
+    }
+
+    /**
+     * Instantiates a response that prompts http basic authentication.
+     * @return the instantiated response
+     */
+    public Response promptBasicAuth() {
+
+        return promptBasicAuth(null);
+
+    }
+
+    /**
+     * Instantiates a response that prompts http basic authentication.
+     * @param realm the realm
+     * @return the instantiated response
+     */
+    public Response promptBasicAuth(String realm) {
+
+        if (realm == null) {
+
+            return Response.builder()
+                .httpStatus(HttpStatus.UNAUTHORIZED)
+                .header("WWW-Authenticate", "Basic")
+                .build();
+
+        } else {
+
+            return Response.builder()
+                .httpStatus(HttpStatus.UNAUTHORIZED)
+                .header("WWW-Authenticate", "Basic realm=\"" + realm + "\"")
+                .build();
+
+        }
 
     }
 

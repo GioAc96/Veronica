@@ -144,6 +144,26 @@ public class Response {
 
         }
 
+        public B requestBasicAuth(String realm) {
+
+            if (realm == null) {
+
+                return header("WWW-Authenticate", "Basic");
+
+            } else {
+
+                return header("WWW-Authenticate", "Basic realm=\"" + realm + '\"');
+
+            }
+
+        }
+
+        public B requestBasicAuth() {
+
+            return requestBasicAuth(null);
+
+        }
+
         @SuppressWarnings("unused")
         public B header(@NonNull String key, @NonNull String value) {
 
