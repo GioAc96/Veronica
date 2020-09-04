@@ -1,13 +1,14 @@
 package rocks.gioac96.veronica.validation;
 
-import java.util.Collection;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
+import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.DeclaresPriority;
+import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.PrioritySet;
 
 /**
@@ -27,7 +28,7 @@ public class FieldValidator {
     @NonNull
     private Boolean nullable;
 
-    protected FieldValidator(FieldValidatorBuilder<?, ?> b) {
+    protected FieldValidator(FieldValidatorBuilder b) {
 
         this.validationRules = b.validationRules;
         this.nullable = b.nullable;
@@ -36,9 +37,9 @@ public class FieldValidator {
 
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
-    public static FieldValidatorBuilder<?, ?> builder() {
+    public static FieldValidatorBuilder builder() {
 
-        return new FieldValidatorBuilderImpl();
+        return new FieldValidatorBuilder();
 
     }
 
@@ -85,10 +86,7 @@ public class FieldValidator {
 
     @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
-    public abstract static class FieldValidatorBuilder<
-        C extends FieldValidator,
-        B extends FieldValidatorBuilder<C, B>
-        > {
+    public static class FieldValidatorBuilder extends Builder<FieldValidator> {
 
         @NonNull
         private final PrioritySet<ValidationRule> validationRules = new PrioritySet<>();
@@ -96,80 +94,65 @@ public class FieldValidator {
         @NonNull
         private Boolean nullable = false;
 
-        @SuppressWarnings("unused")
-        public B validationRule(ValidationRule validationRule) {
+        public FieldValidatorBuilder validationRule(@NonNull ValidationRule validationRule) {
 
             this.validationRules.add(validationRule);
-
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B validationRules(Collection<ValidationRule> validationRules) {
-
-            this.validationRules.addAll(validationRules);
-
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B validationRules(PrioritySet<ValidationRule> validationRules) {
-
-            this.validationRules.addAll(validationRules);
-
-            return self();
-
-        }
-
-
-        public B nullable(@NonNull Boolean nullable) {
-
-            this.nullable = nullable;
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B nullable() {
-
-            return nullable(true);
-
-        }
-
-        @SuppressWarnings("unused")
-        public B notNullable() {
-
-            return nullable(false);
-
-        }
-
-        protected abstract B self();
-
-        @SuppressWarnings("unused")
-        public abstract C build();
-
-    }
-
-    @SuppressWarnings("unused")
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static final class FieldValidatorBuilderImpl extends FieldValidatorBuilder<
-        FieldValidator,
-        FieldValidatorBuilderImpl
-        > {
-
-        protected FieldValidator.FieldValidatorBuilderImpl self() {
 
             return this;
 
         }
 
-        public FieldValidator build() {
+        public FieldValidatorBuilder validationRule(@NonNull ValidationRule validationRule, int priority) {
+
+            this.validationRules.add(validationRule, priority);
+
+            return this;
+
+        }
+
+        public FieldValidatorBuilder validationRule(@NonNull Provider<ValidationRule> validationRuleProvider) {
+
+            if (validationRuleProvider instanceof DeclaresPriority) {
+
+                return validationRule(
+                    validationRuleProvider.provide(),
+                    ((DeclaresPriority) validationRuleProvider).priority()
+                );
+
+            } else {
+
+                return validationRule(validationRuleProvider.provide());
+
+            }
+
+        }
+
+        public FieldValidatorBuilder nullable(@NonNull Boolean nullable) {
+
+            this.nullable = nullable;
+            return this;
+
+        }
+
+        public FieldValidatorBuilder nullable() {
+
+            return nullable(true);
+
+        }
+
+        public FieldValidatorBuilder notNullable() {
+
+            return nullable(false);
+
+        }
+
+        @Override
+        protected FieldValidator instantiate() {
 
             return new FieldValidator(this);
 
         }
 
     }
+    
 }

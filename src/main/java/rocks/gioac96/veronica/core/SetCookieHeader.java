@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import rocks.gioac96.veronica.providers.Builder;
 
 /**
  * Used to generate Set-Cookie http headers. Supports all features from RFC 6265, section 4.1: Set-Cookie.
@@ -227,17 +228,17 @@ public final class SetCookieHeader {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
-    public static class SetCookieHeaderBuilder {
+    public static class SetCookieHeaderBuilder extends Builder<SetCookieHeader> {
 
         private @NonNull String name;
         private @NonNull String value;
-        private ZonedDateTime expires;
-        private Long maxAge;
-        private String domain;
-        private String path;
-        private Boolean secure;
-        private Boolean httpOnly;
-        private SameSitePolicy sameSite;
+        private ZonedDateTime expires = null;
+        private Long maxAge = null;
+        private String domain = null;
+        private String path = null;
+        private Boolean secure = null;
+        private Boolean httpOnly = null;
+        private SameSitePolicy sameSite = null;
 
         SetCookieHeaderBuilder() {
         }
@@ -320,9 +321,20 @@ public final class SetCookieHeader {
 
         }
 
-        public SetCookieHeader build() {
+        @Override
+        protected SetCookieHeader instantiate() {
 
-            return new SetCookieHeader(name, value, expires, maxAge, domain, path, secure, httpOnly, sameSite);
+            return new SetCookieHeader(
+                name,
+                value,
+                expires,
+                maxAge,
+                domain,
+                path,
+                secure,
+                httpOnly,
+                sameSite
+            );
 
         }
 

@@ -1,11 +1,12 @@
 package rocks.gioac96.veronica.validation.rules;
 
 import java.util.Collection;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.util.ArraySet;
 import rocks.gioac96.veronica.validation.CommonValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationException;
@@ -17,8 +18,6 @@ import rocks.gioac96.veronica.validation.ValidationRule;
 /**
  * Validation rule that checks that a field's value is among the specified valid values.
  */
-@SuppressWarnings("unused")
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class InArrayRule implements ValidationRule {
 
     @Getter
@@ -26,7 +25,15 @@ public class InArrayRule implements ValidationRule {
     @NonNull
     private ArraySet<String> allowedValues;
 
-    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
+    public InArrayRule(@NonNull Collection<String> allowedValues) {
+
+        this.allowedValues = new ArraySet<>();
+
+        this.allowedValues.addAll(allowedValues);
+
+    }
+
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod"})
     public static InArrayRuleBuilder builder() {
 
         return new InArrayRuleBuilder();
@@ -65,11 +72,10 @@ public class InArrayRule implements ValidationRule {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
-    public static class InArrayRuleBuilder {
+    public static class InArrayRuleBuilder extends Builder<InArrayRule> {
 
-        private final ArraySet<String> allowedValues = new ArraySet<>();
+        private final Set<String> allowedValues = new HashSet<>();
 
-        @SuppressWarnings("unused")
         public InArrayRuleBuilder allowedValue(String allowedValue) {
 
             this.allowedValues.add(allowedValue);
@@ -78,7 +84,6 @@ public class InArrayRule implements ValidationRule {
 
         }
 
-        @SuppressWarnings("unused")
         public InArrayRuleBuilder allowedValues(Collection<String> allowedValues) {
 
             this.allowedValues.addAll(allowedValues);
@@ -87,12 +92,10 @@ public class InArrayRule implements ValidationRule {
 
         }
 
-        @SuppressWarnings("unused")
-        public InArrayRule build() {
+        @Override
+        protected InArrayRule instantiate() {
 
-            return new InArrayRule(
-                allowedValues
-            );
+            return new InArrayRule(allowedValues);
 
         }
 

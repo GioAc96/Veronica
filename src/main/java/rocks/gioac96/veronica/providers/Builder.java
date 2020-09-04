@@ -6,7 +6,8 @@ package rocks.gioac96.veronica.providers;
  */
 public abstract class Builder<T> implements Provider<T> {
 
-    private T instance = null;
+    private static Object instance = null;
+    private static boolean isConfigured = false;
 
     protected abstract T instantiate();
 
@@ -27,21 +28,28 @@ public abstract class Builder<T> implements Provider<T> {
      */
     public final T build() {
 
-        if (this instanceof BuildsMultipleInstances) {
+        if (instance == null) {
 
-            return instantiate();
+            if (!isConfigured) {
 
-        } else {
+                configure();
+                isConfigured = true;
 
-            if (instance == null) {
+            }
+
+            if (this instanceof BuildsMultipleInstances) {
+
+                return instantiate();
+
+            } else {
 
                 instance = instantiate();
 
             }
 
-            return instance;
-
         }
+
+        return (T) instance;
 
     }
 

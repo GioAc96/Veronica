@@ -16,7 +16,7 @@ import rocks.gioac96.veronica.core.Route;
 @SuppressWarnings("checkstyle:MissingJavadocMethod")
 public class StaticRouteBuilder<
         P
-    > {
+    > extends Route.RouteBuilder {
 
     @NonNull
     private FilePermissionsManager<P> permissionsManager = new FilePermissionsManager<>();
@@ -162,7 +162,8 @@ public class StaticRouteBuilder<
 
     }
 
-    public Route build() {
+    @Override
+    public Route instantiate() {
 
         if (
             baseDir == null || basePath == null
