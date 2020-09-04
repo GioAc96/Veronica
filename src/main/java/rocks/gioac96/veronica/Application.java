@@ -167,11 +167,15 @@ public final class Application {
     public static class ApplicationBuilder extends Builder<Application> {
 
         private final Set<Server> servers = new HashSet<>();
+
         private Router router;
+
         private ExchangeParser exchangeParser = new ExchangeParser() {
         };
+
         private ExceptionHandler exceptionHandler = new ExceptionHandler() {
         };
+
         private ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
         public ApplicationBuilder router(@NonNull Router router) {
@@ -263,6 +267,7 @@ public final class Application {
                 throw new CreationException(e);
 
             }
+
         }
 
     }

@@ -290,9 +290,10 @@ public final class Pipeline {
             return this;
 
         }
-        
+
+        @Override
         protected Pipeline instantiate() {
-            
+
             return new Pipeline(this);
 
         }

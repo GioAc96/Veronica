@@ -104,8 +104,11 @@ public class Response {
     public abstract static class ResponseBuilder<C extends Response, B extends ResponseBuilder<C, B>> {
 
         private final ArraySet<SetCookieHeader> cookies = new ArraySet<>();
+
         private HttpStatus httpStatus = HttpStatus.OK;
+
         private byte[] body = null;
+
         private Headers headers = new Headers();
 
         public B httpStatus(@NonNull HttpStatus httpStatus) {

@@ -20,6 +20,7 @@ public final class SetCookieHeader {
     protected static final boolean DEFAULT_HTTPONLY = false;
 
     private static final String INVALID_NAME_SPECIAL_CHARS = "()<>@,;:\\\"/[]?={}";
+
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("E, dd MMM yyyy HH:mm:ss");
 
     @Getter
