@@ -30,6 +30,12 @@ public class Server {
         return new ServerBuilder();
     }
 
+    /**
+     * Instantiates an http server.
+     * @param httpHandler the handler of the server
+     * @return the instantiated http server
+     * @throws IOException on failure to bind port
+     */
     public HttpServer toHttpServer(HttpHandler httpHandler) throws IOException {
 
         HttpServer httpServer = HttpServer.create();
