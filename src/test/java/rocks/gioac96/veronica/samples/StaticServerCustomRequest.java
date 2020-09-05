@@ -5,7 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import java.net.URI;
 import java.util.Objects;
 import lombok.NonNull;
-import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.ExceptionHandler;
 import rocks.gioac96.veronica.core.ExchangeParseException;
 import rocks.gioac96.veronica.core.ExchangeParser;

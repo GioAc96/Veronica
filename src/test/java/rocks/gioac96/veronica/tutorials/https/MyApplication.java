@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.tutorials.https;
 
-import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.tutorials.https.routes.RouteA;
 

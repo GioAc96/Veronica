@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.tutorials;
 
-import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.Server;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Route;

@@ -1,7 +1,7 @@
 package rocks.gioac96.veronica.tutorials.factories;
 
 
-import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.core.Application;
 
 public class MyApplication extends Application.ApplicationBuilder {
 

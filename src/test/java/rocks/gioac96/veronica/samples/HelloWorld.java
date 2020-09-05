@@ -1,7 +1,7 @@
 package rocks.gioac96.veronica.samples;
 
 import java.io.IOException;
-import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Route;

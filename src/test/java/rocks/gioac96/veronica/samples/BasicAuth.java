@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.samples;
 
-import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.auth.http_basic.BasicAuthFilterBuilder;
 import rocks.gioac96.veronica.core.Pipeline;
 import rocks.gioac96.veronica.core.Response;
