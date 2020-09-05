@@ -6,11 +6,10 @@ import java.util.Collection;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
+import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.util.ArraySet;
 
 /**
@@ -36,7 +35,7 @@ public class Response {
     @Setter
     private ArraySet<SetCookieHeader> cookies;
 
-    protected Response(ResponseBuilder<?, ?> builder) {
+    protected Response(ResponseBuilder builder) {
 
         this.httpStatus = builder.httpStatus;
         this.body = builder.body;
@@ -46,9 +45,9 @@ public class Response {
     }
 
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static ResponseBuilder<?, ?> builder() {
+    public static ResponseBuilder builder() {
 
-        return new ResponseBuilderImpl();
+        return new ResponseBuilder();
 
     }
 
@@ -99,9 +98,8 @@ public class Response {
 
     }
 
-    @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public abstract static class ResponseBuilder<C extends Response, B extends ResponseBuilder<C, B>> {
+    public static class ResponseBuilder extends Builder<Response> {
 
         private final ArraySet<SetCookieHeader> cookies = new ArraySet<>();
 
@@ -111,43 +109,43 @@ public class Response {
 
         private Headers headers = new Headers();
 
-        public B httpStatus(@NonNull HttpStatus httpStatus) {
+        public ResponseBuilder httpStatus(@NonNull HttpStatus httpStatus) {
 
             this.httpStatus = httpStatus;
 
-            return self();
+            return this;
 
         }
 
-        public B body(String body) {
+        public ResponseBuilder body(String body) {
 
             return body(body.getBytes());
 
         }
 
-        public B body(byte[] body) {
+        public ResponseBuilder body(byte[] body) {
 
             this.body = body;
 
-            return self();
+            return this;
 
         }
 
-        public B emptyBody() {
+        public ResponseBuilder emptyBody() {
 
             return body("");
 
         }
 
-        public B headers(@NonNull Headers headers) {
+        public ResponseBuilder headers(@NonNull Headers headers) {
 
             this.headers = headers;
 
-            return self();
+            return this;
 
         }
 
-        public B requestBasicAuth(String realm) {
+        public ResponseBuilder requestBasicAuth(String realm) {
 
             if (realm == null) {
 
@@ -161,14 +159,13 @@ public class Response {
 
         }
 
-        public B requestBasicAuth() {
+        public ResponseBuilder requestBasicAuth() {
 
             return requestBasicAuth(null);
 
         }
 
-        @SuppressWarnings("unused")
-        public B header(@NonNull String key, @NonNull String value) {
+        public ResponseBuilder header(@NonNull String key, @NonNull String value) {
 
             if (this.headers.containsKey(key)) {
 
@@ -180,12 +177,12 @@ public class Response {
 
             }
 
-            return self();
+            return this;
 
         }
 
-        @SuppressWarnings({"checkstyle:RightCurly", "checkstyle:Indentation", "unused"})
-        public B header(@NonNull String key, @NonNull Collection<String> values) {
+        @SuppressWarnings({"checkstyle:RightCurly", "checkstyle:Indentation"})
+        public ResponseBuilder header(@NonNull String key, @NonNull Collection<String> values) {
 
             if (this.headers.containsKey(key)) {
 
@@ -199,45 +196,28 @@ public class Response {
 
             }
 
-            return self();
+            return this;
 
         }
 
-        @SuppressWarnings("unused")
-        public B cookies(Collection<SetCookieHeader> cookies) {
+        public ResponseBuilder cookies(Collection<SetCookieHeader> cookies) {
 
             this.cookies.addAll(cookies);
-
-            return self();
-
-        }
-
-        @SuppressWarnings("unused")
-        public B cookie(@NonNull SetCookieHeader cookie) {
-
-            this.cookies.add(cookie);
-
-            return self();
-
-        }
-
-        protected abstract B self();
-
-        public abstract C build();
-
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static final class ResponseBuilderImpl extends ResponseBuilder<Response, ResponseBuilderImpl> {
-
-        protected Response.ResponseBuilderImpl self() {
 
             return this;
 
         }
 
-        @SuppressWarnings("unused")
-        public Response build() {
+        public ResponseBuilder cookie(@NonNull SetCookieHeader cookie) {
+
+            this.cookies.add(cookie);
+
+            return this;
+
+        }
+
+        @Override
+        protected Response instantiate() {
 
             return new Response(this);
 
