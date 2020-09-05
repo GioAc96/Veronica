@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.static_server;
 
-import java.util.Arrays;
+import java.nio.file.Path;
 import java.util.HashMap;
 import rocks.gioac96.veronica.core.MimeType;
 import rocks.gioac96.veronica.providers.Builder;
@@ -26,20 +26,6 @@ public class MimeResolver {
     }
 
     /**
-     * Instantiates a MimeResolver builder with already all common MIME types configured.
-     * @return the instantiated MimeResolver builder
-     */
-    public static MimeResolverBuilder basic() {
-
-        MimeResolverBuilder builder = builder();
-
-        Arrays.stream(MimeType.CommonMimeTypes.values()).forEach(builder::mime);
-
-        return builder;
-
-    }
-
-    /**
      * Resolves the MIME type of a file given its file name.
      * @param fileName the name of the file to resolve the MIME type of
      * @return the MIME type
@@ -57,6 +43,16 @@ public class MimeResolver {
         String extension = fileName.substring(lastDotPosition);
 
         return extensionMimeMap.get(extension);
+
+    }
+    /**
+     * Resolves the MIME type of a file given its file name.
+     * @param filePath the path of the file to resolve the MIME type of
+     * @return the MIME type
+     */
+    public String resolveMime(Path filePath) {
+
+        return resolveMime(filePath.getFileName().toString());
 
     }
 

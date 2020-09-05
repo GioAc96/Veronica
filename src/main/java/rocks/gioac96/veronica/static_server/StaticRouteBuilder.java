@@ -148,15 +148,15 @@ public class StaticRouteBuilder<
 
         if (contentDisposition == ContentDisposition.INLINE) {
 
-            return CommonResponses.inlineFile(file);
+            return CommonResponses.fileInline(file);
 
         } else if (contentDisposition == ContentDisposition.ATTACHMENT) {
 
-            return CommonResponses.attachmentFile(file);
+            return CommonResponses.fileDownload(file);
 
         } else {
 
-            return CommonResponses.rawFile(file);
+            return CommonResponses.fileRaw(file);
 
         }
 
