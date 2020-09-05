@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import rocks.gioac96.veronica.providers.Builder;
 
 /**
  * Class that manages permissions of file directories. Used to set and get permissions of directories.
@@ -14,6 +15,12 @@ import java.util.Set;
 public class FilePermissionsManager<P> {
 
     private final Set<PermissionTree<P>> rootTrees = new HashSet<>();
+
+    public static <P> FilePermissionsManagerBuilder<P> builder() {
+
+        return new FilePermissionsManagerBuilder<>();
+
+    }
 
     private PermissionTree<P> getClosestParent(Path path) {
 
@@ -195,29 +202,17 @@ public class FilePermissionsManager<P> {
 
     }
 
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static <P> Builder<P> builder() {
+    public static class FilePermissionsManagerBuilder<P> extends Builder<FilePermissionsManager<P>> {
 
-        return new Builder<>();
+        private final FilePermissionsManager<P> filePermissionsManager = new FilePermissionsManager<>();
 
-    }
-
-    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public static class Builder<P> {
-
-        FilePermissionsManager<P> filePermissionsManager = new FilePermissionsManager<>();
-
-        private Builder() {
-
-        }
-
-        public Builder<P> setPermissions(String path, P permissions) {
+        public FilePermissionsManagerBuilder<P> setPermissions(String path, P permissions) {
 
             return setPermissions(Paths.get(path), permissions);
 
         }
 
-        public Builder<P> setPermissions(Path path, P permissions) {
+        public FilePermissionsManagerBuilder<P> setPermissions(Path path, P permissions) {
 
             filePermissionsManager.setPermissions(path, permissions);
 
@@ -225,11 +220,11 @@ public class FilePermissionsManager<P> {
 
         }
 
-        public FilePermissionsManager<P> build() {
-
+        @Override
+        protected FilePermissionsManager<P> instantiate() {
             return filePermissionsManager;
-
         }
 
     }
+
 }
