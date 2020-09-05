@@ -7,7 +7,7 @@ import java.util.Objects;
  * Basic builder class.
  * @param <T> type of the build object
  */
-public abstract class Builder<T> implements Provider<T> {
+public abstract class Builder<T> implements Provider<T>, BuildsInstances {
 
     private static Object instance = null;
     private static boolean isConfigured = false;
@@ -59,7 +59,7 @@ public abstract class Builder<T> implements Provider<T> {
 
             }
 
-            if (this instanceof BuildsMultipleInstances) {
+            if (buildsMultipleInstances()) {
 
                 return instantiate();
 

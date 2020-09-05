@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
 
 /**
@@ -27,7 +28,13 @@ public class Server {
     }
 
     public static ServerBuilder builder() {
-        return new ServerBuilder();
+
+        class ServerBuilderImpl extends ServerBuilder implements BuildsMultipleInstances {
+
+        }
+
+        return new ServerBuilderImpl();
+
     }
 
     /**
@@ -51,7 +58,7 @@ public class Server {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public static class ServerBuilder extends Builder<Server> {
+    public abstract static class ServerBuilder extends Builder<Server> {
 
         private int port;
 
@@ -67,7 +74,6 @@ public class Server {
             return port(port.provide());
 
         }
-
 
         @Override
         protected Server instantiate() {

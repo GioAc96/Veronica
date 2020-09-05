@@ -4,8 +4,9 @@ import static rocks.gioac96.veronica.common.CommonRequestMatchers.get;
 
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.providers.BuildsSingleInstance;
 
-public class RouteB extends Route.RouteBuilder {
+public class RouteB extends Route.RouteBuilder implements BuildsSingleInstance {
 
     @Override
     public void configure() {
@@ -18,5 +19,6 @@ public class RouteB extends Route.RouteBuilder {
         );
 
     }
+
 
 }

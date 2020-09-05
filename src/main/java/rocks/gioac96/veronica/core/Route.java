@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import rocks.gioac96.veronica.common.CommonRequestMatchers;
 import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.static_server.StaticRouteBuilder;
@@ -39,14 +40,18 @@ public class Route {
         this.requestMatcher = b.requestMatcher;
         this.requestHandler = b.requestHandler;
 
-        setPipeline(b.pipeline);
+        this.pipeline = b.pipeline;
 
     }
 
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static RouteBuilder builder() {
 
-        return new RouteBuilder();
+        class RouterBuilderImpl extends RouteBuilder implements BuildsMultipleInstances{
+
+        }
+
+        return new RouterBuilderImpl();
 
     }
 
@@ -61,27 +66,11 @@ public class Route {
 
     }
 
-    /**
-     * Sets the thread pool.
-     * @param threadPool thread pool value
-     */
-    public void setThreadPool(ThreadPoolExecutor threadPool) {
+    public void useThreadPool(ThreadPoolExecutor threadPool) {
 
         this.threadPool = threadPool;
 
-        this.pipeline.setThreadPool(threadPool);
-
-    }
-
-    /**
-     * Sets the pipeline of the route.
-     * @param pipeline the pipeline
-     */
-    public void setPipeline(Pipeline pipeline) {
-
-        this.pipeline = pipeline;
-
-        pipeline.setThreadPool(this.threadPool);
+        this.pipeline.useThreadPool(threadPool);
 
     }
 
@@ -91,7 +80,7 @@ public class Route {
      * @param request request to handle
      * @return true iff the route should handle the specified {@link Request}
      */
-    public boolean shouldHandle(@NonNull Request request) {
+    boolean shouldHandle(@NonNull Request request) {
 
         return requestMatcher.matches(request);
 
@@ -110,15 +99,12 @@ public class Route {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public static class RouteBuilder extends Builder<Route> {
+    public abstract static class RouteBuilder extends Builder<Route> {
 
-        @NonNull
         private RequestMatcher requestMatcher = CommonRequestMatchers.neverMatch();
 
-        @NonNull
         private RequestHandler requestHandler;
 
-        @NonNull
         private Pipeline pipeline = Pipeline.builder().build();
 
         public RouteBuilder requestMatcher(@NonNull RequestMatcher requestMatcher) {
@@ -135,12 +121,6 @@ public class Route {
 
         }
 
-
-        public RouteBuilder alwaysMatch() {
-
-            return requestMatcher(CommonRequestMatchers.alwaysMatch());
-
-        }
 
         public RouteBuilder requestHandler(@NonNull RequestHandler requestHandler) {
 
@@ -169,6 +149,16 @@ public class Route {
 
         }
 
+        @Override
+        protected boolean isValid() {
+
+            return isNotNull(
+                requestMatcher,
+                requestHandler,
+                pipeline
+            );
+
+        }
 
         @Override
         protected Route instantiate() {

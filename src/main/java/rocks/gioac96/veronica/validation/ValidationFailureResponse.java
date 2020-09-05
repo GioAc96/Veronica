@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.HttpStatus;
 import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 
 /**
  * {@link Response} generated on validation failure.
@@ -18,7 +19,13 @@ public class ValidationFailureResponse extends Response {
 
     public static ValidationFailureResponseBuilder builder() {
 
-        return new ValidationFailureResponseBuilder();
+        class ValidationFailureResponseBuilderImpl
+            extends ValidationFailureResponseBuilder
+            implements BuildsMultipleInstances {
+
+        }
+
+        return new ValidationFailureResponseBuilderImpl();
 
     }
 
@@ -30,7 +37,7 @@ public class ValidationFailureResponse extends Response {
 
     }
 
-    public static class ValidationFailureResponseBuilder extends ResponseBuilder {
+    public abstract static class ValidationFailureResponseBuilder extends ResponseBuilder {
 
         private @NonNull ValidationFailureData validationFailureData;
         private @NonNull HttpStatus httpStatus = DEFAULT_HTTP_STATUS;

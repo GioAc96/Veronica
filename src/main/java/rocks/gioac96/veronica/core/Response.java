@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.util.ArraySet;
 
 /**
@@ -47,7 +48,11 @@ public class Response {
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static ResponseBuilder builder() {
 
-        return new ResponseBuilder();
+        class ResponseBuilderImpl extends ResponseBuilder implements BuildsMultipleInstances {
+
+        }
+
+        return new ResponseBuilderImpl();
 
     }
 
@@ -99,7 +104,7 @@ public class Response {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public static class ResponseBuilder extends Builder<Response> {
+    public abstract static class ResponseBuilder extends Builder<Response> {
 
         private final ArraySet<SetCookieHeader> cookies = new ArraySet<>();
 
@@ -200,7 +205,7 @@ public class Response {
 
         }
 
-        public ResponseBuilder cookies(Collection<SetCookieHeader> cookies) {
+        public ResponseBuilder cookies(@NonNull Collection<SetCookieHeader> cookies) {
 
             this.cookies.addAll(cookies);
 

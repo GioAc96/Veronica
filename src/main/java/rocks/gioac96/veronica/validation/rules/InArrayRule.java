@@ -9,6 +9,7 @@ import lombok.Setter;
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.util.ArraySet;
 import rocks.gioac96.veronica.validation.CommonValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationException;
@@ -37,7 +38,11 @@ public class InArrayRule implements ValidationRule {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod"})
     public static InArrayRuleBuilder builder() {
 
-        return new InArrayRuleBuilder();
+        class InArrayRuleBuilderImpl extends InArrayRuleBuilder implements BuildsMultipleInstances {
+
+        }
+
+        return new InArrayRuleBuilderImpl();
 
     }
 
@@ -71,7 +76,7 @@ public class InArrayRule implements ValidationRule {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
-    public static class InArrayRuleBuilder extends Builder<InArrayRule> {
+    public abstract static class InArrayRuleBuilder extends Builder<InArrayRule> {
 
         private final Set<String> allowedValues = new HashSet<>();
 

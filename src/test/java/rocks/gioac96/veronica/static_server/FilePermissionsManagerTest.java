@@ -40,13 +40,14 @@ class FilePermissionsManagerTest {
 
         Path root = Paths.get("A:\\");
 
-        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
+        FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
+            = FilePermissionsManager.<String>builder();
 
-        filePermissionsManager.setPermissions(root, "A");
+        builder.permissions(root, "A");
 
         assertEquals(
             "A",
-            filePermissionsManager.getPermissions(root)
+            builder.build().getPermissions(root)
         );
 
     }
@@ -56,10 +57,13 @@ class FilePermissionsManagerTest {
 
         Path root = Paths.get("A:\\");
 
-        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
+        FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
+            = FilePermissionsManager.<String>builder();
 
-        filePermissionsManager.setPermissions(root, "A");
-        filePermissionsManager.setPermissions(root, "B");
+        builder.permissions(root, "A");
+        builder.permissions(root, "B");
+
+        FilePermissionsManager<String> filePermissionsManager = builder.build();
 
         assertEquals(
             "B",
@@ -72,9 +76,7 @@ class FilePermissionsManagerTest {
 
         Path root = Paths.get("A:\\");
 
-        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
-
-        assertNull(filePermissionsManager.getPermissions(root));
+        assertNull(FilePermissionsManager.builder().build().getPermissions(root));
 
     }
 
@@ -84,10 +86,13 @@ class FilePermissionsManagerTest {
         Path rootA = Paths.get("A:\\");
         Path rootB = Paths.get("B:\\");
 
-        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
+        FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
+            = FilePermissionsManager.<String>builder();
 
-        filePermissionsManager.setPermissions(rootA, "A");
-        filePermissionsManager.setPermissions(rootB, "B");
+        builder.permissions(rootA, "A");
+        builder.permissions(rootB, "B");
+
+        FilePermissionsManager<String> filePermissionsManager = builder.build();
 
         assertEquals(
             "A",
@@ -105,9 +110,12 @@ class FilePermissionsManagerTest {
 
         Path pathA = Paths.get("A:\\path");
 
-        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
+        FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
+            = FilePermissionsManager.<String>builder();
 
-        filePermissionsManager.setPermissions(pathA, "A");
+        builder.permissions(pathA, "A");
+
+        FilePermissionsManager<String> filePermissionsManager = builder.build();
 
         assertEquals(
             "A",
@@ -121,9 +129,12 @@ class FilePermissionsManagerTest {
 
         Path pathA = Paths.get("A:\\parent\\child");
 
-        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
+        FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
+            = FilePermissionsManager.<String>builder();
 
-        filePermissionsManager.setPermissions(pathA, "A");
+        builder.permissions(pathA, "A");
+
+        FilePermissionsManager<String> filePermissionsManager = builder.build();
 
         assertNull(
             filePermissionsManager.getPermissions(pathA.getParent())
@@ -137,9 +148,12 @@ class FilePermissionsManagerTest {
 
         Path pathA = Paths.get("A:\\parent");
 
-        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
+        FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
+            = FilePermissionsManager.<String>builder();
 
-        filePermissionsManager.setPermissions(pathA, "A");
+        builder.permissions(pathA, "A");
+
+        FilePermissionsManager<String> filePermissionsManager = builder.build();
 
         assertEquals(
             "A",
@@ -154,10 +168,13 @@ class FilePermissionsManagerTest {
         Path parent = Paths.get("A:\\parent");
         Path child = Paths.get("A:\\parent\\child");
 
-        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
+        FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
+            = FilePermissionsManager.<String>builder();
 
-        filePermissionsManager.setPermissions(child, "A");
-        filePermissionsManager.setPermissions(parent, "B");
+        builder.permissions(child, "A");
+        builder.permissions(parent, "B");
+
+        FilePermissionsManager<String> filePermissionsManager = builder.build();
 
         assertEquals(
             "B",
@@ -176,10 +193,13 @@ class FilePermissionsManagerTest {
         Path parent = Paths.get("A:\\parent");
         Path child = Paths.get("A:\\parent\\child");
 
-        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
+        FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
+            = FilePermissionsManager.<String>builder();
 
-        filePermissionsManager.setPermissions(parent, "B");
-        filePermissionsManager.setPermissions(child, "A");
+        builder.permissions(parent, "B");
+        builder.permissions(child, "A");
+
+        FilePermissionsManager<String> filePermissionsManager = builder.build();
 
         assertEquals(
             "B",
@@ -198,10 +218,13 @@ class FilePermissionsManagerTest {
         Path parent = Paths.get("A:\\parent");
         Path child = Paths.get("A:\\parent\\child");
 
-        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
+        FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
+            = FilePermissionsManager.<String>builder();
 
-        filePermissionsManager.setPermissions(child, "A");
-        filePermissionsManager.setPermissions(parent, "A");
+        builder.permissions(child, "A");
+        builder.permissions(parent, "A");
+
+        FilePermissionsManager<String> filePermissionsManager = builder.build();
 
         assertEquals(
             "A",
@@ -230,12 +253,15 @@ class FilePermissionsManagerTest {
         Path c = Paths.get("A:\\parent\\a\\b\\c");
         Path d = Paths.get("A:\\parent\\a\\d");
 
-        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
+        FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
+            = FilePermissionsManager.<String>builder();
 
-        filePermissionsManager.setPermissions(a, "A");
-        filePermissionsManager.setPermissions(b, "B");
-        filePermissionsManager.setPermissions(c, "C");
-        filePermissionsManager.setPermissions(d, "D");
+        builder.permissions(a, "A");
+        builder.permissions(b, "B");
+        builder.permissions(c, "C");
+        builder.permissions(d, "D");
+
+        FilePermissionsManager<String> filePermissionsManager = builder.build();
 
         assertEquals(
             "A",
@@ -262,7 +288,9 @@ class FilePermissionsManagerTest {
             )
         );
 
-        filePermissionsManager.setPermissions(b, "B");
+        builder.permissions(b, "B");
+
+        filePermissionsManager = builder.build();
 
         assertEquals(
             "A",
@@ -289,7 +317,9 @@ class FilePermissionsManagerTest {
             )
         );
 
-        filePermissionsManager.setPermissions(Paths.get("B:\\other_drive"), "O");
+        builder.permissions(Paths.get("B:\\other_drive"), "O");
+
+        filePermissionsManager = builder.build();
 
         assertTree(
             filePermissionsManager,
@@ -307,10 +337,13 @@ class FilePermissionsManagerTest {
         Path pathA = Paths.get("A:\\parent\\.");
         Path pathB = Paths.get("B:\\parent\\child\\..");
 
-        FilePermissionsManager<String> filePermissionsManager = new FilePermissionsManager<>();
+        FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
+            = FilePermissionsManager.<String>builder();
 
-        filePermissionsManager.setPermissions(pathA, "A");
-        filePermissionsManager.setPermissions(pathB, "B");
+        builder.permissions(pathA, "A");
+        builder.permissions(pathB, "B");
+
+        FilePermissionsManager<String> filePermissionsManager = builder.build();
 
         assertEquals(
             "B",

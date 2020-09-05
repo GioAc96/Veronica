@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.DeclaresPriority;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.PrioritySet;
@@ -36,7 +37,11 @@ public class FieldValidator {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
     public static FieldValidatorBuilder builder() {
 
-        return new FieldValidatorBuilder();
+        class FieldValidatorBuilderImpl extends FieldValidatorBuilder implements BuildsMultipleInstances {
+
+        }
+
+        return new FieldValidatorBuilderImpl();
 
     }
 
@@ -58,7 +63,7 @@ public class FieldValidator {
                     CommonValidationFailureReason.NOT_PRESENT,
                     fieldName
                 );
-                
+
                 throw ValidationException.builder()
                     .validationFailureData(failureData)
                     .build();
@@ -78,7 +83,7 @@ public class FieldValidator {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
-    public static class FieldValidatorBuilder extends Builder<FieldValidator> {
+    public abstract static class FieldValidatorBuilder extends Builder<FieldValidator> {
 
         @NonNull
         private final PrioritySet<ValidationRule> validationRules = new PrioritySet<>();

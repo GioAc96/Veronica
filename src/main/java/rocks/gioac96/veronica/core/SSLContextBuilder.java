@@ -13,7 +13,7 @@ import rocks.gioac96.veronica.providers.Provider;
  * Factory for SSLContext.
  */
 @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
-public class SSLContextBuilder extends Builder<SSLContext> {
+public abstract class SSLContextBuilder extends Builder<SSLContext> {
 
     private KeyStore keyStore;
 

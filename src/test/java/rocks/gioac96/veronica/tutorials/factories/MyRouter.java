@@ -2,8 +2,9 @@ package rocks.gioac96.veronica.tutorials.factories;
 
 import rocks.gioac96.veronica.common.CommonRoutes;
 import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.providers.BuildsSingleInstance;
 
-public class MyRouter extends Router.RouterBuilder {
+public class MyRouter extends Router.RouterBuilder implements BuildsSingleInstance {
 
     @Override
     public void configure() {
@@ -14,6 +15,5 @@ public class MyRouter extends Router.RouterBuilder {
         defaultRoute(CommonRoutes.notFound());
 
     }
-
 
 }
