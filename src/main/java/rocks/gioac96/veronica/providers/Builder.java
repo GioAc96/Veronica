@@ -1,5 +1,8 @@
 package rocks.gioac96.veronica.providers;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * Basic builder class.
  * @param <T> type of the build object
@@ -15,8 +18,20 @@ public abstract class Builder<T> implements Provider<T> {
 
     }
 
+    protected static boolean isNotNull(Object... fields) {
+
+        return Arrays.stream(fields).allMatch(Objects::nonNull);
+
+    }
+
+    protected boolean isValid() {
+
+        return true;
+
+    }
+
     @Override
-    public final T provide() throws CreationException {
+    public final T provide() {
 
         return build();
 
@@ -33,6 +48,13 @@ public abstract class Builder<T> implements Provider<T> {
             if (!isConfigured) {
 
                 configure();
+
+                if (! isValid()) {
+
+                    throw new CreationException();
+
+                }
+
                 isConfigured = true;
 
             }
