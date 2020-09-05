@@ -9,9 +9,11 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.core.PipelineBreakException;
 import rocks.gioac96.veronica.core.PreFilter;
 import rocks.gioac96.veronica.core.Request;
+import rocks.gioac96.veronica.core.Response;
 
 /**
  * {@link PreFilter} that validates a {@link Request} query.
@@ -26,11 +28,9 @@ public class QueryValidator implements PreFilter {
     @Builder.Default
     private Map<String, FieldValidator> fieldValidators = new HashMap<>();
 
-    protected static ValidationFailureResponse generateValidationFailureResponse(ValidationException e) {
+    protected static Response generateValidationFailureResponse(ValidationException e) {
 
-        return ValidationFailureResponse.builder()
-            .validationFailureData(e.getValidationFailureData())
-            .build();
+        return CommonResponses.validationFailure(e.getValidationFailureData());
 
     }
 

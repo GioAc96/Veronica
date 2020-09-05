@@ -5,10 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import rocks.gioac96.veronica.common.CommonResponses;
+import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.validation.CommonValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
-import rocks.gioac96.veronica.validation.ValidationFailureResponse;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
 
@@ -41,13 +42,11 @@ public final class MinRule implements ValidationRule {
         } catch (NumberFormatException e) {
 
             ValidationFailureData failureData = ValidationFailureData.builder()
-                .failureReason(CommonValidationFailureReason.OUT_OF_RANGE)
+                .failureReason(CommonValidationFailureReason.NOT_NUMERIC)
                 .fieldName(fieldName)
                 .build();
 
-            ValidationFailureResponse failureResponse = ValidationFailureResponse.builder()
-                .validationFailureData(failureData)
-                .build();
+            Response failureResponse = CommonResponses.validationFailure(failureData);
 
             throw new ValidationException(failureResponse, failureData);
 
@@ -62,9 +61,7 @@ public final class MinRule implements ValidationRule {
                 .fieldName(fieldName)
                 .build();
 
-            ValidationFailureResponse failureResponse = ValidationFailureResponse.builder()
-                .validationFailureData(failureData)
-                .build();
+            Response failureResponse = CommonResponses.validationFailure(failureData);
 
             throw new ValidationException(failureResponse, failureData);
 

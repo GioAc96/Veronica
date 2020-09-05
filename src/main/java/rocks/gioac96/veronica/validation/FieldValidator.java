@@ -2,7 +2,6 @@ package rocks.gioac96.veronica.validation;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -13,7 +12,6 @@ import rocks.gioac96.veronica.util.PrioritySet;
 
 /**
  * Field validator.
- * Builder is extensible with lombok's {@link lombok.experimental.SuperBuilder}.
  */
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class FieldValidator {
@@ -35,7 +33,6 @@ public class FieldValidator {
 
     }
 
-    @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
     public static FieldValidatorBuilder builder() {
 
@@ -61,11 +58,7 @@ public class FieldValidator {
                     CommonValidationFailureReason.NOT_PRESENT,
                     fieldName
                 );
-
-                ValidationFailureResponse failureResponse = ValidationFailureResponse.builder()
-                    .validationFailureData(failureData)
-                    .build();
-
+                
                 throw ValidationException.builder()
                     .validationFailureData(failureData)
                     .build();
@@ -84,7 +77,6 @@ public class FieldValidator {
 
     }
 
-    @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
     public static class FieldValidatorBuilder extends Builder<FieldValidator> {
 
