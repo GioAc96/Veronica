@@ -1,95 +1,76 @@
 package rocks.gioac96.veronica.common;
 
-import lombok.experimental.UtilityClass;
+import rocks.gioac96.veronica.common.request_matchers.AlwaysMatch;
+import rocks.gioac96.veronica.common.request_matchers.Favicon;
+import rocks.gioac96.veronica.common.request_matchers.MethodAndPathPattern;
+import rocks.gioac96.veronica.common.request_matchers.NeverMatch;
 import rocks.gioac96.veronica.core.HttpMethod;
-import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.RequestMatcher;
+import rocks.gioac96.veronica.providers.Provider;
 
 /**
  * Contains declaration for common instances of {@link RequestMatcher}.
  */
-@UtilityClass
 public class CommonRequestMatchers {
 
-    /**
-     * Always positive {@link RequestMatcher}.
-     *
-     * @return an always positive {@link RequestMatcher}
-     */
-    public RequestMatcher alwaysMatch() {
+    private static final Provider<RequestMatcher> neverMatch = new NeverMatch();
+    private static final Provider<RequestMatcher> alwaysMatch = new AlwaysMatch();
+    private static final Provider<RequestMatcher> favicon = new Favicon();
 
-        return request -> true;
+    public static RequestMatcher neverMatch() {
 
-    }
-
-    /**
-     * Always negative {@link RequestMatcher}.
-     *
-     * @return an always negative {@link RequestMatcher}
-     */
-    public  RequestMatcher neverMatch() {
-
-        return request -> false;
+        return neverMatch.provide();
 
     }
 
-    private  RequestMatcher methodAndPathPattern(
-        HttpMethod httpMethod,
-        String pathPattern
-    ) {
+    public static RequestMatcher alwaysMatch() {
 
-        return request -> request.getHttpMethod() == httpMethod && request.getPath().matches(pathPattern);
+        return alwaysMatch.provide();
 
     }
 
-    /**
-     * Generates a request matcher that matches GET requests that have a pattern matching the specified one.
-     *
-     * @param pathPattern pattern to check the {@link Request} path against
-     * @return the generated request matcher
-     */
-    @SuppressWarnings("unused")
-    public  RequestMatcher get(String pathPattern) {
+    public static RequestMatcher favicon() {
+
+        return favicon.provide();
+
+    }
+
+    public static RequestMatcher methodAndPathPattern(HttpMethod httpMethod, String pathPattern) {
+
+        return new MethodAndPathPattern()
+            .httpMethod(httpMethod)
+            .pathPattern(pathPattern)
+            .build();
+
+    }
+
+    public static RequestMatcher get(String pathPattern) {
 
         return methodAndPathPattern(HttpMethod.GET, pathPattern);
 
     }
 
-    /**
-     * Generates a request matcher that matches favicon requests.
-     *
-     * @return the generated request matcher
-     */
-    public RequestMatcher favicon() {
-
-        return request -> request.getHttpMethod() == HttpMethod.GET && request.getPath().equals("/favicon.ico");
-
-    }
-
-
-    /**
-     * Generates a request matcher that matches POST requests that have a pattern matching the specified one.
-     *
-     * @param pathPattern pattern to check the {@link Request} path against
-     * @return the generated request matcher
-     */
-    @SuppressWarnings("unused")
-    public RequestMatcher post(String pathPattern) {
+    public static RequestMatcher post(String pathPattern) {
 
         return methodAndPathPattern(HttpMethod.POST, pathPattern);
 
     }
 
-    /**
-     * Generates a request matcher that matches all requests that have a pattern matching the specified one.
-     *
-     * @param pathPattern pattern to check the {@link Request} path against
-     * @return the generated request matcher
-     */
-    @SuppressWarnings("unused")
-    public RequestMatcher path(String pathPattern) {
+    public static RequestMatcher put(String pathPattern) {
 
-        return request -> request.getPath().matches(pathPattern);
+        return methodAndPathPattern(HttpMethod.PUT, pathPattern);
+
+    }
+
+    public static RequestMatcher head(String pathPattern) {
+
+        return methodAndPathPattern(HttpMethod.HEAD, pathPattern);
+
+    }
+
+    public static RequestMatcher delete(String pathPattern) {
+
+        return methodAndPathPattern(HttpMethod.DELETE, pathPattern);
 
     }
 
