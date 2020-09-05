@@ -4,6 +4,7 @@ import java.security.KeyStore;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
+import lombok.NonNull;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.providers.Provider;
@@ -11,46 +12,46 @@ import rocks.gioac96.veronica.providers.Provider;
 /**
  * Factory for SSLContext.
  */
-@SuppressWarnings({"checkstyle:AbbreviationAsWordInName"})
-public abstract class SSLContextBuilder extends Builder<SSLContext> {
+@SuppressWarnings("checkstyle:AbbreviationAsWordInName")
+public class SSLContextBuilder extends Builder<SSLContext> {
 
     private KeyStore keyStore;
 
     private String password;
 
-    protected void keyStore(KeyStore keyStore) {
+    protected SSLContextBuilder keyStore(@NonNull KeyStore keyStore) {
 
         this.keyStore = keyStore;
+        return this;
 
     }
 
-    protected void keyStore(Provider<KeyStore> keyStoreProvider) {
+    protected SSLContextBuilder keyStore(@NonNull Provider<KeyStore> keyStoreProvider) {
 
-        keyStore(keyStoreProvider.provide());
+        return keyStore(keyStoreProvider.provide());
 
     }
 
-    protected void password(String password) {
+    protected SSLContextBuilder password(@NonNull String password) {
 
         this.password = password;
+        return this;
 
     }
 
-    protected void password(Provider<String> passwordProvider) {
+    protected SSLContextBuilder password(@NonNull Provider<String> passwordProvider) {
 
-        password(passwordProvider.provide());
+        return password(passwordProvider.provide());
 
     }
 
-    private void validate() throws CreationException {
+    @Override
+    protected boolean isValid() {
 
-        if (keyStore == null) {
-            throw new CreationException("KeyStore was not set", new NullPointerException());
-        }
-
-        if (password == null) {
-            throw new CreationException("Password was not set", new NullPointerException());
-        }
+        return isNotNull(
+            keyStore,
+            password
+        );
 
     }
 
