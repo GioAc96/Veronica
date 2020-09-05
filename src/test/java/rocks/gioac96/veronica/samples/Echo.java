@@ -24,7 +24,7 @@ public class Echo {
                     )
                     .build()
             )
-            .fallbackRoute(
+            .defaultRoute(
                 Route.builder()
                     .requestHandler(
                         request -> Response.builder()

@@ -9,7 +9,7 @@ public class MyApplication extends Application.ApplicationBuilder {
     public void configure() {
 
         router(Router.builder()
-            .fallbackRoute(new RouteA())
+            .defaultRoute(new RouteA())
             .build());
 
         server(new MyServer());

@@ -43,7 +43,7 @@ public class AsynchronousPostProcessors {
                         .postProcessor((request, response) -> sleep())
                         .build())
                     .build())
-                .fallbackRoute(CommonRoutes.notFound())
+                .defaultRoute(CommonRoutes.notFound())
                 .build())
             .build()
             .start();

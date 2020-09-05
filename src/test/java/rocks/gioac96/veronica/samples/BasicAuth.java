@@ -1,11 +1,11 @@
 package rocks.gioac96.veronica.samples;
 
 import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.auth.http_basic.BasicAuthFilterBuilder;
+import rocks.gioac96.veronica.core.Pipeline;
+import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Route;
 import rocks.gioac96.veronica.core.Router;
-import rocks.gioac96.veronica.core.Pipeline;
 
 public class BasicAuth {
 
@@ -14,14 +14,14 @@ public class BasicAuth {
         Application.builder()
             .port(80)
             .router(Router.builder()
-                .fallbackRoute(Route.builder()
+                .defaultRoute(Route.builder()
                     .pipeline(Pipeline.builder()
                         .preFilter(new BasicAuthFilterBuilder()
                             .realm("My website")
                             .credentialsChecker(credentials -> credentials.getUsername().equals("giorgio") && credentials.getPassword().equals("password"))
                             .build())
                         .build())
-                    .requestHandler(request -> CommonResponses.ok("You are authenticated"))
+                    .requestHandler(request -> Response.builder().body("You are authenticated").build())
                     .build())
                 .build())
             .build()

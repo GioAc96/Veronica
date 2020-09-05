@@ -12,7 +12,7 @@ public class MyApplication extends Application.ApplicationBuilder {
         server(new MyServer());
 
         router(Router.builder()
-            .fallbackRoute(new RouteA())
+            .defaultRoute(new RouteA())
             .build()
         );
 

@@ -14,7 +14,7 @@ public class Multithreading {
         Application app = Application.builder()
             .port(port)
             .router(Router.builder()
-                .fallbackRoute(Route.builder()
+                .defaultRoute(Route.builder()
                     .requestHandler(request -> {
 
                         try {

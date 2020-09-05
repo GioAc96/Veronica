@@ -21,7 +21,7 @@ public class Query {
                 )
                 .build()
             )
-            .fallbackRoute(Route.builder()
+            .defaultRoute(Route.builder()
                 .requestHandler(request -> Response.builder()
                     .body("Request is empty")
                     .build()

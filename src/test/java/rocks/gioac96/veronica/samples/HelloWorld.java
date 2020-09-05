@@ -13,7 +13,7 @@ public class HelloWorld {
 
 
         Router router = Router.builder()
-            .fallbackRoute(
+            .defaultRoute(
                 Route.builder()
                     .requestHandler(request -> Response.builder()
                         .body("Hello, world!")

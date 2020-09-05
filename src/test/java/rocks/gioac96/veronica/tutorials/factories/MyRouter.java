@@ -11,7 +11,7 @@ public class MyRouter extends Router.RouterBuilder {
         route(new RouteA());
         route(new RouteB());
 
-        fallbackRoute(CommonRoutes.notFound());
+        defaultRoute(CommonRoutes.notFound());
 
     }
 

@@ -3,10 +3,10 @@ package rocks.gioac96.veronica.core;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import rocks.gioac96.veronica.common.CommonRoutes;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.providers.DeclaresPriority;
@@ -24,7 +24,7 @@ public final class Router {
     @Getter
     @Setter
     @NonNull
-    protected Route fallbackRoute;
+    protected Route defaultRoute;
 
     @Getter
     @Setter
@@ -33,10 +33,9 @@ public final class Router {
 
     protected ThreadPoolExecutor threadPool;
 
-    @Generated
     protected Router(RouterBuilder b) {
 
-        this.fallbackRoute = b.fallbackRoute;
+        this.defaultRoute = b.defaultRoute;
         this.routes = b.routes;
 
         for (Route route : routes) {
@@ -47,8 +46,6 @@ public final class Router {
 
     }
 
-
-    @Generated
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static RouterBuilder builder() {
 
@@ -83,7 +80,7 @@ public final class Router {
 
         return routes.firstOrDefault(
             route -> route.shouldHandle(request),
-            fallbackRoute
+            defaultRoute
         ).handle(request);
 
     }
@@ -113,7 +110,6 @@ public final class Router {
 
     }
 
-    @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public static class RouterBuilder extends Builder<Router> {
 
@@ -121,20 +117,20 @@ public final class Router {
         private final PrioritySet<Route> routes = new PrioritySet<>();
 
         @NonNull
-        private Route fallbackRoute;
+        private Route defaultRoute = CommonRoutes.notFound();
 
-        public RouterBuilder fallbackRoute(@NonNull Route fallbackRoute) {
+        public RouterBuilder defaultRoute(@NonNull Route defaultRoute) {
 
-            this.fallbackRoute = fallbackRoute;
+            this.defaultRoute = defaultRoute;
 
             return this;
 
         }
 
-        public RouterBuilder fallbackRoute(@NonNull Provider<Route> fallbackRouteProvider)
+        public RouterBuilder defaultRoute(@NonNull Provider<Route> defaultRouteProvider)
             throws CreationException {
 
-            return fallbackRoute(fallbackRouteProvider.provide());
+            return defaultRoute(defaultRouteProvider.provide());
 
         }
 

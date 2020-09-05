@@ -20,7 +20,7 @@ public class HelloWorld {
             .build();
 
         Router router = Router.builder()
-            .fallbackRoute(helloWorldRoute)
+            .defaultRoute(helloWorldRoute)
             .build();
 
         int port = 8000;

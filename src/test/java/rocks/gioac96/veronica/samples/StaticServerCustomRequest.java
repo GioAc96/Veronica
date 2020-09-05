@@ -37,7 +37,7 @@ public class StaticServerCustomRequest {
                     .basePath("")
                     .baseDir("D:\\projects\\veronica\\src")
                     .build())
-                .fallbackRoute(CommonRoutes.notFound())
+                .defaultRoute(CommonRoutes.notFound())
                 .build())
             .build()
             .start();

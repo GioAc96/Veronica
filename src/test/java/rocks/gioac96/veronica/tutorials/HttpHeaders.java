@@ -45,7 +45,7 @@ public class HttpHeaders {
             .build();
 
         Router router = Router.builder()
-            .fallbackRoute(route)
+            .defaultRoute(route)
             .build();
 
         int port = 8000;

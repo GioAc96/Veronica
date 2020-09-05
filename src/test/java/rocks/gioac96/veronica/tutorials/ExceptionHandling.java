@@ -26,7 +26,7 @@ public class ExceptionHandling {
             .build();
 
         Router router = Router.builder()
-            .fallbackRoute(route)
+            .defaultRoute(route)
             .build();
 
         ExceptionHandler exceptionHandler = new ExceptionHandler() {

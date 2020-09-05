@@ -28,7 +28,7 @@ public class Routing {
                 )
                 .build()
             )
-            .fallbackRoute(Route.builder()
+            .defaultRoute(Route.builder()
                 .requestHandler(req -> Response.builder()
                     .body("We could not find what you're looking for")
                     .build()

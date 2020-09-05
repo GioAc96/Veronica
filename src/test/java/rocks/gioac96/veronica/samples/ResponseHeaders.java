@@ -12,7 +12,7 @@ public class ResponseHeaders {
     public static void main(String[] args) throws IOException, CreationException {
 
         Router router = Router.builder()
-            .fallbackRoute(Route.builder()
+            .defaultRoute(Route.builder()
                 .requestHandler(request -> Response.builder()
                     .body("{\"hello\": \"world\"}")
                     .header("content-type", "application/json")

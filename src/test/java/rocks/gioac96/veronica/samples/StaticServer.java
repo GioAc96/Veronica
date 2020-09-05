@@ -21,7 +21,7 @@ public class StaticServer {
                     .baseDir("D:\\projects\\veronica")
                     .basePath("/static")
                     .build())
-                .fallbackRoute(CommonRoutes.notFound())
+                .defaultRoute(CommonRoutes.notFound())
                 .build())
             .port(80)
             .build()
