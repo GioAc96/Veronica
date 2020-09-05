@@ -1,13 +1,15 @@
 package rocks.gioac96.veronica.core;
 
+import java.util.Objects;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import rocks.gioac96.veronica.common.CommonRoutes;
 import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.providers.DeclaresPriority;
 import rocks.gioac96.veronica.providers.Provider;
@@ -24,7 +26,7 @@ public final class Router {
     @Getter
     @Setter
     @NonNull
-    protected Route fallbackRoute;
+    protected Route defaultRoute;
 
     @Getter
     @Setter
@@ -33,26 +35,27 @@ public final class Router {
 
     protected ThreadPoolExecutor threadPool;
 
-    @Generated
     protected Router(RouterBuilder b) {
 
-        this.fallbackRoute = b.fallbackRoute;
+        this.defaultRoute = b.defaultRoute;
         this.routes = b.routes;
 
         for (Route route : routes) {
 
-            route.setThreadPool(threadPool);
+            route.useThreadPool(threadPool);
 
         }
 
     }
 
-
-    @Generated
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static RouterBuilder builder() {
 
-        return new RouterBuilder();
+        class RouterBuilderImpl extends RouterBuilder implements BuildsMultipleInstances {
+
+        }
+
+        return new RouterBuilderImpl();
 
     }
 
@@ -60,81 +63,47 @@ public final class Router {
      * Sets the thread pool.
      * @param threadPool the thread pool
      */
-    public void setThreadPool(ThreadPoolExecutor threadPool) {
+    void useThreadPool(ThreadPoolExecutor threadPool) {
 
         this.threadPool = threadPool;
 
         for (Route route : routes) {
 
-            route.setThreadPool(threadPool);
+            route.useThreadPool(threadPool);
 
         }
 
     }
 
-    /**
-     * Routes the specified {@link Request}. If none of the available routes can handle the request, the request is
-     * handled by the fallback route.
-     *
-     * @param request request to route
-     * @return generated {@link Response}
-     */
-    public Response route(Request request) {
+
+    Response route(Request request) {
 
         return routes.firstOrDefault(
             route -> route.shouldHandle(request),
-            fallbackRoute
+            defaultRoute
         ).handle(request);
 
     }
 
-    /**
-     * Adds a route to the router.
-     * @param route the route to add
-     */
-    public void addRoute(Route route) {
-
-        route.setThreadPool(this.threadPool);
-
-        this.routes.add(route);
-
-    }
-
-    /**
-     * Adds a route to the router, with the specified priority.
-     * @param route the route to add
-     * @param priority the priority of the route
-     */
-    public void addRoute(Route route, int priority) {
-
-        route.setThreadPool(this.threadPool);
-
-        this.routes.add(route, priority);
-
-    }
-
-    @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public static class RouterBuilder extends Builder<Router> {
+    public abstract static class RouterBuilder extends Builder<Router> {
 
-        @NonNull
         private final PrioritySet<Route> routes = new PrioritySet<>();
 
-        @NonNull
-        private Route fallbackRoute;
+        private Route defaultRoute = CommonRoutes.notFound();
 
-        public RouterBuilder fallbackRoute(@NonNull Route fallbackRoute) {
+        public RouterBuilder defaultRoute(@NonNull Route defaultRoute) {
 
-            this.fallbackRoute = fallbackRoute;
+            this.defaultRoute = defaultRoute;
 
             return this;
 
         }
 
-        public RouterBuilder fallbackRoute(@NonNull Provider<Route> fallbackRouteProvider)
+        public RouterBuilder defaultRoute(@NonNull Provider<Route> defaultRouteProvider)
             throws CreationException {
 
-            return fallbackRoute(fallbackRouteProvider.provide());
+            return defaultRoute(defaultRouteProvider.provide());
 
         }
 
@@ -167,7 +136,16 @@ public final class Router {
             }
 
         }
-        
+
+        @Override
+        protected boolean isValid() {
+
+            return routes.stream().noneMatch(Objects::isNull) && isNotNull(
+                defaultRoute
+            );
+
+        }
+
         @Override
         protected Router instantiate() {
 

@@ -5,7 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import java.net.URI;
 import java.util.Objects;
 import lombok.NonNull;
-import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.ExceptionHandler;
 import rocks.gioac96.veronica.core.ExchangeParseException;
 import rocks.gioac96.veronica.core.ExchangeParser;
@@ -30,14 +30,14 @@ public class StaticServerCustomRequest {
             .router(Router.builder()
                 .route(Route.<Boolean>staticRouteBuilder()
                     .permissionManager(FilePermissionsManager.<Boolean>builder()
-                        .setPermissions("D:\\projects\\veronica\\src", true)
-                        .setPermissions("D:\\projects\\veronica\\src\\test", false)
+                        .permissions("D:\\projects\\veronica\\src", true)
+                        .permissions("D:\\projects\\veronica\\src\\test", false)
                         .build())
                     .permissionDecider((request, filePermissions) -> AuthenticationService.isAuthenticated(request) && filePermissions)
                     .basePath("")
                     .baseDir("D:\\projects\\veronica\\src")
                     .build())
-                .fallbackRoute(CommonRoutes.notFound())
+                .defaultRoute(CommonRoutes.notFound())
                 .build())
             .build()
             .start();

@@ -6,11 +6,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import rocks.gioac96.veronica.common.CommonResponses;
+import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.validation.CommonValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
-import rocks.gioac96.veronica.validation.ValidationFailureResponse;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
 /**
@@ -39,9 +40,7 @@ public class RegexRule implements ValidationRule {
                 .fieldName(fieldName)
                 .build();
 
-            ValidationFailureResponse failureResponse = ValidationFailureResponse.builder()
-                .validationFailureData(failureData)
-                .build();
+            Response failureResponse = CommonResponses.validationFailure(failureData);
 
             throw new ValidationException(failureResponse, failureData);
 

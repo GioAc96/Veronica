@@ -1,8 +1,8 @@
 package rocks.gioac96.veronica.tutorials;
 
-import static rocks.gioac96.veronica.common.CommonRequestMatchers.path;
+import static rocks.gioac96.veronica.common.CommonRequestMatchers.get;
 
-import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Route;
 import rocks.gioac96.veronica.core.Router;
@@ -13,7 +13,7 @@ public class Routing {
 
         Router router = Router.builder()
             .route(Route.builder()
-                .requestMatcher(path("/home"))
+                .requestMatcher(get("/home"))
                 .requestHandler(req -> Response.builder()
                     .body("This is the homepage")
                     .build()
@@ -21,14 +21,14 @@ public class Routing {
                 .build()
             )
             .route(Route.builder()
-                .requestMatcher(path("/about"))
+                .requestMatcher(get("/about"))
                 .requestHandler(req -> Response.builder()
                     .body("This is the about page")
                     .build()
                 )
                 .build()
             )
-            .fallbackRoute(Route.builder()
+            .defaultRoute(Route.builder()
                 .requestHandler(req -> Response.builder()
                     .body("We could not find what you're looking for")
                     .build()

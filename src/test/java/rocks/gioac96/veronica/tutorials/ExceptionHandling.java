@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.tutorials;
 
-import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.core.ExceptionHandler;
 import rocks.gioac96.veronica.core.HttpStatus;
@@ -26,7 +26,7 @@ public class ExceptionHandling {
             .build();
 
         Router router = Router.builder()
-            .fallbackRoute(route)
+            .defaultRoute(route)
             .build();
 
         ExceptionHandler exceptionHandler = new ExceptionHandler() {

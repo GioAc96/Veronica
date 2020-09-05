@@ -11,6 +11,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
 import lombok.NonNull;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
 
 /**
@@ -18,16 +19,25 @@ import rocks.gioac96.veronica.providers.Provider;
  */
 public final class SecureServer extends Server {
 
-    @NonNull
     private final SSLContext sslContext;
 
     protected SecureServer(SecureServerBuilder b) {
+
         super(b);
         this.sslContext = b.sslContext;
+
     }
 
     public static SecureServerBuilder builder() {
-        return new SecureServerBuilder();
+
+        class SecureServerBuilderImpl
+            extends SecureServerBuilder
+            implements BuildsMultipleInstances {
+
+        }
+
+        return new SecureServerBuilderImpl();
+
     }
 
     @Override
@@ -63,7 +73,7 @@ public final class SecureServer extends Server {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public static class SecureServerBuilder extends ServerBuilder {
+    public abstract static class SecureServerBuilder extends ServerBuilder {
 
         private @NonNull SSLContext sslContext;
 
@@ -77,6 +87,13 @@ public final class SecureServer extends Server {
         protected SecureServerBuilder sslContext(@NonNull Provider<SSLContext> sslContextProvider) {
 
             return sslContext(sslContextProvider.provide());
+
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            return super.isValid() && isNotNull(sslContext);
 
         }
 

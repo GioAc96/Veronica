@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.tutorials;
 
-import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Route;
 import rocks.gioac96.veronica.core.Router;
@@ -14,7 +14,7 @@ public class Multithreading {
         Application app = Application.builder()
             .port(port)
             .router(Router.builder()
-                .fallbackRoute(Route.builder()
+                .defaultRoute(Route.builder()
                     .requestHandler(request -> {
 
                         try {

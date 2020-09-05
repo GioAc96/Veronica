@@ -8,6 +8,8 @@ import rocks.gioac96.veronica.core.Pipeline;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 
 /**
  * Builder for static server routes.
@@ -16,30 +18,24 @@ import rocks.gioac96.veronica.core.Route;
 @SuppressWarnings("checkstyle:MissingJavadocMethod")
 public class StaticRouteBuilder<
         P
-    > {
+    > extends Builder<Route>
+    implements BuildsMultipleInstances {
 
-    @NonNull
-    private FilePermissionsManager<P> permissionsManager = new FilePermissionsManager<>();
+    private FilePermissionsManager<P> permissionsManager;
 
-    @NonNull
-    private FilePermissionsDecider<P> permissionDecider = ((request, filePermissions) -> false);
+    private FilePermissionsDecider<P> permissionDecider;
 
-    @NonNull
     private Path baseDir;
 
-    @NonNull
     private String basePath;
 
-    @NonNull
     private Response accessDeniedResponse = CommonResponses.forbidden();
 
-    @NonNull
     private Response fileNotFoundResponse = CommonResponses.notFound();
 
-    @NonNull
-    private Pipeline pipeline = Pipeline.builder().provide();
-
     private ContentDisposition contentDisposition = null;
+
+    private Pipeline pipeline = Pipeline.builder().build();
 
     private enum ContentDisposition {
 
@@ -63,7 +59,6 @@ public class StaticRouteBuilder<
         return this;
 
     }
-
 
 
     public StaticRouteBuilder<P> baseDir(@NonNull String baseDir) {
@@ -148,29 +143,37 @@ public class StaticRouteBuilder<
 
         if (contentDisposition == ContentDisposition.INLINE) {
 
-            return CommonResponses.inlineFile(file);
+            return CommonResponses.fileInline(file);
 
         } else if (contentDisposition == ContentDisposition.ATTACHMENT) {
 
-            return CommonResponses.attachmentFile(file);
+            return CommonResponses.fileDownload(file);
 
         } else {
 
-            return CommonResponses.rawFile(file);
+            return CommonResponses.fileRaw(file);
 
         }
 
     }
 
-    public Route build() {
+    @Override
+    protected boolean isValid() {
 
-        if (
-            baseDir == null || basePath == null
-        ) {
+        return isNotNull(
+            baseDir,
+            basePath,
+            permissionDecider,
+            permissionsManager,
+            accessDeniedResponse,
+            fileNotFoundResponse,
+            pipeline
+        );
 
-            throw new NullPointerException("Both baseDir and basePath must be set");
+    }
 
-        }
+    @Override
+    public Route instantiate() {
 
         return Route.builder()
             .pipeline(pipeline)

@@ -2,7 +2,7 @@ package rocks.gioac96.veronica.samples;
 
 import static rocks.gioac96.veronica.common.CommonRequestMatchers.get;
 
-import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.common.CommonRoutes;
 import rocks.gioac96.veronica.core.Route;
@@ -43,7 +43,7 @@ public class AsynchronousPostProcessors {
                         .postProcessor((request, response) -> sleep())
                         .build())
                     .build())
-                .fallbackRoute(CommonRoutes.notFound())
+                .defaultRoute(CommonRoutes.notFound())
                 .build())
             .build()
             .start();

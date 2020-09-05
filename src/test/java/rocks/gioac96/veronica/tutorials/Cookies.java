@@ -3,13 +3,13 @@ package rocks.gioac96.veronica.tutorials;
 import static rocks.gioac96.veronica.common.CommonRequestMatchers.favicon;
 
 import java.util.Map;
-import rocks.gioac96.veronica.Application;
-import rocks.gioac96.veronica.providers.CreationException;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.SetCookieHeader;
 import rocks.gioac96.veronica.core.Route;
 import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.core.SetCookieHeader;
+import rocks.gioac96.veronica.providers.CreationException;
 
 public class Cookies {
 
@@ -47,7 +47,7 @@ public class Cookies {
                 )
                 .build()
             )
-            .fallbackRoute(route)
+            .defaultRoute(route)
             .build();
 
         int port = 8000;

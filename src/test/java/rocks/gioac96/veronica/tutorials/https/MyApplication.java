@@ -1,10 +1,11 @@
 package rocks.gioac96.veronica.tutorials.https;
 
-import rocks.gioac96.veronica.Application;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.providers.BuildsSingleInstance;
 import rocks.gioac96.veronica.tutorials.https.routes.RouteA;
 
-public class MyApplication extends Application.ApplicationBuilder {
+public class MyApplication extends Application.ApplicationBuilder implements BuildsSingleInstance {
 
     @Override
     public void configure() {
@@ -12,7 +13,7 @@ public class MyApplication extends Application.ApplicationBuilder {
         server(new MyServer());
 
         router(Router.builder()
-            .fallbackRoute(new RouteA())
+            .defaultRoute(new RouteA())
             .build()
         );
 
@@ -25,6 +26,5 @@ public class MyApplication extends Application.ApplicationBuilder {
         app.start();
 
     }
-
 
 }

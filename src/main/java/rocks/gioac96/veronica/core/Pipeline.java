@@ -1,13 +1,9 @@
 package rocks.gioac96.veronica.core;
 
 import java.util.concurrent.ThreadPoolExecutor;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Generated;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.DeclaresPriority;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.PrioritySet;
@@ -15,29 +11,16 @@ import rocks.gioac96.veronica.util.PrioritySet;
 /**
  * Request pipeline.
  */
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public final class Pipeline {
 
-    @NonNull
-    @Getter
-    @Setter
-    private PrioritySet<PreFilter> preFilters;
+    private final PrioritySet<PreFilter> preFilters;
 
-    @NonNull
-    @Getter
-    @Setter
-    private PrioritySet<PostFilter> postFilters;
+    private final PrioritySet<PostFilter> postFilters;
 
-    @NonNull
-    @Getter
-    @Setter
-    private PrioritySet<PostProcessor> postProcessors;
+    private final PrioritySet<PostProcessor> postProcessors;
 
-    @Getter
-    @Setter
-    private ResponseRenderer responseRenderer;
+    private final ResponseRenderer responseRenderer;
 
-    @Setter
     protected ThreadPoolExecutor threadPool;
 
     protected Pipeline(PipelineBuilder b) {
@@ -50,7 +33,18 @@ public final class Pipeline {
     }
 
     public static PipelineBuilder builder() {
-        return new PipelineBuilder();
+
+        class PipelineBuilderImpl extends PipelineBuilder implements BuildsMultipleInstances {
+
+        }
+
+        return new PipelineBuilderImpl();
+    }
+
+    void useThreadPool(ThreadPoolExecutor threadPool) {
+
+        this.threadPool = threadPool;
+
     }
 
     private Response preRender(Request request, RequestHandler requestHandler) {
@@ -80,7 +74,7 @@ public final class Pipeline {
      * @param requestHandler request handler that performs the requested action
      * @return the generated response
      */
-    public Response handle(@NonNull Request request, @NonNull RequestHandler requestHandler) {
+    Response handle(@NonNull Request request, @NonNull RequestHandler requestHandler) {
 
         Response response;
 
@@ -162,40 +156,39 @@ public final class Pipeline {
 
     }
 
-    @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
-    public static class PipelineBuilder extends Builder<Pipeline> {
+    public abstract static class PipelineBuilder extends Builder<Pipeline> {
 
-        @NonNull
         private final PrioritySet<PreFilter> preFilters = new PrioritySet<>();
 
-        @NonNull
         private final PrioritySet<PostFilter> postFilters = new PrioritySet<>();
 
-        @NonNull
         private final PrioritySet<PostProcessor> postProcessors = new PrioritySet<>();
 
         private ResponseRenderer responseRenderer;
 
-        public PipelineBuilder preFilter(PreFilter preFilter) {
+        public PipelineBuilder preFilter(@NonNull PreFilter preFilter) {
 
             this.preFilters.add(preFilter);
             return this;
 
         }
 
-        public PipelineBuilder preFilter(PreFilter preFilter, Integer priority) {
+        public PipelineBuilder preFilter(@NonNull PreFilter preFilter, int priority) {
 
             this.preFilters.add(preFilter, priority);
             return this;
 
         }
 
-        public PipelineBuilder preFilter(Provider<PreFilter> preFilterProvider) {
+        public PipelineBuilder preFilter(@NonNull Provider<PreFilter> preFilterProvider) {
 
             if (preFilterProvider instanceof DeclaresPriority) {
 
-                this.preFilters.add(preFilterProvider.provide(), ((DeclaresPriority)preFilterProvider).priority());
+                this.preFilters.add(
+                    preFilterProvider.provide(),
+                    ((DeclaresPriority)preFilterProvider).priority()
+                );
 
             } else {
 
@@ -206,28 +199,28 @@ public final class Pipeline {
 
         }
 
-        public PipelineBuilder postFilter(PostFilter postFilter) {
+        public PipelineBuilder postFilter(@NonNull PostFilter postFilter) {
 
             this.postFilters.add(postFilter);
             return this;
 
         }
 
-        public PipelineBuilder postFilter(PostFilter postFilter, Integer priority) {
+        public PipelineBuilder postFilter(@NonNull PostFilter postFilter, Integer priority) {
 
             this.postFilters.add(postFilter, priority);
             return this;
 
         }
 
-        public PipelineBuilder postFilters(Provider<PostFilter> postFilterProvider) {
+        public PipelineBuilder postFilters(@NonNull Provider<PostFilter> postFilterProvider) {
 
             if (postFilterProvider instanceof DeclaresPriority) {
                 
                 return this.postFilter(
                     postFilterProvider.provide(),
-                    ((DeclaresPriority) postFilterProvider
-                ).priority());
+                    ((DeclaresPriority) postFilterProvider).priority()
+                );
                 
             } else {
                 
@@ -237,21 +230,21 @@ public final class Pipeline {
             
         }
 
-        public PipelineBuilder postProcessor(PostProcessor postProcessor) {
+        public PipelineBuilder postProcessor(@NonNull PostProcessor postProcessor) {
 
             this.postProcessors.add(postProcessor);
             return this;
 
         }
 
-        public PipelineBuilder postProcessor(PostProcessor postProcessor, Integer priority) {
+        public PipelineBuilder postProcessor(@NonNull PostProcessor postProcessor, int priority) {
 
             this.postProcessors.add(postProcessor, priority);
             return this;
 
         }
 
-        public PipelineBuilder postProcessor(Provider<PostProcessor> postProcessorProvider) {
+        public PipelineBuilder postProcessor(@NonNull Provider<PostProcessor> postProcessorProvider) {
 
             if (postProcessorProvider instanceof DeclaresPriority) {
                 
@@ -275,7 +268,7 @@ public final class Pipeline {
 
         }
 
-        public PipelineBuilder combinePipeline(Pipeline pipeline) {
+        public PipelineBuilder combinePipeline(@NonNull Pipeline pipeline) {
 
             preFilters.addAll(pipeline.preFilters);
             postFilters.addAll(pipeline.postFilters);
@@ -290,9 +283,10 @@ public final class Pipeline {
             return this;
 
         }
-        
+
+        @Override
         protected Pipeline instantiate() {
-            
+
             return new Pipeline(this);
 
         }

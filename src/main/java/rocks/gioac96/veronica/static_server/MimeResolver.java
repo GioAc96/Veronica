@@ -1,7 +1,10 @@
 package rocks.gioac96.veronica.static_server;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import rocks.gioac96.veronica.core.MimeType;
+import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 
 /**
  * Class used to resolve file extensions to MIME types.
@@ -10,34 +13,20 @@ public class MimeResolver {
 
     private final HashMap<String, String> extensionMimeMap;
 
-    protected MimeResolver(MimeResolverBuilder<?, ?> b) {
+    protected MimeResolver(MimeResolverBuilder b) {
 
         this.extensionMimeMap = b.extensionMimeMap;
 
     }
 
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static MimeResolverBuilder<?, ?> builder() {
+    public static MimeResolverBuilder builder() {
 
-        return new MimeResolverBuilderImpl();
-
-    }
-
-    /**
-     * Instantiates a MimeResolver builder with already all common MIME types configured.
-     * @return the instantiated MimeResolver builder
-     */
-    public static MimeResolverBuilder<?, ?> basic() {
-
-        MimeResolverBuilder builder = builder();
-
-        for (MimeType mimeType : MimeType.CommonMimeTypes.values()) {
-
-            builder.mime(mimeType);
+        class MimeResolverBuilderImpl extends MimeResolverBuilder implements BuildsMultipleInstances {
 
         }
 
-        return builder;
+        return new MimeResolverBuilderImpl();
 
     }
 
@@ -61,30 +50,37 @@ public class MimeResolver {
         return extensionMimeMap.get(extension);
 
     }
+    /**
+     * Resolves the MIME type of a file given its file name.
+     * @param filePath the path of the file to resolve the MIME type of
+     * @return the MIME type
+     */
+    public String resolveMime(Path filePath) {
+
+        return resolveMime(filePath.getFileName().toString());
+
+    }
 
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public abstract static class MimeResolverBuilder<C extends MimeResolver, B extends MimeResolverBuilder<C, B>> {
+    public abstract static class MimeResolverBuilder extends Builder<MimeResolver> {
 
         private final HashMap<String, String> extensionMimeMap = new HashMap<>();
 
-        public B mime(MimeType... mimeType) {
+        public MimeResolverBuilder mime(MimeType mimeType) {
 
-            for (MimeType mt : mimeType) {
 
-                for (String extension : mt.getExtensions()) {
+            for (String extension : mimeType.getExtensions()) {
 
-                    extensionMimeMap.put(extension, mt.getMime());
-
-                }
+                extensionMimeMap.put(extension, mimeType.getMime());
 
             }
 
-            return self();
+            return this;
 
         }
 
-        public B removeMime(MimeType mimeType) {
+        public MimeResolverBuilder removeMime(MimeType mimeType) {
 
             for (String extension : mimeType.getExtensions()) {
 
@@ -92,35 +88,18 @@ public class MimeResolver {
 
             }
 
-            return self();
-
-        }
-
-        protected abstract B self();
-
-        public abstract C build();
-
-    }
-
-    private static final class MimeResolverBuilderImpl
-        extends MimeResolverBuilder<MimeResolver, MimeResolverBuilderImpl> {
-
-        private MimeResolverBuilderImpl() {
-
-        }
-
-        protected MimeResolver.MimeResolverBuilderImpl self() {
-
             return this;
 
         }
 
-        public MimeResolver build() {
+
+        @Override
+        protected MimeResolver instantiate() {
 
             return new MimeResolver(this);
-
+            
         }
-
+        
     }
-
+    
 }

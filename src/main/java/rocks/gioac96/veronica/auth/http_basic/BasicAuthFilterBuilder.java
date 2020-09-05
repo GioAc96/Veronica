@@ -7,14 +7,14 @@ import rocks.gioac96.veronica.auth.CredentialsChecker;
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.core.PreFilter;
 import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.CreationException;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
 
 /**
  * Http basic authentication filter builder.
  */
 @SuppressWarnings("checkstyle:MissingJavadocMethod")
-public class BasicAuthFilterBuilder extends Builder<PreFilter> {
+public class BasicAuthFilterBuilder extends Builder<PreFilter> implements BuildsMultipleInstances {
 
     private CredentialsChecker credentialsChecker;
     private String realm;
@@ -46,13 +46,14 @@ public class BasicAuthFilterBuilder extends Builder<PreFilter> {
     }
 
     @Override
+    protected boolean isValid() {
+
+        return isNotNull(credentialsChecker);
+
+    }
+
+    @Override
     protected PreFilter instantiate() {
-
-        if (credentialsChecker == null) {
-
-            throw new CreationException("credentials checker not set");
-
-        }
 
         return request -> {
 
