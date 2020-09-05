@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica;
+package rocks.gioac96.veronica.core;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
@@ -9,17 +9,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
-import rocks.gioac96.veronica.core.ExceptionHandler;
-import rocks.gioac96.veronica.core.ExchangeParser;
-import rocks.gioac96.veronica.core.Request;
-import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.Router;
-import rocks.gioac96.veronica.core.Server;
-import rocks.gioac96.veronica.core.SetCookieHeader;
 import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.ArraySet;
@@ -30,40 +22,30 @@ import rocks.gioac96.veronica.util.ArraySet;
 @SuppressWarnings("unused")
 public final class Application {
 
-    private final ThreadPoolExecutor threadPool;
-    private final Set<HttpServer> httpServers;
-    @Getter
-    @Setter
-    @NonNull
-    private Router router;
-    @Getter
-    @Setter
-    @NonNull
-    private ExchangeParser exchangeParser;
-    @Getter
-    @Setter
-    @NonNull
-    private ExceptionHandler exceptionHandler;
+    protected final ThreadPoolExecutor threadPool;
+
+    protected final Set<HttpServer> httpServers;
+
+    protected final Router router;
+
+    protected final ExchangeParser exchangeParser;
+
+    protected final ExceptionHandler exceptionHandler;
 
     protected Application(
-        @NonNull Set<Server> servers,
-        @NonNull Router router,
-        @NonNull ExchangeParser exchangeParser,
-        @NonNull ExceptionHandler exceptionHandler,
-        @NonNull ThreadPoolExecutor threadPool
+        ApplicationBuilder b
     ) throws IOException {
 
-        this.threadPool = threadPool;
+        this.router = b.router;
+        this.exchangeParser = b.exchangeParser;
+        this.exceptionHandler = b.exceptionHandler;
 
-        this.router = router;
-        this.router.setThreadPool(threadPool);
-
-        this.exceptionHandler = exceptionHandler;
-        this.exchangeParser = exchangeParser;
+        this.threadPool = b.threadPool;
+        this.router.useThreadPool(threadPool);
 
         this.httpServers = new ArraySet<>();
 
-        for (Server server : servers) {
+        for (Server server : b.servers) {
 
             this.httpServers.add(server.toHttpServer(this::handleExchange));
 
@@ -78,7 +60,12 @@ public final class Application {
      */
     public static ApplicationBuilder builder() {
 
-        return new ApplicationBuilder();
+        class ApplicationBuilderImpl extends ApplicationBuilder implements BuildsMultipleInstances {
+
+        }
+
+        return new ApplicationBuilderImpl();
+
 
     }
 
@@ -164,7 +151,7 @@ public final class Application {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
-    public static class ApplicationBuilder extends Builder<Application> {
+    public abstract static class ApplicationBuilder extends Builder<Application> {
 
         private final Set<Server> servers = new HashSet<>();
 
@@ -242,10 +229,22 @@ public final class Application {
 
         }
 
-        public ApplicationBuilder threadPool(@NonNull ThreadPoolExecutor threadPool) {
+        public ApplicationBuilder threadPool(ThreadPoolExecutor threadPool) {
 
             this.threadPool = threadPool;
             return this;
+
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            return isNotNull(
+                servers,
+                router,
+                exchangeParser,
+                exceptionHandler
+            );
 
         }
 
@@ -254,13 +253,7 @@ public final class Application {
 
             try {
 
-                return new Application(
-                    servers,
-                    router,
-                    exchangeParser,
-                    exceptionHandler,
-                    threadPool
-                );
+                return new Application(this);
 
             } catch (IOException e) {
 
