@@ -3,7 +3,6 @@ package rocks.gioac96.veronica.core;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -162,7 +161,6 @@ public final class Pipeline {
 
     }
 
-    @Generated
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
     public static class PipelineBuilder extends Builder<Pipeline> {
 
