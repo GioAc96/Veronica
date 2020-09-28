@@ -1,28 +1,21 @@
 plugins {
     id 'java'
-    id "io.freefair.lombok" version "4.1.6"
-    id 'jacoco'
-    id 'checkstyle'
-    id("maven-publish")
+    id 'maven'
+    id 'io.freefair.lombok' version '4.1.6'
 }
 
-group 'rocks.gioac96'
+group 'com.github.GioAc96'
 version '0.12-preview'
-
-sourceCompatibility = 1.9
 
 repositories {
     mavenCentral()
 }
 
-jacocoTestReport {
-
-    reports {
-        xml.enabled false
-        csv.enabled false
-        html.enabled true
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
     }
-
 }
 
 dependencies {
@@ -34,51 +27,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0-M1'
 
-
     implementation("org.mockito:mockito-core:3.5.7")
     implementation("org.mockito:mockito-inline:3.5.7")
 
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-}
-
-checkstyle {
-    toolVersion "8.25"
-    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
-    ignoreFailures = false
-    maxWarnings = 0
-    checkstyleTest.enabled = false
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives sourcesJar
-}
-
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/GioAc96/Veronica")
-            credentials {
-                username = "GioAc96"
-                password = new File('GH_TOKEN').getText()
-            }
-        }
-    }
-    publications {
-        gpr(MavenPublication) {
-            from(components.java)
-        }
-    }
 }

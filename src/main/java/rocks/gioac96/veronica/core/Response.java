@@ -3,7 +3,6 @@ package rocks.gioac96.veronica.core;
 import com.sun.net.httpserver.Headers;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -178,7 +177,9 @@ public class Response {
 
             } else {
 
-                this.headers.put(key, List.of(value));
+                this.headers.put(key, new ArrayList<String>(){{
+                    add(value);
+                }});
 
             }
 
@@ -195,7 +196,7 @@ public class Response {
 
             } else {
 
-                this.headers.put(key, new ArrayList<>() {{
+                this.headers.put(key, new ArrayList<String>() {{
                     addAll(values);
                 }});
 
