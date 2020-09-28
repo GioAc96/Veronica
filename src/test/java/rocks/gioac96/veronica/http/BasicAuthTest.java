@@ -32,7 +32,7 @@ class BasicAuthTest {
         "user, password",
         "user, p:assword",
         "aladin, letmein",
-        "WeiRdUsernamenciajsoifjaio183)(!£$/£(£!(/$#òàè\uD83D\uDC09, WeirderPassword+è+-.-:301934829\uD83D\uDC19",
+        "WeiRdUsernamenciajsoifjaio183)(!£$/£(£!(/$#òàè, WeirderPassword+è+-.-:301934829",
     })
     public void testValidCredentials(String user, String password) throws BasicAuth.BasicAuthCredentialsParsingException {
 
