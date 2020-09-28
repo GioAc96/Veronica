@@ -58,7 +58,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
     @Override
     public Iterator<T> iterator() {
 
-        return new Iterator<>() {
+        return new Iterator<T>() {
 
             final Iterator<Entry> entriesIterator = entriesIterator();
 

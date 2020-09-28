@@ -23,6 +23,7 @@ class FilePermissionsManagerTest {
             Field rootTreesField = FilePermissionsManager.class.getDeclaredField("rootTrees");
             rootTreesField.setAccessible(true);
 
+            @SuppressWarnings("unchecked")
             Set<PermissionTree<String>> permissionTrees = (Set<PermissionTree<String>>) rootTreesField.get(filePermissionsManager);
 
             assertionsOnTree.accept(permissionTrees);
@@ -41,7 +42,7 @@ class FilePermissionsManagerTest {
         Path root = Paths.get("A:\\");
 
         FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
-            = FilePermissionsManager.<String>builder();
+            = FilePermissionsManager.builder();
 
         builder.permissions(root, "A");
 
@@ -58,7 +59,7 @@ class FilePermissionsManagerTest {
         Path root = Paths.get("A:\\");
 
         FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
-            = FilePermissionsManager.<String>builder();
+            = FilePermissionsManager.builder();
 
         builder.permissions(root, "A");
         builder.permissions(root, "B");
