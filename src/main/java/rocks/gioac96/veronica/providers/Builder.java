@@ -1,6 +1,8 @@
 package rocks.gioac96.veronica.providers;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -9,7 +11,24 @@ import java.util.Objects;
  */
 public abstract class Builder<T> implements Provider<T>, BuildsInstances {
 
-    private static Object instance = null;
+    private static final class InstanceStore {
+
+        private static final Map<Class<?>, Object> instancesMap = new HashMap<>();
+
+        public static final <T> void store(Class<T> builderClass, Object instance) {
+
+            instancesMap.put(builderClass, instance);
+
+        }
+
+        public static final <T> Object retrieve(Class<T> builderClass) {
+
+            return instancesMap.get(builderClass);
+
+        }
+
+    }
+
     private static boolean isConfigured = false;
 
     protected abstract T instantiate();
@@ -43,35 +62,44 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
      */
     public final T build() {
 
-        if (instance == null) {
 
-            if (!isConfigured) {
+        if (!isConfigured) {
 
-                configure();
+            configure();
 
-                if (! isValid()) {
+            if (! isValid()) {
 
-                    throw new CreationException();
-
-                }
-
-                isConfigured = true;
+                throw new CreationException();
 
             }
 
-            if (buildsMultipleInstances()) {
+            isConfigured = true;
 
-                return instantiate();
+        }
+
+        if (buildsMultipleInstances()) {
+
+            return instantiate();
+
+        } else {
+
+            T storedInstance = (T)InstanceStore.retrieve(this.getClass());
+
+            if (storedInstance == null) {
+
+                T newInstance = instantiate();
+
+                InstanceStore.store(this.getClass(), newInstance);
+
+                return newInstance;
 
             } else {
 
-                instance = instantiate();
+                return storedInstance;
 
             }
 
         }
-
-        return (T) instance;
 
     }
 

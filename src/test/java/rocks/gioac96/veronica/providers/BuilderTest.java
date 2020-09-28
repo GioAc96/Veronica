@@ -6,40 +6,31 @@ import org.junit.jupiter.api.Test;
 
 class BuilderTest {
 
+
+    private static abstract class GreetingBuilder extends Builder<String> {
+
+        @Override
+        protected String instantiate() {
+            return new String("Ciao");
+        }
+
+    }
+
     @Test
     void testSingleInstance() {
 
-        class BuilderA extends Builder<String> implements BuildsSingleInstance {
+        class SingleInstanceBuilder extends GreetingBuilder implements BuildsSingleInstance{}
 
-            @Override
-            protected String instantiate() {
-
-                return new String("Ciao");
-
-            }
-
-        }
-
-        assertSame(new BuilderA().build(), new BuilderA().build());
+        assertSame(new SingleInstanceBuilder().build(), new SingleInstanceBuilder().build());
 
     }
 
     @Test
     void testMultipleInstances() {
 
-        class BuilderA extends Builder<String> implements BuildsMultipleInstances {
+        class MultipleInstancesBuilder extends GreetingBuilder implements BuildsMultipleInstances{}
 
-            @Override
-            protected String instantiate() {
-
-                return new String("Ciao");
-
-            }
-
-        }
-
-        assertNotSame(new BuilderA().build(), new BuilderA().build());
-        assertEquals(new BuilderA().build(), new BuilderA().build());
+        assertNotSame(new MultipleInstancesBuilder().build(), new MultipleInstancesBuilder().build());
 
     }
 
