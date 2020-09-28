@@ -20,9 +20,3 @@ bin
 .project
 .settings
 
-**/node_modules
-
-**.css.map
-
-**/.sass-cache
-GH_TOKEN

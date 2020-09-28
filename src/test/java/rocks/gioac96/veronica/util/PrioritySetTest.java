@@ -12,7 +12,7 @@ class PrioritySetTest {
 
         PrioritySet<String> a = new PrioritySet<>();
 
-        PrioritySet<String> b = new PrioritySet<>() {{
+        PrioritySet<String> b = new PrioritySet<String>() {{
             add("test");
             add("ciao");
         }};
