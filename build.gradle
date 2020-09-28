@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.github.GioAc96'
-version '0.12-preview'
+version '0.13-preview'
 
 repositories {
     mavenCentral()
