@@ -44,6 +44,14 @@ public class Redirect extends Response.ResponseBuilder implements BuildsMultiple
     }
 
     @Override
+    protected boolean isValid() {
+
+        return super.isValid() &&
+            location != null;
+
+    }
+
+    @Override
     protected void configure() {
 
         if (permanent) {
