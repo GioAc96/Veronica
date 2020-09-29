@@ -2,8 +2,10 @@ package rocks.gioac96.veronica.providers;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Basic builder class.
@@ -29,7 +31,19 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
 
     }
 
-    private static boolean isConfigured = false;
+    private static final Set<Class<?>> configuredBuilders = new HashSet();
+
+    private boolean isConfigured() {
+
+        return configuredBuilders.contains(this.getClass());
+
+    }
+
+    private void configured() {
+
+        configuredBuilders.add(this.getClass());
+
+    }
 
     protected abstract T instantiate();
 
@@ -62,8 +76,7 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
      */
     public final T build() {
 
-
-        if (!isConfigured) {
+        if (!isConfigured()) {
 
             configure();
 
@@ -73,7 +86,7 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
 
             }
 
-            isConfigured = true;
+            configured();
 
         }
 
