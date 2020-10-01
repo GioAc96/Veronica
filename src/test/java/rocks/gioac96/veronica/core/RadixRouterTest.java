@@ -2,29 +2,16 @@ package rocks.gioac96.veronica.core;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 class RadixRouterTest {
 
     private RadixRouter radixRouter;
-
-    private static final class PathMethodTuple{
-
-        private final String path;
-        private final HttpMethod[] httpMethods;
-
-        public PathMethodTuple(String path, HttpMethod... httpMethods) {
-            this.path = path;
-            this.httpMethods = httpMethods;
-        }
-    }
 
     @BeforeEach
     void setUp() {
@@ -33,121 +20,286 @@ class RadixRouterTest {
 
     }
 
+    private Request mockRequest(HttpMethod httpMethod, String path) {
+
+        Request mock = Mockito.mock(Request.class);
+
+        when(mock.getHttpMethod()).thenReturn(httpMethod);
+        when(mock.getPath()).thenReturn(path);
+
+        return mock;
+
+    }
 
     @Test
     void testRootNoMethod() {
 
-        String value = "val";
+        RadixRouter.Route r1 = new RadixRouter.Route("r1");
 
-        radixRouter.register("", value);
+        radixRouter.register("", r1);
 
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->
-            assertSame(value, radixRouter.getValue("", httpMethod))
-        );
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->
-            assertSame(value, radixRouter.getValue("/", httpMethod))
-        );
+        String[] invalidPaths = new String[]{
+
+            "test",
+            "/test",
+            "/very/deep/path",
+            "very/deep/path",
+
+        };
+
+        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->{
+
+            assertSame(r1, radixRouter.route(mockRequest(httpMethod, "")));
+            assertSame(r1, radixRouter.route(mockRequest(httpMethod, "/")));
+
+            Arrays.stream(invalidPaths).forEach(invalidPath ->
+                assertNull(radixRouter.route(mockRequest(httpMethod, invalidPath)))
+            );
+
+        });
 
     }
 
     @Test
     void testRootNoMethodSlash() {
 
-        String value = "val";
+        RadixRouter.Route r1 = new RadixRouter.Route("r1");
 
-        radixRouter.register("/", value);
+        radixRouter.register("/", r1);
 
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->
-            assertSame(value, radixRouter.getValue("", httpMethod))
-        );
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->
-            assertSame(value, radixRouter.getValue("/", httpMethod))
-        );
+        String[] invalidPaths = new String[]{
+
+            "test",
+            "/test",
+            "/very/deep/path",
+            "very/deep/path",
+
+        };
+
+        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->{
+
+            assertSame(r1, radixRouter.route(mockRequest(httpMethod, "")));
+            assertSame(r1, radixRouter.route(mockRequest(httpMethod, "/")));
+
+            Arrays.stream(invalidPaths).forEach(invalidPath ->
+                assertNull(radixRouter.route(mockRequest(httpMethod, invalidPath)))
+            );
+
+        });
 
     }
 
     @Test
     void testRootMethod() {
 
-        String value = "val";
+        RadixRouter.Route r1 = new RadixRouter.Route("r1");
 
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod -> {
+        String[] invalidPaths = new String[]{
 
-                setUp();
+            "test",
+            "/test",
+            "/very/deep/path",
+            "very/deep/path",
 
-                radixRouter.register("", httpMethod, value);
+        };
 
-                Arrays.stream(HttpMethod.values()).filter(httpMethod1 -> httpMethod != httpMethod1).forEach(httpMethod1 -> {
+        Arrays.stream(HttpMethod.values()).forEach(validMethod ->{
 
-                    assertNull(radixRouter.getValue("", httpMethod1));
-                    assertNull(radixRouter.getValue("/", httpMethod1));
+            setUp();
+
+            Request request = mockRequest(validMethod, "");
+            Request requestSlash = mockRequest(validMethod, request.getPath() + "/");
+
+            radixRouter.register(validMethod, "", r1);
+
+            assertSame(r1, radixRouter.route(request));
+            assertSame(r1, radixRouter.route(requestSlash));
+
+            Arrays.stream(invalidPaths).forEach(invalidPath ->
+                assertNull(radixRouter.route(mockRequest(validMethod, invalidPath)))
+            );
+
+            Arrays.stream(HttpMethod.values())
+                .filter(invalidMethod -> invalidMethod != validMethod)
+                .forEach(invalidMethod -> {
+
+                    Request requestInvalidMethod = mockRequest(invalidMethod, "");
+                    Request requestSlashInvalidMethod = mockRequest(invalidMethod, request.getPath() + "/");
+
+                    assertNull(radixRouter.route(requestInvalidMethod));
+                    assertNull(radixRouter.route(requestSlashInvalidMethod));
+
+                    Arrays.stream(invalidPaths).forEach(invalidPath ->
+                        assertNull(radixRouter.route(mockRequest(invalidMethod, invalidPath)))
+                    );
 
                 });
 
-                assertSame(value, radixRouter.getValue("", httpMethod));
-                assertSame(value, radixRouter.getValue("/", httpMethod));
-
-            });
-
-    }
-
-    @Test
-    void testLeafNoMethod() {
-
-        String value = "thisisthevalue";
-
-        radixRouter.register("this/is/a/path", value);
-
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod -> assertSame(value, radixRouter.getValue("/this/is/a/path", httpMethod)));
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod -> assertSame(value, radixRouter.getValue("this/is/a/path", httpMethod)));
-
-    }
-    @Test
-    void testLeafNoMethodSlash() {
-
-        String value = "thisisthevalue";
-
-        radixRouter.register("/this/is/a/path", value);
-
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod -> assertSame(value, radixRouter.getValue("/this/is/a/path", httpMethod)));
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod -> assertSame(value, radixRouter.getValue("this/is/a/path", httpMethod)));
-
-    }
-
-    @Test
-    void testMultipleNoMethod() {
-
-        Map<String, String> values = new HashMap<>(){{
-            put("/", "root");
-            put("/child", "child 1");
-            put("child/2", "child 2");
-            put("/child/3", "child 3");
-            put("child/another/deep/path", "child 4");
-        }};
-
-        values.forEach((path, value) -> radixRouter.register(path, value));
-
-        values.forEach((path, value) -> {
-
-            Arrays.stream(HttpMethod.values()).forEach(httpMethod -> {
-
-                assertSame(value, radixRouter.getValue(path, httpMethod));
-
-            });
-
         });
 
-        Arrays.stream(new String[]{
+    }
+
+    @Test
+    void testRootMethodSlash() {
+
+        RadixRouter.Route r1 = new RadixRouter.Route("r1");
+
+        String[] invalidPaths = new String[]{
+
             "test",
-            "non-existent",
-            "random/path",
-            "/childd",
-            "/child/azz"
-        }).forEach(path -> {
+            "/test",
+            "/very/deep/path",
+            "very/deep/path",
 
-            Arrays.stream(HttpMethod.values()).forEach(httpMethod -> {
+        };
 
-                assertNull(radixRouter.getValue(path, httpMethod));
+        Arrays.stream(HttpMethod.values()).forEach(validMethod ->{
+
+            setUp();
+
+            Request request = mockRequest(validMethod, "");
+            Request requestSlash = mockRequest(validMethod, request.getPath() + "/");
+
+            radixRouter.register(validMethod, "/", r1);
+
+            assertSame(r1, radixRouter.route(request));
+            assertSame(r1, radixRouter.route(requestSlash));
+
+            Arrays.stream(invalidPaths).forEach(invalidPath ->
+                assertNull(radixRouter.route(mockRequest(validMethod, invalidPath)))
+            );
+
+            Arrays.stream(HttpMethod.values())
+                .filter(invalidMethod -> invalidMethod != validMethod)
+                .forEach(invalidMethod -> {
+
+                    Request requestInvalidMethod = mockRequest(invalidMethod, "");
+                    Request requestSlashInvalidMethod = mockRequest(invalidMethod, request.getPath() + "/");
+
+                    assertNull(radixRouter.route(requestInvalidMethod));
+                    assertNull(radixRouter.route(requestSlashInvalidMethod));
+
+                    Arrays.stream(invalidPaths).forEach(invalidPath ->
+                        assertNull(radixRouter.route(mockRequest(invalidMethod, invalidPath)))
+                    );
+
+                });
+
+        });
+
+    }
+
+    @Test
+    void testRootStarNoMethod() {
+
+        RadixRouter.Route r1 = new RadixRouter.Route("r1");
+
+        String[] randomPaths = new String[]{
+
+            "",
+            "/",
+            "test",
+            "/test",
+            "/very/deep/path",
+            "very/deep/path",
+
+        };
+
+        radixRouter.register("*", r1);
+
+        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->{
+
+            Arrays.stream(randomPaths).forEach(path ->
+                assertSame(r1, radixRouter.route(mockRequest(httpMethod, path)))
+            );
+
+        });
+
+    }
+
+    @Test
+    void testRootStarNoMethodSlash() {
+
+        RadixRouter.Route r1 = new RadixRouter.Route("r1");
+
+        String[] randomPaths = new String[]{
+
+            "",
+            "/",
+            "test",
+            "/test",
+            "/very/deep/path",
+            "very/deep/path",
+
+        };
+
+        radixRouter.register("/*", r1);
+
+        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->{
+
+            Arrays.stream(randomPaths).forEach(path ->
+                assertSame(r1, radixRouter.route(mockRequest(httpMethod, path)))
+            );
+
+        });
+
+    }
+
+    @Test
+    void testStarNoMethod() {
+
+        RadixRouter.Route r1 = new RadixRouter.Route("r1");
+
+        radixRouter.register("/this/path/is/valid/*", r1);
+
+        String[] validPaths = new String[]{
+
+            "/this/path/is/valid",
+            "this/path/is/valid",
+            "/this/path/is/valid/and/this/one/too",
+            "this/path/is/valid/and/this/one/too",
+            "/this/path/is/valid/samehere",
+            "this/path/is/valid/samehere",
+
+        };
+        String[] invalidPaths = new String[]{
+
+            "/this",
+            "/this/path",
+            "/this/path/is",
+            "/this/path/is/vali",
+            "/other/path",
+            "/other",
+            "/other/path/is/valid",
+            "/other/path/is/valid/and/this/one/too",
+            "/other/path/is/valid/samehere",
+            "this",
+            "this/path",
+            "this/path/is",
+            "this/path/is/vali",
+            "other/path",
+            "other",
+            "other/path/is/valid",
+            "other/path/is/valid/and/this/one/too",
+            "other/path/is/valid/samehere",
+
+        };
+
+        Arrays.stream(validPaths).forEachOrdered(validPath -> {
+
+            Arrays.stream(HttpMethod.values()).forEachOrdered(httpMethod -> {
+
+                assertSame(r1, radixRouter.route(mockRequest(httpMethod, validPath)));
+
+            });
+
+        });
+
+        Arrays.stream(invalidPaths).forEachOrdered(invalidPath -> {
+
+            Arrays.stream(HttpMethod.values()).forEachOrdered(httpMethod -> {
+
+                assertNull(radixRouter.route(mockRequest(httpMethod, invalidPath)));
 
             });
 
@@ -155,50 +307,148 @@ class RadixRouterTest {
 
     }
     @Test
-    void testMultipleWithMethod() {
+    void testStarMethod() {
 
-        Map<PathMethodTuple, String> values = new LinkedHashMap<>(){{
-            put(new PathMethodTuple("/", HttpMethod.GET), "v1");
-            put(new PathMethodTuple("", HttpMethod.POST, HttpMethod.DELETE), "v2");
-            put(new PathMethodTuple("/child", HttpMethod.HEAD), "v3");
-            put(new PathMethodTuple("child", HttpMethod.DELETE), "v4");
-            put(new PathMethodTuple("this/path/is/really/deep", HttpMethod.DELETE, HttpMethod.PUT, HttpMethod.TRACE), "v5");
-            put(new PathMethodTuple("/this/path/is/really/deep", HttpMethod.CONNECT), "v6");
-        }};
+        RadixRouter.Route r1 = new RadixRouter.Route("r1");
 
-        values
-            .forEach((pathMethodTuple, value) -> {
+        String[] validPaths = new String[]{
 
-                radixRouter.register(pathMethodTuple.path, Arrays.asList(pathMethodTuple.httpMethods), value);
+            "/this/path/is/valid",
+            "this/path/is/valid",
+            "/this/path/is/valid/and/this/one/too",
+            "this/path/is/valid/and/this/one/too",
+            "/this/path/is/valid/samehere",
+            "this/path/is/valid/samehere",
+
+        };
+        String[] invalidPaths = new String[]{
+
+            "/this",
+            "/this/path",
+            "/this/path/is",
+            "/this/path/is/vali",
+            "/other/path",
+            "/other",
+            "/other/path/is/valid",
+            "/other/path/is/valid/and/this/one/too",
+            "/other/path/is/valid/samehere",
+            "this",
+            "this/path",
+            "this/path/is",
+            "this/path/is/vali",
+            "other/path",
+            "other",
+            "other/path/is/valid",
+            "other/path/is/valid/and/this/one/too",
+            "other/path/is/valid/samehere",
+
+        };
+
+        Arrays.stream(HttpMethod.values()).forEachOrdered(validMethod -> {
+
+            setUp();
+
+            radixRouter.register(validMethod, "/this/path/is/valid/*", r1);
+
+            Arrays.stream(validPaths).forEachOrdered(validPath -> {
+
+                assertSame(r1, radixRouter.route(mockRequest(validMethod, validPath)));
+
+                Arrays.stream(HttpMethod.values())
+                    .filter(invalidMethod -> invalidMethod != validMethod)
+                    .forEachOrdered(invalidMethod -> {
+
+                        assertNull(radixRouter.route(mockRequest(invalidMethod, validPath)));
+
+                });
 
             });
 
-        values.forEach((pathMethodTuple, value) -> {
+            Arrays.stream(invalidPaths).forEachOrdered(invalidPath -> {
 
-            Arrays.stream(pathMethodTuple.httpMethods).forEach(httpMethod -> {
+                Arrays.stream(HttpMethod.values())
+                    .forEachOrdered(method -> {
 
-                assertSame(value, radixRouter.getValue(pathMethodTuple.path, httpMethod));
+                        assertNull(radixRouter.route(mockRequest(method, invalidPath)));
+
+                    });
 
             });
 
         });
 
-        Arrays.stream(new String[]{
-            "test",
-            "non-existent",
-            "random/path",
-            "/childd",
-            "/child/azz",
-            "this/path/is/really/deep/and/even/deeper"
-        }).forEach(path -> {
 
-            Arrays.stream(HttpMethod.values()).forEach(httpMethod -> {
+    }
 
-                assertNull(radixRouter.getValue(path, httpMethod));
+    @Test
+    void testStarNotOverrides() {
 
-            });
+        RadixRouter.Route r1 = new RadixRouter.Route("r1");
+        RadixRouter.Route r2 = new RadixRouter.Route("r2");
+        RadixRouter.Route r3 = new RadixRouter.Route("r3");
+
+        radixRouter.register("/valid/route1", r1);
+        radixRouter.register("/valid/*", r2);
+        radixRouter.register("/valid/route3", r3);
+
+        Arrays.stream(HttpMethod.values()).forEachOrdered(httpMethod -> {
+
+            assertSame(r1, radixRouter.route(mockRequest(httpMethod, "/valid/route1")));
+
+            assertSame(r2, radixRouter.route(mockRequest(httpMethod, "/valid/route2")));
+            assertSame(r2, radixRouter.route(mockRequest(httpMethod, "/valid/random")));
+            assertSame(r2, radixRouter.route(mockRequest(httpMethod, "/valid/random/deep")));
+            assertSame(r2, radixRouter.route(mockRequest(httpMethod, "/valid/route1/deep")));
+
+            assertSame(r3, radixRouter.route(mockRequest(httpMethod, "/valid/route3")));
+
+            assertNull(radixRouter.route(mockRequest(httpMethod, "/")));
+            assertNull(radixRouter.route(mockRequest(httpMethod, "/invalid")));
+            assertNull(radixRouter.route(mockRequest(httpMethod, "/invalid/route1")));
+            assertNull(radixRouter.route(mockRequest(httpMethod, "/invalid/route2")));
+            assertNull(radixRouter.route(mockRequest(httpMethod, "/invalid/route3")));
 
         });
+
+    }
+
+    @Test
+    void testCondition() {
+
+        RadixRouter.Route secureRoute = new RadixRouter.Route("secure");
+        RadixRouter.Route nonSecureRoute = new RadixRouter.Route("nonsecure");
+
+        radixRouter.register("/home", Request::isSecure, secureRoute);
+        radixRouter.register("/home", request -> ! request.isSecure(), nonSecureRoute);
+
+        Request nonSecure = mockRequest(HttpMethod.GET, "/home");
+        when(nonSecure.isSecure()).thenReturn(false);
+
+        Request secure = mockRequest(HttpMethod.GET, "/home");
+        when(secure.isSecure()).thenReturn(true);
+
+        assertSame(secureRoute, radixRouter.route(secure));
+        assertSame(nonSecureRoute, radixRouter.route(nonSecure));
+
+    }
+
+    @Test
+    void testStarCondition() {
+
+        RadixRouter.Route secureRoute = new RadixRouter.Route("secure");
+        RadixRouter.Route nonSecureRoute = new RadixRouter.Route("nonsecure");
+
+        radixRouter.register("/home/*", Request::isSecure, secureRoute);
+        radixRouter.register("/home/*", request -> ! request.isSecure(), nonSecureRoute);
+
+        Request nonSecure = mockRequest(HttpMethod.GET, "/home");
+        when(nonSecure.isSecure()).thenReturn(false);
+
+        Request secure = mockRequest(HttpMethod.GET, "/home");
+        when(secure.isSecure()).thenReturn(true);
+
+        assertSame(secureRoute, radixRouter.route(secure));
+        assertSame(nonSecureRoute, radixRouter.route(nonSecure));
 
     }
 
