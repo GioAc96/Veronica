@@ -24,11 +24,25 @@ public class RadixRouter {
 
     }
 
+    @Getter
+    @AllArgsConstructor
+    private final class VariablePathPartMatcher {
+
+        private final Predicate<String> pathPartCondition;
+
+        private final String name;
+
+    }
+
     private final class RouteTree {
 
         private final List<Tuple<Predicate<Request>, Route>> routes = new ArrayList<>();
-        private final Map<String, RouteTree> children = new HashMap<>();
+
         private final List<Tuple<Predicate<Request>, Route>> starRoutes = new ArrayList<>();
+
+        private final Map<String, RouteTree> children = new HashMap<>();
+
+        private final List<Tuple<VariablePathPartMatcher, RouteTree>> variablePathPartChildren = new ArrayList<>();
 
     }
 
@@ -52,14 +66,34 @@ public class RadixRouter {
 
     private RouteTree createChild(
         RouteTree parent,
-        String childPathPart
+        String pathPatternPart
     ) {
 
         RouteTree child = new RouteTree();
 
         child.starRoutes.addAll(parent.starRoutes);
 
-        parent.children.put(childPathPart, child);
+        if (
+            pathPatternPart.charAt(0) == '{'
+                && pathPatternPart.charAt(pathPatternPart.length() -1) == '}'
+        ) {
+
+            parent.variablePathPartChildren.add(
+                new Tuple<>(
+                    new VariablePathPartMatcher(
+                        pathPart -> true,
+                        pathPatternPart.substring(1, pathPatternPart.length() - 1)
+                    ),
+                    child
+                )
+            );
+
+        } else {
+
+            parent.children.put(pathPatternPart, child);
+
+        }
+
 
         return child;
 
@@ -183,10 +217,12 @@ public class RadixRouter {
 
                         propagateNewStarPath(pointer, condition, route);
 
-                    }
+                    } else {
 
-                    child = createChild(pointer, pathPatternPart);
-                    pointer = child;
+                        child = createChild(pointer, pathPatternPart);
+                        pointer = child;
+
+                    }
 
                 }
 
@@ -197,8 +233,6 @@ public class RadixRouter {
                 pointer = child;
 
             }
-
-            //TODO add variable path parts iteration
 
         }
 
@@ -225,7 +259,7 @@ public class RadixRouter {
 
     }
 
-    private Route getFirstRouteMatch(
+    private Route getFirstMatchingRoute(
         Request request,
         Collection<Tuple<Predicate<Request>, Route>> possibleRoutes
     ) {
@@ -258,14 +292,33 @@ public class RadixRouter {
 
         String[] pathParts = getPathParts(request.getPath());
 
+        pathParts:
         for (String pathPart : pathParts) {
 
             RouteTree child = pointer.children.get(pathPart);
 
             if (child == null) {
 
+                // Checking for variable parts children
+                for (Tuple<VariablePathPartMatcher, RouteTree> variablePathRoute : pointer.variablePathPartChildren) {
+
+                    if (variablePathRoute.getFirst().pathPartCondition.test(pathPart)) {
+
+                        request.getVariablePathParts().put(
+                            variablePathRoute.getFirst().name,
+                            pathPart
+                        );
+
+                        pointer = variablePathRoute.getSecond();
+
+                        continue pathParts;
+
+                    }
+
+                }
+
                 // Child not found
-                return getFirstRouteMatch(
+                return getFirstMatchingRoute(
                     request,
                     pointer.starRoutes
                 );
@@ -278,11 +331,11 @@ public class RadixRouter {
 
         }
 
-        Route route = getFirstRouteMatch(request, pointer.routes);
+        Route route = getFirstMatchingRoute(request, pointer.routes);
 
         if (route == null) {
 
-            return getFirstRouteMatch(request, pointer.starRoutes);
+            return getFirstMatchingRoute(request, pointer.starRoutes);
 
         }
 

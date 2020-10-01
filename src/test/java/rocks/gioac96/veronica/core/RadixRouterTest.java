@@ -1,10 +1,13 @@
 package rocks.gioac96.veronica.core;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -449,6 +452,79 @@ class RadixRouterTest {
 
         assertSame(secureRoute, radixRouter.route(secure));
         assertSame(nonSecureRoute, radixRouter.route(nonSecure));
+
+    }
+
+    @Test
+    void testVariablePathPart() {
+
+        RadixRouter.Route r1 = new RadixRouter.Route("r1");
+
+        radixRouter.register("{devName}", r1);
+
+        Request mockRequest = mockRequest(HttpMethod.GET, "/giorgio");
+
+        when(mockRequest.getVariablePathParts()).thenReturn(new HashMap<>());
+
+        assertSame(r1, radixRouter.route(mockRequest));
+        assertEquals("giorgio", mockRequest.getVariablePathParts().get("devName"));
+
+    }
+
+    @Test
+    void testVariablePathPartInterference() {
+
+        RadixRouter.Route r1 = new RadixRouter.Route("r1");
+        RadixRouter.Route r2 = new RadixRouter.Route("r2");
+
+        radixRouter.register("root/{devName}", r1);
+        radixRouter.register("root/r2", r2);
+
+        Request req1 = mockRequest(HttpMethod.GET, "/root/giorgio");
+        Request req2 = mockRequest(HttpMethod.GET, "/root/r2");
+
+        when(req1.getVariablePathParts()).thenReturn(new HashMap<>());
+        when(req2.getVariablePathParts()).thenReturn(new HashMap<>());
+
+        assertSame(r1, radixRouter.route(req1));
+        assertEquals("giorgio", req1.getVariablePathParts().get("devName"));
+
+        assertSame(r2, radixRouter.route(req2));
+        assertEquals(0, req2.getVariablePathParts().size());
+
+    }
+
+    @Test
+    void testMultipleVariablePathParts() {
+
+        RadixRouter.Route r1 = new RadixRouter.Route("r1");
+
+        radixRouter.register("{param1}/{param2}/{param3}", r1);
+
+        Request req1 = mockRequest(HttpMethod.GET, "/p1/p2/p3");
+        when(req1.getVariablePathParts()).thenReturn(new HashMap<>());
+
+        Request req2 = mockRequest(HttpMethod.GET, "/var1/var2/var3");
+        when(req2.getVariablePathParts()).thenReturn(new HashMap<>());
+
+        Request req3 = mockRequest(HttpMethod.GET, "/veronica/gioac96/rocks");
+        when(req3.getVariablePathParts()).thenReturn(new HashMap<>());
+
+        assertSame(r1, radixRouter.route(req1));
+        assertSame(r1, radixRouter.route(req2));
+        assertSame(r1, radixRouter.route(req3));
+
+        assertEquals("p1", req1.getVariablePathParts().get("param1"));
+        assertEquals("p2", req1.getVariablePathParts().get("param2"));
+        assertEquals("p3", req1.getVariablePathParts().get("param3"));
+
+        assertEquals("var1", req2.getVariablePathParts().get("param1"));
+        assertEquals("var2", req2.getVariablePathParts().get("param2"));
+        assertEquals("var3", req2.getVariablePathParts().get("param3"));
+
+        assertEquals("veronica", req3.getVariablePathParts().get("param1"));
+        assertEquals("gioac96", req3.getVariablePathParts().get("param2"));
+        assertEquals("rocks", req3.getVariablePathParts().get("param3"));
 
     }
 

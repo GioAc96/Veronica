@@ -50,6 +50,9 @@ public class Request {
     @Getter(lazy = true)
     private final Map<String, String> cookie = lazyLoadCookie();
 
+    @Getter(lazy = true)
+    private final Map<String, String> variablePathParts = new HashMap<>();
+
     /**
      * Gets a query parameter's value.
      *
