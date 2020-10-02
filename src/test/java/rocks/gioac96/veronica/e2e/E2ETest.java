@@ -71,6 +71,7 @@ public abstract class E2ETest {
 
             sb.append("\n\tmethod: ").append(getHttpMethod());
             sb.append("\n\tpath: ").append(path);
+            sb.append("\n\tquery: ").append(query);
             sb.append("\n\tbody: ").append(getBody());
             sb.append("\n\tsecure: ").append(isSecure());
 
