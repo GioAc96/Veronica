@@ -45,10 +45,12 @@ public class Router {
     }
 
     private final Map<HttpMethod, RouteTree> methodRouteTrees;
+    private final RequestHandler defaultRequestHandler;
 
     public Router(RouterBuilder b) {
 
         this.methodRouteTrees = b.methodRouteTrees;
+        this.defaultRequestHandler = b.defaultRequestHandler;
 
     }
 
@@ -121,6 +123,24 @@ public class Router {
     }
 
     public RequestHandler route(
+        Request request
+    ) {
+
+        RequestHandler requestHandler = routeRequest(request);
+
+        if (requestHandler == null) {
+
+            return defaultRequestHandler;
+
+        } else {
+
+            return requestHandler;
+
+        }
+
+    }
+
+    public RequestHandler routeRequest(
         Request request
     ) {
 
