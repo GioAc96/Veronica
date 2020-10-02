@@ -31,7 +31,7 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
 
     }
 
-    private static final Set<Class<?>> configuredBuilders = new HashSet();
+    private static final Set<Class<?>> configuredBuilders = new HashSet<>();
 
     private boolean isConfigured() {
 

@@ -1,9 +1,7 @@
 package rocks.gioac96.veronica.common.request_matchers;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -20,12 +18,14 @@ public class FaviconTest {
 
     private Router router;
     private RequestHandler requestHandler = request -> null;
+    private RequestHandler defaultRequestHandler = request -> null;
 
     @BeforeEach
     void setUp() {
 
         router = Router.builder()
             .register(new Favicon().build(), requestHandler)
+            .defaultRequestHandler(defaultRequestHandler)
             .build();
 
     }
@@ -52,7 +52,7 @@ public class FaviconTest {
                 when(request.getHttpMethod()).thenReturn(httpMethod);
                 when(request.getPath()).thenReturn("/favicon.ico");
 
-                assertNull(router.route(request), "Should not match method " + httpMethod);
+                assertSame(defaultRequestHandler, router.route(request), "Should not match method " + httpMethod);
 
             }
         );
@@ -79,7 +79,7 @@ public class FaviconTest {
                 when(request.getHttpMethod()).thenReturn(HttpMethod.GET);
                 when(request.getPath()).thenReturn(path);
 
-                assertNull(router.route(request), "Should not match path " + path);
+                assertSame(defaultRequestHandler, router.route(request), "Should not match path " + path);
 
             }
         );
