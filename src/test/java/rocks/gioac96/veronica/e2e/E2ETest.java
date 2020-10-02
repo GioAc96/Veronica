@@ -6,20 +6,18 @@ import static org.mockito.Mockito.when;
 import java.net.URI;
 import java.util.Map;
 import java.util.function.Consumer;
-import lombok.ToString;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
-import rocks.gioac96.veronica.providers.BuildsSingleInstance;
 
 public abstract class E2ETest {
 
     protected static class MockRequestBuilder extends Request.RequestBuilder implements BuildsMultipleInstances {
 
         private String path = null;
+        private String query = null;
 
         public MockRequestBuilder path(String path) {
 
@@ -30,6 +28,30 @@ public abstract class E2ETest {
             when(uriMock.getPath()).thenReturn(path);
 
             uri(uriMock);
+
+            return this;
+
+        }
+
+        public MockRequestBuilder query(String query) {
+
+            this.query = query;
+
+            if (getUri() == null) {
+
+
+                URI uriMock = mock(URI.class);
+
+                when(uriMock.getQuery()).thenReturn(query);
+
+                uri(uriMock);
+
+
+            } else {
+
+                when(getUri().getQuery()).thenReturn(query);
+
+            }
 
             return this;
 
