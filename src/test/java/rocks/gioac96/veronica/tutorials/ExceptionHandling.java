@@ -1,19 +1,19 @@
 package rocks.gioac96.veronica.tutorials;
 
 import rocks.gioac96.veronica.core.Application;
+import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.core.ExceptionHandler;
 import rocks.gioac96.veronica.core.HttpStatus;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.Route;
-import rocks.gioac96.veronica.core.Router;
 
 public class ExceptionHandling {
 
     public static void main(String[] args) {
 
-        Route route = Route.builder()
-            .requestHandler(request -> {
+        Router router = Router.builder()
+            .defaultRequestHandler(request -> {
 
                 String numberQueryString = request.getQueryParam("number");
 
@@ -23,10 +23,6 @@ public class ExceptionHandling {
                     .body(String.valueOf(number * 2))
                     .build();
             })
-            .build();
-
-        Router router = Router.builder()
-            .defaultRoute(route)
             .build();
 
         ExceptionHandler exceptionHandler = new ExceptionHandler() {

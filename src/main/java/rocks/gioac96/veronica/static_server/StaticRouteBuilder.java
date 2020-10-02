@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.core.Pipeline;
-import rocks.gioac96.veronica.core.Request;
+import rocks.gioac96.veronica.core.RequestMatcher;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Route;
 import rocks.gioac96.veronica.providers.Builder;
@@ -15,7 +15,6 @@ import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
  * Builder for static server routes.
  * @param <P> the type of the file permissions
  */
-@SuppressWarnings("checkstyle:MissingJavadocMethod")
 public class StaticRouteBuilder<
         P
     > extends Builder<Route>
@@ -27,7 +26,7 @@ public class StaticRouteBuilder<
 
     private Path baseDir;
 
-    private String basePath;
+    private RequestMatcher requestMatcher = null;
 
     private Response accessDeniedResponse = CommonResponses.forbidden();
 
@@ -35,14 +34,9 @@ public class StaticRouteBuilder<
 
     private ContentDisposition contentDisposition = null;
 
-    private Pipeline pipeline = Pipeline.builder().build();
+    private Pipeline.PipelineBuilder pipelineSchematics = null;
 
-    private enum ContentDisposition {
-
-        INLINE,
-        ATTACHMENT
-
-    }
+    private String basePath = null;
 
     public StaticRouteBuilder<P> basePath(@NonNull String basePath) {
 
@@ -50,13 +44,36 @@ public class StaticRouteBuilder<
 
             this.basePath = basePath;
 
+            return requestMatcher(RequestMatcher.builder()
+                .pathPattern(basePath + "*")
+                .build());
+
         } else {
 
-            this.basePath = basePath + '/';
+            this.basePath = basePath + "/";
+
+            return requestMatcher(RequestMatcher.builder()
+                .pathPattern(basePath + "/*")
+                .build());
 
         }
 
+    }
+
+    private StaticRouteBuilder<P> requestMatcher(@NonNull RequestMatcher requestMatcher) {
+
+        this.requestMatcher = requestMatcher;
         return this;
+
+    }
+
+    public StaticRouteBuilder<P> customRequestMatcher(
+        @NonNull String basePath,
+        @NonNull RequestMatcher requestMatcher
+    ) {
+
+        this.basePath = basePath;
+        return requestMatcher(requestMatcher);
 
     }
 
@@ -89,9 +106,9 @@ public class StaticRouteBuilder<
 
     }
 
-    public StaticRouteBuilder<P> pipeline(@NonNull Pipeline pipeline) {
+    public StaticRouteBuilder<P> pipelineSchematics(@NonNull Pipeline.PipelineBuilder pipelineSchematics) {
 
-        this.pipeline = pipeline;
+        this.pipelineSchematics = pipelineSchematics;
         return this;
 
     }
@@ -124,39 +141,6 @@ public class StaticRouteBuilder<
 
     }
 
-    private Path resolveFileRequest(Request request) {
-        
-        String relativeRequestedPath = request.getPath().substring(basePath.length());
-        return baseDir.resolve(relativeRequestedPath);
-        
-    }
-    
-    private boolean canAccess(Request request, Path file) {
-        
-        P filePermissions = permissionsManager.getPermissions(file);
-        
-        return filePermissions != null && permissionDecider.decide(request, filePermissions);
-        
-    }
-    
-    private Response disposeFile(Path file) {
-
-        if (contentDisposition == ContentDisposition.INLINE) {
-
-            return CommonResponses.fileInline(file);
-
-        } else if (contentDisposition == ContentDisposition.ATTACHMENT) {
-
-            return CommonResponses.fileDownload(file);
-
-        } else {
-
-            return CommonResponses.fileRaw(file);
-
-        }
-
-    }
-
     @Override
     protected boolean isValid() {
 
@@ -166,8 +150,7 @@ public class StaticRouteBuilder<
             permissionDecider,
             permissionsManager,
             accessDeniedResponse,
-            fileNotFoundResponse,
-            pipeline
+            fileNotFoundResponse
         );
 
     }
@@ -176,23 +159,17 @@ public class StaticRouteBuilder<
     public Route instantiate() {
 
         return Route.builder()
-            .pipeline(pipeline)
-            .requestMatcher(request -> request.getPath().startsWith(basePath))
-            .requestHandler(request -> {
-
-                Path requestedFile = resolveFileRequest(request);
-
-                if (canAccess(request, requestedFile)) {
-
-                    return disposeFile(requestedFile);
-
-                } else {
-
-                    return accessDeniedResponse;
-
-                }
-
-            })
+            .requestMatcher(requestMatcher)
+            .requestHandler(new StaticFileRequestHandler<P>(
+                contentDisposition,
+                permissionsManager,
+                permissionDecider,
+                baseDir,
+                basePath,
+                accessDeniedResponse,
+                fileNotFoundResponse,
+                pipelineSchematics
+            ))
             .build();
 
     }

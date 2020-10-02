@@ -3,7 +3,9 @@ package rocks.gioac96.veronica.common.routes;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+import rocks.gioac96.veronica.common.request_handlers.NotFound;
 import rocks.gioac96.veronica.common.request_matchers.Favicon;
+import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.Route;
 
 class NoFaviconTest {
@@ -20,9 +22,9 @@ class NoFaviconTest {
     @Test
     void testRequestHandler() {
 
-        Route notFound = new NotFound().build();
+        RequestHandler notFound = new NotFound().build();
 
-        assertSame(notFound.getRequestHandler(), noFaviconRoute.getRequestHandler());
+        assertSame(notFound, noFaviconRoute.getRequestHandler());
 
     }
 

@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.core;
 
+import java.util.Objects;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.NonNull;
 import rocks.gioac96.veronica.providers.Builder;
@@ -11,7 +12,7 @@ import rocks.gioac96.veronica.util.PrioritySet;
 /**
  * Request pipeline.
  */
-public final class Pipeline {
+public final class Pipeline implements RequestHandler {
 
     private final PrioritySet<PreFilter> preFilters;
 
@@ -21,7 +22,9 @@ public final class Pipeline {
 
     private final ResponseRenderer responseRenderer;
 
-    protected ThreadPoolExecutor threadPool;
+    private final RequestHandler requestHandler;
+
+    private final ThreadPoolExecutor threadPool;
 
     protected Pipeline(PipelineBuilder b) {
 
@@ -29,6 +32,8 @@ public final class Pipeline {
         this.postFilters = b.postFilters;
         this.postProcessors = b.postProcessors;
         this.responseRenderer = b.responseRenderer;
+        this.requestHandler = b.requestHandler;
+        this.threadPool = b.threadPool;
 
     }
 
@@ -41,13 +46,7 @@ public final class Pipeline {
         return new PipelineBuilderImpl();
     }
 
-    void useThreadPool(ThreadPoolExecutor threadPool) {
-
-        this.threadPool = threadPool;
-
-    }
-
-    private Response preRender(Request request, RequestHandler requestHandler) {
+    private Response preRender(Request request) {
 
         for (PreFilter preFilter : preFilters) {
 
@@ -71,16 +70,15 @@ public final class Pipeline {
      * Handles a request by passing it through the pipeline.
      *
      * @param request        request to handle
-     * @param requestHandler request handler that performs the requested action
      * @return the generated response
      */
-    Response handle(@NonNull Request request, @NonNull RequestHandler requestHandler) {
+    public Response handle(@NonNull Request request) {
 
         Response response;
 
         try {
 
-            response = preRender(request, requestHandler);
+            response = preRender(request);
 
         } catch (PipelineBreakException e) {
 
@@ -164,6 +162,10 @@ public final class Pipeline {
         private final PrioritySet<PostFilter> postFilters = new PrioritySet<>();
 
         private final PrioritySet<PostProcessor> postProcessors = new PrioritySet<>();
+
+        private ThreadPoolExecutor threadPool;
+
+        private RequestHandler requestHandler;
 
         private ResponseRenderer responseRenderer;
 
@@ -261,12 +263,45 @@ public final class Pipeline {
 
         }
 
-        public PipelineBuilder responseRenderer(ResponseRenderer responseRenderer) {
+        public PipelineBuilder responseRenderer(@NonNull ResponseRenderer responseRenderer) {
 
             this.responseRenderer = responseRenderer;
             return this;
 
         }
+
+        public PipelineBuilder responseRenderer(@NonNull Provider<ResponseRenderer> responseRenderer) {
+
+            return responseRenderer(responseRenderer.provide());
+
+        }
+
+        public PipelineBuilder requestHandler(@NonNull RequestHandler requestHandler) {
+
+            this.requestHandler = requestHandler;
+            return this;
+
+        }
+
+        public PipelineBuilder requestHandler(@NonNull Provider<RequestHandler> requestHandler) {
+
+            return requestHandler(requestHandler.provide());
+
+        }
+
+        public PipelineBuilder threadPool(@NonNull ThreadPoolExecutor threadPool) {
+
+            this.threadPool = threadPool;
+            return this;
+
+        }
+
+        public PipelineBuilder threadPool(@NonNull Provider<ThreadPoolExecutor> threadPool) {
+
+            return threadPool(threadPool.provide());
+
+        }
+
 
         public PipelineBuilder combinePipeline(@NonNull Pipeline pipeline) {
 
@@ -281,6 +316,17 @@ public final class Pipeline {
             }
 
             return this;
+
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            return super.isValid()
+                && requestHandler != null
+                && preFilters.stream().allMatch(Objects::nonNull)
+                && postFilters.stream().allMatch(Objects::nonNull)
+                && postProcessors.stream().allMatch(Objects::nonNull);
 
         }
 

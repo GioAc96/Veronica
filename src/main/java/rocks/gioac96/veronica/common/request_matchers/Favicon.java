@@ -10,7 +10,7 @@ public class Favicon extends Builder<RequestMatcher> implements BuildsSingleInst
     @Override
     protected RequestMatcher instantiate() {
 
-        return new MethodAndPathPattern()
+        return RequestMatcher.builder()
             .httpMethod(HttpMethod.GET)
             .pathPattern("/favicon.ico")
             .build();

@@ -2,13 +2,17 @@ package rocks.gioac96.veronica.samples;
 
 import static rocks.gioac96.veronica.common.CommonRequestMatchers.get;
 
+import lombok.NonNull;
+import rocks.gioac96.veronica.common.CommonRequestHandlers;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.common.CommonRoutes;
-import rocks.gioac96.veronica.core.Route;
-import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.core.Pipeline;
 import rocks.gioac96.veronica.core.PostProcessor;
+import rocks.gioac96.veronica.core.Request;
+import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.core.Router;
 
 public class AsynchronousPostProcessors {
 
@@ -31,19 +35,19 @@ public class AsynchronousPostProcessors {
             .router(Router.builder()
                 .route(Route.builder()
                     .requestMatcher(get("/async"))
-                    .requestHandler(request -> CommonResponses.ok())
-                    .pipeline(Pipeline.builder()
-                        .postProcessor((PostProcessor.Asynchronous)((request, response) -> sleep()))
+                    .requestHandler(Pipeline.builder()
+                        .requestHandler(request -> CommonResponses.ok())
+                        .postProcessor((PostProcessor.Asynchronous) (request, response) -> sleep())
                         .build())
                     .build())
                 .route(Route.builder()
                     .requestMatcher(get("/sync"))
-                    .requestHandler(request -> CommonResponses.ok())
-                    .pipeline(Pipeline.builder()
+                    .requestHandler(Pipeline.builder()
+                        .requestHandler(request -> CommonResponses.ok())
                         .postProcessor((request, response) -> sleep())
                         .build())
                     .build())
-                .defaultRoute(CommonRoutes.notFound())
+                .defaultRequestHandler(CommonRequestHandlers.notFound())
                 .build())
             .build()
             .start();

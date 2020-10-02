@@ -41,7 +41,6 @@ public final class Application {
         this.exceptionHandler = b.exceptionHandler;
 
         this.threadPool = b.threadPool;
-        this.router.useThreadPool(threadPool);
 
         this.httpServers = new ArraySet<>();
 
@@ -81,7 +80,7 @@ public final class Application {
                 Request request = exchangeParser.parseExchange(exchange);
 
                 // Generate response
-                response = router.route(request);
+                response = router.route(request).handle(request);
 
 
             } catch (Exception e) {
