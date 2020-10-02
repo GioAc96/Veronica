@@ -3,7 +3,7 @@ package rocks.gioac96.veronica.tutorials.https;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.providers.BuildsSingleInstance;
-import rocks.gioac96.veronica.tutorials.https.routes.RouteA;
+import rocks.gioac96.veronica.tutorials.https.handlers.MyHandler;
 
 public class MyApplication extends Application.ApplicationBuilder implements BuildsSingleInstance {
 
@@ -13,7 +13,7 @@ public class MyApplication extends Application.ApplicationBuilder implements Bui
         server(new MyServer());
 
         router(Router.builder()
-            .defaultRoute(new RouteA())
+            .defaultRequestHandler(new MyHandler())
             .build()
         );
 

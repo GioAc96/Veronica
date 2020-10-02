@@ -3,6 +3,7 @@ package rocks.gioac96.veronica.tutorials;
 import static rocks.gioac96.veronica.common.CommonRequestMatchers.favicon;
 
 import java.util.Map;
+import rocks.gioac96.veronica.common.CommonRoutes;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.core.Response;
@@ -15,8 +16,9 @@ public class Cookies {
 
     public static void main(String[] args) {
 
-        Route route = Route.builder()
-            .requestHandler(req -> {
+        Router router = Router.builder()
+            .route(CommonRoutes.noFavIcon())
+            .defaultRequestHandler(req -> {
 
                 Map<String, String> cookie = req.getCookie();
 
@@ -38,16 +40,6 @@ public class Cookies {
                     .build();
 
             })
-            .build();
-
-        Router router = Router.builder()
-            .route(Route.builder()
-                .requestMatcher(favicon())
-                .requestHandler(request -> CommonResponses.notFound()
-                )
-                .build()
-            )
-            .defaultRoute(route)
             .build();
 
         int port = 8000;
