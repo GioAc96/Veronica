@@ -2,6 +2,7 @@ package rocks.gioac96.veronica.samples;
 
 import static rocks.gioac96.veronica.common.CommonRequestMatchers.get;
 
+import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonRequestHandlers;
 import rocks.gioac96.veronica.core.Application;
@@ -16,11 +17,41 @@ import rocks.gioac96.veronica.core.Router;
 
 public class AsynchronousPostProcessors {
 
-    private static void sleep() {
+    @Getter
+    private final int sleepTime;
+
+    @Getter
+    private final Router router = Router.builder()
+        .route(Route.builder()
+            .requestMatcher(get("/async"))
+            .requestHandler(Pipeline.builder()
+                .requestHandler(request -> CommonResponses.ok())
+                .postProcessor((PostProcessor.Asynchronous) (request, response) -> sleep())
+                .build())
+            .build())
+        .route(Route.builder()
+            .requestMatcher(get("/sync"))
+            .requestHandler(Pipeline.builder()
+                .requestHandler(CommonRequestHandlers.ok())
+                .postProcessor((request, response) -> sleep())
+                .build())
+            .build())
+        .defaultRequestHandler(CommonRequestHandlers.notFound())
+        .build();
+
+    public AsynchronousPostProcessors(
+        int sleepTime
+    ) {
+
+        this.sleepTime = sleepTime;
+
+    }
+
+    private void sleep() {
 
         try {
 
-            Thread.sleep(2000);
+            Thread.sleep(sleepTime);
 
             System.out.println("Finished");
 
@@ -32,23 +63,7 @@ public class AsynchronousPostProcessors {
 
         Application.builder()
             .port(80)
-            .router(Router.builder()
-                .route(Route.builder()
-                    .requestMatcher(get("/async"))
-                    .requestHandler(Pipeline.builder()
-                        .requestHandler(request -> CommonResponses.ok())
-                        .postProcessor((PostProcessor.Asynchronous) (request, response) -> sleep())
-                        .build())
-                    .build())
-                .route(Route.builder()
-                    .requestMatcher(get("/sync"))
-                    .requestHandler(Pipeline.builder()
-                        .requestHandler(request -> CommonResponses.ok())
-                        .postProcessor((request, response) -> sleep())
-                        .build())
-                    .build())
-                .defaultRequestHandler(CommonRequestHandlers.notFound())
-                .build())
+            .router(new AsynchronousPostProcessors(2000).router)
             .build()
             .start();
 
