@@ -140,7 +140,7 @@ public class Router {
 
     }
 
-    public RequestHandler routeRequest(
+    private RequestHandler routeRequest(
         Request request
     ) {
 
