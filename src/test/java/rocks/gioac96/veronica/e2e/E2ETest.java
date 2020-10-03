@@ -85,6 +85,18 @@ public abstract class E2ETest {
 
     protected abstract Router getRouter();
 
+    protected static long measureTime(Runnable action) {
+
+        long start = System.currentTimeMillis();
+
+        action.run();
+
+        long end = System.currentTimeMillis();
+
+        return end - start;
+
+    }
+
     protected static MockRequestBuilder mockRequest() {
 
         return new MockRequestBuilder();
