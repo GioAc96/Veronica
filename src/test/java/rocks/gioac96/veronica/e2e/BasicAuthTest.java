@@ -61,7 +61,7 @@ public class BasicAuthTest {
 
         Router router = new BasicAuth(null).getRouter();
 
-        Response response = router.route(unauthorizedRequest).handle(unauthorizedRequest);
+        Response response = router.handle(unauthorizedRequest);
 
         assertUnauthorized(response);
 
@@ -72,7 +72,7 @@ public class BasicAuthTest {
 
         Router router = new BasicAuth(realm).getRouter();
 
-        Response response = router.route(unauthorizedRequest).handle(unauthorizedRequest);
+        Response response = router.handle(unauthorizedRequest);
 
         assertUnauthorizedRealm(response, realm);
 
@@ -83,7 +83,7 @@ public class BasicAuthTest {
 
         Router router = new BasicAuth(null).getRouter();
 
-        Response response = router.route(authorizedRequest).handle(authorizedRequest);
+        Response response = router.handle(authorizedRequest);
 
         assertEquals(OK, response.getHttpStatus());
 
@@ -94,7 +94,7 @@ public class BasicAuthTest {
 
         Router router = new BasicAuth(realm).getRouter();
 
-        Response response = router.route(authorizedRequest).handle(authorizedRequest);
+        Response response = router.handle(authorizedRequest);
 
         assertEquals(OK, response.getHttpStatus());
 

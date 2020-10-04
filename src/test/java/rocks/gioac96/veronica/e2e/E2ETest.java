@@ -136,7 +136,7 @@ public abstract class E2ETest {
 
             try {
 
-                assertions.accept(getRouter().route(request).handle(request));
+                assertions.accept(getRouter().handle(request));
 
             } catch(AssertionError assertionError) {
 
