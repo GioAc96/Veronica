@@ -1,8 +1,11 @@
 package rocks.gioac96.veronica.e2e;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.util.MockUtil.isMock;
 
+import com.sun.net.httpserver.Headers;
 import java.net.URI;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -57,6 +60,20 @@ public abstract class E2ETest {
 
         }
 
+        public MockRequestBuilder header(String name, String value) {
+
+            if (! isMock(getHeaders())) {
+
+                headers(mock(Headers.class));
+
+            }
+
+            when(getHeaders().getFirst(name)).thenReturn(value);
+
+            return this;
+
+        }
+
         @Override
         protected boolean isValid() {
 
@@ -100,6 +117,12 @@ public abstract class E2ETest {
     protected static MockRequestBuilder mockRequest() {
 
         return new MockRequestBuilder();
+
+    }
+
+    protected static void assertResponseBodyEquals(String expected, Response response) {
+
+        assertArrayEquals(expected.getBytes(), response.getBody());
 
     }
 
