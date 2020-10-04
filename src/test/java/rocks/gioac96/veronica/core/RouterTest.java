@@ -630,4 +630,76 @@ class RouterTest {
 
     }
 
+    @Test
+    void testRoutingGuardCatch() {
+
+        TestRequestHandler r1 = new TestRequestHandler("r1");
+
+        Response routingGuardResponse = Response.builder().build();
+
+        Router router = Router.builder()
+            .routingGuard(request -> routingGuardResponse)
+            .route(rm(""), r1)
+            .defaultRequestHandler(defaultRequestHandler)
+            .build();
+
+        assertSame(routingGuardResponse, router.handle(mockRequest(HttpMethod.GET, "")));
+
+    }
+
+    @Test
+    void testRoutingGuardPass() {
+
+        TestRequestHandler r1 = new TestRequestHandler("r1");
+
+        Router router = Router.builder()
+            .routingGuard(request -> null)
+            .route(rm(""), r1)
+            .defaultRequestHandler(defaultRequestHandler)
+            .build();
+
+        assertSameResponse(r1, router.handle(mockRequest(HttpMethod.GET, "")));
+
+    }
+
+    @Test
+    void testConditionalRoutingGuard() {
+
+        TestRequestHandler r1 = new TestRequestHandler("r1");
+
+        Response routingGuardResponse = Response.builder().build();
+
+        Router router = Router.builder()
+            .routingGuard(request -> request.getHttpMethod().equals(HttpMethod.GET) ? routingGuardResponse : null)
+            .route(rm(""), r1)
+            .defaultRequestHandler(defaultRequestHandler)
+            .build();
+
+        assertSame(routingGuardResponse, router.handle(mockRequest(HttpMethod.GET, "")));
+        assertSameResponse(r1, router.handle(mockRequest(HttpMethod.POST, "")));
+
+    }
+
+    @Test
+    void testMultipleRoutingGuards() {
+
+        TestRequestHandler r1 = new TestRequestHandler("r1");
+
+        Response routingGuardResponseGet = Response.builder().build();
+        Response routingGuardResponsePost = Response.builder().build();
+
+        Router router = Router.builder()
+            .routingGuard(request -> request.getHttpMethod().equals(HttpMethod.GET) ? routingGuardResponseGet : null)
+            .routingGuard(request -> request.getHttpMethod().equals(HttpMethod.POST) ? routingGuardResponsePost : null)
+            .route(rm(HttpMethod.PUT, ""), r1)
+            .defaultRequestHandler(defaultRequestHandler)
+            .build();
+
+        assertSame(routingGuardResponseGet, router.handle(mockRequest(HttpMethod.GET, "")));
+        assertSame(routingGuardResponsePost, router.handle(mockRequest(HttpMethod.POST, "")));
+        assertSameResponse(r1, router.handle(mockRequest(HttpMethod.PUT, "")));
+
+
+    }
+
 }
