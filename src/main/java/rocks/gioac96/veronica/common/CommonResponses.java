@@ -57,9 +57,17 @@ public class CommonResponses {
 
     public static Response promptBasicAuth(String realm) {
 
-        return new PromptBasicAuthRealm()
-            .realm(realm)
-            .provide();
+        if (realm == null) {
+
+            return promptBasicAuth();
+
+        } else {
+
+            return new PromptBasicAuthRealm()
+                .realm(realm)
+                .provide();
+
+        }
 
     }
 
