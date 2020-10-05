@@ -696,8 +696,8 @@ class RouterTest {
             .build();
 
         assertSame(routingGuardResponseGet, router.handle(mockRequest(HttpMethod.GET, "")));
-        assertSame(routingGuardResponsePost, router.handle(mockRequest(HttpMethod.POST, "")));
         assertSameResponse(r1, router.handle(mockRequest(HttpMethod.PUT, "")));
+        assertSame(routingGuardResponsePost, router.handle(mockRequest(HttpMethod.POST, "")));
 
 
     }
