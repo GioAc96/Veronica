@@ -31,17 +31,17 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
 
     }
 
-    private static final Set<Class<?>> configuredBuilders = new HashSet<>();
+    private static final Set<Object> configuredBuilders = new HashSet<>();
 
     private boolean isConfigured() {
 
-        return configuredBuilders.contains(this.getClass());
+        return configuredBuilders.contains(this);
 
     }
 
     private void configured() {
 
-        configuredBuilders.add(this.getClass());
+        configuredBuilders.add(this);
 
     }
 
