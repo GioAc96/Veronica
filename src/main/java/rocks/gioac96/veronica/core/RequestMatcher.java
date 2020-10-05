@@ -54,7 +54,7 @@ public class RequestMatcher {
 
         }
 
-        public RequestMatcherBuilder pathPatterns(@NonNull Provider<String> pathPattern) {
+        public RequestMatcherBuilder pathPattern(@NonNull Provider<String> pathPattern) {
 
             return pathPattern(pathPattern.provide());
 

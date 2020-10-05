@@ -6,7 +6,6 @@ import static rocks.gioac96.veronica.e2e.E2ETest.measureTime;
 import org.junit.jupiter.api.Test;
 import rocks.gioac96.veronica.core.HttpMethod;
 import rocks.gioac96.veronica.core.Request;
-import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.samples.AsynchronousPostProcessors;
 
@@ -33,6 +32,5 @@ public class AsynchronousPostProcessorsTest {
         assertTrue(syncDuration - asyncDuration > sleepTime * 0.95);
 
     }
-
 
 }
