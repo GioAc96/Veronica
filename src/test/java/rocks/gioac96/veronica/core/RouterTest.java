@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.core;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.when;
@@ -14,17 +15,44 @@ import org.mockito.Mockito;
 class RouterTest {
 
     @AllArgsConstructor
-    private static final class Route implements RequestHandler {
+    private static final class TestRequestHandler implements RequestHandler {
 
         private final String name;
 
         @Override
         public Response handle(Request request) {
-            return null;
+
+            return Response.builder()
+                .httpStatus(HttpStatus.OK)
+                .body(name)
+                .build();
+
         }
+
     }
 
-    private static final RequestHandler defaultRequestHandler = request -> null;
+    private static final Response defaultResponse = Response.builder()
+        .httpStatus(HttpStatus.NOT_FOUND)
+        .build();
+    private static final RequestHandler defaultRequestHandler = request -> defaultResponse;
+
+    private static void assertSameResponse(
+        TestRequestHandler testRequestHandler,
+        Response response
+    ) {
+
+        assertEquals(HttpStatus.OK, response.getHttpStatus());
+        assertArrayEquals(testRequestHandler.handle(null).getBody(), response.getBody());
+
+    }
+
+    private static void assertNoRouteFound(
+        Response response
+    ) {
+
+        assertSame(defaultResponse, response);
+
+    }
 
     private static RequestMatcher rm(String pathPattern) {
 
@@ -42,6 +70,7 @@ class RouterTest {
             .build();
 
     }
+
     private static RequestMatcher rm(HttpMethod httpMethod, String pathPattern, Predicate<Request> condition) {
 
         return RequestMatcher.builder()
@@ -51,6 +80,7 @@ class RouterTest {
             .build();
 
     }
+
     private static RequestMatcher rm(String pathPattern, Predicate<Request> condition) {
 
         return RequestMatcher.builder()
@@ -74,10 +104,10 @@ class RouterTest {
     @Test
     void testRootNoMethod() {
 
-        Route r1 = new Route("r1");
+        TestRequestHandler r1 = new TestRequestHandler("r1");
 
         Router router = Router.builder()
-            .register(rm(""), r1)
+            .route(rm(""), r1)
             .defaultRequestHandler(defaultRequestHandler)
             .build();
 
@@ -90,13 +120,13 @@ class RouterTest {
 
         };
 
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->{
+        Arrays.stream(HttpMethod.values()).forEach(httpMethod -> {
 
-            assertSame(r1, router.route(mockRequest(httpMethod, "")));
-            assertSame(r1, router.route(mockRequest(httpMethod, "/")));
+            assertSameResponse(r1, router.handle(mockRequest(httpMethod, "")));
+            assertSameResponse(r1, router.handle(mockRequest(httpMethod, "/")));
 
             Arrays.stream(invalidPaths).forEach(invalidPath ->
-                assertSame(defaultRequestHandler, router.route(mockRequest(httpMethod, invalidPath)))
+                assertNoRouteFound(router.handle(mockRequest(httpMethod, invalidPath)))
             );
 
         });
@@ -106,10 +136,10 @@ class RouterTest {
     @Test
     void testRootNoMethodSlash() {
 
-        Route r1 = new Route("r1");
+        TestRequestHandler r1 = new TestRequestHandler("r1");
 
         Router router = Router.builder()
-            .register(rm("/"), r1)
+            .route(rm("/"), r1)
             .defaultRequestHandler(defaultRequestHandler)
             .build();
 
@@ -122,13 +152,13 @@ class RouterTest {
 
         };
 
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->{
+        Arrays.stream(HttpMethod.values()).forEach(httpMethod -> {
 
-            assertSame(r1, router.route(mockRequest(httpMethod, "")));
-            assertSame(r1, router.route(mockRequest(httpMethod, "/")));
+            assertSameResponse(r1, router.handle(mockRequest(httpMethod, "")));
+            assertSameResponse(r1, router.handle(mockRequest(httpMethod, "/")));
 
             Arrays.stream(invalidPaths).forEach(invalidPath ->
-                assertSame(defaultRequestHandler, router.route(mockRequest(httpMethod, invalidPath)))
+                assertNoRouteFound(router.handle(mockRequest(httpMethod, invalidPath)))
             );
 
         });
@@ -138,7 +168,7 @@ class RouterTest {
     @Test
     void testRootMethod() {
 
-        Route r1 = new Route("r1");
+        TestRequestHandler r1 = new TestRequestHandler("r1");
 
         String[] invalidPaths = new String[]{
 
@@ -149,21 +179,21 @@ class RouterTest {
 
         };
 
-        Arrays.stream(HttpMethod.values()).forEach(validMethod ->{
+        Arrays.stream(HttpMethod.values()).forEach(validMethod -> {
 
             Request request = mockRequest(validMethod, "");
             Request requestSlash = mockRequest(validMethod, request.getPath() + "/");
 
             Router router = Router.builder()
-                .register(rm(validMethod, ""), r1)
+                .route(rm(validMethod, ""), r1)
                 .defaultRequestHandler(defaultRequestHandler)
                 .build();
 
-            assertSame(r1, router.route(request));
-            assertSame(r1, router.route(requestSlash));
+            assertSameResponse(r1, router.handle(request));
+            assertSameResponse(r1, router.handle(requestSlash));
 
             Arrays.stream(invalidPaths).forEach(invalidPath ->
-                assertSame(defaultRequestHandler, router.route(mockRequest(validMethod, invalidPath)))
+                assertNoRouteFound(router.handle(mockRequest(validMethod, invalidPath)))
             );
 
             Arrays.stream(HttpMethod.values())
@@ -173,11 +203,11 @@ class RouterTest {
                     Request requestInvalidMethod = mockRequest(invalidMethod, "");
                     Request requestSlashInvalidMethod = mockRequest(invalidMethod, request.getPath() + "/");
 
-                    assertSame(defaultRequestHandler, router.route(requestInvalidMethod));
-                    assertSame(defaultRequestHandler, router.route(requestSlashInvalidMethod));
+                    assertNoRouteFound(router.handle(requestInvalidMethod));
+                    assertNoRouteFound(router.handle(requestSlashInvalidMethod));
 
                     Arrays.stream(invalidPaths).forEach(invalidPath ->
-                        assertSame(defaultRequestHandler, router.route(mockRequest(invalidMethod, invalidPath)))
+                        assertNoRouteFound(router.handle(mockRequest(invalidMethod, invalidPath)))
                     );
 
                 });
@@ -189,7 +219,7 @@ class RouterTest {
     @Test
     void testRootMethodSlash() {
 
-        Route r1 = new Route("r1");
+        TestRequestHandler r1 = new TestRequestHandler("r1");
 
         String[] invalidPaths = new String[]{
 
@@ -200,21 +230,21 @@ class RouterTest {
 
         };
 
-        Arrays.stream(HttpMethod.values()).forEach(validMethod ->{
+        Arrays.stream(HttpMethod.values()).forEach(validMethod -> {
 
             Request request = mockRequest(validMethod, "");
             Request requestSlash = mockRequest(validMethod, request.getPath() + "/");
 
             Router router = Router.builder()
-                .register(rm(validMethod, "/"), r1)
+                .route(rm(validMethod, "/"), r1)
                 .defaultRequestHandler(defaultRequestHandler)
                 .build();
 
-            assertSame(r1, router.route(request));
-            assertSame(r1, router.route(requestSlash));
+            assertSameResponse(r1, router.handle(request));
+            assertSameResponse(r1, router.handle(requestSlash));
 
             Arrays.stream(invalidPaths).forEach(invalidPath ->
-                assertSame(defaultRequestHandler, router.route(mockRequest(validMethod, invalidPath)))
+                assertNoRouteFound(router.handle(mockRequest(validMethod, invalidPath)))
             );
 
             Arrays.stream(HttpMethod.values())
@@ -224,11 +254,11 @@ class RouterTest {
                     Request requestInvalidMethod = mockRequest(invalidMethod, "");
                     Request requestSlashInvalidMethod = mockRequest(invalidMethod, request.getPath() + "/");
 
-                    assertSame(defaultRequestHandler, router.route(requestInvalidMethod));
-                    assertSame(defaultRequestHandler, router.route(requestSlashInvalidMethod));
+                    assertNoRouteFound(router.handle(requestInvalidMethod));
+                    assertNoRouteFound(router.handle(requestSlashInvalidMethod));
 
                     Arrays.stream(invalidPaths).forEach(invalidPath ->
-                        assertSame(defaultRequestHandler, router.route(mockRequest(invalidMethod, invalidPath)))
+                        assertNoRouteFound(router.handle(mockRequest(invalidMethod, invalidPath)))
                     );
 
                 });
@@ -240,7 +270,7 @@ class RouterTest {
     @Test
     void testRootStarNoMethod() {
 
-        Route r1 = new Route("r1");
+        TestRequestHandler r1 = new TestRequestHandler("r1");
 
         String[] randomPaths = new String[]{
 
@@ -254,24 +284,22 @@ class RouterTest {
         };
 
         Router router = Router.builder()
-            .register(rm("*"), r1)
+            .route(rm("*"), r1)
             .defaultRequestHandler(defaultRequestHandler)
             .build();
 
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->{
-
+        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->
             Arrays.stream(randomPaths).forEach(path ->
-                assertSame(r1, router.route(mockRequest(httpMethod, path)))
-            );
-
-        });
+                assertSameResponse(r1, router.handle(mockRequest(httpMethod, path)))
+            )
+        );
 
     }
 
     @Test
     void testRootStarNoMethodSlash() {
 
-        Route r1 = new Route("r1");
+        TestRequestHandler r1 = new TestRequestHandler("r1");
 
         String[] randomPaths = new String[]{
 
@@ -285,27 +313,25 @@ class RouterTest {
         };
 
         Router router = Router.builder()
-            .register(rm("/*"), r1)
+            .route(rm("/*"), r1)
             .defaultRequestHandler(defaultRequestHandler)
             .build();
 
-        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->{
-
+        Arrays.stream(HttpMethod.values()).forEach(httpMethod ->
             Arrays.stream(randomPaths).forEach(path ->
-                assertSame(r1, router.route(mockRequest(httpMethod, path)))
-            );
-
-        });
+                assertSameResponse(r1, router.handle(mockRequest(httpMethod, path)))
+            )
+        );
 
     }
 
     @Test
     void testStarNoMethod() {
 
-        Route r1 = new Route("r1");
+        TestRequestHandler r1 = new TestRequestHandler("r1");
 
         Router router = Router.builder()
-            .register(rm("/this/path/is/valid/*"), r1)
+            .route(rm("/this/path/is/valid/*"), r1)
             .defaultRequestHandler(defaultRequestHandler)
             .build();
 
@@ -342,31 +368,32 @@ class RouterTest {
 
         };
 
-        Arrays.stream(validPaths).forEachOrdered(validPath -> {
+        Arrays.stream(validPaths).forEachOrdered(validPath ->
 
-            Arrays.stream(HttpMethod.values()).forEachOrdered(httpMethod -> {
+            Arrays.stream(HttpMethod.values()).forEachOrdered(httpMethod ->
 
-                assertSame(r1, router.route(mockRequest(httpMethod, validPath)));
+                assertSameResponse(r1, router.handle(mockRequest(httpMethod, validPath)))
 
-            });
+            )
 
-        });
+        );
 
-        Arrays.stream(invalidPaths).forEachOrdered(invalidPath -> {
+        Arrays.stream(invalidPaths).forEachOrdered(invalidPath ->
 
-            Arrays.stream(HttpMethod.values()).forEachOrdered(httpMethod -> {
+            Arrays.stream(HttpMethod.values()).forEachOrdered(httpMethod ->
 
-                assertSame(defaultRequestHandler, router.route(mockRequest(httpMethod, invalidPath)));
+                assertNoRouteFound(router.handle(mockRequest(httpMethod, invalidPath)))
 
-            });
+            )
 
-        });
+        );
 
     }
+
     @Test
     void testStarMethod() {
 
-        Route r1 = new Route("r1");
+        TestRequestHandler r1 = new TestRequestHandler("r1");
 
         String[] validPaths = new String[]{
 
@@ -404,34 +431,34 @@ class RouterTest {
         Arrays.stream(HttpMethod.values()).forEachOrdered(validMethod -> {
 
             Router router = Router.builder()
-                .register(rm(validMethod, "/this/path/is/valid/*"), r1)
+                .route(rm(validMethod, "/this/path/is/valid/*"), r1)
                 .defaultRequestHandler(defaultRequestHandler)
                 .build();
 
             Arrays.stream(validPaths).forEachOrdered(validPath -> {
 
-                assertSame(r1, router.route(mockRequest(validMethod, validPath)));
+                assertSameResponse(r1, router.handle(mockRequest(validMethod, validPath)));
 
                 Arrays.stream(HttpMethod.values())
                     .filter(invalidMethod -> invalidMethod != validMethod)
-                    .forEachOrdered(invalidMethod -> {
+                    .forEachOrdered(invalidMethod ->
 
-                        assertSame(defaultRequestHandler, router.route(mockRequest(invalidMethod, validPath)));
+                        assertNoRouteFound(router.handle(mockRequest(invalidMethod, validPath)))
 
-                });
+                    );
 
             });
 
-            Arrays.stream(invalidPaths).forEachOrdered(invalidPath -> {
+            Arrays.stream(invalidPaths).forEachOrdered(invalidPath ->
 
                 Arrays.stream(HttpMethod.values())
-                    .forEachOrdered(method -> {
+                    .forEachOrdered(method ->
 
-                        assertSame(defaultRequestHandler, router.route(mockRequest(method, invalidPath)));
+                        assertNoRouteFound(router.handle(mockRequest(method, invalidPath)))
 
-                    });
+                    )
 
-            });
+            );
 
         });
 
@@ -441,33 +468,33 @@ class RouterTest {
     @Test
     void testStarNotOverrides() {
 
-        Route r1 = new Route("r1");
-        Route r2 = new Route("r2");
-        Route r3 = new Route("r3");
+        TestRequestHandler r1 = new TestRequestHandler("r1");
+        TestRequestHandler r2 = new TestRequestHandler("r2");
+        TestRequestHandler r3 = new TestRequestHandler("r3");
 
         Router router = Router.builder()
-            .register(rm("/valid/route1"), r1)
-            .register(rm("/valid/*"), r2)
-            .register(rm("/valid/route3"), r3)
+            .route(rm("/valid/route1"), r1)
+            .route(rm("/valid/*"), r2)
+            .route(rm("/valid/route3"), r3)
             .defaultRequestHandler(defaultRequestHandler)
             .build();
 
         Arrays.stream(HttpMethod.values()).forEachOrdered(httpMethod -> {
 
-            assertSame(r1, router.route(mockRequest(httpMethod, "/valid/route1")));
+            assertSameResponse(r1, router.handle(mockRequest(httpMethod, "/valid/route1")));
 
-            assertSame(r2, router.route(mockRequest(httpMethod, "/valid/route2")));
-            assertSame(r2, router.route(mockRequest(httpMethod, "/valid/random")));
-            assertSame(r2, router.route(mockRequest(httpMethod, "/valid/random/deep")));
-            assertSame(r2, router.route(mockRequest(httpMethod, "/valid/route1/deep")));
+            assertSameResponse(r2, router.handle(mockRequest(httpMethod, "/valid/route2")));
+            assertSameResponse(r2, router.handle(mockRequest(httpMethod, "/valid/random")));
+            assertSameResponse(r2, router.handle(mockRequest(httpMethod, "/valid/random/deep")));
+            assertSameResponse(r2, router.handle(mockRequest(httpMethod, "/valid/route1/deep")));
 
-            assertSame(r3, router.route(mockRequest(httpMethod, "/valid/route3")));
+            assertSameResponse(r3, router.handle(mockRequest(httpMethod, "/valid/route3")));
 
-            assertSame(defaultRequestHandler, router.route(mockRequest(httpMethod, "/")));
-            assertSame(defaultRequestHandler, router.route(mockRequest(httpMethod, "/invalid")));
-            assertSame(defaultRequestHandler, router.route(mockRequest(httpMethod, "/invalid/route1")));
-            assertSame(defaultRequestHandler, router.route(mockRequest(httpMethod, "/invalid/route2")));
-            assertSame(defaultRequestHandler, router.route(mockRequest(httpMethod, "/invalid/route3")));
+            assertNoRouteFound(router.handle(mockRequest(httpMethod, "/")));
+            assertNoRouteFound(router.handle(mockRequest(httpMethod, "/invalid")));
+            assertNoRouteFound(router.handle(mockRequest(httpMethod, "/invalid/route1")));
+            assertNoRouteFound(router.handle(mockRequest(httpMethod, "/invalid/route2")));
+            assertNoRouteFound(router.handle(mockRequest(httpMethod, "/invalid/route3")));
 
         });
 
@@ -476,12 +503,12 @@ class RouterTest {
     @Test
     void testCondition() {
 
-        Route secureRoute = new Route("secure");
-        Route nonSecureRoute = new Route("nonsecure");
+        TestRequestHandler secureRoute = new TestRequestHandler("secure");
+        TestRequestHandler nonSecureRoute = new TestRequestHandler("nonsecure");
 
         Router router = Router.builder()
-            .register(rm("/home", Request::isSecure), secureRoute)
-            .register(rm("/home", request -> ! request.isSecure()), nonSecureRoute)
+            .route(rm("/home", Request::isSecure), secureRoute)
+            .route(rm("/home", request -> !request.isSecure()), nonSecureRoute)
             .defaultRequestHandler(defaultRequestHandler)
             .build();
 
@@ -492,20 +519,20 @@ class RouterTest {
         Request secure = mockRequest(HttpMethod.GET, "/home");
         when(secure.isSecure()).thenReturn(true);
 
-        assertSame(secureRoute, router.route(secure));
-        assertSame(nonSecureRoute, router.route(nonSecure));
+        assertSameResponse(secureRoute, router.handle(secure));
+        assertSameResponse(nonSecureRoute, router.handle(nonSecure));
 
     }
 
     @Test
     void testStarCondition() {
 
-        Route secureRoute = new Route("secure");
-        Route nonSecureRoute = new Route("nonsecure");
+        TestRequestHandler secureRoute = new TestRequestHandler("secure");
+        TestRequestHandler nonSecureRoute = new TestRequestHandler("nonsecure");
 
         Router router = Router.builder()
-            .register(rm("/home/*", Request::isSecure), secureRoute)
-            .register(rm("/home/*", request -> ! request.isSecure()), nonSecureRoute)
+            .route(rm("/home/*", Request::isSecure), secureRoute)
+            .route(rm("/home/*", request -> !request.isSecure()), nonSecureRoute)
             .defaultRequestHandler(defaultRequestHandler)
             .build();
 
@@ -515,18 +542,18 @@ class RouterTest {
         Request secure = mockRequest(HttpMethod.GET, "/home");
         when(secure.isSecure()).thenReturn(true);
 
-        assertSame(secureRoute, router.route(secure));
-        assertSame(nonSecureRoute, router.route(nonSecure));
+        assertSameResponse(secureRoute, router.handle(secure));
+        assertSameResponse(nonSecureRoute, router.handle(nonSecure));
 
     }
 
     @Test
     void testVariablePathPart() {
 
-        Route r1 = new Route("r1");
+        TestRequestHandler r1 = new TestRequestHandler("r1");
 
         Router router = Router.builder()
-            .register(rm("{devName}"), r1)
+            .route(rm("{devName}"), r1)
             .defaultRequestHandler(defaultRequestHandler)
             .build();
 
@@ -534,7 +561,7 @@ class RouterTest {
 
         when(mockRequest.getVariablePathParts()).thenReturn(new HashMap<>());
 
-        assertSame(r1, router.route(mockRequest));
+        assertSameResponse(r1, router.handle(mockRequest));
         assertEquals("giorgio", mockRequest.getVariablePathParts().get("devName"));
 
     }
@@ -542,12 +569,12 @@ class RouterTest {
     @Test
     void testVariablePathPartInterference() {
 
-        Route r1 = new Route("r1");
-        Route r2 = new Route("r2");
+        TestRequestHandler r1 = new TestRequestHandler("r1");
+        TestRequestHandler r2 = new TestRequestHandler("r2");
 
         Router router = Router.builder()
-            .register(rm("root/{devName}"), r1)
-            .register(rm("root/r2"), r2)
+            .route(rm("root/{devName}"), r1)
+            .route(rm("root/r2"), r2)
             .defaultRequestHandler(defaultRequestHandler)
             .build();
 
@@ -558,10 +585,10 @@ class RouterTest {
         when(req1.getVariablePathParts()).thenReturn(new HashMap<>());
         when(req2.getVariablePathParts()).thenReturn(new HashMap<>());
 
-        assertSame(r1, router.route(req1));
+        assertSameResponse(r1, router.handle(req1));
         assertEquals("giorgio", req1.getVariablePathParts().get("devName"));
 
-        assertSame(r2, router.route(req2));
+        assertSameResponse(r2, router.handle(req2));
         assertEquals(0, req2.getVariablePathParts().size());
 
     }
@@ -569,10 +596,10 @@ class RouterTest {
     @Test
     void testMultipleVariablePathParts() {
 
-        Route r1 = new Route("r1");
+        TestRequestHandler r1 = new TestRequestHandler("r1");
 
         Router router = Router.builder()
-            .register(rm("{param1}/{param2}/{param3}"), r1)
+            .route(rm("{param1}/{param2}/{param3}"), r1)
             .defaultRequestHandler(defaultRequestHandler)
             .build();
 
@@ -585,9 +612,9 @@ class RouterTest {
         Request req3 = mockRequest(HttpMethod.GET, "/veronica/gioac96/rocks");
         when(req3.getVariablePathParts()).thenReturn(new HashMap<>());
 
-        assertSame(r1, router.route(req1));
-        assertSame(r1, router.route(req2));
-        assertSame(r1, router.route(req3));
+        assertSameResponse(r1, router.handle(req1));
+        assertSameResponse(r1, router.handle(req2));
+        assertSameResponse(r1, router.handle(req3));
 
         assertEquals("p1", req1.getVariablePathParts().get("param1"));
         assertEquals("p2", req1.getVariablePathParts().get("param2"));
@@ -600,6 +627,78 @@ class RouterTest {
         assertEquals("veronica", req3.getVariablePathParts().get("param1"));
         assertEquals("gioac96", req3.getVariablePathParts().get("param2"));
         assertEquals("rocks", req3.getVariablePathParts().get("param3"));
+
+    }
+
+    @Test
+    void testRoutingGuardCatch() {
+
+        TestRequestHandler r1 = new TestRequestHandler("r1");
+
+        Response routingGuardResponse = Response.builder().build();
+
+        Router router = Router.builder()
+            .routingGuard(request -> routingGuardResponse)
+            .route(rm(""), r1)
+            .defaultRequestHandler(defaultRequestHandler)
+            .build();
+
+        assertSame(routingGuardResponse, router.handle(mockRequest(HttpMethod.GET, "")));
+
+    }
+
+    @Test
+    void testRoutingGuardPass() {
+
+        TestRequestHandler r1 = new TestRequestHandler("r1");
+
+        Router router = Router.builder()
+            .routingGuard(request -> null)
+            .route(rm(""), r1)
+            .defaultRequestHandler(defaultRequestHandler)
+            .build();
+
+        assertSameResponse(r1, router.handle(mockRequest(HttpMethod.GET, "")));
+
+    }
+
+    @Test
+    void testConditionalRoutingGuard() {
+
+        TestRequestHandler r1 = new TestRequestHandler("r1");
+
+        Response routingGuardResponse = Response.builder().build();
+
+        Router router = Router.builder()
+            .routingGuard(request -> request.getHttpMethod().equals(HttpMethod.GET) ? routingGuardResponse : null)
+            .route(rm(""), r1)
+            .defaultRequestHandler(defaultRequestHandler)
+            .build();
+
+        assertSame(routingGuardResponse, router.handle(mockRequest(HttpMethod.GET, "")));
+        assertSameResponse(r1, router.handle(mockRequest(HttpMethod.POST, "")));
+
+    }
+
+    @Test
+    void testMultipleRoutingGuards() {
+
+        TestRequestHandler r1 = new TestRequestHandler("r1");
+
+        Response routingGuardResponseGet = Response.builder().build();
+        Response routingGuardResponsePost = Response.builder().build();
+
+        Router router = Router.builder()
+            .routingGuard(request -> request.getHttpMethod().equals(HttpMethod.GET) ? routingGuardResponseGet : null)
+            .routingGuard(request -> request.getHttpMethod().equals(HttpMethod.POST) ? routingGuardResponsePost : null)
+            .route(rm(HttpMethod.PUT, ""), r1)
+            .defaultRequestHandler(defaultRequestHandler)
+            .build();
+
+        assertSame(routingGuardResponseGet, router.handle(mockRequest(HttpMethod.GET, "")));
+        assertSame(routingGuardResponsePost, router.handle(mockRequest(HttpMethod.POST, "")));
+        assertSameResponse(r1, router.handle(mockRequest(HttpMethod.PUT, "")));
+
 
     }
 

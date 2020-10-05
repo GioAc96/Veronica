@@ -27,11 +27,8 @@ public class AsynchronousPostProcessorsTest {
             .httpMethod(HttpMethod.GET)
             .build();
 
-        RequestHandler syncHandler = router.route(syncRequest);
-        RequestHandler asyncHandler = router.route(asyncRequest);
-
-        long syncDuration = measureTime(() -> syncHandler.handle(syncRequest));
-        long asyncDuration = measureTime(() -> asyncHandler.handle(asyncRequest));
+        long syncDuration = measureTime(() -> router.handle(syncRequest));
+        long asyncDuration = measureTime(() -> router.handle(asyncRequest));
 
         System.out.println(syncDuration);
         System.out.println(asyncDuration);

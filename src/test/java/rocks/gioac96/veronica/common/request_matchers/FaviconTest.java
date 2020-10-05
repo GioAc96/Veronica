@@ -10,21 +10,33 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import rocks.gioac96.veronica.core.HttpMethod;
+import rocks.gioac96.veronica.core.HttpStatus;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.RequestHandler;
+import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Router;
 
 public class FaviconTest {
 
     private Router router;
-    private RequestHandler requestHandler = request -> null;
-    private RequestHandler defaultRequestHandler = request -> null;
+
+    private static final Response faviconResponse =
+        Response.builder().httpStatus(HttpStatus.OK).build();
+
+    private static final Response defaultResponse =
+        Response.builder().httpStatus(HttpStatus.NOT_FOUND).build();
+
+    private static final RequestHandler faviconRequestHandler =
+        request -> faviconResponse;
+
+    private static final RequestHandler defaultRequestHandler =
+        request -> defaultResponse;
 
     @BeforeEach
     void setUp() {
 
         router = Router.builder()
-            .register(new Favicon().build(), requestHandler)
+            .route(new Favicon().build(), faviconRequestHandler)
             .defaultRequestHandler(defaultRequestHandler)
             .build();
 
@@ -38,7 +50,7 @@ public class FaviconTest {
         when(request.getHttpMethod()).thenReturn(HttpMethod.GET);
         when(request.getPath()).thenReturn("/favicon.ico");
 
-        assertSame(requestHandler, router.route(request));
+        assertSame(faviconResponse, router.handle(request));
 
     }
 
@@ -52,7 +64,11 @@ public class FaviconTest {
                 when(request.getHttpMethod()).thenReturn(httpMethod);
                 when(request.getPath()).thenReturn("/favicon.ico");
 
-                assertSame(defaultRequestHandler, router.route(request), "Should not match method " + httpMethod);
+                assertSame(
+                    defaultResponse,
+                    router.handle(request),
+                    "Should not match method " + httpMethod
+                );
 
             }
         );
@@ -79,7 +95,11 @@ public class FaviconTest {
                 when(request.getHttpMethod()).thenReturn(HttpMethod.GET);
                 when(request.getPath()).thenReturn(path);
 
-                assertSame(defaultRequestHandler, router.route(request), "Should not match path " + path);
+                assertSame(
+                    defaultResponse,
+                    router.handle(request),
+                    "Should not match path " + path
+                );
 
             }
         );

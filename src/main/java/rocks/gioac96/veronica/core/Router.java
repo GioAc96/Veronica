@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +21,7 @@ import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.Tuple;
 
-public class Router {
+public class Router implements RequestHandler {
 
     @Getter
     @AllArgsConstructor
@@ -46,11 +47,13 @@ public class Router {
 
     private final Map<HttpMethod, RouteTree> methodRouteTrees;
     private final RequestHandler defaultRequestHandler;
+    private final List<RoutingGuard> routingGuards;
 
     public Router(RouterBuilder b) {
 
         this.methodRouteTrees = b.methodRouteTrees;
         this.defaultRequestHandler = b.defaultRequestHandler;
+        this.routingGuards = b.routingGuards;
 
     }
 
@@ -122,25 +125,37 @@ public class Router {
 
     }
 
-    public RequestHandler route(
+    public Response handle(
         Request request
     ) {
 
-        RequestHandler requestHandler = routeRequest(request);
+        for (RoutingGuard routingGuard : routingGuards) {
+
+            Response response = routingGuard.handle(request);
+
+            if (response != null) {
+
+                return response;
+
+            }
+
+        }
+
+        RequestHandler requestHandler = routeRequestInRoutesTree(request);
 
         if (requestHandler == null) {
 
-            return defaultRequestHandler;
+            return defaultRequestHandler.handle(request);
 
         } else {
 
-            return requestHandler;
+            return requestHandler.handle(request);
 
         }
 
     }
 
-    private RequestHandler routeRequest(
+    private RequestHandler routeRequestInRoutesTree(
         Request request
     ) {
 
@@ -211,6 +226,8 @@ public class Router {
 
         private final Map<HttpMethod, RouteTree> methodRouteTrees = new HashMap<>();
 
+        private final List<RoutingGuard> routingGuards = new LinkedList<>();
+
         public RouterBuilder defaultRequestHandler(@NonNull RequestHandler requestHandler) {
 
             this.defaultRequestHandler = requestHandler;
@@ -226,7 +243,7 @@ public class Router {
 
         public RouterBuilder route(@NonNull Route route) {
 
-            return register(route.getRequestMatcher(), route.getRequestHandler());
+            return route(route.getRequestMatcher(), route.getRequestHandler());
 
         }
 
@@ -236,7 +253,21 @@ public class Router {
 
         }
 
-        public RouterBuilder register(
+        public RouterBuilder routingGuard(@NonNull RoutingGuard routingGuard) {
+
+            routingGuards.add(routingGuard);
+
+            return this;
+
+        }
+
+        public RouterBuilder routingGuard(@NonNull Provider<RoutingGuard> routingGuard) {
+
+            return routingGuard(routingGuard.provide());
+
+        }
+
+        public RouterBuilder route(
             @NonNull RequestMatcher requestMatcher,
             @NonNull RequestHandler requestHandler
         ) {

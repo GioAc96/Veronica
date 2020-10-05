@@ -26,7 +26,7 @@ public final class Application {
 
     protected final Set<HttpServer> httpServers;
 
-    protected final Router router;
+    protected final RequestHandler requestHandler;
 
     protected final ExchangeParser exchangeParser;
 
@@ -36,7 +36,7 @@ public final class Application {
         ApplicationBuilder b
     ) throws IOException {
 
-        this.router = b.router;
+        this.requestHandler = b.requestHandler;
         this.exchangeParser = b.exchangeParser;
         this.exceptionHandler = b.exceptionHandler;
 
@@ -80,7 +80,7 @@ public final class Application {
                 Request request = exchangeParser.parseExchange(exchange);
 
                 // Generate response
-                response = router.route(request).handle(request);
+                response = requestHandler.handle(request);
 
 
             } catch (Exception e) {
@@ -154,7 +154,7 @@ public final class Application {
 
         private final Set<Server> servers = new HashSet<>();
 
-        private Router router;
+        private RequestHandler requestHandler;
 
         private ExchangeParser exchangeParser = new ExchangeParser() {
         };
@@ -166,7 +166,7 @@ public final class Application {
 
         public ApplicationBuilder router(@NonNull Router router) {
 
-            this.router = router;
+            this.requestHandler = router;
             return this;
 
         }
@@ -174,6 +174,20 @@ public final class Application {
         public ApplicationBuilder router(@NonNull Provider<Router> routerProvider) {
 
             return router(routerProvider.provide());
+
+        }
+
+        public ApplicationBuilder requestHandler(@NonNull RequestHandler requestHandler) {
+
+            this.requestHandler = requestHandler;
+            return this;
+
+        }
+
+
+        public ApplicationBuilder requestHandler(@NonNull Provider<RequestHandler> requestHandler) {
+
+            return requestHandler(requestHandler.provide());
 
         }
 
@@ -209,9 +223,9 @@ public final class Application {
 
         }
 
-        public ApplicationBuilder port(@NonNull Provider<Integer> portProvider) {
+        public ApplicationBuilder port(@NonNull Provider<Integer> port) {
 
-            return server(Server.builder().port(portProvider.provide()).build());
+            return server(Server.builder().port(port.provide()).build());
 
         }
 
@@ -240,7 +254,7 @@ public final class Application {
 
             return isNotNull(
                 servers,
-                router,
+                requestHandler,
                 exchangeParser,
                 exceptionHandler
             );
