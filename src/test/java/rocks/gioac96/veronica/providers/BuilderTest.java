@@ -34,4 +34,43 @@ class BuilderTest {
 
     }
 
+    @Test
+    void testMultipleConfigurations() {
+
+        abstract class RootBuilder extends Builder<String> implements BuildsMultipleInstances {
+
+            protected String value = "";
+
+            @Override
+            protected void configure() {
+
+                super.configure();
+
+                value += "RootBuilder";
+
+            }
+
+            @Override
+            protected String instantiate() {
+                return new String(value);
+            }
+        }
+
+        class ChildBuilder extends RootBuilder {
+
+            @Override
+            protected void configure() {
+
+                super.configure();
+
+                value += "ChildBuilder";
+
+            }
+
+        }
+
+        assertEquals("RootBuilderChildBuilder", new ChildBuilder().build());
+
+    }
+
 }
