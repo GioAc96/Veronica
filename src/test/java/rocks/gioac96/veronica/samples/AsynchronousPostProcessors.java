@@ -53,8 +53,6 @@ public class AsynchronousPostProcessors {
 
             Thread.sleep(sleepTime);
 
-            System.out.println("Finished");
-
         } catch (InterruptedException ignored) {}
 
     }
