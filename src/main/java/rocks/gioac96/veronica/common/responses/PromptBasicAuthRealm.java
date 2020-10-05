@@ -19,6 +19,8 @@ public class PromptBasicAuthRealm extends Response.ResponseBuilder implements Bu
     @Override
     protected void configure() {
 
+        super.configure();
+
         httpStatus(HttpStatus.UNAUTHORIZED);
         header("WWW-Authenticate", "Basic realm=\"" + realm + "\"");
 

@@ -5,15 +5,15 @@ import rocks.gioac96.veronica.core.RequestMatcher;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsSingleInstance;
 
-public class Favicon extends Builder<RequestMatcher> implements BuildsSingleInstance {
+public class Favicon extends RequestMatcher.RequestMatcherBuilder implements BuildsSingleInstance {
 
     @Override
-    protected RequestMatcher instantiate() {
+    protected void configure() {
 
-        return RequestMatcher.builder()
-            .httpMethod(HttpMethod.GET)
-            .pathPattern("/favicon.ico")
-            .build();
+        super.configure();
+
+        httpMethod(HttpMethod.GET);
+        pathPattern("/favicon.ico");
 
     }
 

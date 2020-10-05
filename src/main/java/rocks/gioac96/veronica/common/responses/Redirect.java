@@ -54,6 +54,8 @@ public class Redirect extends Response.ResponseBuilder implements BuildsMultiple
     @Override
     protected void configure() {
 
+        super.configure();
+
         if (isPermanent) {
 
             httpStatus(HttpStatus.MOVED_PERMANENTLY);
