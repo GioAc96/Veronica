@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.core.concurrent;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -11,14 +12,13 @@ import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
 
-public class PriorityFixedThreadPoolExecutor<P extends Comparable<P>>
-    extends ThreadPoolExecutor
-    implements PriorityExecutor<P> {
+public class PriorityFixedThreadPoolExecutor
+    extends ThreadPoolExecutor {
 
-    private final P defaultPriority;
+    private final int defaultPriority;
 
     protected PriorityFixedThreadPoolExecutor(
-        PriorityFixedThreadPoolExecutorBuilder<P> b
+        PriorityFixedThreadPoolExecutorBuilder b
     ) {
 
         super(
@@ -26,50 +26,88 @@ public class PriorityFixedThreadPoolExecutor<P extends Comparable<P>>
             b.poolSize,
             b.keepAliveTime,
             b.keepAliveTimeUnit,
-            (PriorityBlockingQueue)new PriorityBlockingQueue<PriorityTask<P>>()
+            new PriorityBlockingQueue<>()
         );
 
         this.defaultPriority = b.defaultPriority;
 
     }
-    
-    public static <P extends Comparable<P>> PriorityFixedThreadPoolExecutorBuilder<P> builder() {
 
-        class PriorityFixedThreadPoolExecutorBuilderImpl<P1 extends Comparable<P1>>
-            extends PriorityFixedThreadPoolExecutorBuilder<P1>
+    private static void sleep() {
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static PriorityFixedThreadPoolExecutorBuilder builder() {
+
+        class PriorityFixedThreadPoolExecutorBuilderImpl
+            extends PriorityFixedThreadPoolExecutorBuilder
             implements BuildsMultipleInstances {
 
         }
 
-        return new PriorityFixedThreadPoolExecutorBuilderImpl<>();
+        return new PriorityFixedThreadPoolExecutorBuilderImpl();
 
     }
 
     @Override
     public void execute(Runnable command) {
 
-        execute(new PriorityTask<>(defaultPriority, command));
+        if (command instanceof PriorityTask) {
+
+            super.execute(command);
+
+        } else {
+
+            super.execute(new PriorityTask(defaultPriority, command));
+
+        }
+
 
     }
 
-    @Override
-    public void execute(Runnable command, P priority) {
+    public void execute(Runnable command, int priority) {
 
-        super.execute(new PriorityTask<>(priority, command));
-
-    }
-
-    @Override
-    public void execute(PriorityTask<P> task) {
-
-        super.execute(task);
+        super.execute(new PriorityTask(priority, command));
 
     }
 
-    public abstract static class PriorityFixedThreadPoolExecutorBuilder<P extends Comparable<P>>
-        extends Builder<PriorityFixedThreadPoolExecutor<P>> {
+    public Executor getExecutorWithPriority(int priority) {
 
-        private P defaultPriority;
+        class ExecutorImpl implements Executor {
+
+            private final PriorityFixedThreadPoolExecutor baseExecutor;
+            private final int priority;
+
+            private ExecutorImpl(PriorityFixedThreadPoolExecutor baseExecutor, int priority) {
+
+                this.baseExecutor = baseExecutor;
+                this.priority = priority;
+
+            }
+
+            @Override
+            public void execute(Runnable command) {
+
+                baseExecutor.execute(command, priority);
+
+            }
+
+        }
+
+        return new ExecutorImpl(this, priority);
+
+    }
+
+    public abstract static class PriorityFixedThreadPoolExecutorBuilder
+        extends Builder<PriorityFixedThreadPoolExecutor> {
+
+        private int defaultPriority = Integer.MAX_VALUE;
         private int poolSize = Runtime.getRuntime().availableProcessors();
         private long keepAliveTime = 0;
         private TimeUnit keepAliveTimeUnit = TimeUnit.MILLISECONDS;
@@ -80,7 +118,6 @@ public class PriorityFixedThreadPoolExecutor<P extends Comparable<P>>
         protected boolean isValid() {
 
             return super.isValid() &&
-                defaultPriority != null &&
                 keepAliveTimeUnit != null &&
                 threadFactory != null &&
                 rejectedExecutionHandler != null;
@@ -88,39 +125,39 @@ public class PriorityFixedThreadPoolExecutor<P extends Comparable<P>>
         }
 
         @Override
-        protected PriorityFixedThreadPoolExecutor<P> instantiate() {
+        protected PriorityFixedThreadPoolExecutor instantiate() {
 
-            return new PriorityFixedThreadPoolExecutor<>(this);
+            return new PriorityFixedThreadPoolExecutor(this);
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> poolSize(int poolSize) {
+        public PriorityFixedThreadPoolExecutorBuilder poolSize(int poolSize) {
 
             this.poolSize = poolSize;
             return this;
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> poolSize(@NonNull Provider<Integer> poolSize) {
+        public PriorityFixedThreadPoolExecutorBuilder poolSize(@NonNull Provider<Integer> poolSize) {
 
             return poolSize(poolSize.provide());
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> defaultPriority(@NonNull P defaultPriority) {
+        public PriorityFixedThreadPoolExecutorBuilder defaultPriority(int defaultPriority) {
 
             this.defaultPriority = defaultPriority;
             return this;
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> defaultPriority(@NonNull Provider<P> defaultPriority) {
+        public PriorityFixedThreadPoolExecutorBuilder defaultPriority(@NonNull Provider<Integer> defaultPriority) {
 
             return defaultPriority(defaultPriority.provide());
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> keepAliveTime(long keepAliveTime, @NonNull TimeUnit keepAliveTimeUnit) {
+        public PriorityFixedThreadPoolExecutorBuilder keepAliveTime(long keepAliveTime, @NonNull TimeUnit keepAliveTimeUnit) {
 
             this.keepAliveTime = keepAliveTime;
             this.keepAliveTimeUnit = keepAliveTimeUnit;
@@ -129,53 +166,53 @@ public class PriorityFixedThreadPoolExecutor<P extends Comparable<P>>
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> keepAliveTime(long keepAliveTime) {
+        public PriorityFixedThreadPoolExecutorBuilder keepAliveTime(long keepAliveTime) {
 
             this.keepAliveTime = keepAliveTime;
             return this;
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> keepAliveTime(@NonNull Provider<Long> keepAliveTime) {
+        public PriorityFixedThreadPoolExecutorBuilder keepAliveTime(@NonNull Provider<Long> keepAliveTime) {
 
             return keepAliveTime(keepAliveTime.provide());
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> keepAliveTimeUnit(@NonNull TimeUnit keepAliveTimeUnit) {
+        public PriorityFixedThreadPoolExecutorBuilder keepAliveTimeUnit(@NonNull TimeUnit keepAliveTimeUnit) {
 
             this.keepAliveTimeUnit = keepAliveTimeUnit;
             return this;
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> keepAliveTimeUnit(@NonNull Provider<TimeUnit> keepAliveTimeUnit) {
+        public PriorityFixedThreadPoolExecutorBuilder keepAliveTimeUnit(@NonNull Provider<TimeUnit> keepAliveTimeUnit) {
 
             return keepAliveTimeUnit(keepAliveTimeUnit.provide());
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> threadFactory(@NonNull ThreadFactory threadFactory) {
+        public PriorityFixedThreadPoolExecutorBuilder threadFactory(@NonNull ThreadFactory threadFactory) {
 
             this.threadFactory = threadFactory;
             return this;
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> threadFactory(@NonNull Provider<ThreadFactory> threadFactory) {
+        public PriorityFixedThreadPoolExecutorBuilder threadFactory(@NonNull Provider<ThreadFactory> threadFactory) {
 
             return threadFactory(threadFactory.provide());
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> rejectedExecutionHandler(@NonNull RejectedExecutionHandler rejectedExecutionHandler) {
+        public PriorityFixedThreadPoolExecutorBuilder rejectedExecutionHandler(@NonNull RejectedExecutionHandler rejectedExecutionHandler) {
 
             this.rejectedExecutionHandler = rejectedExecutionHandler;
             return this;
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder<P> rejectedExecutionHandler(@NonNull Provider<RejectedExecutionHandler> rejectedExecutionHandler) {
+        public PriorityFixedThreadPoolExecutorBuilder rejectedExecutionHandler(@NonNull Provider<RejectedExecutionHandler> rejectedExecutionHandler) {
 
             return rejectedExecutionHandler(rejectedExecutionHandler.provide());
 

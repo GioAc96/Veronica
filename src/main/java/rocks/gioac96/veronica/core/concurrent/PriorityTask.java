@@ -2,15 +2,15 @@ package rocks.gioac96.veronica.core.concurrent;
 
 import lombok.Getter;
 
-public class PriorityTask<P extends Comparable<P>> implements Runnable, Comparable<PriorityTask<P>> {
+public class PriorityTask implements Runnable, Comparable<PriorityTask> {
 
     @Getter
-    private final P priority;
+    private final int priority;
 
     @Getter
     private final Runnable task;
 
-    protected PriorityTask(P priority, Runnable task) {
+    protected PriorityTask(int priority, Runnable task) {
 
         this.priority = priority;
 
@@ -25,9 +25,9 @@ public class PriorityTask<P extends Comparable<P>> implements Runnable, Comparab
     }
 
     @Override
-    public int compareTo(PriorityTask<P> o) {
+    public int compareTo(PriorityTask o) {
 
-        return this.priority.compareTo(o.priority);
+        return Integer.compare(this.priority, o.priority);
 
     }
 
