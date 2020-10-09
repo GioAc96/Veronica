@@ -57,7 +57,7 @@ public class PriorityFixedThreadPoolExecutor
 
         if (runnable instanceof PriorityRunnableTask) {
 
-            return (PriorityRunnableTask)runnable;
+            return (PriorityRunnableTask) runnable;
 
         } else {
 
@@ -170,11 +170,11 @@ public class PriorityFixedThreadPoolExecutor
         super.execute(ftask);
 
         return ftask;
-        
+
     }
 
 
-        public Executor getExecutorWithPriority(int priority) {
+    public Executor getExecutorWithPriority(int priority) {
 
         class FixedPriorityExecutorImpl implements ExecutorService {
 
