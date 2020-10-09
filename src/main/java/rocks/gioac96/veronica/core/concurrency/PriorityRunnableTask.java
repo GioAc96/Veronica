@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core.concurrent;
+package rocks.gioac96.veronica.core.concurrency;
 
 import lombok.Getter;
 

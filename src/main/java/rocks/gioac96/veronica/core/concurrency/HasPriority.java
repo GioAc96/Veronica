@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core.concurrent;
+package rocks.gioac96.veronica.core.concurrency;
 
 public interface HasPriority extends Comparable<HasPriority> {
 

@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core.concurrent;
+package rocks.gioac96.veronica.core.concurrency;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -16,5 +16,5 @@ public interface PriorityExecutorService extends ExecutorService {
     <T> Future<T> submit(@NonNull Runnable task, T result, int priority);
 
     ExecutorService getExecutorWithPriority(int priority);
-    
+
 }

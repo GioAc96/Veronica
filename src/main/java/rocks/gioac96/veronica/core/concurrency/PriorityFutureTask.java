@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core.concurrent;
+package rocks.gioac96.veronica.core.concurrency;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
