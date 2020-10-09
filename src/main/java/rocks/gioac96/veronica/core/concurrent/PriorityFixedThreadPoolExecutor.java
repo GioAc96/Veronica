@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -20,8 +19,10 @@ import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
 
+@SuppressWarnings("unused")
 public class PriorityFixedThreadPoolExecutor
-    extends ThreadPoolExecutor {
+    extends ThreadPoolExecutor
+    implements PriorityExecutorService {
 
     private final int defaultPriority;
 
@@ -82,6 +83,7 @@ public class PriorityFixedThreadPoolExecutor
 
     }
 
+    @Override
     public void execute(Runnable command, int priority) {
 
         super.execute(new PriorityRunnableTask(priority, command));
@@ -105,6 +107,7 @@ public class PriorityFixedThreadPoolExecutor
 
     }
 
+    @Override
     public Future<?> submit(@NonNull Runnable task, int priority) {
 
         PriorityFutureTask<?> ftask = new PriorityFutureTask<>(task, null, priority);
@@ -134,9 +137,10 @@ public class PriorityFixedThreadPoolExecutor
 
     }
 
+    @Override
     public <T> Future<T> submit(@NonNull Callable<T> task, int priority) {
 
-        PriorityFutureTask<T> ftask = new PriorityFutureTask<T>(task, priority);
+        PriorityFutureTask<T> ftask = new PriorityFutureTask<>(task, priority);
 
         super.execute(ftask);
 
@@ -149,7 +153,7 @@ public class PriorityFixedThreadPoolExecutor
 
         if (task instanceof HasPriority) {
 
-            PriorityFutureTask<T> ftask = new PriorityFutureTask<T>(task, result, ((HasPriority) task).getPriority());
+            PriorityFutureTask<T> ftask = new PriorityFutureTask<>(task, result, ((HasPriority) task).getPriority());
 
             super.execute(ftask);
 
@@ -163,9 +167,10 @@ public class PriorityFixedThreadPoolExecutor
 
     }
 
+    @Override
     public <T> Future<T> submit(@NonNull Runnable task, T result, int priority) {
 
-        PriorityFutureTask<T> ftask = new PriorityFutureTask<T>(task, result, priority);
+        PriorityFutureTask<T> ftask = new PriorityFutureTask<>(task, result, priority);
 
         super.execute(ftask);
 
@@ -173,133 +178,10 @@ public class PriorityFixedThreadPoolExecutor
 
     }
 
+    @Override
+    public ExecutorService getExecutorWithPriority(int priority) {
 
-    public Executor getExecutorWithPriority(int priority) {
-
-        class FixedPriorityExecutorImpl implements ExecutorService {
-
-            private final PriorityFixedThreadPoolExecutor baseExecutor;
-            private final int priority;
-
-            private FixedPriorityExecutorImpl(
-                PriorityFixedThreadPoolExecutor baseExecutor,
-                int priority
-            ) {
-
-                this.baseExecutor = baseExecutor;
-                this.priority = priority;
-
-            }
-
-            @Override
-            public void execute(Runnable command) {
-
-                baseExecutor.execute(command, priority);
-
-            }
-
-            @Override
-            public void shutdown() {
-
-                baseExecutor.shutdown();
-
-            }
-
-            @Override
-            public List<Runnable> shutdownNow() {
-
-                return baseExecutor.shutdownNow();
-
-            }
-
-            @Override
-            public boolean isShutdown() {
-
-                return baseExecutor.isShutdown();
-
-            }
-
-            @Override
-            public boolean isTerminated() {
-
-                return baseExecutor.isTerminated();
-
-            }
-
-            @Override
-            public boolean awaitTermination(
-                long timeout,
-                TimeUnit unit
-            ) throws InterruptedException {
-
-                return baseExecutor.awaitTermination(timeout, unit);
-
-            }
-
-            @Override
-            public <T> Future<T> submit(Callable<T> task) {
-
-                return baseExecutor.submit(task);
-
-            }
-
-            @Override
-            public <T> Future<T> submit(Runnable task, T result) {
-
-                return baseExecutor.submit(task, result);
-
-            }
-
-            @Override
-            public Future<?> submit(Runnable task) {
-
-                return baseExecutor.submit(task);
-
-            }
-
-            @Override
-            public <T> List<Future<T>> invokeAll(
-                Collection<? extends Callable<T>> tasks
-            ) throws InterruptedException {
-
-                return baseExecutor.invokeAll(tasks);
-
-            }
-
-            @Override
-            public <T> List<Future<T>> invokeAll(
-                Collection<? extends Callable<T>> tasks,
-                long timeout,
-                TimeUnit unit
-            ) throws InterruptedException {
-
-                return baseExecutor.invokeAll(tasks, timeout, unit);
-
-            }
-
-            @Override
-            public <T> T invokeAny(
-                Collection<? extends Callable<T>> tasks
-            ) throws InterruptedException, ExecutionException {
-
-                return baseExecutor.invokeAny(tasks);
-
-            }
-
-            @Override
-            public <T> T invokeAny(
-                Collection<? extends Callable<T>> tasks,
-                long timeout,
-                TimeUnit unit
-            ) throws InterruptedException, ExecutionException, TimeoutException {
-
-                return baseExecutor.invokeAny(tasks, timeout, unit);
-
-            }
-
-        }
-
-        return new FixedPriorityExecutorImpl(this, priority);
+        return new ExecutorWithPriority(this, priority);
 
     }
 
