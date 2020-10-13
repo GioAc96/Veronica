@@ -17,4 +17,5 @@ public interface PriorityExecutorService extends ExecutorService {
 
     ExecutorService getExecutorWithPriority(int priority);
 
+    ExecutorService getExecutorWithDefaultPriority();
 }

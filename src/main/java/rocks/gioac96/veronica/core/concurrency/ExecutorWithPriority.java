@@ -9,12 +9,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class ExecutorWithPriority implements ExecutorService {
+class ExecutorWithPriority implements ExecutorService {
 
     private final PriorityExecutorService baseExecutor;
     private final int priority;
 
-    public ExecutorWithPriority(
+    protected ExecutorWithPriority(
         PriorityExecutorService baseExecutor,
         int priority
     ) {

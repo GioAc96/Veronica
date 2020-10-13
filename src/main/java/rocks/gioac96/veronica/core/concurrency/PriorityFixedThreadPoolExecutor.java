@@ -10,6 +10,7 @@ import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
@@ -20,6 +21,7 @@ public class PriorityFixedThreadPoolExecutor
     extends ThreadPoolExecutor
     implements PriorityExecutorService {
 
+    @Getter
     private final int defaultPriority;
 
     protected PriorityFixedThreadPoolExecutor(
@@ -178,6 +180,13 @@ public class PriorityFixedThreadPoolExecutor
     public ExecutorService getExecutorWithPriority(int priority) {
 
         return new ExecutorWithPriority(this, priority);
+
+    }
+
+    @Override
+    public ExecutorService getExecutorWithDefaultPriority() {
+
+        return getExecutorWithPriority(defaultPriority);
 
     }
 
