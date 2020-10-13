@@ -51,12 +51,6 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
 
     }
 
-    protected static boolean isNotNull(Object... fields) {
-
-        return Arrays.stream(fields).allMatch(Objects::nonNull);
-
-    }
-
     protected boolean isValid() {
 
         return true;

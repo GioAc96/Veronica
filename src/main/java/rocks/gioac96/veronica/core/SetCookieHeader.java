@@ -332,9 +332,9 @@ public final class SetCookieHeader {
         @Override
         protected boolean isValid() {
 
-            return isNameValid(name) && isNotNull(
-                value
-            );
+            return super.isValid()
+                && isNameValid(name)
+                && value != null;
 
         }
 

@@ -144,14 +144,13 @@ public class StaticRouteBuilder<
     @Override
     protected boolean isValid() {
 
-        return isNotNull(
-            baseDir,
-            basePath,
-            permissionDecider,
-            permissionsManager,
-            accessDeniedResponse,
-            fileNotFoundResponse
-        );
+        return super.isValid()
+            && baseDir != null
+            && basePath != null
+            && permissionDecider != null
+            && permissionsManager != null
+            && accessDeniedResponse != null
+            && fileNotFoundResponse != null;
 
     }
 
