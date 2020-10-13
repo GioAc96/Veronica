@@ -24,11 +24,8 @@ import rocks.gioac96.veronica.util.ArraySet;
 public final class Application {
 
     protected final Set<HttpServer> httpServers;
-
     protected final RequestHandler requestHandler;
-
     protected final ExchangeParser exchangeParser;
-
     protected final ExceptionHandler exceptionHandler;
 
     protected Application(
