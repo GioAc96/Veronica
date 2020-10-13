@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.NonNull;
@@ -21,8 +22,6 @@ import rocks.gioac96.veronica.util.ArraySet;
  */
 @SuppressWarnings("unused")
 public final class Application {
-
-    protected final ThreadPoolExecutor threadPool;
 
     protected final Set<HttpServer> httpServers;
 
@@ -39,8 +38,6 @@ public final class Application {
         this.requestHandler = b.requestHandler;
         this.exchangeParser = b.exchangeParser;
         this.exceptionHandler = b.exceptionHandler;
-
-        this.threadPool = b.threadPool;
 
         this.httpServers = new ArraySet<>();
 
@@ -70,57 +67,52 @@ public final class Application {
 
     private void handleExchange(HttpExchange exchange) {
 
-        threadPool.submit(() -> {
+        Response response;
 
-            Response response;
+        try {
 
-            try {
+            // Parse request
+            Request request = exchangeParser.parseExchange(exchange);
 
-                // Parse request
-                Request request = exchangeParser.parseExchange(exchange);
-
-                // Generate response
-                response = requestHandler.handle(request);
+            // Generate response
+            response = requestHandler.handle(request);
 
 
-            } catch (Exception e) {
+        } catch (Exception e) {
 
-                response = exceptionHandler.handle(e);
+            response = exceptionHandler.handle(e);
 
-            }
+        }
 
-            try {
-                // Writing response headers
-                exchange.getResponseHeaders().putAll(response.getHeaders());
+        try {
+            // Writing response headers
+            exchange.getResponseHeaders().putAll(response.getHeaders());
 
-                // Cookies
-                List<String> cookieHeaders = new ArrayList<>();
+            // Cookies
+            List<String> cookieHeaders = new ArrayList<>();
 
-                for (SetCookieHeader httpCookie : response.getCookies()) {
+            for (SetCookieHeader httpCookie : response.getCookies()) {
 
-                    cookieHeaders.add(httpCookie.toHeaderString());
-
-                }
-
-                exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
-
-                // Send response headers
-                exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length);
-
-                // Send response body
-                exchange.getResponseBody().write(response.getBody());
-
-                // Close response
-                exchange.close();
-
-            } catch (IOException e) {
-
-                exceptionHandler.handleExchangeException(e);
+                cookieHeaders.add(httpCookie.toHeaderString());
 
             }
 
-        });
+            exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
 
+            // Send response headers
+            exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length);
+
+            // Send response body
+            exchange.getResponseBody().write(response.getBody());
+
+            // Close response
+            exchange.close();
+
+        } catch (IOException e) {
+
+            exceptionHandler.handleExchangeException(e);
+
+        }
     }
 
     /**
@@ -161,8 +153,6 @@ public final class Application {
 
         private ExceptionHandler exceptionHandler = new ExceptionHandler() {
         };
-
-        private ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
         public ApplicationBuilder router(@NonNull Router router) {
 
@@ -242,12 +232,7 @@ public final class Application {
 
         }
 
-        public ApplicationBuilder threadPool(ThreadPoolExecutor threadPool) {
 
-            this.threadPool = threadPool;
-            return this;
-
-        }
 
         @Override
         protected boolean isValid() {

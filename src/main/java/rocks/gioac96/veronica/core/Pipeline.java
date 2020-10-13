@@ -3,6 +3,7 @@ package rocks.gioac96.veronica.core;
 import java.util.Objects;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.NonNull;
+import rocks.gioac96.veronica.common.CommonExecutorServices;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.DeclaresPriority;
@@ -15,16 +16,10 @@ import rocks.gioac96.veronica.util.PrioritySet;
 public final class Pipeline implements RequestHandler {
 
     private final PrioritySet<PreFilter> preFilters;
-
     private final PrioritySet<PostFilter> postFilters;
-
     private final PrioritySet<PostProcessor> postProcessors;
-
     private final ResponseRenderer responseRenderer;
-
     private final RequestHandler requestHandler;
-
-    private final ThreadPoolExecutor threadPool;
 
     protected Pipeline(PipelineBuilder b) {
 
@@ -33,7 +28,6 @@ public final class Pipeline implements RequestHandler {
         this.postProcessors = b.postProcessors;
         this.responseRenderer = b.responseRenderer;
         this.requestHandler = b.requestHandler;
-        this.threadPool = b.threadPool;
 
     }
 
@@ -100,18 +94,10 @@ public final class Pipeline implements RequestHandler {
 
             if (postProcessor instanceof PostProcessor.Asynchronous) {
 
-                Runnable postProcessorTask = () -> postProcessor.process(request, response);
-
-                if (this.threadPool == null) {
-
-                    new Thread(postProcessorTask).start();
-
-                } else {
-
-                    this.threadPool.execute(postProcessorTask);
-
-                }
-
+                CommonExecutorServices.defaultPriorityExecutorService().execute(
+                    () -> postProcessor.process(request, response),
+                    ((PostProcessor.Asynchronous) postProcessor).priority()
+                );
 
             } else {
 
@@ -162,8 +148,6 @@ public final class Pipeline implements RequestHandler {
         private final PrioritySet<PostFilter> postFilters = new PrioritySet<>();
 
         private final PrioritySet<PostProcessor> postProcessors = new PrioritySet<>();
-
-        private ThreadPoolExecutor threadPool;
 
         private RequestHandler requestHandler;
 
@@ -288,20 +272,6 @@ public final class Pipeline implements RequestHandler {
             return requestHandler(requestHandler.provide());
 
         }
-
-        public PipelineBuilder threadPool(@NonNull ThreadPoolExecutor threadPool) {
-
-            this.threadPool = threadPool;
-            return this;
-
-        }
-
-        public PipelineBuilder threadPool(@NonNull Provider<ThreadPoolExecutor> threadPool) {
-
-            return threadPool(threadPool.provide());
-
-        }
-
 
         public PipelineBuilder combinePipeline(@NonNull Pipeline pipeline) {
 
