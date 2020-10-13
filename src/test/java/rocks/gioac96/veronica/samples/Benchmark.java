@@ -12,9 +12,7 @@ public class Benchmark {
 
         Application.builder()
             .port(80)
-            .router(Router.builder()
-                .defaultRequestHandler(request -> ok())
-                .build())
+            .requestHandler(request -> ok())
             .build()
             .start();
 
