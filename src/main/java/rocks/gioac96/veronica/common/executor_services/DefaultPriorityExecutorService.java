@@ -12,6 +12,7 @@ public class DefaultPriorityExecutorService
 
         super.configure();
 
+        poolSize(Runtime.getRuntime().availableProcessors());
         defaultPriority(Integer.MAX_VALUE);
 
     }
