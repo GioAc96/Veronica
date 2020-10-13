@@ -97,6 +97,7 @@ public final class FilePermissionsManager<P> {
 
     /**
      * Gets the permissions of the specified path.
+     *
      * @param path path to get the permissions of
      * @return the permissions
      */
@@ -160,7 +161,8 @@ public final class FilePermissionsManager<P> {
 
         /**
          * Sets the permissions of the specified path.
-         * @param path path to set the permissions of
+         *
+         * @param path        path to set the permissions of
          * @param permissions permissions tos set
          */
         public FilePermissionsManagerBuilder<P> permissions(Path path, P permissions) {
@@ -195,7 +197,7 @@ public final class FilePermissionsManager<P> {
 
             closestParent.children.removeIf(child -> child.path.startsWith(path));
 
-            if (! Objects.equals(permissions, closestParent.permissions)) {
+            if (!Objects.equals(permissions, closestParent.permissions)) {
 
                 PermissionTree<P> leaf = new PermissionTree<>(path, null);
                 leaf.overwritePermissions(permissions);

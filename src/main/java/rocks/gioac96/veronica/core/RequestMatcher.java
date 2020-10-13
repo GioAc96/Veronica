@@ -1,29 +1,107 @@
 package rocks.gioac96.veronica.core;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Predicate;
+import lombok.Getter;
 import lombok.NonNull;
+import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.Provider;
 
 /**
- * Request matching rule.
+ * Request matching conditions.
  */
-public interface RequestMatcher {
+@Getter
+public class RequestMatcher {
 
-    boolean matches(Request request);
+    private final Set<String> pathPatterns;
 
-    default RequestMatcher and(@NonNull RequestMatcher other) {
+    private final Set<HttpMethod> httpMethods;
 
-        return request -> this.matches(request) && other.matches(request);
+    private final Set<Predicate<Request>> conditions;
+
+    private RequestMatcher(RequestMatcherBuilder b) {
+
+        this.pathPatterns = b.pathPatterns;
+        this.httpMethods = b.httpMethods;
+        this.conditions = b.conditions;
 
     }
 
-    default RequestMatcher or(@NonNull RequestMatcher other) {
+    public static RequestMatcherBuilder builder() {
 
-        return request -> this.matches(request) || other.matches(request);
+        class RequestMatcherBuilderImpl
+            extends RequestMatcherBuilder
+            implements BuildsMultipleInstances {
+        }
+
+        return new RequestMatcherBuilderImpl();
 
     }
 
-    default RequestMatcher negate() {
+    public static abstract class RequestMatcherBuilder extends Builder<RequestMatcher> {
 
-        return request -> ! this.matches(request);
+        private final Set<String> pathPatterns = new HashSet<>();
+        private final Set<HttpMethod> httpMethods = new HashSet<>();
+        private final Set<Predicate<Request>> conditions = new HashSet<>();
+
+        public RequestMatcherBuilder pathPattern(@NonNull String pathPattern) {
+
+            this.pathPatterns.add(pathPattern);
+
+            return this;
+
+        }
+
+        public RequestMatcherBuilder pathPattern(@NonNull Provider<String> pathPattern) {
+
+            return pathPattern(pathPattern.provide());
+
+        }
+
+        public RequestMatcherBuilder httpMethod(@NonNull HttpMethod httpMethod) {
+
+            this.httpMethods.add(httpMethod);
+
+            return this;
+
+        }
+
+        public RequestMatcherBuilder httpMethod(@NonNull Provider<HttpMethod> httpMethod) {
+
+            return httpMethod(httpMethod);
+
+        }
+
+        public RequestMatcherBuilder condition(@NonNull Predicate<Request> condition) {
+
+            this.conditions.add(condition);
+
+            return this;
+
+        }
+
+        public RequestMatcherBuilder condition(@NonNull Provider<Predicate<Request>> condition) {
+
+            return condition(condition.provide());
+
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            return super.isValid()
+                && pathPatterns.size() > 0;
+
+        }
+
+        @Override
+        protected RequestMatcher instantiate() {
+
+            return new RequestMatcher(this);
+
+        }
 
     }
 

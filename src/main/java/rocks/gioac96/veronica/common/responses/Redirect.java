@@ -9,7 +9,7 @@ public class Redirect extends Response.ResponseBuilder implements BuildsMultiple
 
     protected String location;
 
-    protected boolean permanent = false;
+    protected boolean isPermanent = false;
 
     public Redirect location(@NonNull String location) {
 
@@ -19,9 +19,9 @@ public class Redirect extends Response.ResponseBuilder implements BuildsMultiple
 
     }
 
-    public Redirect permanent(boolean permanent) {
+    public Redirect permanent(boolean isPermanent) {
 
-        this.permanent = permanent;
+        this.isPermanent = isPermanent;
 
         return this;
 
@@ -29,7 +29,7 @@ public class Redirect extends Response.ResponseBuilder implements BuildsMultiple
 
     public Redirect permanent() {
 
-        this.permanent = true;
+        this.isPermanent = true;
 
         return this;
 
@@ -37,16 +37,26 @@ public class Redirect extends Response.ResponseBuilder implements BuildsMultiple
 
     public Redirect temporary() {
 
-        this.permanent = false;
+        this.isPermanent = false;
 
         return this;
 
     }
 
     @Override
+    protected boolean isValid() {
+
+        return super.isValid() &&
+            location != null;
+
+    }
+
+    @Override
     protected void configure() {
 
-        if (permanent) {
+        super.configure();
+
+        if (isPermanent) {
 
             httpStatus(HttpStatus.MOVED_PERMANENTLY);
 
@@ -57,7 +67,6 @@ public class Redirect extends Response.ResponseBuilder implements BuildsMultiple
         }
 
         header("Location", location);
-        emptyBody();
 
     }
 

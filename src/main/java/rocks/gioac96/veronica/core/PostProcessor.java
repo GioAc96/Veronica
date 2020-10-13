@@ -12,6 +12,16 @@ public interface PostProcessor {
     /**
      * Marker for PostProcessors that are executed asynchronously.
      */
-    interface Asynchronous extends PostProcessor {}
+    interface Asynchronous extends PostProcessor {
+
+        int DEFAULT_PRIORITY = Integer.MAX_VALUE / 2;
+
+        default Integer priority() {
+
+            return DEFAULT_PRIORITY;
+
+        }
+
+    }
 
 }

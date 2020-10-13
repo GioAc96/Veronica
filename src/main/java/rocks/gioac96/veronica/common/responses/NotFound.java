@@ -9,6 +9,8 @@ public class NotFound extends Response.ResponseBuilder implements BuildsSingleIn
     @Override
     protected void configure() {
 
+        super.configure();
+
         httpStatus(HttpStatus.NOT_FOUND);
         emptyBody();
 

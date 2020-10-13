@@ -10,15 +10,13 @@ import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 
 /**
  * Http Request.
  */
-@SuperBuilder
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Request {
 
     @Getter
@@ -49,6 +47,45 @@ public class Request {
 
     @Getter(lazy = true)
     private final Map<String, String> cookie = lazyLoadCookie();
+
+    @Getter(lazy = true)
+    private final Map<String, String> variablePathParts = new HashMap<>();
+
+    protected Request(RequestBuilder b) {
+
+        this.httpMethod = b.httpMethod;
+        this.body = b.body;
+        this.headers = b.headers;
+        this.uri = b.uri;
+        this.secure = b.secure;
+
+    }
+
+    protected Request(
+        HttpMethod httpMethod,
+        String body,
+        Headers headers,
+        URI uri,
+        boolean secure
+    ) {
+
+        this.httpMethod = httpMethod;
+        this.body = body;
+        this.headers = headers;
+        this.uri = uri;
+        this.secure = secure;
+
+    }
+
+    public static RequestBuilder builder() {
+
+        class RequestBuilderImpl extends RequestBuilder implements BuildsMultipleInstances {
+
+        }
+
+        return new RequestBuilderImpl();
+
+    }
 
     /**
      * Gets a query parameter's value.
@@ -136,6 +173,70 @@ public class Request {
         }
 
         return cookieMap;
+
+    }
+
+    @Getter(AccessLevel.PROTECTED)
+    public abstract static class RequestBuilder extends Builder<Request> {
+
+        private @NonNull HttpMethod httpMethod;
+        private @NonNull String body;
+        private @NonNull Headers headers;
+        private @NonNull URI uri;
+        private boolean secure;
+
+        public RequestBuilder httpMethod(@NonNull HttpMethod httpMethod) {
+
+            this.httpMethod = httpMethod;
+            return this;
+
+        }
+
+        public RequestBuilder body(@NonNull String body) {
+
+            this.body = body;
+            return this;
+
+        }
+
+        public RequestBuilder headers(@NonNull Headers headers) {
+
+            this.headers = headers;
+            return this;
+
+        }
+
+        public RequestBuilder uri(@NonNull URI uri) {
+
+            this.uri = uri;
+            return this;
+
+        }
+
+        public RequestBuilder secure(boolean secure) {
+
+            this.secure = secure;
+            return this;
+
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            return super.isValid()
+                && httpMethod != null
+                && body != null
+                && headers != null
+                && uri != null;
+
+        }
+
+        @Override
+        protected Request instantiate() {
+
+            return new Request(this);
+
+        }
 
     }
 

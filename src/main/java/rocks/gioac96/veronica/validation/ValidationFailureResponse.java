@@ -17,6 +17,14 @@ public class ValidationFailureResponse extends Response {
     @NonNull
     protected final ValidationFailureData validationFailureData;
 
+    protected ValidationFailureResponse(ValidationFailureResponseBuilder b) {
+
+        super(b);
+        this.validationFailureData = b.validationFailureData;
+        this.httpStatus = b.httpStatus;
+
+    }
+
     public static ValidationFailureResponseBuilder builder() {
 
         class ValidationFailureResponseBuilderImpl
@@ -26,14 +34,6 @@ public class ValidationFailureResponse extends Response {
         }
 
         return new ValidationFailureResponseBuilderImpl();
-
-    }
-
-    protected ValidationFailureResponse(ValidationFailureResponseBuilder b) {
-
-        super(b);
-        this.validationFailureData = b.validationFailureData;
-        this.httpStatus = b.httpStatus;
 
     }
 

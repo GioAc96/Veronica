@@ -2,18 +2,20 @@ package rocks.gioac96.veronica.common.request_matchers;
 
 import rocks.gioac96.veronica.core.HttpMethod;
 import rocks.gioac96.veronica.core.RequestMatcher;
-import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsSingleInstance;
 
-public class Favicon extends Builder<RequestMatcher> implements BuildsSingleInstance {
+/**
+ * Framework's common favicon request matcher.
+ */
+public class Favicon extends RequestMatcher.RequestMatcherBuilder implements BuildsSingleInstance {
 
     @Override
-    protected RequestMatcher instantiate() {
+    protected void configure() {
 
-        return new MethodAndPathPattern()
-            .httpMethod(HttpMethod.GET)
-            .pathPattern("/favicon.ico")
-            .build();
+        super.configure();
+
+        httpMethod(HttpMethod.GET);
+        pathPattern("/favicon.ico");
 
     }
 

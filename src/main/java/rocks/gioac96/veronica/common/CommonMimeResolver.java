@@ -5,6 +5,9 @@ import rocks.gioac96.veronica.core.MimeType;
 import rocks.gioac96.veronica.providers.BuildsSingleInstance;
 import rocks.gioac96.veronica.static_server.MimeResolver;
 
+/**
+ * The framework's default common {@link MimeResolver} builder.
+ */
 public class CommonMimeResolver extends MimeResolver.MimeResolverBuilder implements BuildsSingleInstance {
 
     @Override
@@ -13,5 +16,5 @@ public class CommonMimeResolver extends MimeResolver.MimeResolverBuilder impleme
         Arrays.stream(MimeType.CommonMimeTypes.values()).forEach(this::mime);
 
     }
-    
+
 }

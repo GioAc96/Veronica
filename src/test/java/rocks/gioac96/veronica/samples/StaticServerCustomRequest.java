@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import java.net.URI;
 import java.util.Objects;
 import lombok.NonNull;
+import rocks.gioac96.veronica.common.CommonRequestHandlers;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.ExceptionHandler;
 import rocks.gioac96.veronica.core.ExchangeParseException;
@@ -37,7 +38,7 @@ public class StaticServerCustomRequest {
                     .basePath("")
                     .baseDir("D:\\projects\\veronica\\src")
                     .build())
-                .defaultRoute(CommonRoutes.notFound())
+                .defaultRequestHandler(CommonRequestHandlers.notFound())
                 .build())
             .build()
             .start();

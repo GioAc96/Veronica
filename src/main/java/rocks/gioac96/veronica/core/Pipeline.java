@@ -1,7 +1,8 @@
 package rocks.gioac96.veronica.core;
 
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.Objects;
 import lombok.NonNull;
+import rocks.gioac96.veronica.common.CommonExecutorServices;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.DeclaresPriority;
@@ -11,17 +12,13 @@ import rocks.gioac96.veronica.util.PrioritySet;
 /**
  * Request pipeline.
  */
-public final class Pipeline {
+public final class Pipeline implements RequestHandler {
 
     private final PrioritySet<PreFilter> preFilters;
-
     private final PrioritySet<PostFilter> postFilters;
-
     private final PrioritySet<PostProcessor> postProcessors;
-
     private final ResponseRenderer responseRenderer;
-
-    protected ThreadPoolExecutor threadPool;
+    private final RequestHandler requestHandler;
 
     protected Pipeline(PipelineBuilder b) {
 
@@ -29,6 +26,7 @@ public final class Pipeline {
         this.postFilters = b.postFilters;
         this.postProcessors = b.postProcessors;
         this.responseRenderer = b.responseRenderer;
+        this.requestHandler = b.requestHandler;
 
     }
 
@@ -41,13 +39,7 @@ public final class Pipeline {
         return new PipelineBuilderImpl();
     }
 
-    void useThreadPool(ThreadPoolExecutor threadPool) {
-
-        this.threadPool = threadPool;
-
-    }
-
-    private Response preRender(Request request, RequestHandler requestHandler) {
+    private Response preRender(Request request) {
 
         for (PreFilter preFilter : preFilters) {
 
@@ -70,17 +62,16 @@ public final class Pipeline {
     /**
      * Handles a request by passing it through the pipeline.
      *
-     * @param request        request to handle
-     * @param requestHandler request handler that performs the requested action
+     * @param request request to handle
      * @return the generated response
      */
-    Response handle(@NonNull Request request, @NonNull RequestHandler requestHandler) {
+    public Response handle(@NonNull Request request) {
 
         Response response;
 
         try {
 
-            response = preRender(request, requestHandler);
+            response = preRender(request);
 
         } catch (PipelineBreakException e) {
 
@@ -102,18 +93,10 @@ public final class Pipeline {
 
             if (postProcessor instanceof PostProcessor.Asynchronous) {
 
-                Runnable postProcessorTask = () -> postProcessor.process(request, response);
-
-                if (this.threadPool == null) {
-
-                    new Thread(postProcessorTask).start();
-
-                } else {
-
-                    this.threadPool.execute(postProcessorTask);
-
-                }
-
+                CommonExecutorServices.defaultPriorityExecutorService().execute(
+                    () -> postProcessor.process(request, response),
+                    ((PostProcessor.Asynchronous) postProcessor).priority()
+                );
 
             } else {
 
@@ -124,7 +107,7 @@ public final class Pipeline {
         }
 
     }
-    
+
     private void render(Response response) {
 
         if (!response.isRendered()) {
@@ -165,6 +148,8 @@ public final class Pipeline {
 
         private final PrioritySet<PostProcessor> postProcessors = new PrioritySet<>();
 
+        private RequestHandler requestHandler;
+
         private ResponseRenderer responseRenderer;
 
         public PipelineBuilder preFilter(@NonNull PreFilter preFilter) {
@@ -187,7 +172,7 @@ public final class Pipeline {
 
                 this.preFilters.add(
                     preFilterProvider.provide(),
-                    ((DeclaresPriority)preFilterProvider).priority()
+                    ((DeclaresPriority) preFilterProvider).priority()
                 );
 
             } else {
@@ -216,18 +201,18 @@ public final class Pipeline {
         public PipelineBuilder postFilters(@NonNull Provider<PostFilter> postFilterProvider) {
 
             if (postFilterProvider instanceof DeclaresPriority) {
-                
+
                 return this.postFilter(
                     postFilterProvider.provide(),
                     ((DeclaresPriority) postFilterProvider).priority()
                 );
-                
+
             } else {
-                
+
                 return this.postFilter(postFilterProvider.provide());
-                
+
             }
-            
+
         }
 
         public PipelineBuilder postProcessor(@NonNull PostProcessor postProcessor) {
@@ -247,24 +232,43 @@ public final class Pipeline {
         public PipelineBuilder postProcessor(@NonNull Provider<PostProcessor> postProcessorProvider) {
 
             if (postProcessorProvider instanceof DeclaresPriority) {
-                
+
                 return postProcessor(
                     postProcessorProvider.provide(),
                     ((DeclaresPriority) postProcessorProvider).priority()
                 );
-                
+
             } else {
-                
+
                 return postProcessor(postProcessorProvider.provide());
-                
+
             }
 
         }
 
-        public PipelineBuilder responseRenderer(ResponseRenderer responseRenderer) {
+        public PipelineBuilder responseRenderer(@NonNull ResponseRenderer responseRenderer) {
 
             this.responseRenderer = responseRenderer;
             return this;
+
+        }
+
+        public PipelineBuilder responseRenderer(@NonNull Provider<ResponseRenderer> responseRenderer) {
+
+            return responseRenderer(responseRenderer.provide());
+
+        }
+
+        public PipelineBuilder requestHandler(@NonNull RequestHandler requestHandler) {
+
+            this.requestHandler = requestHandler;
+            return this;
+
+        }
+
+        public PipelineBuilder requestHandler(@NonNull Provider<RequestHandler> requestHandler) {
+
+            return requestHandler(requestHandler.provide());
 
         }
 
@@ -281,6 +285,17 @@ public final class Pipeline {
             }
 
             return this;
+
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            return super.isValid()
+                && requestHandler != null
+                && preFilters.stream().allMatch(Objects::nonNull)
+                && postFilters.stream().allMatch(Objects::nonNull)
+                && postProcessors.stream().allMatch(Objects::nonNull);
 
         }
 

@@ -48,10 +48,9 @@ public abstract class SSLContextBuilder extends Builder<SSLContext> {
     @Override
     protected boolean isValid() {
 
-        return isNotNull(
-            keyStore,
-            password
-        );
+        return super.isValid()
+            && keyStore != null
+            && password != null;
 
     }
 

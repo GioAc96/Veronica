@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.providers;
 
-public interface BuildsInstances {
+interface BuildsInstances {
 
     boolean buildsMultipleInstances();
 

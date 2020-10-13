@@ -1,28 +1,27 @@
 package rocks.gioac96.veronica.samples;
 
+import lombok.Getter;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.Route;
 import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.providers.CreationException;
 
 public class Path {
 
-    public static void main(String[] args) throws CreationException {
+    public static final String message = "The request path is: ";
 
-        Router router = Router.builder()
-            .defaultRoute(Route.builder()
-                .requestHandler(request -> Response.builder()
-                    .body("The request path is: " + request.getPath())
-                    .build()
-                )
-                .build()
-            )
-            .build();
+    @Getter
+    private final Router router = Router.builder()
+        .defaultRequestHandler(request -> Response.builder()
+            .body(message + request.getPath())
+            .build()
+        ).build();
+
+    public static void main(String[] args) throws CreationException {
 
         Application application = Application.builder()
             .port(80)
-            .router(router)
+            .router(new Path().router)
             .build();
 
         application.start();

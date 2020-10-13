@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.samples;
 
+import rocks.gioac96.veronica.common.CommonRequestHandlers;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.common.CommonRoutes;
 import rocks.gioac96.veronica.core.Route;
@@ -21,7 +22,7 @@ public class StaticServer {
                     .baseDir("D:\\projects\\veronica")
                     .basePath("/static")
                     .build())
-                .defaultRoute(CommonRoutes.notFound())
+                .defaultRequestHandler(CommonRequestHandlers.notFound())
                 .build())
             .port(80)
             .build()

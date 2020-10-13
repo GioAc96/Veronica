@@ -48,7 +48,8 @@ public class BasicAuthFilterBuilder extends Builder<PreFilter> implements Builds
     @Override
     protected boolean isValid() {
 
-        return isNotNull(credentialsChecker);
+        return super.isValid()
+            && credentialsChecker != null;
 
     }
 

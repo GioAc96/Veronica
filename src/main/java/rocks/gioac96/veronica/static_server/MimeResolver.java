@@ -32,6 +32,7 @@ public class MimeResolver {
 
     /**
      * Resolves the MIME type of a file given its file name.
+     *
      * @param fileName the name of the file to resolve the MIME type of
      * @return the MIME type
      */
@@ -50,8 +51,10 @@ public class MimeResolver {
         return extensionMimeMap.get(extension);
 
     }
+
     /**
      * Resolves the MIME type of a file given its file name.
+     *
      * @param filePath the path of the file to resolve the MIME type of
      * @return the MIME type
      */
@@ -97,9 +100,9 @@ public class MimeResolver {
         protected MimeResolver instantiate() {
 
             return new MimeResolver(this);
-            
+
         }
-        
+
     }
-    
+
 }

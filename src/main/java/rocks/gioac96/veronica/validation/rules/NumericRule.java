@@ -36,7 +36,7 @@ public final class NumericRule implements ValidationRule {
                 .build();
 
             Response failureResponse = CommonResponses.validationFailure(failureData);
-            
+
             throw new ValidationException(failureResponse, failureData);
 
         }

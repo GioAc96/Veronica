@@ -1,54 +1,39 @@
 package rocks.gioac96.veronica.core;
 
-import java.util.Objects;
-import java.util.concurrent.ThreadPoolExecutor;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 import lombok.NonNull;
-import lombok.Setter;
-import rocks.gioac96.veronica.common.CommonRoutes;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
-import rocks.gioac96.veronica.providers.CreationException;
-import rocks.gioac96.veronica.providers.DeclaresPriority;
 import rocks.gioac96.veronica.providers.Provider;
-import rocks.gioac96.veronica.util.PrioritySet;
+import rocks.gioac96.veronica.util.Tuple;
 
-/**
- * Application router, responsible for routing {@link Request} to a specific {@link Route}, that handles the
- * request and generates a response.
- * Builder is extensible with lombok's {@link lombok.experimental.SuperBuilder}.
- */
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-public final class Router {
+public class Router implements RequestHandler {
 
-    @Getter
-    @Setter
-    @NonNull
-    protected Route defaultRoute;
+    private final Map<HttpMethod, RouteTree> methodRouteTrees;
+    private final RequestHandler defaultRequestHandler;
+    private final List<RoutingGuard> routingGuards;
+    private final String pathPrefix;
+    public Router(RouterBuilder b) {
 
-    @Getter
-    @Setter
-    @NonNull
-    protected PrioritySet<Route> routes;
-
-    protected ThreadPoolExecutor threadPool;
-
-    protected Router(RouterBuilder b) {
-
-        this.defaultRoute = b.defaultRoute;
-        this.routes = b.routes;
-
-        for (Route route : routes) {
-
-            route.useThreadPool(threadPool);
-
-        }
+        this.methodRouteTrees = b.methodRouteTrees;
+        this.defaultRequestHandler = b.defaultRequestHandler;
+        this.routingGuards = b.routingGuards;
+        this.pathPrefix = b.pathPrefix;
 
     }
 
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static RouterBuilder builder() {
 
         class RouterBuilderImpl extends RouterBuilder implements BuildsMultipleInstances {
@@ -59,79 +44,477 @@ public final class Router {
 
     }
 
-    /**
-     * Sets the thread pool.
-     * @param threadPool the thread pool
-     */
-    void useThreadPool(ThreadPoolExecutor threadPool) {
+    private static void checkPathPatternStars(String pathPattern) {
 
-        this.threadPool = threadPool;
+        StringCharacterIterator characterIterator = new StringCharacterIterator(pathPattern);
 
-        for (Route route : routes) {
+        int i = 0;
 
-            route.useThreadPool(threadPool);
+        while (characterIterator.current() != CharacterIterator.DONE) {
+
+            if (characterIterator.current() == '*' && i != pathPattern.length() - 1) {
+
+                throw new IllegalArgumentException();
+
+            }
+
+            characterIterator.next();
+            i++;
 
         }
 
     }
 
+    private String[] getPathParts(String path) {
 
-    Response route(Request request) {
+        if (pathPrefix == null) {
 
-        return routes.firstOrDefault(
-            route -> route.shouldHandle(request),
-            defaultRoute
-        ).handle(request);
+            if (path.equals("/")) {
+
+                return new String[0];
+
+            } else if (path.startsWith("/")) {
+
+                return path.substring(1).split("/");
+
+            } else {
+
+                return null;
+
+            }
+
+
+        } else if (path.startsWith(pathPrefix)) {
+
+            String pathWithoutPrefix = path.replaceFirst("^" + pathPrefix, "");
+
+            if (pathWithoutPrefix.startsWith("/")) {
+
+                return pathWithoutPrefix.substring(1).split("/");
+
+            } else if (pathWithoutPrefix.equals("")) {
+
+                return new String[0];
+
+            }
+
+        }
+
+        return null;
 
     }
 
-    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
+    private RequestHandler getFirstEligibleRequestHandler(
+        Request request,
+        Collection<Tuple<Predicate<Request>, RequestHandler>> possibleRoutes
+    ) {
+
+        for (Tuple<Predicate<Request>, RequestHandler> starRoute : possibleRoutes) {
+
+            if (starRoute.getFirst().test(request)) {
+
+                return starRoute.getSecond();
+
+            }
+
+        }
+
+        return null;
+
+    }
+
+    public Response handle(
+        Request request
+    ) {
+
+        for (RoutingGuard routingGuard : routingGuards) {
+
+            Response response = routingGuard.handle(request);
+
+            if (response != null) {
+
+                return response;
+
+            }
+
+        }
+
+        RequestHandler requestHandler = routeRequestInRoutesTree(request);
+
+        if (requestHandler == null) {
+
+            return defaultRequestHandler.handle(request);
+
+        } else {
+
+            return requestHandler.handle(request);
+
+        }
+
+    }
+
+    private RequestHandler routeRequestInRoutesTree(
+        Request request
+    ) {
+
+        RouteTree pointer = methodRouteTrees.get(request.getHttpMethod());
+
+        if (pointer == null) {
+
+            return null;
+
+        }
+
+        String[] pathParts = getPathParts(request.getPath());
+
+        if (pathParts == null) {
+            return null;
+        }
+
+        for (String pathPart : pathParts) {
+
+            RouteTree child = pointer.children.get(pathPart);
+
+            if (child == null) {
+
+                // Checking for variable parts children
+                if (pointer.variablePathPartChild != null) {
+
+                    request.getVariablePathParts().put(
+                        pointer.variablePathPartChild.getFirst(),
+                        pathPart
+                    );
+
+                    pointer = pointer.variablePathPartChild.getSecond();
+
+                    continue;
+
+                }
+
+                // Child not found
+                return getFirstEligibleRequestHandler(
+                    request,
+                    pointer.starRoutes
+                );
+
+            } else {
+
+                pointer = child;
+
+            }
+
+        }
+
+        RequestHandler requestHandler = getFirstEligibleRequestHandler(request, pointer.routes);
+
+        if (requestHandler == null) {
+
+            return getFirstEligibleRequestHandler(request, pointer.starRoutes);
+
+        }
+
+        return requestHandler;
+
+    }
+
+    protected static final class RouteTree {
+
+        private final List<Tuple<Predicate<Request>, RequestHandler>> routes = new ArrayList<>();
+
+        private final List<Tuple<Predicate<Request>, RequestHandler>> starRoutes = new ArrayList<>();
+
+        private final Map<String, RouteTree> children = new HashMap<>();
+
+        private Tuple<String, RouteTree> variablePathPartChild = null;
+
+    }
+
     public abstract static class RouterBuilder extends Builder<Router> {
 
-        private final PrioritySet<Route> routes = new PrioritySet<>();
+        private final Map<HttpMethod, RouteTree> methodRouteTrees = new HashMap<>();
+        private final List<RoutingGuard> routingGuards = new LinkedList<>();
+        private final List<Route> routesToRegister = new LinkedList<>();
+        private RequestHandler defaultRequestHandler;
+        private String pathPrefix = null;
 
-        private Route defaultRoute = CommonRoutes.notFound();
+        private static Set<HttpMethod> aggregateHttpMethods(RequestMatcher requestMatcher) {
 
-        public RouterBuilder defaultRoute(@NonNull Route defaultRoute) {
+            if (requestMatcher.getHttpMethods().size() == 0) {
 
-            this.defaultRoute = defaultRoute;
+                return new HashSet<>() {{
 
+                    addAll(Arrays.asList(HttpMethod.values()));
+
+                }};
+
+            } else {
+
+                return requestMatcher.getHttpMethods();
+
+            }
+        }
+
+        private static Predicate<Request> aggregateMatchingConditions(RequestMatcher requestMatcher) {
+
+            Predicate<Request> aggregateCondition;
+
+            if (requestMatcher.getConditions().size() > 0) {
+
+                Iterator<Predicate<Request>> conditionsIterator = requestMatcher.getConditions().iterator();
+
+                aggregateCondition = conditionsIterator.next();
+
+                while (conditionsIterator.hasNext()) {
+
+                    aggregateCondition = aggregateCondition.and(conditionsIterator.next());
+
+                }
+
+            } else {
+
+                aggregateCondition = request -> true;
+
+            }
+
+            return aggregateCondition;
+
+        }
+
+        public RouterBuilder defaultRequestHandler(@NonNull RequestHandler requestHandler) {
+
+            this.defaultRequestHandler = requestHandler;
             return this;
 
         }
 
-        public RouterBuilder defaultRoute(@NonNull Provider<Route> defaultRouteProvider)
-            throws CreationException {
+        public RouterBuilder defaultRequestHandler(@NonNull Provider<RequestHandler> requestHandler) {
 
-            return defaultRoute(defaultRouteProvider.provide());
+            return defaultRequestHandler(requestHandler.provide());
 
         }
 
         public RouterBuilder route(@NonNull Route route) {
 
-            this.routes.add(route);
+            this.routesToRegister.add(route);
 
             return this;
 
         }
 
-        public RouterBuilder route(@NonNull Route route, Integer priority) {
+        public RouterBuilder route(@NonNull Provider<Route> route) {
 
-            this.routes.add(route, priority);
+            return route(route.provide());
+
+        }
+
+        public RouterBuilder route(
+            @NonNull String pathPattern,
+            @NonNull RequestHandler requestHandler
+        ) {
+
+            return route(Route.builder()
+                .requestMatcher(RequestMatcher.builder()
+                    .pathPattern(pathPattern)
+                    .build())
+                .requestHandler(requestHandler)
+                .build()
+            );
+
+        }
+
+        public RouterBuilder route(
+            @NonNull HttpMethod httpMethod,
+            @NonNull String pathPattern,
+            @NonNull RequestHandler requestHandler
+        ) {
+
+            return route(Route.builder()
+                .requestMatcher(RequestMatcher.builder()
+                    .pathPattern(pathPattern)
+                    .httpMethod(httpMethod)
+                    .build())
+                .requestHandler(requestHandler)
+                .build()
+            );
+
+        }
+
+        public RouterBuilder route(
+            @NonNull RequestMatcher requestMatcher,
+            @NonNull RequestHandler requestHandler
+        ) {
+
+            return route(Route.builder()
+                .requestMatcher(requestMatcher)
+                .requestHandler(requestHandler)
+                .build()
+            );
+
+        }
+
+        public RouterBuilder routingGuard(@NonNull RoutingGuard routingGuard) {
+
+            routingGuards.add(routingGuard);
 
             return this;
 
         }
 
-        public RouterBuilder route(@NonNull Provider<Route> routeProvider) throws CreationException {
+        public RouterBuilder routingGuard(@NonNull Provider<RoutingGuard> routingGuard) {
 
-            if (routeProvider instanceof DeclaresPriority) {
+            return routingGuard(routingGuard.provide());
 
-                return route(routeProvider.provide(), ((DeclaresPriority) routeProvider).priority());
+        }
+
+        public RouterBuilder pathPrefix(@NonNull String pathPrefix) {
+
+            this.pathPrefix = pathPrefix;
+
+            return this;
+
+        }
+
+        public RouterBuilder pathPrefix(@NonNull Provider<String> pathPrefix) {
+
+            return pathPrefix(pathPrefix.provide());
+
+        }
+
+        private String[] getPathPatternParts(
+            String pathPattern
+        ) {
+
+            if (pathPattern.length() == 0 || pathPattern.equals("/")) {
+
+                return new String[0];
+
+            } else if (pathPattern.startsWith("/")) {
+
+                return pathPattern.substring(1).split("/");
 
             } else {
 
-                return route(routeProvider.provide());
+                return pathPattern.split("/");
+
+            }
+
+        }
+
+        private void register(
+            HttpMethod httpMethod,
+            String pathPattern,
+            Predicate<Request> condition,
+            RequestHandler requestHandler
+        ) {
+
+            checkPathPatternStars(pathPattern);
+
+            RouteTree pointer = methodRouteTrees.get(httpMethod);
+
+            if (pointer == null) {
+
+                pointer = new RouteTree();
+                methodRouteTrees.put(httpMethod, pointer);
+
+            }
+
+            Iterator<String> pathPatternPartsIterator = Arrays.stream(getPathPatternParts(pathPattern)).iterator();
+
+            while (pathPatternPartsIterator.hasNext()) {
+
+                String pathPatternPart = pathPatternPartsIterator.next();
+
+                if (pathPatternPart.equals("*")) {
+
+                    // Propagating star path
+                    propagateNewStarPath(pointer, condition, requestHandler);
+                    return;
+
+                }
+
+                // Looking for child
+                RouteTree child = pointer.children.get(pathPatternPart);
+
+                if (child == null) {
+
+                    // Child not found, expanding tree
+
+                    child = createChild(pointer, pathPatternPart);
+                    pointer = child;
+
+                    while (pathPatternPartsIterator.hasNext()) {
+
+                        pathPatternPart = pathPatternPartsIterator.next();
+
+                        if (pathPatternPart.equals("*")) {
+
+                            propagateNewStarPath(pointer, condition, requestHandler);
+
+                        } else {
+
+                            child = createChild(pointer, pathPatternPart);
+                            pointer = child;
+
+                        }
+
+                    }
+
+                    break;
+
+                } else {
+
+                    pointer = child;
+
+                }
+
+            }
+
+            // Leaf found
+            pointer.routes.add(new Tuple<>(condition, requestHandler));
+
+        }
+
+        private RouteTree createChild(
+            RouteTree parent,
+            String pathPatternPart
+        ) {
+
+            RouteTree child = new RouteTree();
+
+            child.starRoutes.addAll(parent.starRoutes);
+
+            if (
+                pathPatternPart.charAt(0) == '{'
+                    && pathPatternPart.charAt(pathPatternPart.length() - 1) == '}'
+            ) {
+
+                parent.variablePathPartChild = new Tuple<>(
+                    pathPatternPart.substring(1, pathPatternPart.length() - 1),
+                    child
+                );
+
+            } else {
+
+                parent.children.put(pathPatternPart, child);
+
+            }
+
+
+            return child;
+
+        }
+
+        private void propagateNewStarPath(
+            RouteTree tree,
+            Predicate<Request> condition,
+            RequestHandler route
+        ) {
+
+            tree.starRoutes.add(new Tuple<>(condition, route));
+
+            for (Map.Entry<String, RouteTree> child : tree.children.entrySet()) {
+
+                propagateNewStarPath(child.getValue(), condition, route);
 
             }
 
@@ -140,14 +523,37 @@ public final class Router {
         @Override
         protected boolean isValid() {
 
-            return routes.stream().noneMatch(Objects::isNull) && isNotNull(
-                defaultRoute
-            );
+            return super.isValid()
+                && defaultRequestHandler != null
+                && (pathPrefix == null || (pathPrefix.startsWith("/") & !pathPrefix.endsWith("/"))); //TODO throw an exception
 
         }
 
         @Override
         protected Router instantiate() {
+
+            for (Route route : routesToRegister) {
+
+                Predicate<Request> aggregateCondition = aggregateMatchingConditions(route.getRequestMatcher());
+
+                Set<HttpMethod> httpMethods = aggregateHttpMethods(route.getRequestMatcher());
+
+                for (HttpMethod httpMethod : httpMethods) {
+
+                    for (String pathPattern : route.getRequestMatcher().getPathPatterns()) {
+
+                        register(
+                            httpMethod,
+                            pathPattern,
+                            aggregateCondition,
+                            route.getRequestHandler()
+                        );
+
+                    }
+
+                }
+
+            }
 
             return new Router(this);
 

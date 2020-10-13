@@ -6,15 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import lombok.NonNull;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.providers.Provider;
-import rocks.gioac96.veronica.util.ArraySet;
 
 /**
  * Veronica application.
@@ -22,34 +20,26 @@ import rocks.gioac96.veronica.util.ArraySet;
 @SuppressWarnings("unused")
 public final class Application {
 
-    protected final ThreadPoolExecutor threadPool;
-
-    protected final Set<HttpServer> httpServers;
-
-    protected final Router router;
-
-    protected final ExchangeParser exchangeParser;
-
-    protected final ExceptionHandler exceptionHandler;
+    private final Set<HttpServer> httpServers;
+    private final RequestHandler requestHandler;
+    private final ExchangeParser exchangeParser;
+    private final ExceptionHandler exceptionHandler;
 
     protected Application(
         ApplicationBuilder b
     ) throws IOException {
 
-        this.router = b.router;
+        this.requestHandler = b.requestHandler;
         this.exchangeParser = b.exchangeParser;
         this.exceptionHandler = b.exceptionHandler;
 
-        this.threadPool = b.threadPool;
-        this.router.useThreadPool(threadPool);
+        this.httpServers = b.httpServers;
 
-        this.httpServers = new ArraySet<>();
+        this.httpServers.forEach(httpServer -> {
 
-        for (Server server : b.servers) {
+            httpServer.createContext("/", this::handleExchange);
 
-            this.httpServers.add(server.toHttpServer(this::handleExchange));
-
-        }
+        });
 
     }
 
@@ -71,57 +61,52 @@ public final class Application {
 
     private void handleExchange(HttpExchange exchange) {
 
-        threadPool.submit(() -> {
+        Response response;
 
-            Response response;
+        try {
 
-            try {
+            // Parse request
+            Request request = exchangeParser.parseExchange(exchange);
 
-                // Parse request
-                Request request = exchangeParser.parseExchange(exchange);
-
-                // Generate response
-                response = router.route(request);
+            // Generate response
+            response = requestHandler.handle(request);
 
 
-            } catch (Exception e) {
+        } catch (Exception e) {
 
-                response = exceptionHandler.handle(e);
+            response = exceptionHandler.handle(e);
 
-            }
+        }
 
-            try {
-                // Writing response headers
-                exchange.getResponseHeaders().putAll(response.getHeaders());
+        try {
+            // Writing response headers
+            exchange.getResponseHeaders().putAll(response.getHeaders());
 
-                // Cookies
-                List<String> cookieHeaders = new ArrayList<>();
+            // Cookies
+            List<String> cookieHeaders = new ArrayList<>();
 
-                for (SetCookieHeader httpCookie : response.getCookies()) {
+            for (SetCookieHeader httpCookie : response.getCookies()) {
 
-                    cookieHeaders.add(httpCookie.toHeaderString());
-
-                }
-
-                exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
-
-                // Send response headers
-                exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length);
-
-                // Send response body
-                exchange.getResponseBody().write(response.getBody());
-
-                // Close response
-                exchange.close();
-
-            } catch (IOException e) {
-
-                exceptionHandler.handleExchangeException(e);
+                cookieHeaders.add(httpCookie.toHeaderString());
 
             }
 
-        });
+            exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
 
+            // Send response headers
+            exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length);
+
+            // Send response body
+            exchange.getResponseBody().write(response.getBody());
+
+            // Close response
+            exchange.close();
+
+        } catch (IOException e) {
+
+            exceptionHandler.handleExchangeException(e);
+
+        }
     }
 
     /**
@@ -153,9 +138,8 @@ public final class Application {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
     public abstract static class ApplicationBuilder extends Builder<Application> {
 
-        private final Set<Server> servers = new HashSet<>();
-
-        private Router router;
+        private final Set<HttpServer> httpServers = new HashSet<>();
+        private RequestHandler requestHandler;
 
         private ExchangeParser exchangeParser = new ExchangeParser() {
         };
@@ -163,11 +147,9 @@ public final class Application {
         private ExceptionHandler exceptionHandler = new ExceptionHandler() {
         };
 
-        private ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-
         public ApplicationBuilder router(@NonNull Router router) {
 
-            this.router = router;
+            this.requestHandler = router;
             return this;
 
         }
@@ -175,6 +157,20 @@ public final class Application {
         public ApplicationBuilder router(@NonNull Provider<Router> routerProvider) {
 
             return router(routerProvider.provide());
+
+        }
+
+        public ApplicationBuilder requestHandler(@NonNull RequestHandler requestHandler) {
+
+            this.requestHandler = requestHandler;
+            return this;
+
+        }
+
+
+        public ApplicationBuilder requestHandler(@NonNull Provider<RequestHandler> requestHandler) {
+
+            return requestHandler(requestHandler.provide());
 
         }
 
@@ -206,45 +202,39 @@ public final class Application {
 
         public ApplicationBuilder port(int port) {
 
-            return server(Server.builder().port(port).build());
+            return server(new ServerBuilder().port(port).build());
 
         }
 
-        public ApplicationBuilder port(@NonNull Provider<Integer> portProvider) {
+        public ApplicationBuilder port(@NonNull Provider<Integer> port) {
 
-            return server(Server.builder().port(portProvider.provide()).build());
+            return server(new ServerBuilder().port(port.provide()).build());
 
         }
 
-        public ApplicationBuilder server(@NonNull Server server) {
+        public ApplicationBuilder server(@NonNull HttpServer server) {
 
-            this.servers.add(server);
+            this.httpServers.add(server);
             return this;
 
         }
 
-        public ApplicationBuilder server(@NonNull Provider<Server> serverProvider) {
+        public ApplicationBuilder server(@NonNull Provider<HttpServer> serverProvider) {
 
             return server(serverProvider.provide());
-
-        }
-
-        public ApplicationBuilder threadPool(ThreadPoolExecutor threadPool) {
-
-            this.threadPool = threadPool;
-            return this;
 
         }
 
         @Override
         protected boolean isValid() {
 
-            return isNotNull(
-                servers,
-                router,
-                exchangeParser,
-                exceptionHandler
-            );
+            return super.isValid()
+                && httpServers != null
+                && httpServers.stream().allMatch(Objects::nonNull)
+                && requestHandler != null
+                && exchangeParser != null
+                && exceptionHandler != null;
+
 
         }
 

@@ -28,14 +28,10 @@ public class Routing {
                 )
                 .build()
             )
-            .defaultRoute(Route.builder()
-                .requestHandler(req -> Response.builder()
-                    .body("We could not find what you're looking for")
-                    .build()
-                )
+            .defaultRequestHandler(req -> Response.builder()
+                .body("We could not find what you're looking for")
                 .build()
-            )
-            .build();
+            ).build();
 
         int port = 8000;
 

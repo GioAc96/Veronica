@@ -177,7 +177,7 @@ public class Response {
 
             } else {
 
-                this.headers.put(key, new ArrayList<String>(){{
+                this.headers.put(key, new ArrayList<String>() {{
                     add(value);
                 }});
 

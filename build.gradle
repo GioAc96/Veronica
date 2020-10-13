@@ -18,6 +18,12 @@ test {
     }
 }
 
+build {
+
+    dependsOn test
+
+}
+
 dependencies {
 
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
