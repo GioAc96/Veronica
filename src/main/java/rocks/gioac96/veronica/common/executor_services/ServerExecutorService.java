@@ -1,10 +1,11 @@
 package rocks.gioac96.veronica.common.executor_services;
 
 import java.util.concurrent.ExecutorService;
+import rocks.gioac96.veronica.common.CommonExecutorServices;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsSingleInstance;
 
-public class ServerExecutor
+public class ServerExecutorService
     extends Builder<ExecutorService>
     implements BuildsSingleInstance {
 
@@ -13,8 +14,8 @@ public class ServerExecutor
     @Override
     protected ExecutorService instantiate() {
 
-        return new DefaultPriorityExecutorService()
-            .provide()
+        return CommonExecutorServices
+            .defaultPriorityExecutorService()
             .getExecutorWithPriority(SERVER_TASKS_PRIORITY);
 
     }
