@@ -21,23 +21,10 @@ import rocks.gioac96.veronica.util.Tuple;
 
 public class Router implements RequestHandler {
 
-    protected static final class RouteTree {
-
-        private final List<Tuple<Predicate<Request>, RequestHandler>> routes = new ArrayList<>();
-
-        private final List<Tuple<Predicate<Request>, RequestHandler>> starRoutes = new ArrayList<>();
-
-        private final Map<String, RouteTree> children = new HashMap<>();
-
-        private Tuple<String, RouteTree> variablePathPartChild = null;
-
-    }
-
     private final Map<HttpMethod, RouteTree> methodRouteTrees;
     private final RequestHandler defaultRequestHandler;
     private final List<RoutingGuard> routingGuards;
     private final String pathPrefix;
-
     public Router(RouterBuilder b) {
 
         this.methodRouteTrees = b.methodRouteTrees;
@@ -63,7 +50,7 @@ public class Router implements RequestHandler {
 
         int i = 0;
 
-        while(characterIterator.current() != CharacterIterator.DONE) {
+        while (characterIterator.current() != CharacterIterator.DONE) {
 
             if (characterIterator.current() == '*' && i != pathPattern.length() - 1) {
 
@@ -230,14 +217,68 @@ public class Router implements RequestHandler {
 
     }
 
+    protected static final class RouteTree {
+
+        private final List<Tuple<Predicate<Request>, RequestHandler>> routes = new ArrayList<>();
+
+        private final List<Tuple<Predicate<Request>, RequestHandler>> starRoutes = new ArrayList<>();
+
+        private final Map<String, RouteTree> children = new HashMap<>();
+
+        private Tuple<String, RouteTree> variablePathPartChild = null;
+
+    }
+
     public abstract static class RouterBuilder extends Builder<Router> {
 
-        private RequestHandler defaultRequestHandler;
         private final Map<HttpMethod, RouteTree> methodRouteTrees = new HashMap<>();
         private final List<RoutingGuard> routingGuards = new LinkedList<>();
+        private final List<Route> routesToRegister = new LinkedList<>();
+        private RequestHandler defaultRequestHandler;
         private String pathPrefix = null;
 
-        private final List<Route> routesToRegister = new LinkedList<>();
+        private static Set<HttpMethod> aggregateHttpMethods(RequestMatcher requestMatcher) {
+
+            if (requestMatcher.getHttpMethods().size() == 0) {
+
+                return new HashSet<>() {{
+
+                    addAll(Arrays.asList(HttpMethod.values()));
+
+                }};
+
+            } else {
+
+                return requestMatcher.getHttpMethods();
+
+            }
+        }
+
+        private static Predicate<Request> aggregateMatchingConditions(RequestMatcher requestMatcher) {
+
+            Predicate<Request> aggregateCondition;
+
+            if (requestMatcher.getConditions().size() > 0) {
+
+                Iterator<Predicate<Request>> conditionsIterator = requestMatcher.getConditions().iterator();
+
+                aggregateCondition = conditionsIterator.next();
+
+                while (conditionsIterator.hasNext()) {
+
+                    aggregateCondition = aggregateCondition.and(conditionsIterator.next());
+
+                }
+
+            } else {
+
+                aggregateCondition = request -> true;
+
+            }
+
+            return aggregateCondition;
+
+        }
 
         public RouterBuilder defaultRequestHandler(@NonNull RequestHandler requestHandler) {
 
@@ -337,23 +378,6 @@ public class Router implements RequestHandler {
 
             return pathPrefix(pathPrefix.provide());
 
-        }
-
-        private static Set<HttpMethod> aggregateHttpMethods(RequestMatcher requestMatcher) {
-
-            if (requestMatcher.getHttpMethods().size() == 0) {
-
-                return new HashSet<>() {{
-
-                    addAll(Arrays.asList(HttpMethod.values()));
-
-                }};
-
-            } else {
-
-                return requestMatcher.getHttpMethods();
-
-            }
         }
 
         private String[] getPathPatternParts(
@@ -461,7 +485,7 @@ public class Router implements RequestHandler {
 
             if (
                 pathPatternPart.charAt(0) == '{'
-                    && pathPatternPart.charAt(pathPatternPart.length() -1) == '}'
+                    && pathPatternPart.charAt(pathPatternPart.length() - 1) == '}'
             ) {
 
                 parent.variablePathPartChild = new Tuple<>(
@@ -496,39 +520,12 @@ public class Router implements RequestHandler {
 
         }
 
-        private static Predicate<Request> aggregateMatchingConditions(RequestMatcher requestMatcher) {
-
-            Predicate<Request> aggregateCondition;
-
-            if (requestMatcher.getConditions().size() > 0) {
-
-                Iterator<Predicate<Request>> conditionsIterator = requestMatcher.getConditions().iterator();
-
-                aggregateCondition = conditionsIterator.next();
-
-                while(conditionsIterator.hasNext()) {
-
-                    aggregateCondition = aggregateCondition.and(conditionsIterator.next());
-
-                }
-
-            } else {
-
-                aggregateCondition = request -> true;
-
-            }
-
-            return aggregateCondition;
-
-        }
-
-
         @Override
         protected boolean isValid() {
 
             return super.isValid()
                 && defaultRequestHandler != null
-                && (pathPrefix == null || (pathPrefix.startsWith("/") &! pathPrefix.endsWith("/"))); //TODO throw an exception
+                && (pathPrefix == null || (pathPrefix.startsWith("/") & !pathPrefix.endsWith("/"))); //TODO throw an exception
 
         }
 

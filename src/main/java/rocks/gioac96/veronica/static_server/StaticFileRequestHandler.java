@@ -17,29 +17,7 @@ class StaticFileRequestHandler<P> implements RequestHandler {
     private final Response accessDeniedResponse;
     private final Response fileNotFoundResponse;
 
-    private RequestHandler requestHandler;
-
-    private static <P> RequestHandler getDefaultHandler(
-        StaticFileRequestHandler<P> instance
-    ) {
-
-        return request -> {
-
-            Path requestedFile = instance.resolveFileRequest(request);
-
-            if (instance.canAccess(request, requestedFile)) {
-
-                return instance.disposeFile(requestedFile);
-
-            } else {
-
-                return instance.accessDeniedResponse;
-
-            }
-
-        };
-
-    }
+    private final RequestHandler requestHandler;
 
     public StaticFileRequestHandler(
         ContentDisposition contentDisposition,
@@ -71,6 +49,28 @@ class StaticFileRequestHandler<P> implements RequestHandler {
                 .build();
 
         }
+
+    }
+
+    private static <P> RequestHandler getDefaultHandler(
+        StaticFileRequestHandler<P> instance
+    ) {
+
+        return request -> {
+
+            Path requestedFile = instance.resolveFileRequest(request);
+
+            if (instance.canAccess(request, requestedFile)) {
+
+                return instance.disposeFile(requestedFile);
+
+            } else {
+
+                return instance.accessDeniedResponse;
+
+            }
+
+        };
 
     }
 

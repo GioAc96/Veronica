@@ -13,10 +13,11 @@ import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 
 /**
  * Builder for static server routes.
+ *
  * @param <P> the type of the file permissions
  */
 public class StaticRouteBuilder<
-        P
+    P
     > extends Builder<Route>
     implements BuildsMultipleInstances {
 

@@ -1,35 +1,16 @@
 package rocks.gioac96.veronica.providers;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 /**
  * Basic builder class.
+ *
  * @param <T> type of the build object
  */
 public abstract class Builder<T> implements Provider<T>, BuildsInstances {
-
-    private static final class InstanceStore {
-
-        private static final Map<Class<?>, Object> instancesMap = new HashMap<>();
-
-        public static final <T> void store(Class<T> builderClass, Object instance) {
-
-            instancesMap.put(builderClass, instance);
-
-        }
-
-        public static final <T> Object retrieve(Class<T> builderClass) {
-
-            return instancesMap.get(builderClass);
-
-        }
-
-    }
 
     private static final Set<Object> configuredBuilders = new HashSet<>();
 
@@ -66,6 +47,7 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
 
     /**
      * Builds the object.
+     *
      * @return the built object
      */
     public final T build() {
@@ -74,7 +56,7 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
 
             configure();
 
-            if (! isValid()) {
+            if (!isValid()) {
 
                 throw new CreationException();
 
@@ -90,7 +72,7 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
 
         } else {
 
-            T storedInstance = (T)InstanceStore.retrieve(this.getClass());
+            T storedInstance = (T) InstanceStore.retrieve(this.getClass());
 
             if (storedInstance == null) {
 
@@ -105,6 +87,24 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
                 return storedInstance;
 
             }
+
+        }
+
+    }
+
+    private static final class InstanceStore {
+
+        private static final Map<Class<?>, Object> instancesMap = new HashMap<>();
+
+        public static final <T> void store(Class<T> builderClass, Object instance) {
+
+            instancesMap.put(builderClass, instance);
+
+        }
+
+        public static final <T> Object retrieve(Class<T> builderClass) {
+
+            return instancesMap.get(builderClass);
 
         }
 

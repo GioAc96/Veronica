@@ -1,8 +1,6 @@
 package rocks.gioac96.veronica.core;
 
-import java.util.concurrent.Executor;
 import lombok.NonNull;
-import rocks.gioac96.veronica.common.CommonExecutorServices;
 
 /**
  * {@link Pipeline} stage that processes a {@link Request} after the {@link Response} was already sent.

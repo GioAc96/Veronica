@@ -10,6 +10,7 @@ public interface ExchangeParser {
 
     /**
      * Parses an Http exchange and returns a request.
+     *
      * @param httpExchange the exchange to parse
      * @return the parsed exchange
      */

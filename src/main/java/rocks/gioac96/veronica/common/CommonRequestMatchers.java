@@ -26,6 +26,7 @@ public class CommonRequestMatchers {
             .build();
 
     }
+
     public static RequestMatcher post(String pathPattern) {
 
         return RequestMatcher.builder()
@@ -34,6 +35,7 @@ public class CommonRequestMatchers {
             .build();
 
     }
+
     public static RequestMatcher put(String pathPattern) {
 
         return RequestMatcher.builder()
@@ -42,6 +44,7 @@ public class CommonRequestMatchers {
             .build();
 
     }
+
     public static RequestMatcher head(String pathPattern) {
 
         return RequestMatcher.builder()
@@ -50,6 +53,7 @@ public class CommonRequestMatchers {
             .build();
 
     }
+
     public static RequestMatcher delete(String pathPattern) {
 
         return RequestMatcher.builder()

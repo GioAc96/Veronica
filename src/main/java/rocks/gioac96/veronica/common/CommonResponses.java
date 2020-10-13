@@ -19,11 +19,11 @@ import rocks.gioac96.veronica.validation.ValidationFailureResponse;
 
 public class CommonResponses {
 
-    private static final  Provider<Response> ok = new Ok();
-    private static final  Provider<Response> notFound = new NotFound();
-    private static final  Provider<Response> forbidden = new Forbidden();
-    private static final  Provider<Response> internalError = new InternalError();
-    private static final  Provider<Response> promptBasicAuth = new PromptBasicAuth();
+    private static final Provider<Response> ok = new Ok();
+    private static final Provider<Response> notFound = new NotFound();
+    private static final Provider<Response> forbidden = new Forbidden();
+    private static final Provider<Response> internalError = new InternalError();
+    private static final Provider<Response> promptBasicAuth = new PromptBasicAuth();
 
     public static Response ok() {
 

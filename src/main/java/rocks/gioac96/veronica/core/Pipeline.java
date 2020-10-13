@@ -1,7 +1,6 @@
 package rocks.gioac96.veronica.core;
 
 import java.util.Objects;
-import java.util.concurrent.ThreadPoolExecutor;
 import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonExecutorServices;
 import rocks.gioac96.veronica.providers.Builder;
@@ -63,7 +62,7 @@ public final class Pipeline implements RequestHandler {
     /**
      * Handles a request by passing it through the pipeline.
      *
-     * @param request        request to handle
+     * @param request request to handle
      * @return the generated response
      */
     public Response handle(@NonNull Request request) {
@@ -108,7 +107,7 @@ public final class Pipeline implements RequestHandler {
         }
 
     }
-    
+
     private void render(Response response) {
 
         if (!response.isRendered()) {
@@ -173,7 +172,7 @@ public final class Pipeline implements RequestHandler {
 
                 this.preFilters.add(
                     preFilterProvider.provide(),
-                    ((DeclaresPriority)preFilterProvider).priority()
+                    ((DeclaresPriority) preFilterProvider).priority()
                 );
 
             } else {
@@ -202,18 +201,18 @@ public final class Pipeline implements RequestHandler {
         public PipelineBuilder postFilters(@NonNull Provider<PostFilter> postFilterProvider) {
 
             if (postFilterProvider instanceof DeclaresPriority) {
-                
+
                 return this.postFilter(
                     postFilterProvider.provide(),
                     ((DeclaresPriority) postFilterProvider).priority()
                 );
-                
+
             } else {
-                
+
                 return this.postFilter(postFilterProvider.provide());
-                
+
             }
-            
+
         }
 
         public PipelineBuilder postProcessor(@NonNull PostProcessor postProcessor) {
@@ -233,16 +232,16 @@ public final class Pipeline implements RequestHandler {
         public PipelineBuilder postProcessor(@NonNull Provider<PostProcessor> postProcessorProvider) {
 
             if (postProcessorProvider instanceof DeclaresPriority) {
-                
+
                 return postProcessor(
                     postProcessorProvider.provide(),
                     ((DeclaresPriority) postProcessorProvider).priority()
                 );
-                
+
             } else {
-                
+
                 return postProcessor(postProcessorProvider.provide());
-                
+
             }
 
         }

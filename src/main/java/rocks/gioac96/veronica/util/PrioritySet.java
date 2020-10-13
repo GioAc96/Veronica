@@ -163,7 +163,7 @@ public class PrioritySet<T> extends SetOps<T> implements Set<T>, Collection<T> {
      * @param element  element to change the priority of
      * @param priority priority to assign to the element. If null, defaults to DEFAULT_PRIORITY
      * @return true iff the element was not in the set already or if the element had a different priority prior to the
-     *      call.
+     * call.
      */
     public boolean changePriority(T element, Integer priority) {
 

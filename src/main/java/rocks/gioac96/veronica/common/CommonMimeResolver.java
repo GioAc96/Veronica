@@ -13,5 +13,5 @@ public class CommonMimeResolver extends MimeResolver.MimeResolverBuilder impleme
         Arrays.stream(MimeType.CommonMimeTypes.values()).forEach(this::mime);
 
     }
-    
+
 }

@@ -7,8 +7,16 @@ import java.util.Set;
 class PermissionTree<P> {
 
     protected final Set<PermissionTree<P>> children;
-    protected P permissions;
     protected final Path path;
+    protected P permissions;
+
+    protected PermissionTree(Path path, P permissions) {
+
+        this.children = new HashSet<>();
+        this.path = path;
+        this.permissions = permissions;
+
+    }
 
     int getTreeSize() {
 
@@ -22,14 +30,6 @@ class PermissionTree<P> {
 
         return counter;
 
-
-    }
-
-    protected PermissionTree(Path path, P permissions) {
-
-        this.children = new HashSet<>();
-        this.path = path;
-        this.permissions = permissions;
 
     }
 
