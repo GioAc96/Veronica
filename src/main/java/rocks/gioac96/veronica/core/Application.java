@@ -6,16 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import lombok.NonNull;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.providers.Provider;
-import rocks.gioac96.veronica.util.ArraySet;
 
 /**
  * Veronica application.
@@ -23,10 +20,10 @@ import rocks.gioac96.veronica.util.ArraySet;
 @SuppressWarnings("unused")
 public final class Application {
 
-    protected final Set<HttpServer> httpServers;
-    protected final RequestHandler requestHandler;
-    protected final ExchangeParser exchangeParser;
-    protected final ExceptionHandler exceptionHandler;
+    private final Set<HttpServer> httpServers;
+    private final RequestHandler requestHandler;
+    private final ExchangeParser exchangeParser;
+    private final ExceptionHandler exceptionHandler;
 
     protected Application(
         ApplicationBuilder b
@@ -36,13 +33,13 @@ public final class Application {
         this.exchangeParser = b.exchangeParser;
         this.exceptionHandler = b.exceptionHandler;
 
-        this.httpServers = new ArraySet<>();
+        this.httpServers = b.httpServers;
 
-        for (Server server : b.servers) {
+        this.httpServers.forEach(httpServer -> {
 
-            this.httpServers.add(server.toHttpServer(this::handleExchange));
+            httpServer.createContext("/", this::handleExchange);
 
-        }
+        });
 
     }
 
@@ -141,8 +138,7 @@ public final class Application {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
     public abstract static class ApplicationBuilder extends Builder<Application> {
 
-        private final Set<Server> servers = new HashSet<>();
-
+        private final Set<HttpServer> httpServers = new HashSet<>();
         private RequestHandler requestHandler;
 
         private ExchangeParser exchangeParser = new ExchangeParser() {
@@ -206,40 +202,39 @@ public final class Application {
 
         public ApplicationBuilder port(int port) {
 
-            return server(Server.builder().port(port).build());
+            return server(new ServerBuilder().port(port).build());
 
         }
 
         public ApplicationBuilder port(@NonNull Provider<Integer> port) {
 
-            return server(Server.builder().port(port.provide()).build());
+            return server(new ServerBuilder().port(port.provide()).build());
 
         }
 
-        public ApplicationBuilder server(@NonNull Server server) {
+        public ApplicationBuilder server(@NonNull HttpServer server) {
 
-            this.servers.add(server);
+            this.httpServers.add(server);
             return this;
 
         }
 
-        public ApplicationBuilder server(@NonNull Provider<Server> serverProvider) {
+        public ApplicationBuilder server(@NonNull Provider<HttpServer> serverProvider) {
 
             return server(serverProvider.provide());
 
         }
 
-
-
         @Override
         protected boolean isValid() {
 
-            return isNotNull(
-                servers,
-                requestHandler,
-                exchangeParser,
-                exceptionHandler
-            );
+            return super.isValid()
+                && httpServers != null
+                && httpServers.stream().allMatch(Objects::nonNull)
+                && requestHandler != null
+                && exchangeParser != null
+                && exceptionHandler != null;
+
 
         }
 

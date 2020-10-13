@@ -1,10 +1,9 @@
 package rocks.gioac96.veronica.tutorials.https;
 
-import rocks.gioac96.veronica.core.SecureServer;
-import rocks.gioac96.veronica.providers.BuildsSingleInstance;
+import rocks.gioac96.veronica.core.SecureServerBuilder;
 import rocks.gioac96.veronica.tutorials.https.ssl.MyContext;
 
-public class MyServer extends SecureServer.SecureServerBuilder implements BuildsSingleInstance {
+public class MyServer extends SecureServerBuilder {
 
     @Override
     public void configure() {
