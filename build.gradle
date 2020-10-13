@@ -4,8 +4,8 @@ plugins {
     id 'io.freefair.lombok' version '4.1.6'
 }
 
-group 'com.github.GioAc96'
-version '0.13-preview'
+group 'rocks.gioac96'
+version '0.14-preview'
 
 repositories {
     mavenCentral()
