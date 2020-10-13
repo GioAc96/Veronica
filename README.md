@@ -9,8 +9,6 @@
 <h2>State of development</h2>
 <p>Veronica is still in the early stages of its development and is missing proper testing.
 <p>You can find a work in progress version of the documentation <a href="https://veronica-gioac96.readme.io/">here</a>.</p>
-<img src="https://jitpack.io/v/GioAc96/Veronica.svg">
+<a href="https://jitpack.io/#GioAc96/Veronica"><img alt="Release" src="https://jitpack.io/v/GioAc96/Veronica.svg"></a>
 <hr>
 <p align="center">Developed with ❤️ by Giorgio Acquati.<br><a href="https://gioac96.rocks/">https://gioac96.rocks/</a></p>
-
-
