@@ -61,7 +61,7 @@ public class Server {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public abstract static class ServerBuilder extends Builder<Server> {
 
-        private int port;
+        private Integer port;
         private Executor executor = CommonExecutorServices.serverExecutor();
 
         public ServerBuilder port(int port) {
@@ -93,6 +93,7 @@ public class Server {
         protected boolean isValid() {
 
             return super.isValid()
+                && port != null
                 && port >= 0
                 && port <= 65535;
 
