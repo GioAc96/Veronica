@@ -13,7 +13,7 @@ public class CommonRequestMatchers {
 
     private static final Provider<RequestMatcher> favicon = new Favicon();
 
-    /***
+    /**
      * Gets the framework's common "favicon" {@link RequestMatcher}.
      * @return the request matcher
      */
@@ -23,7 +23,7 @@ public class CommonRequestMatchers {
 
     }
 
-    /***
+    /**
      * Gets the framework's common {@link RequestMatcher} for "GET" requests that match the specified path pattern.
      * @param pathPattern the pattern the request's path matches against
      * @return the request matcher
@@ -37,7 +37,7 @@ public class CommonRequestMatchers {
 
     }
 
-    /***
+    /**
      * Gets the framework's common {@link RequestMatcher} for "POST" requests that match the specified path pattern.
      * @param pathPattern the pattern the request's path matches against
      * @return the request matcher
@@ -51,7 +51,7 @@ public class CommonRequestMatchers {
 
     }
 
-    /***
+    /**
      * Gets the framework's common {@link RequestMatcher} for "PUT" requests that match the specified path pattern.
      * @param pathPattern the pattern the request's path matches against
      * @return the request matcher
@@ -65,7 +65,7 @@ public class CommonRequestMatchers {
 
     }
 
-    /***
+    /**
      * Gets the framework's common {@link RequestMatcher} for "HEAD" requests that match the specified path pattern.
      * @param pathPattern the pattern the request's path matches against
      * @return the request matcher
@@ -79,7 +79,7 @@ public class CommonRequestMatchers {
 
     }
 
-    /***
+    /**
      * Gets the framework's common {@link RequestMatcher} for "DELETE" requests that match the specified path pattern.
      * @param pathPattern the pattern the request's path matches against
      * @return the request matcher

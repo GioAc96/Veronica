@@ -13,7 +13,7 @@ public class CommonRequestHandlers {
     private static final Provider<RequestHandler> notFound = new NotFound();
     private static final Provider<RequestHandler> ok = new Ok();
 
-    /***
+    /**
      * Gets the framework's common "not found" {@link RequestHandler}.
      *
      * @return the request handler
@@ -24,7 +24,7 @@ public class CommonRequestHandlers {
 
     }
 
-    /***
+    /**
      * Gets the framework's common "ok" {@link RequestHandler}.
      * @return the request handler
      */
