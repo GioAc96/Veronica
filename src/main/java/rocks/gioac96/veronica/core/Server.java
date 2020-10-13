@@ -4,10 +4,10 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import java.util.concurrent.Executor;
 import lombok.Getter;
 import lombok.NonNull;
+import rocks.gioac96.veronica.common.CommonExecutorServices;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
@@ -16,14 +16,15 @@ import rocks.gioac96.veronica.providers.Provider;
  * Http server initializer.
  */
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Server {
 
     private final int port;
+    private final Executor executor;
 
     protected Server(ServerBuilder b) {
 
         this.port = b.port;
+        this.executor = b.executor;
 
     }
 
@@ -51,7 +52,7 @@ public class Server {
 
         httpServer.createContext("/", httpHandler);
 
-        httpServer.setExecutor(null);
+        httpServer.setExecutor(executor);
 
         return httpServer;
 
@@ -61,6 +62,7 @@ public class Server {
     public abstract static class ServerBuilder extends Builder<Server> {
 
         private int port;
+        private Executor executor = CommonExecutorServices.serverExecutor();
 
         public ServerBuilder port(int port) {
 
@@ -72,6 +74,27 @@ public class Server {
         public ServerBuilder port(@NonNull Provider<Integer> port) {
 
             return port(port.provide());
+
+        }
+
+        public ServerBuilder executor(@NonNull Executor executor) {
+
+            this.executor = executor;
+            return this;
+
+        }
+        public ServerBuilder executor(@NonNull Provider<Executor> executor) {
+
+            return executor(executor.provide());
+
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            return super.isValid()
+                && port >= 0
+                && port <= 65535;
 
         }
 
