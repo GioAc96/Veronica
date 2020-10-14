@@ -6,6 +6,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,9 @@ class RequestTest {
 
     @Mock
     private URI uriMock;
+
+    @Mock
+    private HttpExchange exchangeMock;
 
     static Object[][] parseQueryStringTestParameters() {
 
@@ -87,12 +91,15 @@ class RequestTest {
         when(uriMock.getPath())
             .thenReturn(path);
 
+
+
         Request request = Request.builder()
             .httpMethod(HttpMethod.GET)
             .body("")
             .headers(headersMock)
             .uri(uriMock)
             .secure(false)
+            .httpExchange(exchangeMock)
             .build();
 
         assertEquals(path, request.getPath());
@@ -112,6 +119,7 @@ class RequestTest {
             .headers(headersMock)
             .uri(uriMock)
             .secure(false)
+            .httpExchange(exchangeMock)
             .build();
 
         assertEquals(expected.size(), request.getQueryMap().size());

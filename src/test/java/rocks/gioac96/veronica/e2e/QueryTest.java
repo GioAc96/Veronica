@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.e2e;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class QueryTest extends E2ETest {
                     .query("")
                     .httpMethod(HttpMethod.GET),
 
-                response -> assertArrayEquals(new HashMap<>().toString().getBytes(), response.getBody())
+                response -> assertEquals(new HashMap<>().toString(), response.getBody())
             );
 
             put(
@@ -34,11 +35,11 @@ public class QueryTest extends E2ETest {
                     .query("var1=val1")
                     .httpMethod(HttpMethod.GET),
 
-                response -> assertArrayEquals(new HashMap<>(){{
+                response -> assertEquals(new HashMap<>(){{
 
                     put("var1", "val1");
 
-                }}.toString().getBytes(), response.getBody())
+                }}.toString(), response.getBody())
             );
 
             put(
@@ -47,12 +48,12 @@ public class QueryTest extends E2ETest {
                     .query("var1=val1&var2=second_value")
                     .httpMethod(HttpMethod.GET),
 
-                response -> assertArrayEquals(new HashMap<>(){{
+                response -> assertEquals(new HashMap<>(){{
 
                     put("var1", "val1");
                     put("var2", "second_value");
 
-                }}.toString().getBytes(), response.getBody())
+                }}.toString(), response.getBody())
             );
 
             put(
@@ -61,13 +62,13 @@ public class QueryTest extends E2ETest {
                     .query("var1=val1&var2=second_value&bool")
                     .httpMethod(HttpMethod.GET),
 
-                response -> assertArrayEquals(new HashMap<>(){{
+                response -> assertEquals(new HashMap<>(){{
 
                     put("var1", "val1");
                     put("var2", "second_value");
                     put("bool", "");
 
-                }}.toString().getBytes(), response.getBody())
+                }}.toString(), response.getBody())
             );
 
 

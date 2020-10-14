@@ -15,7 +15,6 @@ import rocks.gioac96.veronica.util.ArraySet;
 /**
  * Http response.
  */
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Response {
 
     @Getter
@@ -24,7 +23,10 @@ public class Response {
     protected HttpStatus httpStatus;
 
     @Getter
-    private byte[] body;
+    private byte[] bodyBytes;
+
+    @Getter
+    private String body;
 
     @Getter
     @NonNull
@@ -39,6 +41,7 @@ public class Response {
 
         this.httpStatus = builder.httpStatus;
         this.body = builder.body;
+        this.bodyBytes = builder.bodyBytes;
         this.headers = builder.headers;
         this.cookies = builder.cookies;
 
@@ -70,11 +73,12 @@ public class Response {
      * Writes the body of the response if the response is not already rendered.
      *
      * @param body body of the response
-     * @return true if the response was not already rendered and the body was successfully written
+     * @return true iff the response was not already rendered and the body was successfully written
      */
     @SuppressWarnings("UnusedReturnValue")
     public boolean writeBody(@NonNull String body) {
 
+        this.body = body;
         return writeBody(body.getBytes());
 
     }
@@ -83,7 +87,7 @@ public class Response {
      * Writes the body of the response if the response is not already rendered.
      *
      * @param body body of the response
-     * @return true if the response was not already rendered and the body was successfully written
+     * @return true iff the response was not already rendered and the body was successfully written
      */
     @SuppressWarnings("UnusedReturnValue")
     public boolean writeBody(@NonNull byte[] body) {
@@ -94,7 +98,7 @@ public class Response {
 
         } else {
 
-            this.body = body;
+            this.bodyBytes = body;
 
             return true;
 
@@ -106,11 +110,9 @@ public class Response {
     public abstract static class ResponseBuilder extends Builder<Response> {
 
         private final ArraySet<SetCookieHeader> cookies = new ArraySet<>();
-
         private HttpStatus httpStatus = HttpStatus.OK;
-
-        private byte[] body = null;
-
+        private byte[] bodyBytes;
+        private String body;
         private Headers headers = new Headers();
 
         public ResponseBuilder httpStatus(@NonNull HttpStatus httpStatus) {
@@ -123,14 +125,14 @@ public class Response {
 
         public ResponseBuilder body(String body) {
 
+            this.body = body;
             return body(body.getBytes());
 
         }
 
         public ResponseBuilder body(byte[] body) {
 
-            this.body = body;
-
+            this.bodyBytes = body;
             return this;
 
         }

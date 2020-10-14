@@ -94,10 +94,10 @@ public final class Application {
             exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
 
             // Send response headers
-            exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBody().length);
+            exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBodyBytes().length);
 
             // Send response body
-            exchange.getResponseBody().write(response.getBody());
+            exchange.getResponseBody().write(response.getBodyBytes());
 
             // Close response
             exchange.close();

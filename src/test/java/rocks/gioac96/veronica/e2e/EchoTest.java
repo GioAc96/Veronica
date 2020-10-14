@@ -2,6 +2,7 @@ package rocks.gioac96.veronica.e2e;
 
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,8 +32,8 @@ public class EchoTest extends E2ETest {
                     .path("/")
                     .body("")
                     .httpMethod(HttpMethod.GET),
-                response -> assertArrayEquals(
-                    Echo.getErrorMessage().getBytes(),
+                response -> assertEquals(
+                    Echo.getErrorMessage(),
                     response.getBody()
                 )
             );
@@ -47,8 +48,8 @@ public class EchoTest extends E2ETest {
                     .path("/")
                     .body(bodyValue)
                     .httpMethod(HttpMethod.GET),
-                response -> assertArrayEquals(
-                    bodyValue.getBytes(),
+                response -> assertEquals(
+                    bodyValue,
                     response.getBody()
                 )
             );

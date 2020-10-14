@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.e2e;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,21 +23,21 @@ public class HelloWorldTest extends E2ETest {
                 mockRequest()
                     .path("/")
                     .httpMethod(HttpMethod.GET),
-                response -> assertArrayEquals(HelloWorld.getMessage().getBytes(), response.getBody())
+                response -> assertEquals(HelloWorld.getMessage(), response.getBody())
             );
 
             put(
                 mockRequest()
                     .path("/some/path")
                     .httpMethod(HttpMethod.POST),
-                response -> assertArrayEquals(HelloWorld.getMessage().getBytes(), response.getBody())
+                response -> assertEquals(HelloWorld.getMessage(), response.getBody())
             );
 
             put(
                 mockRequest()
                     .path("/some/other/path?query=myquery")
                     .httpMethod(HttpMethod.PUT),
-                response -> assertArrayEquals(HelloWorld.getMessage().getBytes(), response.getBody())
+                response -> assertEquals(HelloWorld.getMessage(), response.getBody())
             );
 
         }};

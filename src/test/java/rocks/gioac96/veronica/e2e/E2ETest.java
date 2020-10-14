@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.e2e;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.MockUtil.isMock;
@@ -122,7 +123,7 @@ public abstract class E2ETest {
 
     protected static void assertResponseBodyEquals(String expected, Response response) {
 
-        assertArrayEquals(expected.getBytes(), response.getBody());
+        assertEquals(expected, response.getBody());
 
     }
 
