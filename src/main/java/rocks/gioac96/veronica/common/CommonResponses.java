@@ -15,7 +15,6 @@ import rocks.gioac96.veronica.common.responses.Redirect;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
-import rocks.gioac96.veronica.validation.ValidationFailureResponse;
 
 /**
  * Framework's common responses.
@@ -197,19 +196,6 @@ public class CommonResponses {
             .temporary()
             .location(location)
             .provide();
-
-    }
-
-    /**
-     * Gets the framework's common {@link ValidationFailureResponse}.
-     * @param validationFailureData the validation failure data
-     * @return the response
-     */
-    public static Response validationFailure(ValidationFailureData validationFailureData) {
-
-        return ValidationFailureResponse.builder()
-            .validationFailureData(validationFailureData)
-            .build();
 
     }
 

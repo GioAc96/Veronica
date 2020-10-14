@@ -66,9 +66,8 @@ public class InArray
                     .fieldName(fieldName)
                     .build();
 
-                Response failureResponse = CommonResponses.validationFailure(failureData);
 
-                throw new ValidationException(failureResponse, failureData);
+                throw new ValidationException(failureData);
 
             }
 

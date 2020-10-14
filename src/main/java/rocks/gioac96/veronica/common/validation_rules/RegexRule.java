@@ -3,6 +3,8 @@ package rocks.gioac96.veronica.common.validation_rules;
 import lombok.NonNull;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
+import rocks.gioac96.veronica.validation.ValidationException;
+import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
@@ -48,7 +50,18 @@ public class RegexRule
     @Override
     protected ValidationRule instantiate() {
 
-        return null;
+        return (fieldName, fieldValue) -> {
+
+            if (! fieldValue.matches(pattern)) {
+
+                throw new ValidationException(ValidationFailureData.builder()
+                    .failureReason(failureReason)
+                    .fieldName(fieldName)
+                    .build());
+
+            }
+
+        };
 
     }
 
