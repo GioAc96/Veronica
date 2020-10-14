@@ -23,6 +23,7 @@ public interface ExchangeParser {
             String body = new String(httpExchange.getRequestBody().readAllBytes());
 
             return Request.builder()
+                .httpExchange(httpExchange)
                 .secure(httpExchange instanceof HttpsExchange)
                 .httpMethod(httpMethod)
                 .uri(httpExchange.getRequestURI())

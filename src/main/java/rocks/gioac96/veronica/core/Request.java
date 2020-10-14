@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.core;
 
 import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
@@ -179,10 +180,11 @@ public class Request {
     @Getter(AccessLevel.PROTECTED)
     public abstract static class RequestBuilder extends Builder<Request> {
 
-        private @NonNull HttpMethod httpMethod;
-        private @NonNull String body;
-        private @NonNull Headers headers;
-        private @NonNull URI uri;
+        private HttpMethod httpMethod;
+        private String body;
+        private Headers headers;
+        private URI uri;
+        private HttpExchange httpExchange;
         private boolean secure;
 
         public RequestBuilder httpMethod(@NonNull HttpMethod httpMethod) {
@@ -220,6 +222,13 @@ public class Request {
 
         }
 
+        public RequestBuilder httpExchange(@NonNull HttpExchange httpExchange) {
+
+            this.httpExchange = httpExchange;
+            return this;
+
+        }
+
         @Override
         protected boolean isValid() {
 
@@ -227,7 +236,8 @@ public class Request {
                 && httpMethod != null
                 && body != null
                 && headers != null
-                && uri != null;
+                && uri != null
+                && httpExchange != null;
 
         }
 
