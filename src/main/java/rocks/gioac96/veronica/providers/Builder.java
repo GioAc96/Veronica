@@ -13,6 +13,7 @@ import java.util.Set;
 public abstract class Builder<T> implements Provider<T>, BuildsInstances {
 
     private static final Set<Object> configuredBuilders = new HashSet<>();
+    private static final Map<Class<?>, Object> instances = new HashMap<>();
 
     private boolean isConfigured() {
 
@@ -72,13 +73,13 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
 
         } else {
 
-            T storedInstance = (T) InstanceStore.retrieve(this.getClass());
+            T storedInstance = (T) instances.get(this.getClass());
 
             if (storedInstance == null) {
 
                 T newInstance = instantiate();
 
-                InstanceStore.store(this.getClass(), newInstance);
+                instances.put(this.getClass(), newInstance);
 
                 return newInstance;
 
@@ -91,24 +92,5 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
         }
 
     }
-
-    private static final class InstanceStore {
-
-        private static final Map<Class<?>, Object> instancesMap = new HashMap<>();
-
-        public static final <T> void store(Class<T> builderClass, Object instance) {
-
-            instancesMap.put(builderClass, instance);
-
-        }
-
-        public static final <T> Object retrieve(Class<T> builderClass) {
-
-            return instancesMap.get(builderClass);
-
-        }
-
-    }
-
 
 }
