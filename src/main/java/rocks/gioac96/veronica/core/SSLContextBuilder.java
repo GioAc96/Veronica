@@ -16,7 +16,6 @@ import rocks.gioac96.veronica.providers.Provider;
 public abstract class SSLContextBuilder extends Builder<SSLContext> {
 
     private KeyStore keyStore;
-
     private String password;
 
     protected SSLContextBuilder keyStore(@NonNull KeyStore keyStore) {

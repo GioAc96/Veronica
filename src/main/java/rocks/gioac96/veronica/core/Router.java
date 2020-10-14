@@ -25,6 +25,7 @@ public class Router implements RequestHandler {
     private final RequestHandler defaultRequestHandler;
     private final List<RoutingGuard> routingGuards;
     private final String pathPrefix;
+
     public Router(RouterBuilder b) {
 
         this.methodRouteTrees = b.methodRouteTrees;
@@ -220,11 +221,8 @@ public class Router implements RequestHandler {
     protected static final class RouteTree {
 
         private final List<Tuple<Predicate<Request>, RequestHandler>> routes = new ArrayList<>();
-
         private final List<Tuple<Predicate<Request>, RequestHandler>> starRoutes = new ArrayList<>();
-
         private final Map<String, RouteTree> children = new HashMap<>();
-
         private Tuple<String, RouteTree> variablePathPartChild = null;
 
     }

@@ -2,6 +2,7 @@ package rocks.gioac96.veronica.static_server;
 
 import java.nio.file.Path;
 import java.util.HashMap;
+import lombok.NonNull;
 import rocks.gioac96.veronica.core.MimeType;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
@@ -70,7 +71,7 @@ public class MimeResolver {
 
         private final HashMap<String, String> extensionMimeMap = new HashMap<>();
 
-        public MimeResolverBuilder mime(MimeType mimeType) {
+        public MimeResolverBuilder mime(@NonNull MimeType mimeType) {
 
 
             for (String extension : mimeType.getExtensions()) {
@@ -83,7 +84,7 @@ public class MimeResolver {
 
         }
 
-        public MimeResolverBuilder removeMime(MimeType mimeType) {
+        public MimeResolverBuilder removeMime(@NonNull MimeType mimeType) {
 
             for (String extension : mimeType.getExtensions()) {
 

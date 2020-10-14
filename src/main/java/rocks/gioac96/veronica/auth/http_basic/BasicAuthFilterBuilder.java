@@ -13,8 +13,9 @@ import rocks.gioac96.veronica.providers.Provider;
 /**
  * Http basic authentication filter builder.
  */
-@SuppressWarnings("checkstyle:MissingJavadocMethod")
-public class BasicAuthFilterBuilder extends Builder<PreFilter> implements BuildsMultipleInstances {
+public class BasicAuthFilterBuilder
+    extends Builder<PreFilter>
+    implements BuildsMultipleInstances {
 
     private CredentialsChecker credentialsChecker;
     private String realm;
@@ -26,9 +27,9 @@ public class BasicAuthFilterBuilder extends Builder<PreFilter> implements Builds
 
     }
 
-    public BasicAuthFilterBuilder credentialsChecker(@NonNull Provider<CredentialsChecker> credentialsCheckerProvider) {
+    public BasicAuthFilterBuilder credentialsChecker(@NonNull Provider<CredentialsChecker> credentialsChecker) {
 
-        return credentialsChecker(credentialsCheckerProvider.provide());
+        return credentialsChecker(credentialsChecker.provide());
 
     }
 
@@ -39,9 +40,9 @@ public class BasicAuthFilterBuilder extends Builder<PreFilter> implements Builds
 
     }
 
-    public BasicAuthFilterBuilder realm(Provider<String> realmProvider) {
+    public BasicAuthFilterBuilder realm(Provider<String> realm) {
 
-        return realm(realmProvider.provide());
+        return realm(realm.provide());
 
     }
 
@@ -70,7 +71,7 @@ public class BasicAuthFilterBuilder extends Builder<PreFilter> implements Builds
 
             } catch (BasicAuth.BasicAuthCredentialsParsingException e) {
 
-                throw new AuthenticationException(CommonResponses.promptBasicAuth(realm));
+                throw new AuthenticationException(e, CommonResponses.promptBasicAuth(realm));
 
             }
 

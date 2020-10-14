@@ -235,6 +235,14 @@ public final class FilePermissionsManager<P> {
         }
 
         @Override
+        protected boolean isValid() {
+
+            return super.isValid()
+                && rootTrees != null;
+
+        }
+
+        @Override
         protected FilePermissionsManager<P> instantiate() {
 
             return new FilePermissionsManager<>(this);

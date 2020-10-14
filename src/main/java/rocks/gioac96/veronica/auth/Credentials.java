@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 /**
- * Class for holding authentication credentials.
+ * Authentication credentials.
  */
 @Getter
 @NonNull

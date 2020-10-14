@@ -11,59 +11,28 @@ import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.Provider;
 
 /**
  * Used to generate Set-Cookie http headers. Supports all features from RFC 6265, section 4.1: Set-Cookie.
  * All features are explained here https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie.
  */
+@Getter
 public final class SetCookieHeader {
-
-    protected static final boolean DEFAULT_SECURE = false;
-    protected static final boolean DEFAULT_HTTPONLY = false;
 
     private static final String INVALID_NAME_SPECIAL_CHARS = "()<>@,;:\\\"/[]?={}";
 
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("E, dd MMM yyyy HH:mm:ss");
-
-    @Getter
-    @Setter
-    private static Charset COOKIE_VALUE_CHARSET = StandardCharsets.UTF_8;
-
-    @Getter
-    private String name;
-
-    @Getter
-    @Setter
-    @NonNull
-    private String value;
-
-    @Getter
-    @Setter
-    private ZonedDateTime expires;
-
-    @Getter
-    @Setter
-    private Long maxAge;
-
-    @Getter
-    @Setter
-    private String domain;
-
-    @Getter
-    @Setter
-    private String path;
-
-    @Getter
-    @Setter
-    private Boolean secure;
-
-    @Getter
-    @Setter
-    private Boolean httpOnly;
-
-    @Getter
-    @Setter
-    private SameSitePolicy sameSite;
+    private static final Charset COOKIE_VALUE_CHARSET = StandardCharsets.UTF_8;
+    private final String name;
+    private final String value;
+    private final ZonedDateTime expires;
+    private final Long maxAge;
+    private final String domain;
+    private final String path;
+    private final Boolean secure;
+    private final Boolean httpOnly;
+    private final SameSitePolicy sameSite;
 
     protected SetCookieHeader(
         SetCookieHeaderBuilder b
@@ -131,25 +100,7 @@ public final class SetCookieHeader {
         return expires.withZoneSameInstant(ZoneOffset.UTC).format(timeFormatter) + " GMT";
 
     }
-
-    /**
-     * Validates and sets the cookie name.
-     *
-     * @param name name to validate and assign to cookie
-     * @throws IllegalArgumentException on invalid cookie name
-     */
-    public void setName(String name) throws IllegalArgumentException {
-
-        if (!isNameValid(name)) {
-
-            throw new IllegalArgumentException("Illegal cookie name");
-
-        }
-
-        this.name = name;
-
-    }
-
+    
     /**
      * Generates a Set-Cookie header string.
      *
@@ -258,6 +209,12 @@ public final class SetCookieHeader {
             return this;
 
         }
+        
+        public SetCookieHeaderBuilder name(@NonNull Provider<String> name) {
+            
+            return name(name.provide());
+            
+        }
 
         public SetCookieHeaderBuilder value(@NonNull String value) {
 
@@ -266,12 +223,26 @@ public final class SetCookieHeader {
 
         }
 
+        public SetCookieHeaderBuilder value(@NonNull Provider<String> value) {
+
+            return value(value.provide());
+
+        }
+
+
         public SetCookieHeaderBuilder expires(ZonedDateTime expires) {
 
             this.expires = expires;
             return this;
 
         }
+
+        public SetCookieHeaderBuilder expires(@NonNull Provider<ZonedDateTime> expires) {
+
+            return expires(expires.provide());
+
+        }
+
 
         public SetCookieHeaderBuilder maxAge(Long maxAge) {
 
@@ -280,12 +251,26 @@ public final class SetCookieHeader {
 
         }
 
+        public SetCookieHeaderBuilder maxAge(@NonNull Provider<Long> maxAge) {
+
+            return maxAge(maxAge.provide());
+
+        }
+
+
         public SetCookieHeaderBuilder domain(String domain) {
 
             this.domain = domain;
             return this;
 
         }
+
+        public SetCookieHeaderBuilder domain(@NonNull Provider<String> domain) {
+
+            return domain(domain.provide());
+
+        }
+
 
         public SetCookieHeaderBuilder path(String path) {
 
@@ -301,6 +286,13 @@ public final class SetCookieHeader {
 
         }
 
+        public SetCookieHeaderBuilder secure(@NonNull Provider<Boolean> secure) {
+
+            return secure(secure.provide());
+
+        }
+
+
         public SetCookieHeaderBuilder secure() {
 
             this.secure = true;
@@ -315,6 +307,13 @@ public final class SetCookieHeader {
 
         }
 
+        public SetCookieHeaderBuilder httpOnly(@NonNull Provider<Boolean> httpOnly) {
+
+            return httpOnly(httpOnly.provide());
+
+        }
+
+
         public SetCookieHeaderBuilder httpOnly() {
 
             this.httpOnly = true;
@@ -328,6 +327,13 @@ public final class SetCookieHeader {
             return this;
 
         }
+
+        public SetCookieHeaderBuilder sameSite(@NonNull Provider<SameSitePolicy> sameSite) {
+
+            return sameSite(sameSite.provide());
+
+        }
+
 
         @Override
         protected boolean isValid() {

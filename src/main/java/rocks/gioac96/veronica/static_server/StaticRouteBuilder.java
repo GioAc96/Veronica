@@ -22,21 +22,13 @@ public class StaticRouteBuilder<
     implements BuildsMultipleInstances {
 
     private FilePermissionsManager<P> permissionsManager;
-
     private FilePermissionsDecider<P> permissionDecider;
-
     private Path baseDir;
-
     private RequestMatcher requestMatcher = null;
-
     private Response accessDeniedResponse = CommonResponses.forbidden();
-
     private Response fileNotFoundResponse = CommonResponses.notFound();
-
     private ContentDisposition contentDisposition = null;
-
     private Pipeline.PipelineBuilder pipelineSchematics = null;
-
     private String basePath = null;
 
     public StaticRouteBuilder<P> basePath(@NonNull String basePath) {

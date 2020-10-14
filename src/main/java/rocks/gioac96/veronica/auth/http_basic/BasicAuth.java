@@ -8,8 +8,7 @@ import rocks.gioac96.veronica.core.Request;
 /**
  * Utility class for http basic authentication.
  */
-@UtilityClass
-public class BasicAuth {
+public final class BasicAuth {
 
     /**
      * Parses an http "Authorization" header to retrieve credentials in basic http authentication.
@@ -18,7 +17,7 @@ public class BasicAuth {
      * @return the parsed credentials
      * @throws BasicAuthCredentialsParsingException on parsing failure
      */
-    public Credentials fromAuthorizationHeader(String headerValue)
+    public static Credentials fromAuthorizationHeader(String headerValue)
         throws BasicAuthCredentialsParsingException {
 
         try {
@@ -52,7 +51,7 @@ public class BasicAuth {
      * @return the parsed credentials
      * @throws BasicAuthCredentialsParsingException on parsing failure
      */
-    public Credentials fromRequest(Request request)
+    public static Credentials fromRequest(Request request)
         throws BasicAuthCredentialsParsingException {
 
         return fromAuthorizationHeader(

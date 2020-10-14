@@ -15,7 +15,7 @@ public interface MimeType {
     /**
      * Enum of common MIME types.
      */
-    enum CommonMimeTypes implements MimeType {
+    enum CommonMimeType implements MimeType {
 
         AAC(Set.of(".aac"), "audio/aac"),
         ABIWORD(Set.of(".abw"), "application/x-abiword"),
@@ -101,7 +101,7 @@ public interface MimeType {
         @Getter
         private final String mime;
 
-        CommonMimeTypes(Set<String> extensions, String mime) {
+        CommonMimeType(Set<String> extensions, String mime) {
             this.extensions = extensions;
             this.mime = mime;
         }

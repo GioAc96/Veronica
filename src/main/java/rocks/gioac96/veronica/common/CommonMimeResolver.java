@@ -13,7 +13,7 @@ public class CommonMimeResolver extends MimeResolver.MimeResolverBuilder impleme
     @Override
     protected void configure() {
 
-        Arrays.stream(MimeType.CommonMimeTypes.values()).forEach(this::mime);
+        Arrays.stream(MimeType.CommonMimeType.values()).forEach(this::mime);
 
     }
 

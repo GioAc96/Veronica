@@ -29,6 +29,8 @@ public interface ExceptionHandler {
      */
     default void handleExchangeException(IOException e) {
 
+        e.printStackTrace();
+
     }
 
 }
