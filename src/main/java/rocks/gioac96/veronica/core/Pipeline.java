@@ -1,22 +1,24 @@
 package rocks.gioac96.veronica.core;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.PriorityQueue;
 import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonExecutorServices;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
-import rocks.gioac96.veronica.providers.DeclaresPriority;
 import rocks.gioac96.veronica.providers.Provider;
-import rocks.gioac96.veronica.util.PrioritySet;
+import rocks.gioac96.veronica.util.HasPriority;
+import rocks.gioac96.veronica.util.PriorityEntry;
 
 /**
  * Request pipeline.
  */
 public final class Pipeline implements RequestHandler {
 
-    private final PrioritySet<PreFilter> preFilters;
-    private final PrioritySet<PostFilter> postFilters;
-    private final PrioritySet<PostProcessor> postProcessors;
+    private final PriorityQueue<PriorityEntry<PreFilter>> preFilters;
+    private final PriorityQueue<PriorityEntry<PostFilter>> postFilters;
+    private final PriorityQueue<PriorityEntry<PostProcessor>> postProcessors;
     private final ResponseRenderer responseRenderer;
     private final RequestHandler requestHandler;
 
@@ -41,19 +43,11 @@ public final class Pipeline implements RequestHandler {
 
     private Response preRender(Request request) {
 
-        for (PreFilter preFilter : preFilters) {
-
-            preFilter.filter(request);
-
-        }
+        preFilters.forEach(preFilterEntry -> preFilterEntry.getValue().filter(request));
 
         Response response = requestHandler.handle(request);
 
-        for (PostFilter postFilter : postFilters) {
-
-            postFilter.filter(request, response);
-
-        }
+        postFilters.forEach(postFilterEntry -> postFilterEntry.getValue().filter(request, response));
 
         return response;
 
@@ -89,7 +83,9 @@ public final class Pipeline implements RequestHandler {
 
     private void postRender(@NonNull Request request, Response response) {
 
-        for (PostProcessor postProcessor : postProcessors) {
+        postProcessors.forEach(postProcessorEntry -> {
+
+            PostProcessor postProcessor = postProcessorEntry.getValue();
 
             if (postProcessor instanceof PostProcessor.Asynchronous) {
 
@@ -104,7 +100,7 @@ public final class Pipeline implements RequestHandler {
 
             }
 
-        }
+        });
 
     }
 
@@ -142,11 +138,9 @@ public final class Pipeline implements RequestHandler {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
     public abstract static class PipelineBuilder extends Builder<Pipeline> {
 
-        private final PrioritySet<PreFilter> preFilters = new PrioritySet<>();
-
-        private final PrioritySet<PostFilter> postFilters = new PrioritySet<>();
-
-        private final PrioritySet<PostProcessor> postProcessors = new PrioritySet<>();
+        private final PriorityQueue<PriorityEntry<PreFilter>> preFilters = new PriorityQueue<>();
+        private final PriorityQueue<PriorityEntry<PostFilter>> postFilters = new PriorityQueue<>();
+        private final PriorityQueue<PriorityEntry<PostProcessor>> postProcessors = new PriorityQueue<>();
 
         private RequestHandler requestHandler;
 
@@ -154,57 +148,56 @@ public final class Pipeline implements RequestHandler {
 
         public PipelineBuilder preFilter(@NonNull PreFilter preFilter) {
 
-            this.preFilters.add(preFilter);
+            this.preFilters.add(new PriorityEntry<>(preFilter));
             return this;
 
         }
 
         public PipelineBuilder preFilter(@NonNull PreFilter preFilter, int priority) {
 
-            this.preFilters.add(preFilter, priority);
+            this.preFilters.add(new PriorityEntry<>(preFilter, priority));
             return this;
 
         }
 
         public PipelineBuilder preFilter(@NonNull Provider<PreFilter> preFilterProvider) {
 
-            if (preFilterProvider instanceof DeclaresPriority) {
+            if (preFilterProvider instanceof HasPriority) {
 
-                this.preFilters.add(
+                return this.preFilter(
                     preFilterProvider.provide(),
-                    ((DeclaresPriority) preFilterProvider).priority()
+                    ((HasPriority) preFilterProvider).getPriority()
                 );
 
             } else {
 
-                this.preFilters.add(preFilterProvider.provide());
+                return this.preFilter(preFilterProvider.provide());
 
             }
-            return this;
 
         }
 
         public PipelineBuilder postFilter(@NonNull PostFilter postFilter) {
 
-            this.postFilters.add(postFilter);
+            this.postFilters.add(new PriorityEntry<>(postFilter));
             return this;
 
         }
 
-        public PipelineBuilder postFilter(@NonNull PostFilter postFilter, Integer priority) {
+        public PipelineBuilder postFilter(@NonNull PostFilter postFilter, int priority) {
 
-            this.postFilters.add(postFilter, priority);
+            this.postFilters.add(new PriorityEntry<>(postFilter, priority));
             return this;
 
         }
 
-        public PipelineBuilder postFilters(@NonNull Provider<PostFilter> postFilterProvider) {
+        public PipelineBuilder postFilter(@NonNull Provider<PostFilter> postFilterProvider) {
 
-            if (postFilterProvider instanceof DeclaresPriority) {
+            if (postFilterProvider instanceof HasPriority) {
 
                 return this.postFilter(
                     postFilterProvider.provide(),
-                    ((DeclaresPriority) postFilterProvider).priority()
+                    ((HasPriority) postFilterProvider).getPriority()
                 );
 
             } else {
@@ -217,34 +210,35 @@ public final class Pipeline implements RequestHandler {
 
         public PipelineBuilder postProcessor(@NonNull PostProcessor postProcessor) {
 
-            this.postProcessors.add(postProcessor);
+            this.postProcessors.add(new PriorityEntry<>(postProcessor));
             return this;
 
         }
 
         public PipelineBuilder postProcessor(@NonNull PostProcessor postProcessor, int priority) {
 
-            this.postProcessors.add(postProcessor, priority);
+            this.postProcessors.add(new PriorityEntry<>(postProcessor, priority));
             return this;
 
         }
 
         public PipelineBuilder postProcessor(@NonNull Provider<PostProcessor> postProcessorProvider) {
 
-            if (postProcessorProvider instanceof DeclaresPriority) {
+            if (postProcessorProvider instanceof HasPriority) {
 
-                return postProcessor(
+                return this.postProcessor(
                     postProcessorProvider.provide(),
-                    ((DeclaresPriority) postProcessorProvider).priority()
+                    ((HasPriority) postProcessorProvider).getPriority()
                 );
 
             } else {
 
-                return postProcessor(postProcessorProvider.provide());
+                return this.postProcessor(postProcessorProvider.provide());
 
             }
 
         }
+
 
         public PipelineBuilder responseRenderer(@NonNull ResponseRenderer responseRenderer) {
 
@@ -293,6 +287,9 @@ public final class Pipeline implements RequestHandler {
 
             return super.isValid()
                 && requestHandler != null
+                && preFilters != null
+                && postFilters != null
+                && postProcessors != null
                 && preFilters.stream().allMatch(Objects::nonNull)
                 && postFilters.stream().allMatch(Objects::nonNull)
                 && postProcessors.stream().allMatch(Objects::nonNull);

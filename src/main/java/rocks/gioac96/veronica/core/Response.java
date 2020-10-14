@@ -3,14 +3,13 @@ package rocks.gioac96.veronica.core;
 import com.sun.net.httpserver.Headers;
 import java.util.ArrayList;
 import java.util.Collection;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
-import rocks.gioac96.veronica.util.ArraySet;
 
 /**
  * Http response.
@@ -35,7 +34,7 @@ public class Response {
 
     @Getter
     @Setter
-    private ArraySet<SetCookieHeader> cookies;
+    private Set<SetCookieHeader> cookies;
 
     protected Response(ResponseBuilder builder) {
 
@@ -109,7 +108,7 @@ public class Response {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public abstract static class ResponseBuilder extends Builder<Response> {
 
-        private final ArraySet<SetCookieHeader> cookies = new ArraySet<>();
+        private final Set<SetCookieHeader> cookies = new HashSet<>();
         private HttpStatus httpStatus = HttpStatus.OK;
         private byte[] bodyBytes;
         private String body;

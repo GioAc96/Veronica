@@ -1,23 +1,19 @@
 package rocks.gioac96.veronica.core.concurrency;
 
-import lombok.Getter;
+import rocks.gioac96.veronica.util.PriorityEntry;
 
-public class PriorityRunnableTask extends PriorityTask implements Runnable {
-
-    @Getter
-    private final Runnable task;
+public class PriorityRunnableTask extends PriorityEntry<Runnable> implements Runnable {
 
     protected PriorityRunnableTask(int priority, Runnable task) {
 
-        super(priority);
+        super(task, priority);
 
-        this.task = task;
     }
 
     @Override
     public void run() {
 
-        task.run();
+        getValue().run();
 
     }
 
