@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.validation;
 
+import java.util.PriorityQueue;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,24 +8,18 @@ import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
-import rocks.gioac96.veronica.providers.DeclaresPriority;
 import rocks.gioac96.veronica.providers.Provider;
-import rocks.gioac96.veronica.util.PrioritySet;
+import rocks.gioac96.veronica.util.HasPriority;
+import rocks.gioac96.veronica.util.PriorityEntry;
 
 /**
  * Field validator.
  */
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class FieldValidator {
 
-    @Getter
-    @Setter
-    @NonNull
-    private PrioritySet<ValidationRule> validationRules;
-
-    @Getter
-    @Setter
-    @NonNull
+    private PriorityQueue<PriorityEntry<ValidationRule>> validationRules;
     private Boolean nullable;
 
     protected FieldValidator(FieldValidatorBuilder b) {
@@ -72,9 +67,9 @@ public class FieldValidator {
 
         } else {
 
-            for (ValidationRule validationRule : validationRules) {
+            for (PriorityEntry<ValidationRule> validationRuleEntry : validationRules) {
 
-                validationRule.validate(fieldName, fieldValue);
+                validationRuleEntry.getValue().validate(fieldName, fieldValue);
 
             }
 
@@ -85,44 +80,40 @@ public class FieldValidator {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
     public abstract static class FieldValidatorBuilder extends Builder<FieldValidator> {
 
-        @NonNull
-        private final PrioritySet<ValidationRule> validationRules = new PrioritySet<>();
-
-        @NonNull
+        private final PriorityQueue<PriorityEntry<ValidationRule>> validationRules = new PriorityQueue<>();
         private Boolean nullable = false;
 
-        public FieldValidatorBuilder validationRule(@NonNull ValidationRule validationRule) {
+        public FieldValidatorBuilder validationRules(@NonNull ValidationRule validationRules) {
 
-            this.validationRules.add(validationRule);
-
+            this.validationRules.add(new PriorityEntry<>(validationRules));
             return this;
 
         }
 
-        public FieldValidatorBuilder validationRule(@NonNull ValidationRule validationRule, int priority) {
+        public FieldValidatorBuilder validationRules(@NonNull ValidationRule validationRules, int priority) {
 
-            this.validationRules.add(validationRule, priority);
-
+            this.validationRules.add(new PriorityEntry<>(validationRules, priority));
             return this;
 
         }
 
-        public FieldValidatorBuilder validationRule(@NonNull Provider<ValidationRule> validationRuleProvider) {
+        public FieldValidatorBuilder validationRules(@NonNull Provider<ValidationRule> validationRulesProvider) {
 
-            if (validationRuleProvider instanceof DeclaresPriority) {
+            if (validationRulesProvider instanceof HasPriority) {
 
-                return validationRule(
-                    validationRuleProvider.provide(),
-                    ((DeclaresPriority) validationRuleProvider).priority()
+                return this.validationRules(
+                    validationRulesProvider.provide(),
+                    ((HasPriority) validationRulesProvider).getPriority()
                 );
 
             } else {
 
-                return validationRule(validationRuleProvider.provide());
+                return this.validationRules(validationRulesProvider.provide());
 
             }
 
         }
+
 
         public FieldValidatorBuilder nullable(@NonNull Boolean nullable) {
 

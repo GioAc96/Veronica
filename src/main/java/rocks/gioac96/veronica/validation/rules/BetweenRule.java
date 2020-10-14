@@ -8,7 +8,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.validation.CommonValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationRule;
