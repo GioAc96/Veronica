@@ -53,41 +53,49 @@ public abstract class Builder<T> implements Provider<T>, BuildsInstances {
      */
     public final T build() {
 
-        if (!isConfigured()) {
+        try {
 
-            configure();
+            if (!isConfigured()) {
 
-            if (!isValid()) {
+                configure();
 
-                throw new CreationException();
+                if (!isValid()) {
+
+                    throw new CreationException();
+
+                }
+
+                configured();
 
             }
 
-            configured();
+            if (buildsMultipleInstances()) {
 
-        }
-
-        if (buildsMultipleInstances()) {
-
-            return instantiate();
-
-        } else {
-
-            T storedInstance = (T) instances.get(this.getClass());
-
-            if (storedInstance == null) {
-
-                T newInstance = instantiate();
-
-                instances.put(this.getClass(), newInstance);
-
-                return newInstance;
+                return instantiate();
 
             } else {
 
-                return storedInstance;
+                T storedInstance = (T) instances.get(this.getClass());
+
+                if (storedInstance == null) {
+
+                    T newInstance = instantiate();
+
+                    instances.put(this.getClass(), newInstance);
+
+                    return newInstance;
+
+                } else {
+
+                    return storedInstance;
+
+                }
 
             }
+
+        } catch (Exception e) {
+
+            throw new CreationException(e);
 
         }
 
