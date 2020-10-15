@@ -2,6 +2,7 @@ package rocks.gioac96.veronica.common;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import rocks.gioac96.veronica.common.validation_rules.BetweenRule;
 import rocks.gioac96.veronica.common.validation_rules.BooleanRule;
 import rocks.gioac96.veronica.common.validation_rules.EmailRule;
@@ -10,7 +11,7 @@ import rocks.gioac96.veronica.common.validation_rules.MaxRule;
 import rocks.gioac96.veronica.common.validation_rules.MinRule;
 import rocks.gioac96.veronica.common.validation_rules.NumericPredicateRule;
 import rocks.gioac96.veronica.common.validation_rules.NumericRule;
-import rocks.gioac96.veronica.common.validation_rules.RegexRule;
+import rocks.gioac96.veronica.common.validation_rules.PatternRule;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
@@ -79,9 +80,17 @@ public class CommonValidationRules {
 
     }
 
-    public static ValidationRule regex(String pattern) {
+    public static ValidationRule pattern(String pattern) {
 
-        return new RegexRule()
+        return new PatternRule()
+            .patternString(pattern)
+            .build();
+
+    }
+
+    public static ValidationRule pattern(Pattern pattern) {
+
+        return new PatternRule()
             .pattern(pattern)
             .build();
 

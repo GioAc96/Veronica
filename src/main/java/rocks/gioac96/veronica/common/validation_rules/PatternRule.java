@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.common.validation_rules;
 
+import java.util.regex.Pattern;
 import lombok.NonNull;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
@@ -8,22 +9,35 @@ import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
-public class RegexRule
+public class PatternRule
     extends ValidationRuleBuilderWithConstantFailureReason
     implements BuildsMultipleInstances {
 
-    protected String pattern;
+    protected Pattern pattern;
 
-    public RegexRule pattern(@NonNull String pattern) {
+    public PatternRule pattern(@NonNull Pattern pattern) {
 
         this.pattern = pattern;
         return this;
 
     }
 
-    public RegexRule pattern(@NonNull Provider<String> patternProvider) {
+    public PatternRule pattern(@NonNull Provider<Pattern> patternProvider) {
 
         return pattern(patternProvider.provide());
+
+    }
+
+    public PatternRule patternString(@NonNull String pattern) {
+
+        return pattern(Pattern.compile(pattern));
+
+    }
+
+
+    public PatternRule patternString(@NonNull Provider<String> patternProvider) {
+
+        return patternString(patternProvider.provide());
 
     }
 
@@ -52,7 +66,7 @@ public class RegexRule
 
         return (fieldName, fieldValue) -> {
 
-            if (!fieldValue.matches(pattern)) {
+            if (! pattern.matcher(fieldValue).find()) {
 
                 throw new ValidationException(ValidationFailureData.builder()
                     .failureReason(failureReason)

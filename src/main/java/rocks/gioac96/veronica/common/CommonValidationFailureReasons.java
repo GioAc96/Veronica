@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.common;
 
+import rocks.gioac96.veronica.common.validation_failure_reasons.InvalidEmail;
 import rocks.gioac96.veronica.common.validation_failure_reasons.IsNull;
 import rocks.gioac96.veronica.common.validation_failure_reasons.NotBoolean;
 import rocks.gioac96.veronica.common.validation_failure_reasons.NotInRange;
@@ -14,6 +15,7 @@ public class CommonValidationFailureReasons {
     private static final Provider<ValidationFailureReason> isNull = new IsNull();
     private static final Provider<ValidationFailureReason> notNumeric = new NotNumeric();
     private static final Provider<ValidationFailureReason> notBoolean = new NotBoolean();
+    private static final Provider<ValidationFailureReason> invalidEmail = new InvalidEmail();
 
     public static ValidationFailureReason isNull() {
 
@@ -55,6 +57,12 @@ public class CommonValidationFailureReasons {
     public static ValidationFailureReason notBoolean() {
 
         return notBoolean.provide();
+
+    }
+
+    public static ValidationFailureReason invalidEmail() {
+
+        return invalidEmail.provide();
 
     }
 

@@ -1,18 +1,20 @@
 package rocks.gioac96.veronica.common.validation_rules;
 
-import rocks.gioac96.veronica.validation.ValidationFailureReason;
+import java.util.regex.Pattern;
+import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 
-public class EmailRule extends RegexRule {
+public class EmailRule extends PatternRule {
 
     @Override
     protected void configure() {
 
         super.configure();
 
-        pattern("^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$");
-        failureReason(ValidationFailureReason.builder()
-            .message("value is not a valid email address")
-            .build());
+        pattern(Pattern.compile(
+            "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,63}$",
+            Pattern.CASE_INSENSITIVE)
+        );
+        failureReason(CommonValidationFailureReasons.invalidEmail());
 
     }
 
