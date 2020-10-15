@@ -2,6 +2,7 @@ package rocks.gioac96.veronica.common.validation_rules;
 
 import java.util.regex.Pattern;
 import lombok.NonNull;
+import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationException;
@@ -46,10 +47,11 @@ public class PatternRule
 
         super.configure();
 
-        failureReason(ValidationFailureReason.builder()
-            .message("value does not match the expected pattern")
-            .build()
-        );
+        if (failureReason == null) {
+
+            failureReason(CommonValidationFailureReasons.patternNotMatches());
+
+        }
 
     }
 

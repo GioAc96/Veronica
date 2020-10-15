@@ -5,6 +5,7 @@ import rocks.gioac96.veronica.common.validation_failure_reasons.IsNull;
 import rocks.gioac96.veronica.common.validation_failure_reasons.NotBoolean;
 import rocks.gioac96.veronica.common.validation_failure_reasons.NotInRange;
 import rocks.gioac96.veronica.common.validation_failure_reasons.NotNumeric;
+import rocks.gioac96.veronica.common.validation_failure_reasons.PatternNotMatches;
 import rocks.gioac96.veronica.common.validation_failure_reasons.ValueTooBig;
 import rocks.gioac96.veronica.common.validation_failure_reasons.ValueTooSmall;
 import rocks.gioac96.veronica.providers.Provider;
@@ -16,6 +17,7 @@ public class CommonValidationFailureReasons {
     private static final Provider<ValidationFailureReason> notNumeric = new NotNumeric();
     private static final Provider<ValidationFailureReason> notBoolean = new NotBoolean();
     private static final Provider<ValidationFailureReason> invalidEmail = new InvalidEmail();
+    private static final Provider<ValidationFailureReason> patternNotMatches = new PatternNotMatches();
 
     public static ValidationFailureReason isNull() {
 
@@ -63,6 +65,12 @@ public class CommonValidationFailureReasons {
     public static ValidationFailureReason invalidEmail() {
 
         return invalidEmail.provide();
+
+    }
+
+    public static ValidationFailureReason patternNotMatches() {
+
+        return patternNotMatches.provide();
 
     }
 

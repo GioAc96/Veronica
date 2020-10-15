@@ -13,6 +13,7 @@ import rocks.gioac96.veronica.common.validation_rules.NumericPredicateRule;
 import rocks.gioac96.veronica.common.validation_rules.NumericRule;
 import rocks.gioac96.veronica.common.validation_rules.PatternRule;
 import rocks.gioac96.veronica.providers.Provider;
+import rocks.gioac96.veronica.validation.ValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
 public class CommonValidationRules {
@@ -92,6 +93,27 @@ public class CommonValidationRules {
 
         return new PatternRule()
             .pattern(pattern)
+            .build();
+
+    }
+    public static ValidationRule pattern(String pattern, String failureReasonMessage) {
+
+        return new PatternRule()
+            .patternString(pattern)
+            .failureReason(ValidationFailureReason.builder()
+                .message(failureReasonMessage)
+                .build())
+            .build();
+
+    }
+
+    public static ValidationRule pattern(Pattern pattern, String failureReasonMessage) {
+
+        return new PatternRule()
+            .pattern(pattern)
+            .failureReason(ValidationFailureReason.builder()
+                .message(failureReasonMessage)
+                .build())
             .build();
 
     }
