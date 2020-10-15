@@ -26,6 +26,7 @@ class BuilderTest {
         }
 
         assertNotSame(new MultipleInstancesBuilder().build(), new MultipleInstancesBuilder().build());
+        assertEquals(new MultipleInstancesBuilder().build(), new MultipleInstancesBuilder().build());
 
     }
 
@@ -72,7 +73,7 @@ class BuilderTest {
 
         @Override
         protected String instantiate() {
-            return "Ciao";
+            return new String("Ciao");
         }
 
     }
