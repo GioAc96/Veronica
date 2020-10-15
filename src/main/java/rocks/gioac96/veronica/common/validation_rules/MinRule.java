@@ -2,6 +2,7 @@ package rocks.gioac96.veronica.common.validation_rules;
 
 
 import lombok.NonNull;
+import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.Provider;
 
 public class MinRule extends NumericPredicateRule {
@@ -22,11 +23,20 @@ public class MinRule extends NumericPredicateRule {
     }
 
     @Override
+    protected boolean isValid() {
+
+        return super.isValid()
+            && minValue != null;
+
+    }
+
+    @Override
     protected void configure() {
 
         super.configure();
 
         predicate(value -> value >= minValue);
+        predicateNotAppliesFailureReason(CommonValidationFailureReasons.tooSmall(minValue));
 
     }
 

@@ -2,6 +2,7 @@ package rocks.gioac96.veronica.common.validation_rules;
 
 import java.util.function.Predicate;
 import lombok.NonNull;
+import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
@@ -65,7 +66,7 @@ public class NumericPredicateRule extends Builder<ValidationRule> implements Bui
             } catch (NumberFormatException e) {
 
                 ValidationFailureData failureData = ValidationFailureData.builder()
-                    .failureReason(NumericRule.FAILURE_REASON)
+                    .failureReason(CommonValidationFailureReasons.notNumeric())
                     .fieldName(fieldName)
                     .build();
 

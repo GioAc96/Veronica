@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.validation;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.providers.Builder;
@@ -10,6 +11,7 @@ import rocks.gioac96.veronica.providers.Provider;
  * Reasons for validation failure.
  */
 @Getter
+@EqualsAndHashCode
 public class ValidationFailureReason {
 
     private final String message;

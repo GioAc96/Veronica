@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.common.validation_rules;
 
 import lombok.NonNull;
+import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.Provider;
 
 public class BetweenRule extends NumericPredicateRule {
@@ -36,11 +37,22 @@ public class BetweenRule extends NumericPredicateRule {
     }
 
     @Override
+    protected boolean isValid() {
+
+        return super.isValid()
+            && minValue != null
+            && maxValue != null
+            && minValue < maxValue;
+
+    }
+
+    @Override
     protected void configure() {
 
         super.configure();
 
         predicate(value -> value <= maxValue && value >= minValue);
+        predicateNotAppliesFailureReason(CommonValidationFailureReasons.notInRange(minValue, maxValue));
 
     }
 
