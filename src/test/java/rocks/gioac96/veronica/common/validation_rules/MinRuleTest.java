@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.common.validation_rules;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static rocks.gioac96.veronica.common.CommonValidationRulesTest.assertValidationFails;
 
 import org.junit.jupiter.api.Test;
@@ -12,29 +12,26 @@ import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
 
-class MaxRuleTest {
+public class MinRuleTest {
 
     @ParameterizedTest
     @CsvSource({
-        "1, 0",
         "0, -1",
-        "0.1, 0",
-        "-1, -2",
-        "13491348.00001, 13491348",
-        "-138718.9, -138718.91"
+        "10, 9.9999",
+        "1000, -1000"
     })
-    void testMaxFails(
-        double value,
-        double max
+    void testMinFails(
+        double min,
+        double value
     ) {
 
         assertValidationFails(
-            CommonValidationRules.max(max),
+            CommonValidationRules.min(min),
             "test",
             String.valueOf(value),
             ValidationFailureData.builder()
                 .fieldName("test")
-                .failureReason(CommonValidationFailureReasons.tooBig(max))
+                .failureReason(CommonValidationFailureReasons.tooSmall(min))
                 .build()
         );
 
@@ -42,29 +39,29 @@ class MaxRuleTest {
 
     @ParameterizedTest
     @CsvSource({
+        "0, 0",
         "0, 1",
-        "1, 2",
-        "1.000001, 1.000001",
-        "12345, 12345",
-        "123456.00001, 123456.00002"
+        "-100, -100",
+        "-134, -133.9999999",
+        "1457.0139, 1457.014"
     })
-    void testMaxOk(
-        double value,
-        double max
+    void testMinOk(
+        double min,
+        double value
     ) throws ValidationException {
 
-        CommonValidationRules.max(max).validate("test", String.valueOf(value));
+        CommonValidationRules.min(min).validate("test", String.valueOf(value));
 
     }
 
     @Test
-    void testInvalidMax() {
+    void testInvalidMin() {
 
         assertThrows(CreationException.class, () -> {
-            new MaxRule().build();
+            new MinRule().build();
         });
 
 
     }
-
+    
 }
