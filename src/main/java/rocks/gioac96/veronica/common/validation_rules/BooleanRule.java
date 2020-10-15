@@ -1,32 +1,34 @@
 package rocks.gioac96.veronica.common.validation_rules;
 
 import java.util.Arrays;
-import rocks.gioac96.veronica.validation.ValidationFailureReason;
+import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 
 public class BooleanRule extends InArray {
+
+    public static final String[] TRUE_VALUES = {
+        "true",
+        "on",
+        "yes",
+        "ok",
+        "1",
+        ""
+    };
+    public static final String[] FALSE_VALUES = {
+        "false",
+        "off",
+        "no",
+        "0",
+    };
 
     @Override
     protected void configure() {
 
         super.configure();
 
-        failureReason(ValidationFailureReason.builder()
-            .message("value must be either true or false")
-            .build()
-        );
+        failureReason(CommonValidationFailureReasons.notBoolean());
 
-        Arrays.stream(new String[]{
-            "false",
-            "true",
-            "on",
-            "off",
-            "yes",
-            "no",
-            "ok",
-            "1",
-            "0",
-            ""
-        }).forEach(this::allowedValue);
+        Arrays.stream(TRUE_VALUES).forEach(this::allowedValue);
+        Arrays.stream(FALSE_VALUES).forEach(this::allowedValue);
 
     }
 

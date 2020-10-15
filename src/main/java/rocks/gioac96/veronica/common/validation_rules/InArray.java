@@ -59,7 +59,7 @@ public class InArray
 
         return (fieldName, fieldValue) -> {
 
-            if (allowedValues.stream().noneMatch(allowedValues -> equals(fieldValue))) {
+            if (allowedValues.stream().noneMatch(allowedValues -> allowedValues.equals(fieldValue))) {
 
                 ValidationFailureData failureData = ValidationFailureData.builder()
                     .failureReason(failureReason)

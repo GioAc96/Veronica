@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.common;
 
+import rocks.gioac96.veronica.common.validation_failure_reasons.NotBoolean;
 import rocks.gioac96.veronica.common.validation_failure_reasons.ValueTooBig;
 import rocks.gioac96.veronica.common.validation_failure_reasons.ValueTooSmall;
 import rocks.gioac96.veronica.common.validation_failure_reasons.IsNull;
@@ -12,6 +13,7 @@ public class CommonValidationFailureReasons {
 
     private static final Provider<ValidationFailureReason> isNull = new IsNull();
     private static final Provider<ValidationFailureReason> notNumeric = new NotNumeric();
+    private static final Provider<ValidationFailureReason> notBoolean = new NotBoolean();
 
     public static ValidationFailureReason isNull() {
 
@@ -47,6 +49,12 @@ public class CommonValidationFailureReasons {
         return new ValueTooSmall()
             .minValue(minValue)
             .build();
+
+    }
+
+    public static ValidationFailureReason notBoolean() {
+
+        return notBoolean.provide();
 
     }
 
