@@ -1,15 +1,12 @@
 package rocks.gioac96.veronica.validation;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-import rocks.gioac96.veronica.common.CommonResponses;
+import rocks.gioac96.veronica.common.CommonHttpStatus;
 import rocks.gioac96.veronica.core.PipelineBreakException;
 import rocks.gioac96.veronica.core.PreFilter;
 import rocks.gioac96.veronica.core.Request;
@@ -18,42 +15,34 @@ import rocks.gioac96.veronica.core.Response;
 /**
  * {@link PreFilter} that validates a {@link Request} query.
  */
-@SuperBuilder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class QueryValidator implements PreFilter {
 
     @Getter
-    @Setter
-    @NonNull
-    @Builder.Default
-    private Map<String, FieldValidator> fieldValidators = new HashMap<>();
-
-    protected static Response generateValidationFailureResponse(ValidationException e) {
-
-        return CommonResponses.validationFailure(e.getValidationFailureData());
-
-    }
+    private final Map<String, FieldValidator> fieldValidators = new HashMap<>();
 
     @Override
     public void filter(@NonNull Request request) {
 
-        try {
+        List<ValidationFailureData> validationFailures = new LinkedList<>();
 
-            for (Map.Entry<String, FieldValidator> entry : fieldValidators.entrySet()) {
-
-                String fieldName = entry.getKey();
-                FieldValidator fieldValidator = entry.getValue();
+        fieldValidators.forEach((fieldName, fieldValidator) -> {
+            try {
 
                 fieldValidator.validateField(fieldName, request.getQueryParam(fieldName));
 
+            } catch (ValidationException e) {
+
+                validationFailures.add(e.getValidationFailureData());
+
             }
+        });
 
-        } catch (ValidationException e) {
+        if (! validationFailures.isEmpty()) {
 
-            throw new PipelineBreakException(
-                e,
-                generateValidationFailureResponse(e)
-            );
+            throw new PipelineBreakException(Response.builder()
+                .httpStatus(CommonHttpStatus.validationFailure())
+                .validationFailures(validationFailures)
+                .build());
 
         }
 

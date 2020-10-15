@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
+import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
@@ -15,12 +15,11 @@ import rocks.gioac96.veronica.util.PriorityEntry;
 /**
  * Field validator.
  */
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class FieldValidator {
 
-    private PriorityQueue<PriorityEntry<ValidationRule>> validationRules;
-    private Boolean nullable;
+    private final PriorityQueue<PriorityEntry<ValidationRule>> validationRules;
+    private final Boolean nullable;
 
     protected FieldValidator(FieldValidatorBuilder b) {
 
@@ -29,7 +28,6 @@ public class FieldValidator {
 
     }
 
-    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "unused"})
     public static FieldValidatorBuilder builder() {
 
         class FieldValidatorBuilderImpl extends FieldValidatorBuilder implements BuildsMultipleInstances {
@@ -40,30 +38,17 @@ public class FieldValidator {
 
     }
 
-    /**
-     * Validates a field by enforcing all of the field's validation rules.
-     *
-     * @param fieldName  name of the field to validate
-     * @param fieldValue value of the field to validate
-     * @throws ValidationException on validation failure
-     */
-    @SuppressWarnings("unused")
+
     public void validateField(String fieldName, String fieldValue) throws ValidationException {
 
-        if (fieldValue == null || fieldValue.equals("")) {
+        if (fieldValue == null &&! nullable) {
 
-            if (!nullable) {
+            ValidationFailureData failureData = ValidationFailureData.builder()
+                .fieldName(fieldName)
+                .failureReason(CommonValidationFailureReasons.isNull())
+                .build();
 
-                ValidationFailureData failureData = new ValidationFailureData(
-                    CommonValidationFailureReason.NOT_PRESENT,
-                    fieldName
-                );
-
-                throw ValidationException.builder()
-                    .validationFailureData(failureData)
-                    .build();
-
-            }
+            throw new ValidationException(failureData);
 
         } else {
 
@@ -77,38 +62,37 @@ public class FieldValidator {
 
     }
 
-    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
     public abstract static class FieldValidatorBuilder extends Builder<FieldValidator> {
 
         private final PriorityQueue<PriorityEntry<ValidationRule>> validationRules = new PriorityQueue<>();
         private Boolean nullable = false;
 
-        public FieldValidatorBuilder validationRules(@NonNull ValidationRule validationRules) {
+        public FieldValidatorBuilder validationRule(@NonNull ValidationRule validationRule) {
 
-            this.validationRules.add(new PriorityEntry<>(validationRules));
+            this.validationRules.add(new PriorityEntry<>(validationRule));
             return this;
 
         }
 
-        public FieldValidatorBuilder validationRules(@NonNull ValidationRule validationRules, int priority) {
+        public FieldValidatorBuilder validationRule(@NonNull ValidationRule validationRule, int priority) {
 
-            this.validationRules.add(new PriorityEntry<>(validationRules, priority));
+            this.validationRules.add(new PriorityEntry<>(validationRule, priority));
             return this;
 
         }
 
-        public FieldValidatorBuilder validationRules(@NonNull Provider<ValidationRule> validationRulesProvider) {
+        public FieldValidatorBuilder validationRule(@NonNull Provider<ValidationRule> validationRuleProvider) {
 
-            if (validationRulesProvider instanceof HasPriority) {
+            if (validationRuleProvider instanceof HasPriority) {
 
-                return this.validationRules(
-                    validationRulesProvider.provide(),
-                    ((HasPriority) validationRulesProvider).getPriority()
+                return this.validationRule(
+                    validationRuleProvider.provide(),
+                    ((HasPriority) validationRuleProvider).getPriority()
                 );
 
             } else {
 
-                return this.validationRules(validationRulesProvider.provide());
+                return this.validationRule(validationRuleProvider.provide());
 
             }
 
@@ -122,6 +106,12 @@ public class FieldValidator {
 
         }
 
+        public FieldValidatorBuilder nullable(@NonNull Provider<Boolean> nullable) {
+
+            return nullable(nullable.provide());
+
+        }
+
         public FieldValidatorBuilder nullable() {
 
             return nullable(true);
@@ -131,6 +121,15 @@ public class FieldValidator {
         public FieldValidatorBuilder notNullable() {
 
             return nullable(false);
+
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            return super.isValid()
+                && validationRules != null
+                && nullable != null;
 
         }
 

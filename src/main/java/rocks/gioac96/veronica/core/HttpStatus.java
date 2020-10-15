@@ -42,6 +42,7 @@ public enum HttpStatus {
     UNSUPPORTED_MEDIA_TYPE(415, "Unsupported Media Type"),
     REQUESTED_RANGE_NOT_SATISFIABLE(416, "Requested Range Not Satisfiable"),
     EXPECTATION_FAILED(417, "Expectation Failed"),
+    UNPROCESSABLE_ENTITY(422, "Unprocessable Entity"),
     PRECONDITION_REQUIRED(428, "Precondition Required"),
     TOO_MANY_REQUESTS(429, "Too Many Requests"),
     REQUEST_HEADER_FIELDS_TOO_LARGE(431, "Request Header Fields Too Large"),

@@ -38,7 +38,7 @@ public class InArray
 
         return super.isValid()
             && allowedValues != null
-            &! allowedValues.isEmpty()
+            &&! allowedValues.isEmpty()
             && allowedValues.stream().allMatch(Objects::nonNull);
 
     }
