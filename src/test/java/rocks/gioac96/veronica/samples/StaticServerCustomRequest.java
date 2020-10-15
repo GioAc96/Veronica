@@ -12,7 +12,6 @@ import rocks.gioac96.veronica.core.ExchangeParseException;
 import rocks.gioac96.veronica.core.ExchangeParser;
 import rocks.gioac96.veronica.core.HttpMethod;
 import rocks.gioac96.veronica.core.Request;
-import rocks.gioac96.veronica.common.CommonRoutes;
 import rocks.gioac96.veronica.core.Route;
 import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.static_server.FilePermissionsManager;

@@ -39,5 +39,5 @@ public class ValueTooBig extends Builder<ValidationFailureReason> implements Bui
             .build();
 
     }
-    
+
 }

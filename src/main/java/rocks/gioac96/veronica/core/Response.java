@@ -56,7 +56,6 @@ public class Response {
     }
 
 
-
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static ResponseBuilder builder() {
 
@@ -70,7 +69,7 @@ public class Response {
 
     public boolean hasValidationFailures() {
 
-        return validationFailures != null &&! validationFailures.isEmpty();
+        return validationFailures != null && !validationFailures.isEmpty();
 
     }
 
@@ -219,7 +218,7 @@ public class Response {
 
         private void initCookies() {
 
-            if (cookies == null){
+            if (cookies == null) {
 
                 cookies = new HashSet<>();
 

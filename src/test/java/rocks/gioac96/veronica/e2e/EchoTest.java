@@ -1,7 +1,6 @@
 package rocks.gioac96.veronica.e2e;
 
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
@@ -19,9 +18,9 @@ public class EchoTest extends E2ETest {
     protected Map<Request.RequestBuilder, Consumer<Response>> getTestCases() {
 
         String[] bodyValues = new String[]{
-          "body",
-          "request body",
-          "this is the request body"
+            "body",
+            "request body",
+            "this is the request body"
         };
 
         HashMap<Request.RequestBuilder, Consumer<Response>> testCases = new HashMap<>() {{

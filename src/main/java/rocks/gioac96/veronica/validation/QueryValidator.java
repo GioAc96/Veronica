@@ -37,7 +37,7 @@ public class QueryValidator implements PreFilter {
             }
         });
 
-        if (! validationFailures.isEmpty()) {
+        if (!validationFailures.isEmpty()) {
 
             throw new PipelineBreakException(Response.builder()
                 .httpStatus(CommonHttpStatus.validationFailure())

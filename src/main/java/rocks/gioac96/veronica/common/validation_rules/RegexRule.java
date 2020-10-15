@@ -52,7 +52,7 @@ public class RegexRule
 
         return (fieldName, fieldValue) -> {
 
-            if (! fieldValue.matches(pattern)) {
+            if (!fieldValue.matches(pattern)) {
 
                 throw new ValidationException(ValidationFailureData.builder()
                     .failureReason(failureReason)

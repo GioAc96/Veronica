@@ -1,6 +1,5 @@
 package rocks.gioac96.veronica.core;
 
-import java.util.Collection;
 import java.util.Objects;
 import java.util.PriorityQueue;
 import lombok.NonNull;

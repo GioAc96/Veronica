@@ -1,8 +1,8 @@
 package rocks.gioac96.veronica.tutorials;
 
 import rocks.gioac96.veronica.core.Application;
-import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.RequestHandler;
+import rocks.gioac96.veronica.core.Response;
 
 public class HelloWorld {
 

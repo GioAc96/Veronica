@@ -1,8 +1,6 @@
 package rocks.gioac96.veronica.validation;
 
 import java.util.PriorityQueue;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
@@ -41,7 +39,7 @@ public class FieldValidator {
 
     public void validateField(String fieldName, String fieldValue) throws ValidationException {
 
-        if (fieldValue == null &&! nullable) {
+        if (fieldValue == null && !nullable) {
 
             ValidationFailureData failureData = ValidationFailureData.builder()
                 .fieldName(fieldName)

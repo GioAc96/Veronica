@@ -72,6 +72,7 @@ class FilePermissionsManagerTest {
         );
 
     }
+
     @Test
     public void testGetUnknownRootPermissions() {
 
@@ -88,7 +89,7 @@ class FilePermissionsManagerTest {
         Path rootB = Paths.get("B:\\");
 
         FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
-            = FilePermissionsManager.<String>builder();
+            = FilePermissionsManager.builder();
 
         builder.permissions(rootA, "A");
         builder.permissions(rootB, "B");
@@ -112,7 +113,7 @@ class FilePermissionsManagerTest {
         Path pathA = Paths.get("A:\\path");
 
         FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
-            = FilePermissionsManager.<String>builder();
+            = FilePermissionsManager.builder();
 
         builder.permissions(pathA, "A");
 
@@ -131,7 +132,7 @@ class FilePermissionsManagerTest {
         Path pathA = Paths.get("A:\\parent\\child");
 
         FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
-            = FilePermissionsManager.<String>builder();
+            = FilePermissionsManager.builder();
 
         builder.permissions(pathA, "A");
 
@@ -150,7 +151,7 @@ class FilePermissionsManagerTest {
         Path pathA = Paths.get("A:\\parent");
 
         FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
-            = FilePermissionsManager.<String>builder();
+            = FilePermissionsManager.builder();
 
         builder.permissions(pathA, "A");
 
@@ -170,7 +171,7 @@ class FilePermissionsManagerTest {
         Path child = Paths.get("A:\\parent\\child");
 
         FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
-            = FilePermissionsManager.<String>builder();
+            = FilePermissionsManager.builder();
 
         builder.permissions(child, "A");
         builder.permissions(parent, "B");
@@ -195,7 +196,7 @@ class FilePermissionsManagerTest {
         Path child = Paths.get("A:\\parent\\child");
 
         FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
-            = FilePermissionsManager.<String>builder();
+            = FilePermissionsManager.builder();
 
         builder.permissions(parent, "B");
         builder.permissions(child, "A");
@@ -220,7 +221,7 @@ class FilePermissionsManagerTest {
         Path child = Paths.get("A:\\parent\\child");
 
         FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
-            = FilePermissionsManager.<String>builder();
+            = FilePermissionsManager.builder();
 
         builder.permissions(child, "A");
         builder.permissions(parent, "A");
@@ -255,7 +256,7 @@ class FilePermissionsManagerTest {
         Path d = Paths.get("A:\\parent\\a\\d");
 
         FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
-            = FilePermissionsManager.<String>builder();
+            = FilePermissionsManager.builder();
 
         builder.permissions(a, "A");
         builder.permissions(b, "B");
@@ -339,7 +340,7 @@ class FilePermissionsManagerTest {
         Path pathB = Paths.get("B:\\parent\\child\\..");
 
         FilePermissionsManager.FilePermissionsManagerBuilder<String> builder
-            = FilePermissionsManager.<String>builder();
+            = FilePermissionsManager.builder();
 
         builder.permissions(pathA, "A");
         builder.permissions(pathB, "B");

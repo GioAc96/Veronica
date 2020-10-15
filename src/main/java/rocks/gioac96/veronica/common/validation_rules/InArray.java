@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import rocks.gioac96.veronica.common.CommonResponses;
-import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
@@ -38,7 +36,7 @@ public class InArray
 
         return super.isValid()
             && allowedValues != null
-            &&! allowedValues.isEmpty()
+            && !allowedValues.isEmpty()
             && allowedValues.stream().allMatch(Objects::nonNull);
 
     }

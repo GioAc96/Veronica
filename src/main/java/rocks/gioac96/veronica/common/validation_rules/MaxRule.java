@@ -5,7 +5,7 @@ import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.Provider;
 
 public class MaxRule extends NumericPredicateRule {
-    
+
     protected Double maxValue;
 
     public MaxRule maxValue(@NonNull Double maxValue) {

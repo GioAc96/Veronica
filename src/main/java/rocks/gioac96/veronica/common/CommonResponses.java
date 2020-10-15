@@ -14,7 +14,6 @@ import rocks.gioac96.veronica.common.responses.PromptBasicAuthRealm;
 import rocks.gioac96.veronica.common.responses.Redirect;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.providers.Provider;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 
 /**
  * Framework's common responses.
@@ -29,6 +28,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common "ok" {@link Response}.
+     *
      * @return the response
      */
     public static Response ok() {
@@ -39,6 +39,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common "not found" {@link Response}.
+     *
      * @return the response
      */
     public static Response notFound() {
@@ -49,6 +50,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common "forbidden" {@link Response}.
+     *
      * @return the response
      */
     public static Response forbidden() {
@@ -59,6 +61,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common "internal error" {@link Response}.
+     *
      * @return the response
      */
     public static Response internalError() {
@@ -69,6 +72,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common {@link Response} that prompts http basic auth.
+     *
      * @return the response
      */
     public static Response promptBasicAuth() {
@@ -79,6 +83,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common {@link Response} that prompts http basic auth, with the specified realm.
+     *
      * @param realm the realm
      * @return the response
      */
@@ -100,6 +105,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common {@link Response} containing a raw file.
+     *
      * @param filePath the path of the file
      * @return the response
      */
@@ -111,6 +117,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common {@link Response} containing a raw file.
+     *
      * @param filePath the path of the file
      * @return the response
      */
@@ -125,6 +132,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common {@link Response} containing a file attached as a download.
+     *
      * @param filePath the path of the file
      * @return the response
      */
@@ -136,6 +144,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common {@link Response} containing a file attached as a download.
+     *
      * @param filePath the path of the file
      * @return the response
      */
@@ -149,6 +158,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common {@link Response} containing a file disposed inline.
+     *
      * @param filePath the path of the file
      * @return the response
      */
@@ -160,6 +170,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common {@link Response} containing a file disposed inline.
+     *
      * @param filePath the path of the file
      * @return the response
      */
@@ -173,6 +184,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common {@link Response} that permanently redirects to the specified location.
+     *
      * @param location the location to redirect to
      * @return the response
      */
@@ -187,6 +199,7 @@ public class CommonResponses {
 
     /**
      * Gets the framework's common {@link Response} that temporarily redirects to the specified location.
+     *
      * @param location the location to redirect to
      * @return the response
      */

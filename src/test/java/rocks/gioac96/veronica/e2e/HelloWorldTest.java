@@ -1,6 +1,5 @@
 package rocks.gioac96.veronica.e2e;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
@@ -17,7 +16,7 @@ public class HelloWorldTest extends E2ETest {
     @Override
     protected Map<Request.RequestBuilder, Consumer<Response>> getTestCases() {
 
-        return new HashMap<>(){{
+        return new HashMap<>() {{
 
             put(
                 mockRequest()

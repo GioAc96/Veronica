@@ -3,7 +3,6 @@ package rocks.gioac96.veronica.tutorials;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.Route;
 import rocks.gioac96.veronica.core.Router;
 
 public class HttpHeaders {
@@ -12,36 +11,36 @@ public class HttpHeaders {
 
         RequestHandler requestHandler = req -> {
 
-                Response response;
+            Response response;
 
-                switch (req.getHeaders().getFirst("accept").toLowerCase()) {
+            switch (req.getHeaders().getFirst("accept").toLowerCase()) {
 
-                    case "application/json":
-                        response = Response.builder()
-                            .body("{\"message\": \"Hello, world!\"}")
-                            .header("Content-Type", "application/json")
-                            .build();
+                case "application/json":
+                    response = Response.builder()
+                        .body("{\"message\": \"Hello, world!\"}")
+                        .header("Content-Type", "application/json")
+                        .build();
 
-                        break;
+                    break;
 
-                    case "text/html":
-                        response = Response.builder()
-                            .body("<h1>Hello, world!</h1>")
-                            .header("Content-Type", "text/html")
-                            .build();
+                case "text/html":
+                    response = Response.builder()
+                        .body("<h1>Hello, world!</h1>")
+                        .header("Content-Type", "text/html")
+                        .build();
 
-                        break;
+                    break;
 
-                    default:
-                        response = Response.builder()
-                            .body("Hello, world!")
-                            .header("Content-Type", "text/plain")
-                            .build();
+                default:
+                    response = Response.builder()
+                        .body("Hello, world!")
+                        .header("Content-Type", "text/plain")
+                        .build();
 
-                }
+            }
 
-                return response;
-            };
+            return response;
+        };
 
         Router router = Router.builder()
             .defaultRequestHandler(requestHandler)

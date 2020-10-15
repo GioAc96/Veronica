@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.common.routes;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.junit.jupiter.api.Test;
 import rocks.gioac96.veronica.common.request_handlers.NotFound;

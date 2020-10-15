@@ -26,6 +26,7 @@ public class CommonRequestHandlers {
 
     /**
      * Gets the framework's common "ok" {@link RequestHandler}.
+     *
      * @return the request handler
      */
     public static RequestHandler ok() {

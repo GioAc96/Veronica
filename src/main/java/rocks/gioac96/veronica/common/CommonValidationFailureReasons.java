@@ -1,11 +1,11 @@
 package rocks.gioac96.veronica.common;
 
-import rocks.gioac96.veronica.common.validation_failure_reasons.NotBoolean;
-import rocks.gioac96.veronica.common.validation_failure_reasons.ValueTooBig;
-import rocks.gioac96.veronica.common.validation_failure_reasons.ValueTooSmall;
 import rocks.gioac96.veronica.common.validation_failure_reasons.IsNull;
+import rocks.gioac96.veronica.common.validation_failure_reasons.NotBoolean;
 import rocks.gioac96.veronica.common.validation_failure_reasons.NotInRange;
 import rocks.gioac96.veronica.common.validation_failure_reasons.NotNumeric;
+import rocks.gioac96.veronica.common.validation_failure_reasons.ValueTooBig;
+import rocks.gioac96.veronica.common.validation_failure_reasons.ValueTooSmall;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
 

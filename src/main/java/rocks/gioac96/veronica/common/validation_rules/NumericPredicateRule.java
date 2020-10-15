@@ -28,7 +28,7 @@ public class NumericPredicateRule extends Builder<ValidationRule> implements Bui
         return predicate(predicateProvider.provide());
 
     }
-    
+
     public NumericPredicateRule predicateNotAppliesFailureReason(@NonNull ValidationFailureReason predicateNotAppliesFailureReason) {
 
         this.predicateNotAppliesFailureReason = predicateNotAppliesFailureReason;
@@ -74,7 +74,7 @@ public class NumericPredicateRule extends Builder<ValidationRule> implements Bui
 
             }
 
-            if (! predicate.test(value)) {
+            if (!predicate.test(value)) {
 
                 throw new ValidationException(ValidationFailureData.builder()
                     .failureReason(predicateNotAppliesFailureReason)

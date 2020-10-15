@@ -1,6 +1,5 @@
 package rocks.gioac96.veronica.e2e;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
@@ -17,7 +16,7 @@ public class QueryTest extends E2ETest {
     @Override
     protected Map<Request.RequestBuilder, Consumer<Response>> getTestCases() {
 
-        return new HashMap<>(){{
+        return new HashMap<>() {{
 
             put(
 
@@ -35,7 +34,7 @@ public class QueryTest extends E2ETest {
                     .query("var1=val1")
                     .httpMethod(HttpMethod.GET),
 
-                response -> assertEquals(new HashMap<>(){{
+                response -> assertEquals(new HashMap<>() {{
 
                     put("var1", "val1");
 
@@ -48,7 +47,7 @@ public class QueryTest extends E2ETest {
                     .query("var1=val1&var2=second_value")
                     .httpMethod(HttpMethod.GET),
 
-                response -> assertEquals(new HashMap<>(){{
+                response -> assertEquals(new HashMap<>() {{
 
                     put("var1", "val1");
                     put("var2", "second_value");
@@ -62,7 +61,7 @@ public class QueryTest extends E2ETest {
                     .query("var1=val1&var2=second_value&bool")
                     .httpMethod(HttpMethod.GET),
 
-                response -> assertEquals(new HashMap<>(){{
+                response -> assertEquals(new HashMap<>() {{
 
                     put("var1", "val1");
                     put("var2", "second_value");

@@ -24,6 +24,7 @@ public class CommonExecutorServices {
 
     /**
      * Gets the framework's default priority executor service.
+     *
      * @return the framework's default priority executor service.
      */
     public static PriorityExecutorService defaultPriorityExecutorService() {
@@ -34,6 +35,7 @@ public class CommonExecutorServices {
 
     /**
      * Gets the framework's default executor service.
+     *
      * @return the framework's default executor service.
      */
     public static ExecutorService defaultExecutorService() {
@@ -44,6 +46,7 @@ public class CommonExecutorServices {
 
     /**
      * Gets the framework's default executor used by {@link com.sun.net.httpserver.HttpsServer} instances.
+     *
      * @return the executor.
      */
     public static Executor serverExecutor() {
