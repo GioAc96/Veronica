@@ -9,10 +9,10 @@ public class Forbidden extends Response.ResponseBuilder implements BuildsSingleI
     @Override
     protected void configure() {
 
-        super.configure();
-
         httpStatus(HttpStatus.FORBIDDEN);
         emptyBody();
+
+        super.configure();
 
     }
 

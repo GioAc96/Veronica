@@ -5,9 +5,9 @@ public class FileInline extends FileRaw {
     @Override
     protected void configure() {
 
-        super.configure();
-
         header("Content-Disposition", "inline; filename=" + filePath.getFileName());
+
+        super.configure();
 
     }
 

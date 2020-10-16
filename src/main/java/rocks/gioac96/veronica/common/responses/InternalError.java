@@ -9,10 +9,10 @@ public class InternalError extends Response.ResponseBuilder implements BuildsSin
     @Override
     protected void configure() {
 
-        super.configure();
-
         httpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         emptyBody();
+
+        super.configure();
 
     }
 

@@ -23,8 +23,6 @@ public class FileRaw extends Response.ResponseBuilder implements BuildsMultipleI
     @Override
     protected void configure() {
 
-        super.configure();
-
         String mime = new CommonMimeResolver().build().resolveMime(filePath);
 
         if (mime != null) {
@@ -42,6 +40,8 @@ public class FileRaw extends Response.ResponseBuilder implements BuildsMultipleI
             throw new CreationException(e);
 
         }
+
+        super.configure();
 
     }
 

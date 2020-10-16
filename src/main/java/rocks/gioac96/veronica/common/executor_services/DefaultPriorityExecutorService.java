@@ -13,10 +13,10 @@ public class DefaultPriorityExecutorService
     @Override
     protected void configure() {
 
-        super.configure();
-
         poolSize(Runtime.getRuntime().availableProcessors());
         defaultPriority(Integer.MAX_VALUE);
+
+        super.configure();
 
     }
 

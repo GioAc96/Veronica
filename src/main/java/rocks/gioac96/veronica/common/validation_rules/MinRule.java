@@ -33,10 +33,10 @@ public class MinRule extends NumericPredicateRule {
     @Override
     protected void configure() {
 
-        super.configure();
-
         predicate(value -> value >= minValue);
         predicateNotAppliesFailureReason(CommonValidationFailureReasons.tooSmall(minValue));
+
+        super.configure();
 
     }
 

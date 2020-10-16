@@ -23,12 +23,12 @@ public class BooleanRule extends InArray {
     @Override
     protected void configure() {
 
-        super.configure();
-
         failureReason(CommonValidationFailureReasons.notBoolean());
 
         Arrays.stream(TRUE_VALUES).forEach(this::allowedValue);
         Arrays.stream(FALSE_VALUES).forEach(this::allowedValue);
+
+        super.configure();
 
     }
 

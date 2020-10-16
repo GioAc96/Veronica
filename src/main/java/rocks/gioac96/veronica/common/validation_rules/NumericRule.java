@@ -13,9 +13,9 @@ public class NumericRule
     @Override
     protected void configure() {
 
-        super.configure();
-
         failureReason(CommonValidationFailureReasons.notNumeric());
+
+        super.configure();
 
     }
 

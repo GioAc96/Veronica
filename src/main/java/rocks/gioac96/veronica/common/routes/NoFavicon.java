@@ -10,10 +10,10 @@ public class NoFavicon extends Route.RouteBuilder implements BuildsSingleInstanc
     @Override
     protected void configure() {
 
-        super.configure();
-
         requestHandler(CommonRequestHandlers.notFound());
         requestMatcher(CommonRequestMatchers.favicon());
+
+        super.configure();
 
     }
 

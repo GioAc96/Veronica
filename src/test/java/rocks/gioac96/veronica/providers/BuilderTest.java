@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 class BuilderTest {
 
-
     @Test
     void testSingleInstance() {
 
@@ -40,9 +39,9 @@ class BuilderTest {
             @Override
             protected void configure() {
 
-                super.configure();
-
                 value += "RootBuilder";
+
+                super.configure();
 
             }
 
@@ -57,15 +56,15 @@ class BuilderTest {
             @Override
             protected void configure() {
 
-                super.configure();
-
                 value += "ChildBuilder";
+
+                super.configure();
 
             }
 
         }
 
-        assertEquals("RootBuilderChildBuilder", new ChildBuilder().build());
+        assertEquals("ChildBuilderRootBuilder", new ChildBuilder().build());
 
     }
 

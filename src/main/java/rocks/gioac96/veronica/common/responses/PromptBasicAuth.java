@@ -9,10 +9,10 @@ public class PromptBasicAuth extends Response.ResponseBuilder implements BuildsS
     @Override
     protected void configure() {
 
-        super.configure();
-
         httpStatus(HttpStatus.UNAUTHORIZED);
         header("WWW-Authenticate", "Basic");
+
+        super.configure();
 
     }
 

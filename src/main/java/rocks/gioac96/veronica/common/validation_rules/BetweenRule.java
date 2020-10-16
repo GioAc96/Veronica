@@ -49,10 +49,10 @@ public class BetweenRule extends NumericPredicateRule {
     @Override
     protected void configure() {
 
-        super.configure();
-
         predicate(value -> value <= maxValue && value >= minValue);
         predicateNotAppliesFailureReason(CommonValidationFailureReasons.notInRange(minValue, maxValue));
+
+        super.configure();
 
     }
 

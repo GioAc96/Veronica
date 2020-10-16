@@ -32,10 +32,10 @@ public class MaxRule extends NumericPredicateRule {
     @Override
     protected void configure() {
 
-        super.configure();
-
         predicate(value -> value <= maxValue);
         predicateNotAppliesFailureReason(CommonValidationFailureReasons.tooBig(maxValue));
+
+        super.configure();
 
     }
 

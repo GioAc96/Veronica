@@ -9,10 +9,10 @@ public class Ok extends Response.ResponseBuilder implements BuildsSingleInstance
     @Override
     protected void configure() {
 
-        super.configure();
-
         httpStatus(HttpStatus.OK);
         emptyBody();
+
+        super.configure();
 
     }
 

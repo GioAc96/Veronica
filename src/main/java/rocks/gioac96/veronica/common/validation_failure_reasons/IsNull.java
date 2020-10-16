@@ -8,9 +8,9 @@ public class IsNull extends ValidationFailureReason.ValidationFailureReasonBuild
     @Override
     protected void configure() {
 
-        super.configure();
-
         message("field can not be left empty");
+
+        super.configure();
 
     }
 

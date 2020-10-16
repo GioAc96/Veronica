@@ -12,10 +12,10 @@ public class Favicon extends RequestMatcher.RequestMatcherBuilder implements Bui
     @Override
     protected void configure() {
 
-        super.configure();
-
         httpMethod(HttpMethod.GET);
         pathPattern("/favicon.ico");
+
+        super.configure();
 
     }
 
