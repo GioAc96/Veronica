@@ -1,7 +1,6 @@
 package rocks.gioac96.veronica.auth.http_basic;
 
 import java.util.Base64;
-import lombok.experimental.UtilityClass;
 import rocks.gioac96.veronica.auth.Credentials;
 import rocks.gioac96.veronica.core.Request;
 

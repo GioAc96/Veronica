@@ -1,8 +1,8 @@
 package rocks.gioac96.veronica.samples;
 
 import lombok.Getter;
-import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.auth.http_basic.BasicAuthFilterBuilder;
+import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.Pipeline;
 import rocks.gioac96.veronica.core.PreFilter;
 import rocks.gioac96.veronica.core.Response;

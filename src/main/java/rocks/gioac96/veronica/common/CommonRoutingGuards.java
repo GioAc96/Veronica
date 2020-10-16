@@ -13,6 +13,7 @@ public class CommonRoutingGuards {
 
     /**
      * Gets the framework's common {@link RoutingGuard} that redirects all non-secure requests to a secure context.
+     *
      * @return the response
      */
     public static RoutingGuard redirectToSecure() {

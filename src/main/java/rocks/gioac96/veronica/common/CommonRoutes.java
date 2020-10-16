@@ -14,6 +14,7 @@ public final class CommonRoutes {
     /**
      * Gets the framework's common {@link Route} that returns a "not found" response when a "favicon" request is
      * submitted.
+     *
      * @return the route
      */
     public static Route noFavIcon() {

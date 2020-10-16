@@ -3,7 +3,10 @@ package rocks.gioac96.veronica.core.concurrency;
 import static java.lang.Math.atan;
 import static java.lang.Math.cbrt;
 import static java.lang.Math.tan;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -37,95 +40,6 @@ class PriorityFixedThreadPoolExecutorTest {
         return System.currentTimeMillis() - start;
 
     }
-
-    @BeforeEach
-    void setUp() {
-
-        events = new LinkedList<>();
-
-    }
-
-    void addEvent(Event event) {
-
-        events.add(event);
-        log(event.message);
-
-    }
-
-    void addEventReverse(Event event) {
-
-        events.add(0, event);
-        log(event.message);
-
-    }
-
-    private static class Event {
-
-        private final String message;
-
-        public Event(String message) {
-            this.message = message;
-        }
-    }
-
-    private static final class DefaultPriorityJobStarted extends JobStarted {
-
-        public DefaultPriorityJobStarted(int priority) {
-
-            super(priority);
-
-        }
-
-    }
-
-    private static final class DefaultPriorityJobCompleted extends JobCompleted {
-
-        public DefaultPriorityJobCompleted(int priority) {
-
-            super(priority);
-
-        }
-
-    }
-
-    private static class SchedulingComplete extends Event {
-
-        public SchedulingComplete() {
-
-            super("Scheduling complete");
-
-        }
-
-    }
-
-    private static class JobCompleted extends Event {
-
-        private final int priority;
-
-        public JobCompleted(int priority) {
-
-            super("Completed job: " + priority);
-
-            this.priority = priority;
-
-        }
-
-    }
-
-    private static class JobStarted extends Event {
-
-        private final int priority;
-
-        public JobStarted(int priority) {
-
-            super("Started job: " + priority);
-
-            this.priority = priority;
-
-        }
-
-    }
-
 
     private static int randomPriority() {
 
@@ -165,44 +79,6 @@ class PriorityFixedThreadPoolExecutorTest {
         return PriorityFixedThreadPoolExecutor.builder()
             .poolSize(defaultThreadCount)
             .build();
-
-    }
-
-    private Runnable task(int priority) {
-
-        return () -> {
-            addEvent(new JobStarted(priority));
-            load();
-            addEvent(new JobCompleted(priority));
-        };
-
-    }
-
-    private Runnable defaultPriorityTask(int priority) {
-
-        return () -> {
-            addEvent(new DefaultPriorityJobStarted(priority));
-            load();
-            addEvent(new DefaultPriorityJobCompleted(priority));
-        };
-
-    }
-
-    private Runnable timedTask(int priority, int duration) {
-
-        return () -> {
-
-            addEvent(new DefaultPriorityJobStarted(priority));
-            sleep(duration);
-            addEvent(new DefaultPriorityJobCompleted(priority));
-
-        };
-
-    }
-
-    private Runnable timedTask(int priority) {
-
-        return timedTask(priority, defaultSleepTime);
 
     }
 
@@ -262,6 +138,98 @@ class PriorityFixedThreadPoolExecutorTest {
             previousVal = val;
 
         }
+
+    }
+
+    private static void await(PriorityFixedThreadPoolExecutor ex) {
+
+        ex.shutdown();
+
+        try {
+            ex.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+
+        } catch (InterruptedException e) {
+
+            fail();
+
+        }
+
+    }
+
+    private static void assertTakes(Runnable action, long expectedDuration) {
+
+        assertTakes(action, expectedDuration, defaultErrorMarginFactor);
+
+    }
+
+    private static void assertTakes(Runnable action, long expectedDuration, double errorMarginFactor) {
+
+        double expectedMaxDuration = expectedDuration * (1 + errorMarginFactor);
+        double expectedMinDuration = expectedDuration * (1 - errorMarginFactor);
+
+        long duration = measureTime(action);
+
+        assertTrue(duration <= expectedMaxDuration, "Action took too long (" + duration + ", " + expectedMaxDuration + ")");
+        assertTrue(duration >= expectedMinDuration, "Action executed too fast (" + duration + ", " + expectedMinDuration + ")");
+
+    }
+
+    @BeforeEach
+    void setUp() {
+
+        events = new LinkedList<>();
+
+    }
+
+    void addEvent(Event event) {
+
+        events.add(event);
+        log(event.message);
+
+    }
+
+    void addEventReverse(Event event) {
+
+        events.add(0, event);
+        log(event.message);
+
+    }
+
+    private Runnable task(int priority) {
+
+        return () -> {
+            addEvent(new JobStarted(priority));
+            load();
+            addEvent(new JobCompleted(priority));
+        };
+
+    }
+
+    private Runnable defaultPriorityTask(int priority) {
+
+        return () -> {
+            addEvent(new DefaultPriorityJobStarted(priority));
+            load();
+            addEvent(new DefaultPriorityJobCompleted(priority));
+        };
+
+    }
+
+    private Runnable timedTask(int priority, int duration) {
+
+        return () -> {
+
+            addEvent(new DefaultPriorityJobStarted(priority));
+            sleep(duration);
+            addEvent(new DefaultPriorityJobCompleted(priority));
+
+        };
+
+    }
+
+    private Runnable timedTask(int priority) {
+
+        return timedTask(priority, defaultSleepTime);
 
     }
 
@@ -366,38 +334,6 @@ class PriorityFixedThreadPoolExecutorTest {
 
     }
 
-    private static void await(PriorityFixedThreadPoolExecutor ex) {
-
-        ex.shutdown();
-
-        try {
-            ex.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
-
-        } catch (InterruptedException e) {
-
-            fail();
-
-        }
-
-    }
-
-    private static void assertTakes(Runnable action, long expectedDuration) {
-
-        assertTakes(action, expectedDuration, defaultErrorMarginFactor);
-
-    }
-    private static void assertTakes(Runnable action, long expectedDuration, double errorMarginFactor) {
-
-        double expectedMaxDuration = expectedDuration * (1 + errorMarginFactor);
-        double expectedMinDuration = expectedDuration * (1 - errorMarginFactor);
-
-        long duration = measureTime(action);
-
-        assertTrue(duration <= expectedMaxDuration, "Action took too long (" + duration + ", " + expectedMaxDuration + ")");
-        assertTrue(duration >= expectedMinDuration, "Action executed too fast (" + duration + ", " + expectedMinDuration + ")");
-
-    }
-
     @Test
     void testExecuteOrderMultipleThreads() throws InterruptedException {
 
@@ -465,6 +401,73 @@ class PriorityFixedThreadPoolExecutorTest {
             },
             rounds * defaultSleepTime
         );
+
+    }
+
+    private static class Event {
+
+        private final String message;
+
+        public Event(String message) {
+            this.message = message;
+        }
+    }
+
+    private static final class DefaultPriorityJobStarted extends JobStarted {
+
+        public DefaultPriorityJobStarted(int priority) {
+
+            super(priority);
+
+        }
+
+    }
+
+    private static final class DefaultPriorityJobCompleted extends JobCompleted {
+
+        public DefaultPriorityJobCompleted(int priority) {
+
+            super(priority);
+
+        }
+
+    }
+
+    private static class SchedulingComplete extends Event {
+
+        public SchedulingComplete() {
+
+            super("Scheduling complete");
+
+        }
+
+    }
+
+    private static class JobCompleted extends Event {
+
+        private final int priority;
+
+        public JobCompleted(int priority) {
+
+            super("Completed job: " + priority);
+
+            this.priority = priority;
+
+        }
+
+    }
+
+    private static class JobStarted extends Event {
+
+        private final int priority;
+
+        public JobStarted(int priority) {
+
+            super("Started job: " + priority);
+
+            this.priority = priority;
+
+        }
 
     }
 

@@ -1,25 +1,19 @@
 package rocks.gioac96.veronica.providers;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.junit.jupiter.api.Test;
 
 class BuilderTest {
 
 
-    private static abstract class GreetingBuilder extends Builder<String> {
-
-        @Override
-        protected String instantiate() {
-            return new String("Ciao");
-        }
-
-    }
-
     @Test
     void testSingleInstance() {
 
-        class SingleInstanceBuilder extends GreetingBuilder implements BuildsSingleInstance{}
+        class SingleInstanceBuilder extends GreetingBuilder implements BuildsSingleInstance {
+        }
 
         assertSame(new SingleInstanceBuilder().build(), new SingleInstanceBuilder().build());
 
@@ -28,9 +22,11 @@ class BuilderTest {
     @Test
     void testMultipleInstances() {
 
-        class MultipleInstancesBuilder extends GreetingBuilder implements BuildsMultipleInstances{}
+        class MultipleInstancesBuilder extends GreetingBuilder implements BuildsMultipleInstances {
+        }
 
         assertNotSame(new MultipleInstancesBuilder().build(), new MultipleInstancesBuilder().build());
+        assertEquals(new MultipleInstancesBuilder().build(), new MultipleInstancesBuilder().build());
 
     }
 
@@ -52,7 +48,7 @@ class BuilderTest {
 
             @Override
             protected String instantiate() {
-                return new String(value);
+                return value;
             }
         }
 
@@ -70,6 +66,15 @@ class BuilderTest {
         }
 
         assertEquals("RootBuilderChildBuilder", new ChildBuilder().build());
+
+    }
+
+    private static abstract class GreetingBuilder extends Builder<String> {
+
+        @Override
+        protected String instantiate() {
+            return new String("Ciao");
+        }
 
     }
 

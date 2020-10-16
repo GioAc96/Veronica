@@ -1,6 +1,5 @@
 package rocks.gioac96.veronica.common.request_matchers;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.when;
 
@@ -18,19 +17,15 @@ import rocks.gioac96.veronica.core.Router;
 
 public class FaviconTest {
 
-    private Router router;
-
     private static final Response faviconResponse =
         Response.builder().httpStatus(HttpStatus.OK).build();
-
     private static final Response defaultResponse =
         Response.builder().httpStatus(HttpStatus.NOT_FOUND).build();
-
     private static final RequestHandler faviconRequestHandler =
         request -> faviconResponse;
-
     private static final RequestHandler defaultRequestHandler =
         request -> defaultResponse;
+    private Router router;
 
     @BeforeEach
     void setUp() {

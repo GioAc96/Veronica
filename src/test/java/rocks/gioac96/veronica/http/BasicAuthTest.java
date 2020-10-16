@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import rocks.gioac96.veronica.auth.http_basic.BasicAuth;
 import rocks.gioac96.veronica.auth.Credentials;
+import rocks.gioac96.veronica.auth.http_basic.BasicAuth;
 
 class BasicAuthTest {
 
@@ -50,6 +50,7 @@ class BasicAuthTest {
         );
 
     }
+
     @ParameterizedTest
     @CsvSource({
         ":, test",

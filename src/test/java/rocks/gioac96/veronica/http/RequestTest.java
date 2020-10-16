@@ -2,7 +2,6 @@ package rocks.gioac96.veronica.http;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 import com.sun.net.httpserver.Headers;
@@ -90,7 +89,6 @@ class RequestTest {
 
         when(uriMock.getPath())
             .thenReturn(path);
-
 
 
         Request request = Request.builder()

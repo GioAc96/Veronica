@@ -8,7 +8,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
@@ -100,7 +99,7 @@ public final class SetCookieHeader {
         return expires.withZoneSameInstant(ZoneOffset.UTC).format(timeFormatter) + " GMT";
 
     }
-    
+
     /**
      * Generates a Set-Cookie header string.
      *
@@ -209,11 +208,11 @@ public final class SetCookieHeader {
             return this;
 
         }
-        
+
         public SetCookieHeaderBuilder name(@NonNull Provider<String> name) {
-            
+
             return name(name.provide());
-            
+
         }
 
         public SetCookieHeaderBuilder value(@NonNull String value) {

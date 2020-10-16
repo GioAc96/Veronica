@@ -1,6 +1,5 @@
 package rocks.gioac96.veronica.core;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -14,23 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 class RouterTest {
-
-    @AllArgsConstructor
-    private static final class TestRequestHandler implements RequestHandler {
-
-        private final String name;
-
-        @Override
-        public Response handle(Request request) {
-
-            return Response.builder()
-                .httpStatus(HttpStatus.OK)
-                .body(name)
-                .build();
-
-        }
-
-    }
 
     private static final Response defaultResponse = Response.builder()
         .httpStatus(HttpStatus.NOT_FOUND)
@@ -806,6 +788,23 @@ class RouterTest {
         for (Request invalidRequest : invalid) {
 
             assertNull(root.handle(invalidRequest));
+
+        }
+
+    }
+
+    @AllArgsConstructor
+    private static final class TestRequestHandler implements RequestHandler {
+
+        private final String name;
+
+        @Override
+        public Response handle(Request request) {
+
+            return Response.builder()
+                .httpStatus(HttpStatus.OK)
+                .body(name)
+                .build();
 
         }
 

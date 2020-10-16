@@ -1,6 +1,5 @@
 package rocks.gioac96.veronica.e2e;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -17,6 +16,58 @@ import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 
 public abstract class E2ETest {
+
+    protected static long measureTime(Runnable action) {
+
+        long start = System.currentTimeMillis();
+
+        action.run();
+
+        long end = System.currentTimeMillis();
+
+        return end - start;
+
+    }
+
+    protected static MockRequestBuilder mockRequest() {
+
+        return new MockRequestBuilder();
+
+    }
+
+    protected static void assertResponseBodyEquals(String expected, Response response) {
+
+        assertEquals(expected, response.getBody());
+
+    }
+
+    protected abstract Map<Request.RequestBuilder, Consumer<Response>> getTestCases();
+
+    protected abstract Router getRouter();
+
+    @Test
+    void runTest() {
+
+        for (Map.Entry<Request.RequestBuilder, Consumer<Response>> testCase : getTestCases().entrySet()) {
+
+            Request request = testCase.getKey().build();
+            Consumer<Response> assertions = testCase.getValue();
+
+            try {
+
+                assertions.accept(getRouter().handle(request));
+
+            } catch (AssertionError assertionError) {
+
+                System.out.println("Failed on request: " + testCase.getKey().toString());
+
+                throw assertionError;
+
+            }
+
+        }
+
+    }
 
     protected static class MockRequestBuilder extends Request.RequestBuilder implements BuildsMultipleInstances {
 
@@ -63,7 +114,7 @@ public abstract class E2ETest {
 
         public MockRequestBuilder header(String name, String value) {
 
-            if (! isMock(getHeaders())) {
+            if (!isMock(getHeaders())) {
 
                 headers(mock(Headers.class));
 
@@ -94,58 +145,6 @@ public abstract class E2ETest {
             sb.append("\n\tsecure: ").append(isSecure());
 
             return sb.toString();
-
-        }
-
-    }
-
-    protected abstract Map<Request.RequestBuilder, Consumer<Response>> getTestCases();
-
-    protected abstract Router getRouter();
-
-    protected static long measureTime(Runnable action) {
-
-        long start = System.currentTimeMillis();
-
-        action.run();
-
-        long end = System.currentTimeMillis();
-
-        return end - start;
-
-    }
-
-    protected static MockRequestBuilder mockRequest() {
-
-        return new MockRequestBuilder();
-
-    }
-
-    protected static void assertResponseBodyEquals(String expected, Response response) {
-
-        assertEquals(expected, response.getBody());
-
-    }
-
-    @Test
-    void runTest() {
-
-        for (Map.Entry<Request.RequestBuilder, Consumer<Response>> testCase : getTestCases().entrySet()) {
-
-            Request request = testCase.getKey().build();
-            Consumer<Response> assertions = testCase.getValue();
-
-            try {
-
-                assertions.accept(getRouter().handle(request));
-
-            } catch(AssertionError assertionError) {
-
-                System.out.println("Failed on request: " + testCase.getKey().toString());
-
-                throw assertionError;
-
-            }
 
         }
 

@@ -2,7 +2,6 @@ package rocks.gioac96.veronica.common;
 
 import rocks.gioac96.veronica.common.request_matchers.Favicon;
 import rocks.gioac96.veronica.core.HttpMethod;
-import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.RequestMatcher;
 import rocks.gioac96.veronica.providers.Provider;
 
@@ -15,6 +14,7 @@ public class CommonRequestMatchers {
 
     /**
      * Gets the framework's common "favicon" {@link RequestMatcher}.
+     *
      * @return the request matcher
      */
     public static RequestMatcher favicon() {
@@ -25,6 +25,7 @@ public class CommonRequestMatchers {
 
     /**
      * Gets the framework's common {@link RequestMatcher} for "GET" requests that match the specified path pattern.
+     *
      * @param pathPattern the pattern the request's path matches against
      * @return the request matcher
      */
@@ -39,6 +40,7 @@ public class CommonRequestMatchers {
 
     /**
      * Gets the framework's common {@link RequestMatcher} for "POST" requests that match the specified path pattern.
+     *
      * @param pathPattern the pattern the request's path matches against
      * @return the request matcher
      */
@@ -53,6 +55,7 @@ public class CommonRequestMatchers {
 
     /**
      * Gets the framework's common {@link RequestMatcher} for "PUT" requests that match the specified path pattern.
+     *
      * @param pathPattern the pattern the request's path matches against
      * @return the request matcher
      */
@@ -67,6 +70,7 @@ public class CommonRequestMatchers {
 
     /**
      * Gets the framework's common {@link RequestMatcher} for "HEAD" requests that match the specified path pattern.
+     *
      * @param pathPattern the pattern the request's path matches against
      * @return the request matcher
      */
@@ -81,6 +85,7 @@ public class CommonRequestMatchers {
 
     /**
      * Gets the framework's common {@link RequestMatcher} for "DELETE" requests that match the specified path pattern.
+     *
      * @param pathPattern the pattern the request's path matches against
      * @return the request matcher
      */

@@ -7,6 +7,14 @@ import rocks.gioac96.veronica.tutorials.https.handlers.MyHandler;
 
 public class MyApplication extends Application.ApplicationBuilder implements BuildsSingleInstance {
 
+    public static void main(String[] args) {
+
+        Application app = new MyApplication().build();
+
+        app.start();
+
+    }
+
     @Override
     public void configure() {
 
@@ -16,14 +24,6 @@ public class MyApplication extends Application.ApplicationBuilder implements Bui
 
         server(new MyServer());
         server(new MySecureServer());
-
-    }
-
-    public static void main(String[] args) {
-
-        Application app = new MyApplication().build();
-
-        app.start();
 
     }
 

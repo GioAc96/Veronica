@@ -15,7 +15,7 @@ public class PathTest extends E2ETest {
     @Override
     protected Map<Request.RequestBuilder, Consumer<Response>> getTestCases() {
 
-        String[] paths = new String[] {
+        String[] paths = new String[]{
 
             "/path",
             "/other/path",

@@ -15,6 +15,7 @@ import lombok.NonNull;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
+import rocks.gioac96.veronica.util.HasPriority;
 
 @SuppressWarnings("unused")
 public class PriorityFixedThreadPoolExecutor

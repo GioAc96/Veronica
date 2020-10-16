@@ -3,14 +3,17 @@ package rocks.gioac96.veronica.core;
 import com.sun.net.httpserver.Headers;
 import java.util.ArrayList;
 import java.util.Collection;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import rocks.gioac96.veronica.providers.Builder;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
-import rocks.gioac96.veronica.util.ArraySet;
+import rocks.gioac96.veronica.providers.Provider;
+import rocks.gioac96.veronica.validation.ValidationFailureData;
 
 /**
  * Http response.
@@ -35,17 +38,23 @@ public class Response {
 
     @Getter
     @Setter
-    private ArraySet<SetCookieHeader> cookies;
+    private Set<SetCookieHeader> cookies;
 
-    protected Response(ResponseBuilder builder) {
+    @Getter
+    @Setter
+    private List<ValidationFailureData> validationFailures;
 
-        this.httpStatus = builder.httpStatus;
-        this.body = builder.body;
-        this.bodyBytes = builder.bodyBytes;
-        this.headers = builder.headers;
-        this.cookies = builder.cookies;
+    protected Response(ResponseBuilder b) {
+
+        this.httpStatus = b.httpStatus;
+        this.body = b.body;
+        this.bodyBytes = b.bodyBytes;
+        this.headers = b.headers;
+        this.cookies = b.cookies;
+        this.validationFailures = b.validationFailures;
 
     }
+
 
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static ResponseBuilder builder() {
@@ -55,6 +64,12 @@ public class Response {
         }
 
         return new ResponseBuilderImpl();
+
+    }
+
+    public boolean hasValidationFailures() {
+
+        return validationFailures != null && !validationFailures.isEmpty();
 
     }
 
@@ -109,11 +124,12 @@ public class Response {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public abstract static class ResponseBuilder extends Builder<Response> {
 
-        private final ArraySet<SetCookieHeader> cookies = new ArraySet<>();
+        private Set<SetCookieHeader> cookies = null;
         private HttpStatus httpStatus = HttpStatus.OK;
         private byte[] bodyBytes;
         private String body;
         private Headers headers = new Headers();
+        private List<ValidationFailureData> validationFailures = null;
 
         public ResponseBuilder httpStatus(@NonNull HttpStatus httpStatus) {
 
@@ -123,14 +139,14 @@ public class Response {
 
         }
 
-        public ResponseBuilder body(String body) {
+        public ResponseBuilder body(@NonNull String body) {
 
             this.body = body;
             return body(body.getBytes());
 
         }
 
-        public ResponseBuilder body(byte[] body) {
+        public ResponseBuilder body(@NonNull byte[] body) {
 
             this.bodyBytes = body;
             return this;
@@ -151,23 +167,15 @@ public class Response {
 
         }
 
-        public ResponseBuilder requestBasicAuth(String realm) {
+        public ResponseBuilder requestBasicAuth(@NonNull String realm) {
 
-            if (realm == null) {
-
-                return header("WWW-Authenticate", "Basic");
-
-            } else {
-
-                return header("WWW-Authenticate", "Basic realm=\"" + realm + '\"');
-
-            }
+            return header("WWW-Authenticate", "Basic realm=\"" + realm + '\"');
 
         }
 
         public ResponseBuilder requestBasicAuth() {
 
-            return requestBasicAuth(null);
+            return header("WWW-Authenticate", "Basic");
 
         }
 
@@ -179,7 +187,7 @@ public class Response {
 
             } else {
 
-                this.headers.put(key, new ArrayList<String>() {{
+                this.headers.put(key, new ArrayList<>() {{
                     add(value);
                 }});
 
@@ -208,7 +216,19 @@ public class Response {
 
         }
 
+        private void initCookies() {
+
+            if (cookies == null) {
+
+                cookies = new HashSet<>();
+
+            }
+
+        }
+
         public ResponseBuilder cookies(@NonNull Collection<SetCookieHeader> cookies) {
+
+            initCookies();
 
             this.cookies.addAll(cookies);
 
@@ -218,9 +238,56 @@ public class Response {
 
         public ResponseBuilder cookie(@NonNull SetCookieHeader cookie) {
 
+            initCookies();
+
             this.cookies.add(cookie);
 
             return this;
+
+        }
+
+        public ResponseBuilder validationFailures(@NonNull List<ValidationFailureData> validationFailures) {
+
+            if (this.validationFailures == null) {
+
+                this.validationFailures = validationFailures;
+
+            } else {
+
+                this.validationFailures.addAll(validationFailures);
+
+            }
+
+            return this;
+
+        }
+
+
+        public ResponseBuilder validationFailure(@NonNull ValidationFailureData validationFailure) {
+
+            if (this.validationFailures == null) {
+
+                validationFailures = new LinkedList<>();
+
+            }
+
+            validationFailures.add(validationFailure);
+
+            return this;
+
+        }
+
+        public ResponseBuilder validationFailure(@NonNull Provider<ValidationFailureData> validationFailure) {
+
+            return validationFailure(validationFailure.provide());
+
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            return super.isValid()
+                && httpStatus != null;
 
         }
 

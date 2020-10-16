@@ -21,12 +21,10 @@ class RedirectToSecureTest {
     private static final RoutingGuard temporaryRedirectToSecure = new RedirectToSecure()
         .temporary()
         .build();
-
-    private static final Request secureRequest = mockRequest(true);
-    private static final Request nonSecureRequest = mockRequest(false);
-
     private static final String secureUri = "https://test.com/";
     private static final String nonSecureUri = "http://test.com/";
+    private static final Request secureRequest = mockRequest(true);
+    private static final Request nonSecureRequest = mockRequest(false);
 
     private static Request mockRequest(boolean isSecure) {
 
@@ -69,6 +67,7 @@ class RedirectToSecureTest {
         );
 
     }
+
     @Test
     void testPermanentRedirectNonSecure() {
 

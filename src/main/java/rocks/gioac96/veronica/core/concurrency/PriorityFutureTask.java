@@ -3,6 +3,7 @@ package rocks.gioac96.veronica.core.concurrency;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import lombok.Getter;
+import rocks.gioac96.veronica.util.HasPriority;
 
 public class PriorityFutureTask<V> extends FutureTask<V> implements HasPriority {
 
