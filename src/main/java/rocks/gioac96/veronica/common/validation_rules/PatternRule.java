@@ -7,7 +7,6 @@ import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
-import rocks.gioac96.veronica.validation.ValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
 public class PatternRule
@@ -43,23 +42,23 @@ public class PatternRule
     }
 
     @Override
-    protected void configure() {
-
-        super.configure();
-
-        if (failureReason == null) {
-
-            failureReason(CommonValidationFailureReasons.patternNotMatches());
-
-        }
-
-    }
-
-    @Override
     protected boolean isValid() {
 
         return super.isValid()
             && pattern != null;
+
+    }
+
+    @Override
+    protected void configure() {
+
+        if (failureReason == null) {
+
+            failureReason = CommonValidationFailureReasons.patternNotMatches();
+
+        }
+
+        super.configure();
 
     }
 
@@ -71,8 +70,8 @@ public class PatternRule
             if (! pattern.matcher(fieldValue).find()) {
 
                 throw new ValidationException(ValidationFailureData.builder()
-                    .failureReason(failureReason)
                     .fieldName(fieldName)
+                    .failureReason(failureReason)
                     .build());
 
             }

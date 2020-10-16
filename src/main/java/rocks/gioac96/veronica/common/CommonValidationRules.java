@@ -110,24 +110,20 @@ public class CommonValidationRules {
             .build();
 
     }
-    public static ValidationRule pattern(String pattern, String failureReasonMessage) {
+    public static ValidationRule pattern(String pattern, ValidationFailureReason failureReason) {
 
         return new PatternRule()
             .patternString(pattern)
-            .failureReason(ValidationFailureReason.builder()
-                .message(failureReasonMessage)
-                .build())
+            .failureReason(failureReason)
             .build();
 
     }
 
-    public static ValidationRule pattern(Pattern pattern, String failureReasonMessage) {
+    public static ValidationRule pattern(Pattern pattern, ValidationFailureReason failureReason) {
 
         return new PatternRule()
             .pattern(pattern)
-            .failureReason(ValidationFailureReason.builder()
-                .message(failureReasonMessage)
-                .build())
+            .failureReason(failureReason)
             .build();
 
     }

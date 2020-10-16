@@ -15,7 +15,7 @@ class PatternRuleTest {
     @ParameterizedTest
     @CsvSource({
         "1, [0-9]{2}, message1",
-        "a, [0-9]{2}, message1"
+        "a, [0-9]{2}, message2"
     })
     void testPatternFailsWithMessage(
         String value,
@@ -24,14 +24,12 @@ class PatternRuleTest {
     ) {
 
         assertValidationFails(
-            CommonValidationRules.pattern(pattern, message),
+            CommonValidationRules.pattern(pattern, ValidationFailureReason.builder().message(message).build()),
             "test",
             value,
             ValidationFailureData.builder()
                 .fieldName("test")
-                .failureReason(ValidationFailureReason.builder()
-                    .message(message)
-                    .build())
+                .failureReason(ValidationFailureReason.builder().message(message).build())
                 .build()
         );
 

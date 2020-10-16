@@ -24,7 +24,10 @@ public class CommonValidationRulesTest {
 
         } catch (ValidationException e) {
 
-            assertEquals(expected, e.getValidationFailureData());
+            ValidationFailureData actualFailureData = e.getValidationFailureData();
+
+            assertEquals(expected, actualFailureData,
+                "Wrong failure data: " + actualFailureData.getFieldName() + ", " + actualFailureData.getFailureReason().getMessage());
 
         }
 
