@@ -1,10 +1,11 @@
 package rocks.gioac96.veronica.providers;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 public abstract class ConfigurableProvider<T> implements Provider<T> {
 
-    private static final HashMap<Class<?>, ConfigurableProvider<?>> configuredProviders = new HashMap<>();
+    private static final HashSet<ConfigurableProvider<?>> configuredProviders = new HashSet<>();
     private static final HashMap<Class<?>, Object> singletonInstances = new HashMap<>();
 
     protected void configure() {
@@ -14,14 +15,14 @@ public abstract class ConfigurableProvider<T> implements Provider<T> {
 
     private boolean isConfigured() {
 
-        return configuredProviders.containsKey(this.getClass());
+        return configuredProviders.contains(this);
 
     }
 
     private void applyConfiguration() {
 
         configure();
-        configuredProviders.put(this.getClass(), this);
+        configuredProviders.add(this);
 
     }
 
@@ -47,7 +48,7 @@ public abstract class ConfigurableProvider<T> implements Provider<T> {
 
         try {
 
-            if (this instanceof SingletonProvider) {
+            if (this instanceof Singleton) {
 
                 if (hasStoredInstance()) {
 
@@ -64,19 +65,15 @@ public abstract class ConfigurableProvider<T> implements Provider<T> {
 
             } else {
 
-                if (isConfigured()) {
-
-                    return (T) configuredProviders.get(this.getClass()).instantiate();
-
-                } else {
+                if (!isConfigured()) {
 
                     applyConfiguration();
 
                     checkValidity();
 
-                    return instantiate();
-
                 }
+
+                return instantiate();
 
             }
 
