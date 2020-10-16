@@ -39,7 +39,7 @@ class PredicateRuleTest {
             );
 
     }
-    
+
     @Test
     void testInvalidPredicateRule() {
 

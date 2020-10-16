@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
@@ -44,11 +45,13 @@ public class InArray
     @Override
     protected void configure() {
 
-        super.configure();
+        if (failureReason == null) {
 
-        super.failureReason(ValidationFailureReason.builder()
-            .message("value is not in array of possible values")
-            .build());
+            failureReason(CommonValidationFailureReasons.notInArray());
+
+        }
+
+        super.configure();
 
     }
 
