@@ -8,8 +8,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Getter;
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 
 /**
@@ -52,13 +51,7 @@ public final class SetCookieHeader {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod"})
     public static SetCookieHeaderBuilder builder() {
 
-        class SetCookieHeaderBuilderImpl
-            extends SetCookieHeaderBuilder
-            implements BuildsMultipleInstances {
-
-        }
-
-        return new SetCookieHeaderBuilderImpl();
+        return new SetCookieHeaderBuilder();
 
     }
 
@@ -187,7 +180,7 @@ public final class SetCookieHeader {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
-    public abstract static class SetCookieHeaderBuilder extends Builder<SetCookieHeader> {
+    public static class SetCookieHeaderBuilder extends ConfigurableProvider<SetCookieHeader> {
 
         private String name;
         private String value;
@@ -337,8 +330,7 @@ public final class SetCookieHeader {
         @Override
         protected boolean isValid() {
 
-            return super.isValid()
-                && isNameValid(name)
+            return isNameValid(name)
                 && value != null;
 
         }

@@ -2,13 +2,13 @@ package rocks.gioac96.veronica.common.validation_rules;
 
 import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
-import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
 public abstract class ValidationRuleBuilderWithConstantFailureReason
-    extends Builder<ValidationRule> {
+    extends ConfigurableProvider<ValidationRule> {
 
     protected ValidationFailureReason failureReason;
 

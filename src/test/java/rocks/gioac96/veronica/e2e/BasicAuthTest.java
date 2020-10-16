@@ -20,13 +20,13 @@ public class BasicAuthTest {
         .path("/")
         .header("Authorization", null)
         .httpMethod(HttpMethod.GET)
-        .build();
+        .provide();
 
     Request authorizedRequest = E2ETest.mockRequest()
         .path("/")
         .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("giorgio:password".getBytes()))
         .httpMethod(HttpMethod.GET)
-        .build();
+        .provide();
 
     private static void assertUnauthorized(Response response) {
 

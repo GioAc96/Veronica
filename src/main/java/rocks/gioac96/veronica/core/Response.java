@@ -10,8 +10,7 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
 
@@ -59,7 +58,7 @@ public class Response {
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static ResponseBuilder builder() {
 
-        class ResponseBuilderImpl extends ResponseBuilder implements BuildsMultipleInstances {
+        class ResponseBuilderImpl extends ResponseBuilder {
 
         }
 
@@ -122,7 +121,7 @@ public class Response {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public abstract static class ResponseBuilder extends Builder<Response> {
+    public static class ResponseBuilder extends ConfigurableProvider<Response> {
 
         private Set<SetCookieHeader> cookies = null;
         private HttpStatus httpStatus = HttpStatus.OK;
@@ -286,8 +285,7 @@ public class Response {
         @Override
         protected boolean isValid() {
 
-            return super.isValid()
-                && httpStatus != null;
+            return httpStatus != null;
 
         }
 

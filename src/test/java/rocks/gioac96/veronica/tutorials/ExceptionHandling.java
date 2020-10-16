@@ -20,9 +20,9 @@ public class ExceptionHandling {
 
                 return Response.builder()
                     .body(String.valueOf(number * 2))
-                    .build();
+                    .provide();
             })
-            .build();
+            .provide();
 
         ExceptionHandler exceptionHandler = new ExceptionHandler() {
 
@@ -32,7 +32,7 @@ public class ExceptionHandling {
                 return Response.builder()
                     .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getClass().getName() + ": " + e.getMessage())
-                    .build();
+                    .provide();
 
             }
 
@@ -46,7 +46,7 @@ public class ExceptionHandling {
                 .port(port)
                 .router(router)
                 .exceptionHandler(exceptionHandler)
-                .build();
+                .provide();
             app.start();
 
         } catch (CreationException e) {

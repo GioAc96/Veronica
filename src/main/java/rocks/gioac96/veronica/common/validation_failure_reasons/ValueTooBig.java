@@ -1,12 +1,11 @@
 package rocks.gioac96.veronica.common.validation_failure_reasons;
 
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
 
-public class ValueTooBig extends Builder<ValidationFailureReason> implements BuildsMultipleInstances {
+public class ValueTooBig extends ConfigurableProvider<ValidationFailureReason> {
 
     protected Double maxValue;
 
@@ -36,7 +35,7 @@ public class ValueTooBig extends Builder<ValidationFailureReason> implements Bui
 
         return ValidationFailureReason.builder()
             .message("value must be smaller than " + maxValue)
-            .build();
+            .provide();
 
     }
 

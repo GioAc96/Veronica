@@ -19,7 +19,7 @@ public class HttpHeaders {
                     response = Response.builder()
                         .body("{\"message\": \"Hello, world!\"}")
                         .header("Content-Type", "application/json")
-                        .build();
+                        .provide();
 
                     break;
 
@@ -27,7 +27,7 @@ public class HttpHeaders {
                     response = Response.builder()
                         .body("<h1>Hello, world!</h1>")
                         .header("Content-Type", "text/html")
-                        .build();
+                        .provide();
 
                     break;
 
@@ -35,7 +35,7 @@ public class HttpHeaders {
                     response = Response.builder()
                         .body("Hello, world!")
                         .header("Content-Type", "text/plain")
-                        .build();
+                        .provide();
 
             }
 
@@ -44,14 +44,14 @@ public class HttpHeaders {
 
         Router router = Router.builder()
             .defaultRequestHandler(requestHandler)
-            .build();
+            .provide();
 
         int port = 8000;
 
         Application app = Application.builder()
             .port(port)
             .router(router)
-            .build();
+            .provide();
 
         app.start();
 

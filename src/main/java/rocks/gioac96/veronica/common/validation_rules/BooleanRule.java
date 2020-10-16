@@ -32,11 +32,4 @@ public class BooleanRule extends InArray {
 
     }
 
-    @Override
-    public boolean buildsMultipleInstances() {
-
-        return false;
-
-    }
-
 }

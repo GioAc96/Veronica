@@ -46,7 +46,7 @@ class StaticFileRequestHandler<P> implements RequestHandler {
 
             this.requestHandler = pipelineSchematics
                 .requestHandler(getDefaultHandler(this))
-                .build();
+                .provide();
 
         }
 

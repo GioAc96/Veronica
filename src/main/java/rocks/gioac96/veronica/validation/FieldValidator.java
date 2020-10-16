@@ -4,8 +4,7 @@ import java.util.PriorityQueue;
 import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.HasPriority;
 import rocks.gioac96.veronica.util.PriorityEntry;
@@ -28,11 +27,7 @@ public class FieldValidator {
 
     public static FieldValidatorBuilder builder() {
 
-        class FieldValidatorBuilderImpl extends FieldValidatorBuilder implements BuildsMultipleInstances {
-
-        }
-
-        return new FieldValidatorBuilderImpl();
+        return new FieldValidatorBuilder();
 
     }
 
@@ -44,7 +39,7 @@ public class FieldValidator {
             ValidationFailureData failureData = ValidationFailureData.builder()
                 .fieldName(fieldName)
                 .failureReason(CommonValidationFailureReasons.isNull())
-                .build();
+                .provide();
 
             throw new ValidationException(failureData);
 
@@ -60,7 +55,7 @@ public class FieldValidator {
 
     }
 
-    public abstract static class FieldValidatorBuilder extends Builder<FieldValidator> {
+    public static class FieldValidatorBuilder extends ConfigurableProvider<FieldValidator> {
 
         private final PriorityQueue<PriorityEntry<ValidationRule>> validationRules = new PriorityQueue<>();
         private Boolean nullable = false;

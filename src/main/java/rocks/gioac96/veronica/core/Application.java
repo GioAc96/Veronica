@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.providers.Provider;
 
@@ -50,11 +49,7 @@ public final class Application {
      */
     public static ApplicationBuilder builder() {
 
-        class ApplicationBuilderImpl extends ApplicationBuilder implements BuildsMultipleInstances {
-
-        }
-
-        return new ApplicationBuilderImpl();
+        return new ApplicationBuilder();
 
 
     }
@@ -136,7 +131,7 @@ public final class Application {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
-    public abstract static class ApplicationBuilder extends Builder<Application> {
+    public static class ApplicationBuilder extends ConfigurableProvider<Application> {
 
         private final Set<HttpServer> httpServers = new HashSet<>();
         private RequestHandler requestHandler;
@@ -202,13 +197,13 @@ public final class Application {
 
         public ApplicationBuilder port(int port) {
 
-            return server(new ServerBuilder().port(port).build());
+            return server(new ServerBuilder().port(port).provide());
 
         }
 
         public ApplicationBuilder port(@NonNull Provider<Integer> port) {
 
-            return server(new ServerBuilder().port(port.provide()).build());
+            return server(new ServerBuilder().port(port.provide()).provide());
 
         }
 

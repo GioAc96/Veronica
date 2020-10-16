@@ -14,15 +14,15 @@ public class Path {
     private final Router router = Router.builder()
         .defaultRequestHandler(request -> Response.builder()
             .body(message + request.getPath())
-            .build()
-        ).build();
+            .provide()
+        ).provide();
 
     public static void main(String[] args) throws CreationException {
 
         Application application = Application.builder()
             .port(80)
             .router(new Path().router)
-            .build();
+            .provide();
 
         application.start();
 

@@ -13,15 +13,15 @@ public class Query {
     private final Router router = Router.builder()
         .defaultRequestHandler(request -> Response.builder()
             .body(request.getQueryMap().toString())
-            .build())
-        .build();
+            .provide())
+        .provide();
 
     public static void main(String[] args) throws IOException, CreationException {
 
         Application application = Application.builder()
             .port(80)
             .router(new Query().getRouter())
-            .build();
+            .provide();
 
         application.start();
 

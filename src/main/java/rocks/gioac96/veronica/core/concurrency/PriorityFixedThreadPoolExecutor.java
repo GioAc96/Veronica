@@ -12,8 +12,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.HasPriority;
 
@@ -43,13 +42,7 @@ public class PriorityFixedThreadPoolExecutor
 
     public static PriorityFixedThreadPoolExecutorBuilder builder() {
 
-        class PriorityFixedThreadPoolExecutorBuilderImpl
-            extends PriorityFixedThreadPoolExecutorBuilder
-            implements BuildsMultipleInstances {
-
-        }
-
-        return new PriorityFixedThreadPoolExecutorBuilderImpl();
+        return new PriorityFixedThreadPoolExecutorBuilder();
 
     }
 
@@ -191,8 +184,8 @@ public class PriorityFixedThreadPoolExecutor
 
     }
 
-    public abstract static class PriorityFixedThreadPoolExecutorBuilder
-        extends Builder<PriorityFixedThreadPoolExecutor> {
+    public static class PriorityFixedThreadPoolExecutorBuilder
+        extends ConfigurableProvider<PriorityFixedThreadPoolExecutor> {
 
         private int defaultPriority = Integer.MAX_VALUE;
         private int poolSize = Runtime.getRuntime().availableProcessors();
@@ -204,10 +197,9 @@ public class PriorityFixedThreadPoolExecutor
         @Override
         protected boolean isValid() {
 
-            return super.isValid() &&
-                keepAliveTimeUnit != null &&
-                threadFactory != null &&
-                rejectedExecutionHandler != null;
+            return keepAliveTimeUnit != null
+                && threadFactory != null
+                && rejectedExecutionHandler != null;
 
         }
 

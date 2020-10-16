@@ -5,10 +5,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import rocks.gioac96.veronica.common.CommonMimeResolver;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.providers.CreationException;
 
-public class FileRaw extends Response.ResponseBuilder implements BuildsMultipleInstances {
+public class FileRaw
+    extends Response.ResponseBuilder {
 
     protected Path filePath = null;
 
@@ -23,7 +23,7 @@ public class FileRaw extends Response.ResponseBuilder implements BuildsMultipleI
     @Override
     protected void configure() {
 
-        String mime = new CommonMimeResolver().build().resolveMime(filePath);
+        String mime = new CommonMimeResolver().provide().resolveMime(filePath);
 
         if (mime != null) {
 

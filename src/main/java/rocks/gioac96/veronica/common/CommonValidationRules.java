@@ -49,7 +49,7 @@ public class CommonValidationRules {
 
         return new InArray()
             .allowedValues(Arrays.asList(values))
-            .build();
+            .provide();
 
     }
 
@@ -57,7 +57,7 @@ public class CommonValidationRules {
 
         return new MaxRule()
             .maxValue(maxValue)
-            .build();
+            .provide();
 
     }
 
@@ -65,7 +65,7 @@ public class CommonValidationRules {
 
         return new MinRule()
             .minValue(minValue)
-            .build();
+            .provide();
 
     }
 
@@ -77,6 +77,7 @@ public class CommonValidationRules {
         );
 
     }
+
     public static ValidationRule numericPredicate(
         Predicate<Double> predicate,
         ValidationFailureReason predicateNotAppliesFailureReason
@@ -85,7 +86,7 @@ public class CommonValidationRules {
         return new NumericPredicateRule()
             .predicate(predicate)
             .predicateNotAppliesFailureReason(predicateNotAppliesFailureReason)
-            .build();
+            .provide();
 
     }
 
@@ -99,7 +100,7 @@ public class CommonValidationRules {
 
         return new PatternRule()
             .patternString(pattern)
-            .build();
+            .provide();
 
     }
 
@@ -107,15 +108,16 @@ public class CommonValidationRules {
 
         return new PatternRule()
             .pattern(pattern)
-            .build();
+            .provide();
 
     }
+
     public static ValidationRule pattern(String pattern, ValidationFailureReason failureReason) {
 
         return new PatternRule()
             .patternString(pattern)
             .failureReason(failureReason)
-            .build();
+            .provide();
 
     }
 
@@ -124,7 +126,7 @@ public class CommonValidationRules {
         return new PatternRule()
             .pattern(pattern)
             .failureReason(failureReason)
-            .build();
+            .provide();
 
     }
 

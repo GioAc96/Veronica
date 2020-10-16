@@ -32,7 +32,7 @@ public class MinRuleTest {
             ValidationFailureData.builder()
                 .fieldName("test")
                 .failureReason(CommonValidationFailureReasons.tooSmall(min))
-                .build()
+                .provide()
         );
 
     }
@@ -58,7 +58,7 @@ public class MinRuleTest {
     void testInvalidMin() {
 
         assertThrows(CreationException.class, () -> {
-            new MinRule().build();
+            new MinRule().provide();
         });
 
 

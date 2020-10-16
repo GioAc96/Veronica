@@ -6,7 +6,7 @@ public class Launcher {
 
     public static void main(String[] args) {
 
-        Application app = new MyApplication().build();
+        Application app = new MyApplication().provide();
 
         app.start();
 

@@ -12,16 +12,16 @@ class NoFaviconTest {
     @Test
     void testRequestMatcher() {
 
-        assertSame(new Favicon().build(), new NoFavicon().build().getRequestMatcher());
+        assertSame(new Favicon().provide(), new NoFavicon().provide().getRequestMatcher());
 
     }
 
     @Test
     void testRequestHandler() {
 
-        RequestHandler expected = new NotFound().build();
+        RequestHandler expected = new NotFound().provide();
 
-        RequestHandler noFaviconRouteRequestHandler = new NoFavicon().build().getRequestHandler();
+        RequestHandler noFaviconRouteRequestHandler = new NoFavicon().provide().getRequestHandler();
 
         assertSame(expected, noFaviconRouteRequestHandler);
 

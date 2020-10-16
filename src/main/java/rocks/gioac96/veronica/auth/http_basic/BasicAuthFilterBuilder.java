@@ -6,16 +6,13 @@ import rocks.gioac96.veronica.auth.Credentials;
 import rocks.gioac96.veronica.auth.CredentialsChecker;
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.core.PreFilter;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 
 /**
  * Http basic authentication filter builder.
  */
-public class BasicAuthFilterBuilder
-    extends Builder<PreFilter>
-    implements BuildsMultipleInstances {
+public class BasicAuthFilterBuilder extends ConfigurableProvider<PreFilter> {
 
     private CredentialsChecker credentialsChecker;
     private String realm;
@@ -49,8 +46,7 @@ public class BasicAuthFilterBuilder
     @Override
     protected boolean isValid() {
 
-        return super.isValid()
-            && credentialsChecker != null;
+        return credentialsChecker != null;
 
     }
 

@@ -11,7 +11,7 @@ public class Benchmark {
         Application.builder()
             .port(80)
             .requestHandler(request -> ok())
-            .build()
+            .provide()
             .start();
 
     }

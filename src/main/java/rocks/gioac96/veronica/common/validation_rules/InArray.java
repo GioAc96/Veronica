@@ -5,15 +5,11 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
-import rocks.gioac96.veronica.validation.ValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
-public class InArray
-    extends ValidationRuleBuilderWithConstantFailureReason
-    implements BuildsMultipleInstances {
+public class InArray extends ValidationRuleBuilderWithConstantFailureReason {
 
     private final Set<String> allowedValues = new HashSet<>();
 
@@ -65,7 +61,7 @@ public class InArray
                 ValidationFailureData failureData = ValidationFailureData.builder()
                     .failureReason(failureReason)
                     .fieldName(fieldName)
-                    .build();
+                    .provide();
 
 
                 throw new ValidationException(failureData);

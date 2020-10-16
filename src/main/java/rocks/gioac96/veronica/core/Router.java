@@ -14,8 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.Tuple;
 
@@ -37,11 +36,7 @@ public class Router implements RequestHandler {
 
     public static RouterBuilder builder() {
 
-        class RouterBuilderImpl extends RouterBuilder implements BuildsMultipleInstances {
-
-        }
-
-        return new RouterBuilderImpl();
+        return new RouterBuilder();
 
     }
 
@@ -227,7 +222,7 @@ public class Router implements RequestHandler {
 
     }
 
-    public abstract static class RouterBuilder extends Builder<Router> {
+    public static class RouterBuilder extends ConfigurableProvider<Router> {
 
         private final Map<HttpMethod, RouteTree> methodRouteTrees = new HashMap<>();
         private final List<RoutingGuard> routingGuards = new LinkedList<>();
@@ -313,9 +308,9 @@ public class Router implements RequestHandler {
             return route(Route.builder()
                 .requestMatcher(RequestMatcher.builder()
                     .pathPattern(pathPattern)
-                    .build())
+                    .provide())
                 .requestHandler(requestHandler)
-                .build()
+                .provide()
             );
 
         }
@@ -330,9 +325,9 @@ public class Router implements RequestHandler {
                 .requestMatcher(RequestMatcher.builder()
                     .pathPattern(pathPattern)
                     .httpMethod(httpMethod)
-                    .build())
+                    .provide())
                 .requestHandler(requestHandler)
-                .build()
+                .provide()
             );
 
         }
@@ -345,7 +340,7 @@ public class Router implements RequestHandler {
             return route(Route.builder()
                 .requestMatcher(requestMatcher)
                 .requestHandler(requestHandler)
-                .build()
+                .provide()
             );
 
         }

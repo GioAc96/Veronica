@@ -10,14 +10,14 @@ public class HelloWorld {
 
         RequestHandler helloWorldHandler = request -> Response.builder()
             .body("Hello World")
-            .build();
+            .provide();
 
         int port = 8000;
 
         Application app = Application.builder()
             .port(port)
             .requestHandler(helloWorldHandler)
-            .build();
+            .provide();
 
         app.start();
 

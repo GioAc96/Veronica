@@ -62,7 +62,7 @@ class PriorityFixedThreadPoolExecutorTest {
         return PriorityFixedThreadPoolExecutor.builder()
             .poolSize(poolSize)
             .defaultPriority(defaultPriority)
-            .build();
+            .provide();
 
     }
 
@@ -70,7 +70,7 @@ class PriorityFixedThreadPoolExecutorTest {
 
         return PriorityFixedThreadPoolExecutor.builder()
             .poolSize(poolSize)
-            .build();
+            .provide();
 
     }
 
@@ -78,7 +78,7 @@ class PriorityFixedThreadPoolExecutorTest {
 
         return PriorityFixedThreadPoolExecutor.builder()
             .poolSize(defaultThreadCount)
-            .build();
+            .provide();
 
     }
 

@@ -8,18 +8,14 @@ import rocks.gioac96.veronica.core.Pipeline;
 import rocks.gioac96.veronica.core.RequestMatcher;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Route;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 
 /**
  * Builder for static server routes.
  *
  * @param <P> the type of the file permissions
  */
-public class StaticRouteBuilder<
-    P
-    > extends Builder<Route>
-    implements BuildsMultipleInstances {
+public class StaticRouteBuilder<P> extends ConfigurableProvider<Route> {
 
     private FilePermissionsManager<P> permissionsManager;
     private FilePermissionsDecider<P> permissionDecider;
@@ -39,7 +35,7 @@ public class StaticRouteBuilder<
 
             return requestMatcher(RequestMatcher.builder()
                 .pathPattern(basePath + "*")
-                .build());
+                .provide());
 
         } else {
 
@@ -47,7 +43,7 @@ public class StaticRouteBuilder<
 
             return requestMatcher(RequestMatcher.builder()
                 .pathPattern(basePath + "/*")
-                .build());
+                .provide());
 
         }
 
@@ -137,8 +133,7 @@ public class StaticRouteBuilder<
     @Override
     protected boolean isValid() {
 
-        return super.isValid()
-            && baseDir != null
+        return baseDir != null
             && basePath != null
             && permissionDecider != null
             && permissionsManager != null
@@ -162,7 +157,7 @@ public class StaticRouteBuilder<
                 fileNotFoundResponse,
                 pipelineSchematics
             ))
-            .build();
+            .provide();
 
     }
 

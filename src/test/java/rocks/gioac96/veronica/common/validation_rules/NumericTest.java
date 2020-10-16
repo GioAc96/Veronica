@@ -32,7 +32,7 @@ class NumericTest {
             ValidationFailureData.builder()
                 .fieldName("test")
                 .failureReason(CommonValidationFailureReasons.notNumeric())
-                .build()
+                .provide()
         );
 
     }

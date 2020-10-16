@@ -18,9 +18,9 @@ import rocks.gioac96.veronica.core.Router;
 public class FaviconTest {
 
     private static final Response faviconResponse =
-        Response.builder().httpStatus(HttpStatus.OK).build();
+        Response.builder().httpStatus(HttpStatus.OK).provide();
     private static final Response defaultResponse =
-        Response.builder().httpStatus(HttpStatus.NOT_FOUND).build();
+        Response.builder().httpStatus(HttpStatus.NOT_FOUND).provide();
     private static final RequestHandler faviconRequestHandler =
         request -> faviconResponse;
     private static final RequestHandler defaultRequestHandler =
@@ -31,9 +31,9 @@ public class FaviconTest {
     void setUp() {
 
         router = Router.builder()
-            .route(new Favicon().build(), faviconRequestHandler)
+            .route(new Favicon().provide(), faviconRequestHandler)
             .defaultRequestHandler(defaultRequestHandler)
-            .build();
+            .provide();
 
     }
 

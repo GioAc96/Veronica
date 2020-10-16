@@ -5,8 +5,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 
 /**
@@ -31,16 +30,11 @@ public class RequestMatcher {
 
     public static RequestMatcherBuilder builder() {
 
-        class RequestMatcherBuilderImpl
-            extends RequestMatcherBuilder
-            implements BuildsMultipleInstances {
-        }
-
-        return new RequestMatcherBuilderImpl();
+        return new RequestMatcherBuilder();
 
     }
 
-    public static abstract class RequestMatcherBuilder extends Builder<RequestMatcher> {
+    public static class RequestMatcherBuilder extends ConfigurableProvider<RequestMatcher> {
 
         private final Set<String> pathPatterns = new HashSet<>();
         private final Set<HttpMethod> httpMethods = new HashSet<>();

@@ -17,8 +17,8 @@ public class HelloWorld {
         this.router = Router.builder()
             .defaultRequestHandler(request -> Response.builder()
                 .body(message)
-                .build()
-            ).build();
+                .provide()
+            ).provide();
 
     }
 
@@ -27,7 +27,7 @@ public class HelloWorld {
         Application application = Application.builder()
             .port(80)
             .router(new HelloWorld().router)
-            .build();
+            .provide();
 
         application.start();
 

@@ -20,11 +20,11 @@ public class AsynchronousPostProcessorsTest {
         Request syncRequest = E2ETest.mockRequest()
             .path("/sync")
             .httpMethod(HttpMethod.GET)
-            .build();
+            .provide();
         Request asyncRequest = E2ETest.mockRequest()
             .path("/async")
             .httpMethod(HttpMethod.GET)
-            .build();
+            .provide();
 
         long syncDuration = measureTime(() -> router.handle(syncRequest));
         long asyncDuration = measureTime(() -> router.handle(asyncRequest));

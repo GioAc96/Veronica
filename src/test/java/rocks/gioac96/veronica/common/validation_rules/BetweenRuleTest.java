@@ -37,7 +37,7 @@ class BetweenRuleTest {
             ValidationFailureData.builder()
                 .fieldName("test")
                 .failureReason(CommonValidationFailureReasons.notInRange(min, max))
-                .build()
+                .provide()
         );
 
     }

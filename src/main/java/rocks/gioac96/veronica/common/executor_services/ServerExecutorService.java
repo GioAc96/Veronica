@@ -2,14 +2,21 @@ package rocks.gioac96.veronica.common.executor_services;
 
 import java.util.concurrent.ExecutorService;
 import rocks.gioac96.veronica.common.CommonExecutorServices;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsSingleInstance;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.providers.Singleton;
 
 public class ServerExecutorService
-    extends Builder<ExecutorService>
-    implements BuildsSingleInstance {
+    extends ConfigurableProvider<ExecutorService>
+    implements Singleton {
 
     public static final int SERVER_TASKS_PRIORITY = 0;
+
+    @Override
+    protected boolean isValid() {
+
+        return true;
+
+    }
 
     @Override
     protected ExecutorService instantiate() {

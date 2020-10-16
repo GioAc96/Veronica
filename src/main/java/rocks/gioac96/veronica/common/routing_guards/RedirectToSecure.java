@@ -2,10 +2,9 @@ package rocks.gioac96.veronica.common.routing_guards;
 
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.core.RoutingGuard;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 
-public class RedirectToSecure extends Builder<RoutingGuard> implements BuildsMultipleInstances {
+public class RedirectToSecure extends ConfigurableProvider<RoutingGuard> {
 
     private boolean isPermanent = false;
 

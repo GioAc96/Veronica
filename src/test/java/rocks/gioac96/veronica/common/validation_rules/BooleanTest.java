@@ -54,7 +54,7 @@ public class BooleanTest {
             ValidationFailureData.builder()
                 .fieldName("test")
                 .failureReason(CommonValidationFailureReasons.notBoolean())
-                .build()
+                .provide()
         );
 
     }

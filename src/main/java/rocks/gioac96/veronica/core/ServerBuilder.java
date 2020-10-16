@@ -6,12 +6,11 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executor;
 import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonExecutorServices;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.providers.Provider;
 
-public class ServerBuilder extends Builder<HttpServer> implements BuildsMultipleInstances {
+public class ServerBuilder extends ConfigurableProvider<HttpServer> {
 
     protected Integer port;
     protected Executor executor = CommonExecutorServices.serverExecutor();

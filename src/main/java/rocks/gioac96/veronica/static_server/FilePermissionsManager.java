@@ -5,8 +5,7 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 
 /**
  * Class that manages permissions of file directories. Used to set and get permissions of directories.
@@ -28,8 +27,7 @@ public final class FilePermissionsManager<P> {
     public static <P> FilePermissionsManagerBuilder<P> builder() {
 
         class FilePermissionsManagerBuilderImpl
-            extends FilePermissionsManagerBuilder<P>
-            implements BuildsMultipleInstances {
+            extends FilePermissionsManagerBuilder<P> {
 
         }
 
@@ -155,7 +153,7 @@ public final class FilePermissionsManager<P> {
 
     }
 
-    public abstract static class FilePermissionsManagerBuilder<P> extends Builder<FilePermissionsManager<P>> {
+    public static class FilePermissionsManagerBuilder<P> extends ConfigurableProvider<FilePermissionsManager<P>> {
 
         private final Set<PermissionTree<P>> rootTrees = new HashSet<>();
 
@@ -237,8 +235,7 @@ public final class FilePermissionsManager<P> {
         @Override
         protected boolean isValid() {
 
-            return super.isValid()
-                && rootTrees != null;
+            return rootTrees != null;
 
         }
 

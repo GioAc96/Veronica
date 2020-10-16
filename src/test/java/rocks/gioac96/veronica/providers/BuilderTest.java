@@ -11,28 +11,28 @@ class BuilderTest {
     @Test
     void testSingleInstance() {
 
-        class SingleInstanceBuilder extends GreetingBuilder implements BuildsSingleInstance {
+        class SingleInstanceBuilder extends GreetingBuilder  {
         }
 
-        assertSame(new SingleInstanceBuilder().build(), new SingleInstanceBuilder().build());
+        assertSame(new SingleInstanceBuilder().provide(), new SingleInstanceBuilder().provide());
 
     }
 
     @Test
     void testMultipleInstances() {
 
-        class MultipleInstancesBuilder extends GreetingBuilder implements BuildsMultipleInstances {
+        class MultipleInstancesBuilder extends GreetingBuilder  {
         }
 
-        assertNotSame(new MultipleInstancesBuilder().build(), new MultipleInstancesBuilder().build());
-        assertEquals(new MultipleInstancesBuilder().build(), new MultipleInstancesBuilder().build());
+        assertNotSame(new MultipleInstancesBuilder().provide(), new MultipleInstancesBuilder().provide());
+        assertEquals(new MultipleInstancesBuilder().provide(), new MultipleInstancesBuilder().provide());
 
     }
 
     @Test
     void testMultipleConfigurations() {
 
-        abstract class RootBuilder extends Builder<String> implements BuildsMultipleInstances {
+        abstract class RootBuilder extends ConfigurableProvider<String>  {
 
             protected String value = "";
 
@@ -64,11 +64,11 @@ class BuilderTest {
 
         }
 
-        assertEquals("ChildBuilderRootBuilder", new ChildBuilder().build());
+        assertEquals("ChildBuilderRootBuilder", new ChildBuilder().provide());
 
     }
 
-    private static abstract class GreetingBuilder extends Builder<String> {
+    private static abstract class GreetingBuilder extends ConfigurableProvider<String> {
 
         @Override
         protected String instantiate() {

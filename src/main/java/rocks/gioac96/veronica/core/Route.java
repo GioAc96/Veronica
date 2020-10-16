@@ -2,8 +2,7 @@ package rocks.gioac96.veronica.core;
 
 import lombok.Getter;
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.static_server.StaticRouteBuilder;
 
@@ -24,11 +23,7 @@ public class Route {
 
     public static RouteBuilder builder() {
 
-        class RouteBuilderImpl extends RouteBuilder implements BuildsMultipleInstances {
-
-        }
-
-        return new RouteBuilderImpl();
+        return new RouteBuilder();
 
     }
 
@@ -38,7 +33,7 @@ public class Route {
 
     }
 
-    public abstract static class RouteBuilder extends Builder<Route> {
+    public static class RouteBuilder extends ConfigurableProvider<Route> {
 
         private RequestMatcher requestMatcher;
         private RequestHandler requestHandler;
@@ -72,8 +67,7 @@ public class Route {
         @Override
         protected boolean isValid() {
 
-            return super.isValid()
-                && requestMatcher != null
+            return requestMatcher != null
                 && requestHandler != null;
 
         }

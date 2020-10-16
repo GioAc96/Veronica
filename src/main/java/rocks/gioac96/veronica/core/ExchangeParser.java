@@ -29,7 +29,7 @@ public interface ExchangeParser {
                 .uri(httpExchange.getRequestURI())
                 .headers(httpExchange.getRequestHeaders())
                 .body(body)
-                .build();
+                .provide();
 
         } catch (Exception e) {
 
