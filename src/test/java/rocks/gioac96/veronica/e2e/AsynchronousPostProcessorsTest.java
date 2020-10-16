@@ -29,7 +29,7 @@ public class AsynchronousPostProcessorsTest {
         long syncDuration = measureTime(() -> router.handle(syncRequest));
         long asyncDuration = measureTime(() -> router.handle(asyncRequest));
 
-        assertTrue(syncDuration - asyncDuration > sleepTime * 0.95);
+        assertTrue(syncDuration - asyncDuration > sleepTime * 0.9);
 
     }
 
