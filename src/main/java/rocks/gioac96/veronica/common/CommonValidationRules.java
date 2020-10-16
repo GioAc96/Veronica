@@ -1,5 +1,7 @@
 package rocks.gioac96.veronica.common;
 
+import static rocks.gioac96.veronica.common.CommonValidationFailureReasons.generic;
+
 import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -69,8 +71,20 @@ public class CommonValidationRules {
 
     public static ValidationRule numericPredicate(Predicate<Double> predicate) {
 
+        return numericPredicate(
+            predicate,
+            generic()
+        );
+
+    }
+    public static ValidationRule numericPredicate(
+        Predicate<Double> predicate,
+        ValidationFailureReason predicateNotAppliesFailureReason
+    ) {
+
         return new NumericPredicateRule()
             .predicate(predicate)
+            .predicateNotAppliesFailureReason(predicateNotAppliesFailureReason)
             .build();
 
     }

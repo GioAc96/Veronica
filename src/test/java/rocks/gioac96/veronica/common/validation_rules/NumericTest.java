@@ -11,7 +11,7 @@ import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
 
-class NotNumericTest {
+class NumericTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
