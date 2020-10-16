@@ -1,5 +1,6 @@
 package rocks.gioac96.veronica.common;
 
+import rocks.gioac96.veronica.common.validation_failure_reasons.GenericFailureReason;
 import rocks.gioac96.veronica.common.validation_failure_reasons.InvalidEmail;
 import rocks.gioac96.veronica.common.validation_failure_reasons.IsNull;
 import rocks.gioac96.veronica.common.validation_failure_reasons.NotBoolean;
@@ -18,6 +19,7 @@ public class CommonValidationFailureReasons {
     private static final Provider<ValidationFailureReason> notBoolean = new NotBoolean();
     private static final Provider<ValidationFailureReason> invalidEmail = new InvalidEmail();
     private static final Provider<ValidationFailureReason> patternNotMatches = new PatternNotMatches();
+    private static final Provider<ValidationFailureReason> generic = new GenericFailureReason();
 
     public static ValidationFailureReason isNull() {
 
@@ -71,6 +73,12 @@ public class CommonValidationFailureReasons {
     public static ValidationFailureReason patternNotMatches() {
 
         return patternNotMatches.provide();
+
+    }
+
+    public static ValidationFailureReason generic() {
+
+        return generic.provide();
 
     }
 
