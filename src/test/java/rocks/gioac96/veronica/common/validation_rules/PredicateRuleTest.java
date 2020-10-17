@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 
 class PredicateRuleTest {
 
@@ -18,12 +17,8 @@ class PredicateRuleTest {
             new PredicateRule()
                 .predicate(value -> false)
                 .provide(),
-            "test",
             "val",
-            ValidationFailureData.builder()
-                .fieldName("test")
-                .failureReason(CommonValidationFailureReasons.generic())
-                .provide()
+            CommonValidationFailureReasons.generic()
         );
 
     }
@@ -34,7 +29,6 @@ class PredicateRuleTest {
             .predicate(value -> true)
             .provide()
             .validate(
-                "test",
                 "value"
             );
 

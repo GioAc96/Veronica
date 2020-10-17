@@ -6,7 +6,6 @@ import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
@@ -14,6 +13,7 @@ public class NumericPredicateRule extends ConfigurableProvider<ValidationRule> {
 
     protected Predicate<Double> predicate;
     protected ValidationFailureReason predicateNotAppliesFailureReason;
+    protected ValidationFailureReason notNumericFailureReason = CommonValidationFailureReasons.notNumeric();
 
     public NumericPredicateRule predicate(@NonNull Predicate<Double> predicate) {
 
@@ -42,19 +42,34 @@ public class NumericPredicateRule extends ConfigurableProvider<ValidationRule> {
         return predicateNotAppliesFailureReason(predicateNotAppliesFailureReasonProvider.provide());
 
     }
+    public NumericPredicateRule notNumericFailureReason(@NonNull ValidationFailureReason notNumericFailureReason) {
+
+        this.notNumericFailureReason = notNumericFailureReason;
+        return this;
+
+    }
+
+    public NumericPredicateRule notNumericFailureReason(
+        @NonNull Provider<ValidationFailureReason> notNumericFailureReasonProvider
+    ) {
+
+        return notNumericFailureReason(notNumericFailureReasonProvider.provide());
+
+    }
 
     @Override
     protected boolean isValid() {
 
         return super.isValid()
             && predicate != null
-            && predicateNotAppliesFailureReason != null;
+            && predicateNotAppliesFailureReason != null
+            && notNumericFailureReason != null;
 
     }
 
     protected ValidationRule instantiate() {
 
-        return (fieldName, fieldValue) -> {
+        return fieldValue -> {
 
             double value;
 
@@ -64,21 +79,13 @@ public class NumericPredicateRule extends ConfigurableProvider<ValidationRule> {
 
             } catch (NumberFormatException e) {
 
-                ValidationFailureData failureData = ValidationFailureData.builder()
-                    .failureReason(CommonValidationFailureReasons.notNumeric())
-                    .fieldName(fieldName)
-                    .provide();
-
-                throw new ValidationException(e, failureData);
+                throw new ValidationException(e, notNumericFailureReason);
 
             }
 
             if (!predicate.test(value)) {
 
-                throw new ValidationException(ValidationFailureData.builder()
-                    .failureReason(predicateNotAppliesFailureReason)
-                    .fieldName(fieldName)
-                    .provide());
+                throw new ValidationException(predicateNotAppliesFailureReason);
 
             }
 

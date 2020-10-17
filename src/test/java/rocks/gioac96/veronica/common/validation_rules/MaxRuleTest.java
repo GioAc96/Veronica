@@ -10,7 +10,6 @@ import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.common.CommonValidationRules;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 
 class MaxRuleTest {
 
@@ -30,12 +29,8 @@ class MaxRuleTest {
 
         assertValidationFails(
             CommonValidationRules.max(max),
-            "test",
             String.valueOf(value),
-            ValidationFailureData.builder()
-                .fieldName("test")
-                .failureReason(CommonValidationFailureReasons.tooBig(max))
-                .provide()
+            CommonValidationFailureReasons.tooBig(max)
         );
 
     }
@@ -53,7 +48,7 @@ class MaxRuleTest {
         double max
     ) throws ValidationException {
 
-        CommonValidationRules.max(max).validate("test", String.valueOf(value));
+        CommonValidationRules.max(max).validate( String.valueOf(value));
 
     }
 

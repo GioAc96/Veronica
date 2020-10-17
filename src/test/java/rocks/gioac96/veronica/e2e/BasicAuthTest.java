@@ -8,6 +8,7 @@ import java.util.Base64;
 import org.junit.jupiter.api.Test;
 import rocks.gioac96.veronica.core.HttpMethod;
 import rocks.gioac96.veronica.core.Request;
+import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.samples.BasicAuth;
@@ -59,9 +60,9 @@ public class BasicAuthTest {
     @Test
     void testNoRealmNotAuthorized() {
 
-        Router router = new BasicAuth(null).getRouter();
+        RequestHandler requestHandler = new BasicAuth(null).getRequestHandler();
 
-        Response response = router.handle(unauthorizedRequest);
+        Response response = requestHandler.handle(unauthorizedRequest);
 
         assertUnauthorized(response);
 
@@ -70,9 +71,9 @@ public class BasicAuthTest {
     @Test
     void testNotAuthorized() {
 
-        Router router = new BasicAuth(realm).getRouter();
+        RequestHandler requestHandler = new BasicAuth(realm).getRequestHandler();
 
-        Response response = router.handle(unauthorizedRequest);
+        Response response = requestHandler.handle(unauthorizedRequest);
 
         assertUnauthorizedRealm(response, realm);
 
@@ -81,9 +82,9 @@ public class BasicAuthTest {
     @Test
     void testAuthorizedNoRealm() {
 
-        Router router = new BasicAuth(null).getRouter();
+        RequestHandler requestHandler = new BasicAuth(null).getRequestHandler();
 
-        Response response = router.handle(authorizedRequest);
+        Response response = requestHandler.handle(authorizedRequest);
 
         assertEquals(OK, response.getHttpStatus());
 
@@ -92,9 +93,9 @@ public class BasicAuthTest {
     @Test
     void testAuthorized() {
 
-        Router router = new BasicAuth(realm).getRouter();
+        RequestHandler requestHandler = new BasicAuth(realm).getRequestHandler();
 
-        Response response = router.handle(authorizedRequest);
+        Response response = requestHandler.handle(authorizedRequest);
 
         assertEquals(OK, response.getHttpStatus());
 

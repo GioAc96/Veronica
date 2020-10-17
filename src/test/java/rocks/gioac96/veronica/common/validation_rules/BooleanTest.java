@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 
 public class BooleanTest {
 
@@ -49,12 +48,8 @@ public class BooleanTest {
 
         assertValidationFails(
             bool(),
-            "test",
             value,
-            ValidationFailureData.builder()
-                .fieldName("test")
-                .failureReason(CommonValidationFailureReasons.notBoolean())
-                .provide()
+            CommonValidationFailureReasons.notBoolean()
         );
 
     }
@@ -63,7 +58,7 @@ public class BooleanTest {
     @MethodSource("okArgs")
     void testBooleanOk(String value) throws ValidationException {
 
-        bool().validate("test", value);
+        bool().validate(value);
 
     }
 

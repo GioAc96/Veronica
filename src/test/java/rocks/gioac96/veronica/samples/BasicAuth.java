@@ -1,48 +1,67 @@
 package rocks.gioac96.veronica.samples;
 
 import lombok.Getter;
+import rocks.gioac96.veronica.auth.Credentials;
+import rocks.gioac96.veronica.auth.CredentialsChecker;
 import rocks.gioac96.veronica.auth.http_basic.BasicAuthFilterBuilder;
+import rocks.gioac96.veronica.auth.http_basic.HoldsBasicAuthenticationData;
 import rocks.gioac96.veronica.core.Application;
-import rocks.gioac96.veronica.core.Pipeline;
-import rocks.gioac96.veronica.core.PreFilter;
-import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.core.RequestHandler;
+import rocks.gioac96.veronica.core.pipeline.Pipeline;
 
 public class BasicAuth {
 
     @Getter
-    private final Router router;
+    private final RequestHandler requestHandler;
 
     public BasicAuth(String realm) {
 
-        PreFilter basicAuthFilter;
+        CredentialsChecker credentialsChecker = credentials ->
+            credentials.getUsername().equals("giorgio")
+                && credentials.getPassword().equals("password");
 
-        if (realm == null) {
+        BasicAuthFilterBuilder<PipelineData> basicAuthFilterBuilder = new BasicAuthFilterBuilder<PipelineData>()
+            .credentialsChecker(credentialsChecker)
+            .realm(realm);
 
-            basicAuthFilter = new BasicAuthFilterBuilder()
-                .credentialsChecker(credentials ->
-                    credentials.getUsername().equals("giorgio")
-                        && credentials.getPassword().equals("password")
-                )
-                .provide();
+        if (realm != null) {
 
-        } else {
-
-            basicAuthFilter = new BasicAuthFilterBuilder()
-                .realm(realm)
-                .credentialsChecker(credentials ->
-                    credentials.getUsername().equals("giorgio")
-                        && credentials.getPassword().equals("password")
-                )
-                .provide();
+            basicAuthFilterBuilder.realm(realm);
 
         }
 
-        router = Router.builder()
-            .defaultRequestHandler(Pipeline.builder()
-                .preFilter(basicAuthFilter)
-                .requestHandler(request -> Response.builder().body("You are authenticated").provide())
-                .provide())
+        requestHandler = Pipeline.<PipelineData>builder()
+            .dataFactory(request -> new PipelineData())
+            .stage(basicAuthFilterBuilder.provide())
+            .stage((request, responseBuilder, data) -> {
+
+                if (data.getCredentials() == null) {
+
+                    return responseBuilder.body("no credentials supplied").provide();
+
+                }
+
+                return null;
+
+            })
+            .stage((request, responseBuilder, data) -> {
+
+                if (! data.isAuthenticated()) {
+
+                    return responseBuilder.body("invalid credentials").provide();
+
+                }
+
+                return null;
+
+            })
+            .stage((request, responseBuilder, data) -> {
+
+                responseBuilder.body("You are accessing the restricted area as user: " + data.getCredentials().getUsername());
+
+                return null;
+
+            })
             .provide();
     }
 
@@ -50,9 +69,25 @@ public class BasicAuth {
 
         Application.builder()
             .port(80)
-            .router(new BasicAuth("my realm").router)
+            .requestHandler(new BasicAuth("my realm").requestHandler)
             .provide()
             .start();
+
+    }
+
+    @Getter
+    private static final class PipelineData implements HoldsBasicAuthenticationData {
+
+        private Credentials credentials;
+        private boolean isAuthenticated;
+
+        @Override
+        public void setBasicAuthenticationResult(Credentials credentials, boolean isAuthenticated) {
+
+            this.credentials = credentials;
+            this.isAuthenticated = isAuthenticated;
+
+        }
 
     }
 

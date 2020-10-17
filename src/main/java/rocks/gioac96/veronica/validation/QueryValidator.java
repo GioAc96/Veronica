@@ -2,34 +2,28 @@ package rocks.gioac96.veronica.validation;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 import java.util.PriorityQueue;
 import lombok.Getter;
 import lombok.NonNull;
-import rocks.gioac96.veronica.common.CommonHttpStatus;
-import rocks.gioac96.veronica.core.PipelineBreakException;
-import rocks.gioac96.veronica.core.PreFilter;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.pipeline.PipelineStage;
 import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.HasPriority;
 import rocks.gioac96.veronica.util.PriorityEntry;
+import rocks.gioac96.veronica.util.PriorityQueueUtils;
 import rocks.gioac96.veronica.util.Tuple;
 
-/**
- * {@link PreFilter} that validates a {@link Request} query.
- */
 @Getter
-public class QueryValidator implements PreFilter {
+public class QueryValidator<D extends HoldsValidationFailureData> implements PipelineStage<D> {
 
     private final LinkedHashMap<String, FieldValidator> fieldValidators;
 
     public QueryValidator(QueryValidatorBuilder b) {
 
-        this.fieldValidators = b.getFieldValidators();
+        this.fieldValidators = b.generateFieldValidators();
 
     }
 
@@ -40,30 +34,22 @@ public class QueryValidator implements PreFilter {
     }
 
     @Override
-    public void filter(@NonNull Request request) {
-
-        List<ValidationFailureData> validationFailures = new LinkedList<>();
+    public Response filter(@NonNull Request request, Response.ResponseBuilder responseBuilder, D pipelineData) {
 
         fieldValidators.forEach((fieldName, fieldValidator) -> {
             try {
 
-                fieldValidator.validateField(fieldName, request.getQueryParam(fieldName));
+                fieldValidator.validateField(request.getQueryParam(fieldName));
 
             } catch (ValidationException e) {
 
-                validationFailures.add(e.getValidationFailureData());
+                pipelineData.addValidationFailure(fieldName, e.getValidationFailureReason());
 
             }
+
         });
 
-        if (!validationFailures.isEmpty()) {
-
-            throw new PipelineBreakException(Response.builder()
-                .httpStatus(CommonHttpStatus.validationFailure())
-                .validationFailures(validationFailures)
-                .provide());
-
-        }
+        return null;
 
     }
 
@@ -72,14 +58,9 @@ public class QueryValidator implements PreFilter {
         private final PriorityQueue<PriorityEntry<Tuple<String, FieldValidator>>> orderedFieldValidators = new PriorityQueue<>();
         private final HashSet<String> registeredFields = new HashSet<>();
 
-        protected LinkedHashMap<String, FieldValidator> getFieldValidators() {
+        protected LinkedHashMap<String, FieldValidator> generateFieldValidators() {
 
-            LinkedHashMap<String, FieldValidator> fieldValidators = new LinkedHashMap<>();
-
-            orderedFieldValidators.forEach(entry -> fieldValidators.put(entry.getValue().getFirst(), entry.getValue().getSecond()));
-
-            return fieldValidators;
-
+            return PriorityQueueUtils.transferEntriesToSortedLinkedHashMap(orderedFieldValidators);
         }
 
         public QueryValidatorBuilder fieldValidator(

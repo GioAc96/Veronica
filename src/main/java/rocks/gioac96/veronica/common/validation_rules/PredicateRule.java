@@ -4,7 +4,6 @@ import java.util.function.Predicate;
 import lombok.NonNull;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
 public class PredicateRule
@@ -36,16 +35,11 @@ public class PredicateRule
     @Override
     protected ValidationRule instantiate() {
 
-        return (fieldName, fieldValue) -> {
+        return fieldValue -> {
 
             if (!predicate.test(fieldValue)) {
 
-                throw new ValidationException(
-                    ValidationFailureData.builder()
-                        .fieldName(fieldName)
-                        .failureReason(failureReason)
-                        .provide()
-                );
+                throw new ValidationException(failureReason);
 
             }
 

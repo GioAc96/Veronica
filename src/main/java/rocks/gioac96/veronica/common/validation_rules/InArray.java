@@ -8,7 +8,6 @@ import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
 public class InArray extends ValidationRuleBuilderWithConstantFailureReason {
@@ -62,17 +61,11 @@ public class InArray extends ValidationRuleBuilderWithConstantFailureReason {
     @Override
     protected ValidationRule instantiate() {
 
-        return (fieldName, fieldValue) -> {
+        return fieldValue -> {
 
             if (allowedValues.stream().noneMatch(allowedValues -> allowedValues.equals(fieldValue))) {
 
-                ValidationFailureData failureData = ValidationFailureData.builder()
-                    .failureReason(failureReason)
-                    .fieldName(fieldName)
-                    .provide();
-
-
-                throw new ValidationException(failureData);
+                throw new ValidationException(failureReason);
 
             }
 

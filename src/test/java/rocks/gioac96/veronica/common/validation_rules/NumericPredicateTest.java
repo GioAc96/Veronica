@@ -10,7 +10,6 @@ import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.common.CommonValidationRules;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
 
 public class NumericPredicateTest {
@@ -31,12 +30,8 @@ public class NumericPredicateTest {
 
         assertValidationFails(
             CommonValidationRules.numericPredicate(val -> true),
-            "test",
             value,
-            ValidationFailureData.builder()
-                .fieldName("test")
-                .failureReason(CommonValidationFailureReasons.notNumeric())
-                .provide()
+            CommonValidationFailureReasons.notNumeric()
         );
 
     }
@@ -59,12 +54,8 @@ public class NumericPredicateTest {
 
         assertValidationFails(
             CommonValidationRules.numericPredicate(val -> val % 2 == 0d, failureReason),
-            "test",
             value,
-            ValidationFailureData.builder()
-                .fieldName("test")
-                .failureReason(failureReason)
-                .provide()
+            failureReason
         );
 
     }
@@ -85,7 +76,6 @@ public class NumericPredicateTest {
             .provide();
 
         CommonValidationRules.numericPredicate(val -> val % 2 == 0d, failureReason).validate(
-            "test",
             value
         );
 

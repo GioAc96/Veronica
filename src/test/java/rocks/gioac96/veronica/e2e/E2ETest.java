@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import rocks.gioac96.veronica.core.Request;
+import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Router;
 
@@ -42,7 +43,7 @@ public abstract class E2ETest {
 
     protected abstract Map<Request.RequestBuilder, Consumer<Response>> getTestCases();
 
-    protected abstract Router getRouter();
+    protected abstract RequestHandler getRequestHandler();
 
     @Test
     void runTest() {
@@ -54,7 +55,7 @@ public abstract class E2ETest {
 
             try {
 
-                assertions.accept(getRouter().handle(request));
+                assertions.accept(getRequestHandler().handle(request));
 
             } catch (AssertionError assertionError) {
 

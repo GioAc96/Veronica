@@ -3,7 +3,6 @@ package rocks.gioac96.veronica.common.validation_rules;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.Singleton;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
 public class NumericRule
@@ -22,7 +21,7 @@ public class NumericRule
     @Override
     protected ValidationRule instantiate() {
 
-        return (fieldName, fieldValue) -> {
+        return fieldValue -> {
 
             try {
 
@@ -30,12 +29,7 @@ public class NumericRule
 
             } catch (NumberFormatException e) {
 
-                ValidationFailureData failureData = ValidationFailureData.builder()
-                    .failureReason(failureReason)
-                    .fieldName(fieldName)
-                    .provide();
-
-                throw new ValidationException(e, failureData);
+                throw new ValidationException(e, failureReason);
 
             }
 

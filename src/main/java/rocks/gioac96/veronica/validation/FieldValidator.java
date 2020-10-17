@@ -31,22 +31,17 @@ public class FieldValidator {
 
     }
 
-    public void validateField(String fieldName, String fieldValue) throws ValidationException {
+    public void validateField(String fieldValue) throws ValidationException {
 
         if (fieldValue == null && !nullable) {
 
-            ValidationFailureData failureData = ValidationFailureData.builder()
-                .fieldName(fieldName)
-                .failureReason(CommonValidationFailureReasons.isNull())
-                .provide();
-
-            throw new ValidationException(failureData);
+            throw new ValidationException(CommonValidationFailureReasons.isNull());
 
         } else {
 
             for (PriorityEntry<ValidationRule> validationRuleEntry : validationRules) {
 
-                validationRuleEntry.getValue().validate(fieldName, fieldValue);
+                validationRuleEntry.getValue().validate(fieldValue);
 
             }
 
