@@ -116,22 +116,22 @@ public class QueryValidator implements PreFilter {
         }
 
         public QueryValidatorBuilder fieldValidator(
-            @NonNull Provider<String> fieldName,
+            @NonNull Provider<String> fieldNameProvider,
             @NonNull FieldValidator fieldValidator
         ) {
 
-            if (fieldName instanceof HasPriority) {
+            if (fieldNameProvider instanceof HasPriority) {
 
                 return fieldValidator(
-                    fieldName.provide(),
+                    fieldNameProvider.provide(),
                     fieldValidator,
-                    ((HasPriority) fieldName).getPriority()
+                    ((HasPriority) fieldNameProvider).getPriority()
                 );
 
             } else {
 
                 return fieldValidator(
-                    fieldName.provide(),
+                    fieldNameProvider.provide(),
                     fieldValidator
                 );
 
@@ -144,10 +144,22 @@ public class QueryValidator implements PreFilter {
             @NonNull Provider<FieldValidator> fieldValidatorProvider
         ) {
 
-            return fieldValidator(
-                fieldName,
-                fieldValidatorProvider.provide()
-            );
+            if (fieldValidatorProvider instanceof HasPriority) {
+
+                return fieldValidator(
+                    fieldName,
+                    fieldValidatorProvider.provide(),
+                    ((HasPriority) fieldValidatorProvider).getPriority()
+                );
+
+            } else {
+
+                return fieldValidator(
+                    fieldName,
+                    fieldValidatorProvider.provide()
+                );
+
+            }
 
         }
 
@@ -157,8 +169,8 @@ public class QueryValidator implements PreFilter {
         ) {
 
             return fieldValidator(
-                fieldName,
-                fieldValidatorProvider.provide()
+                fieldName.provide(),
+                fieldValidatorProvider
             );
 
         }
@@ -166,8 +178,7 @@ public class QueryValidator implements PreFilter {
         @Override
         protected boolean isValid() {
 
-            return super.isValid()
-                && !registeredFields.isEmpty()
+            return !registeredFields.isEmpty()
                 && orderedFieldValidators.stream().noneMatch(Objects::isNull)
                 && orderedFieldValidators.stream().allMatch(entry -> {
                 return entry.getValue() != null

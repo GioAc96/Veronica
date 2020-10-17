@@ -29,7 +29,7 @@ public class ValidationFailureReason {
 
     public static class ValidationFailureReasonBuilder extends ConfigurableProvider<ValidationFailureReason> {
 
-        private String message;
+        protected String message;
 
         public ValidationFailureReasonBuilder message(@NonNull String message) {
 

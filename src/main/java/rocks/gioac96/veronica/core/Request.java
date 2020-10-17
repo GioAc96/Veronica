@@ -17,29 +17,15 @@ import rocks.gioac96.veronica.providers.ConfigurableProvider;
 /**
  * Http Request.
  */
+@Getter
 public class Request {
 
-    @Getter
     @Setter
     private static Charset COOKIE_VALUE_CHARSET = StandardCharsets.UTF_8;
-
-    @Getter
-    @NonNull
     protected final HttpMethod httpMethod;
-
-    @Getter
-    @NonNull
     protected final String body;
-
-    @Getter
-    @NonNull
     protected final Headers headers;
-
-    @Getter
-    @NonNull
     protected final URI uri;
-
-    @Getter
     protected final boolean secure;
 
     @Getter(lazy = true)

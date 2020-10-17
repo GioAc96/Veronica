@@ -14,8 +14,8 @@ import rocks.gioac96.veronica.providers.Provider;
  */
 public class BasicAuthFilterBuilder extends ConfigurableProvider<PreFilter> {
 
-    private CredentialsChecker credentialsChecker;
-    private String realm;
+    protected CredentialsChecker credentialsChecker;
+    protected String realm;
 
     public BasicAuthFilterBuilder credentialsChecker(@NonNull CredentialsChecker credentialsChecker) {
 
@@ -24,20 +24,20 @@ public class BasicAuthFilterBuilder extends ConfigurableProvider<PreFilter> {
 
     }
 
-    public BasicAuthFilterBuilder credentialsChecker(@NonNull Provider<CredentialsChecker> credentialsChecker) {
+    public BasicAuthFilterBuilder credentialsChecker(@NonNull Provider<CredentialsChecker> credentialsCheckerProvider) {
 
-        return credentialsChecker(credentialsChecker.provide());
+        return credentialsChecker(credentialsCheckerProvider.provide());
 
     }
 
-    public BasicAuthFilterBuilder realm(String realm) {
+    public BasicAuthFilterBuilder realm(@NonNull String realm) {
 
         this.realm = realm;
         return this;
 
     }
 
-    public BasicAuthFilterBuilder realm(Provider<String> realm) {
+    public BasicAuthFilterBuilder realm(@NonNull Provider<String> realm) {
 
         return realm(realm.provide());
 

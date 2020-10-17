@@ -6,12 +6,10 @@ import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.static_server.StaticRouteBuilder;
 
+@Getter
 public class Route {
 
-    @Getter
     private final RequestMatcher requestMatcher;
-
-    @Getter
     private final RequestHandler requestHandler;
 
     protected Route(RouteBuilder b) {
@@ -35,8 +33,8 @@ public class Route {
 
     public static class RouteBuilder extends ConfigurableProvider<Route> {
 
-        private RequestMatcher requestMatcher;
-        private RequestHandler requestHandler;
+        protected RequestMatcher requestMatcher;
+        protected RequestHandler requestHandler;
 
         public RouteBuilder requestMatcher(@NonNull RequestMatcher requestMatcher) {
 
@@ -45,9 +43,9 @@ public class Route {
 
         }
 
-        public RouteBuilder requestMatcher(@NonNull Provider<RequestMatcher> requestMatcher) {
+        public RouteBuilder requestMatcher(@NonNull Provider<RequestMatcher> requestMatcherProvider) {
 
-            return requestMatcher(requestMatcher.provide());
+            return requestMatcher(requestMatcherProvider.provide());
 
         }
 
@@ -58,9 +56,9 @@ public class Route {
 
         }
 
-        public RouteBuilder requestHandler(@NonNull Provider<RequestHandler> requestHandler) {
+        public RouteBuilder requestHandler(@NonNull Provider<RequestHandler> requestHandlerProvider) {
 
-            return requestHandler(requestHandler.provide());
+            return requestHandler(requestHandlerProvider.provide());
 
         }
 

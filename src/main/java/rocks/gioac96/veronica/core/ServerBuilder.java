@@ -22,9 +22,9 @@ public class ServerBuilder extends ConfigurableProvider<HttpServer> {
 
     }
 
-    public ServerBuilder port(@NonNull Provider<Integer> port) {
+    public ServerBuilder port(@NonNull Provider<Integer> portProvider) {
 
-        return port(port.provide());
+        return port(portProvider.provide());
 
     }
 
@@ -35,9 +35,9 @@ public class ServerBuilder extends ConfigurableProvider<HttpServer> {
 
     }
 
-    public ServerBuilder executor(@NonNull Provider<Executor> executor) {
+    public ServerBuilder executor(@NonNull Provider<Executor> executorProvider) {
 
-        return executor(executor.provide());
+        return executor(executorProvider.provide());
 
     }
 

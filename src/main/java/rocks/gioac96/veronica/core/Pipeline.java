@@ -132,9 +132,9 @@ public final class Pipeline implements RequestHandler {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
     public static class PipelineBuilder extends ConfigurableProvider<Pipeline> {
 
-        private final PriorityQueue<PriorityEntry<PreFilter>> preFilters = new PriorityQueue<>();
-        private final PriorityQueue<PriorityEntry<PostFilter>> postFilters = new PriorityQueue<>();
-        private final PriorityQueue<PriorityEntry<PostProcessor>> postProcessors = new PriorityQueue<>();
+        protected PriorityQueue<PriorityEntry<PreFilter>> preFilters = new PriorityQueue<>();
+        protected PriorityQueue<PriorityEntry<PostFilter>> postFilters = new PriorityQueue<>();
+        protected PriorityQueue<PriorityEntry<PostProcessor>> postProcessors = new PriorityQueue<>();
 
         private RequestHandler requestHandler;
 

@@ -14,7 +14,7 @@ import rocks.gioac96.veronica.providers.Provider;
 
 public class SecureServerBuilder extends ServerBuilder {
 
-    private SSLContext sslContext;
+    protected SSLContext sslContext;
 
     public SecureServerBuilder sslContext(@NonNull SSLContext sslContext) {
 

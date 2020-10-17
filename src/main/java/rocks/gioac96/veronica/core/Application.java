@@ -16,7 +16,6 @@ import rocks.gioac96.veronica.providers.Provider;
 /**
  * Veronica application.
  */
-@SuppressWarnings("unused")
 public final class Application {
 
     private final Set<HttpServer> httpServers;
@@ -133,8 +132,8 @@ public final class Application {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
     public static class ApplicationBuilder extends ConfigurableProvider<Application> {
 
-        private final Set<HttpServer> httpServers = new HashSet<>();
-        private RequestHandler requestHandler;
+        protected Set<HttpServer> httpServers = new HashSet<>();
+        protected RequestHandler requestHandler;
 
         private ExchangeParser exchangeParser = new ExchangeParser() {
         };
@@ -163,9 +162,9 @@ public final class Application {
         }
 
 
-        public ApplicationBuilder requestHandler(@NonNull Provider<RequestHandler> requestHandler) {
+        public ApplicationBuilder requestHandler(@NonNull Provider<RequestHandler> requestHandlerProvider) {
 
-            return requestHandler(requestHandler.provide());
+            return requestHandler(requestHandlerProvider.provide());
 
         }
 
@@ -225,11 +224,11 @@ public final class Application {
 
             return super.isValid()
                 && httpServers != null
+                && ! httpServers.isEmpty()
                 && httpServers.stream().allMatch(Objects::nonNull)
                 && requestHandler != null
                 && exchangeParser != null
                 && exceptionHandler != null;
-
 
         }
 

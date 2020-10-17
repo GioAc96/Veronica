@@ -77,6 +77,10 @@ public abstract class ConfigurableProvider<T> implements Provider<T> {
 
             }
 
+        } catch (CreationException e) {
+
+            throw e;
+
         } catch (Exception e) {
 
             throw new CreationException(e);

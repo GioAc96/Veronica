@@ -5,6 +5,7 @@ import java.util.HashMap;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.MimeType;
 import rocks.gioac96.veronica.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.providers.Provider;
 
 /**
  * Class used to resolve file extensions to MIME types.
@@ -62,10 +63,9 @@ public class MimeResolver {
 
     public static class MimeResolverBuilder extends ConfigurableProvider<MimeResolver> {
 
-        private final HashMap<String, String> extensionMimeMap = new HashMap<>();
+        protected HashMap<String, String> extensionMimeMap = new HashMap<>();
 
         public MimeResolverBuilder mime(@NonNull MimeType mimeType) {
-
 
             for (String extension : mimeType.getExtensions()) {
 
@@ -74,6 +74,12 @@ public class MimeResolver {
             }
 
             return this;
+
+        }
+
+        public MimeResolverBuilder mime(@NonNull Provider<MimeType> mimeTypeProvider) {
+
+            return mime(mimeTypeProvider.provide());
 
         }
 

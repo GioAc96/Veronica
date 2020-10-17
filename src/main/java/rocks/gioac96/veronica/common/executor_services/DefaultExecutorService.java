@@ -11,13 +11,6 @@ public class DefaultExecutorService
     extends ConfigurableProvider<ExecutorService>
     implements Singleton {
 
-    @Override
-    protected boolean isValid() {
-
-        return true;
-
-    }
-
     protected ExecutorService instantiate() {
 
         return new DefaultPriorityExecutorService()

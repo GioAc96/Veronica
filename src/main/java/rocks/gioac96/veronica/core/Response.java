@@ -17,12 +17,11 @@ import rocks.gioac96.veronica.validation.ValidationFailureData;
 /**
  * Http response.
  */
+@Getter
 public class Response {
 
-    @Getter
-    @Setter
     @NonNull
-    protected HttpStatus httpStatus;
+    protected final HttpStatus httpStatus;
 
     @Getter
     private byte[] bodyBytes;
@@ -30,18 +29,12 @@ public class Response {
     @Getter
     private String body;
 
-    @Getter
     @NonNull
-    @Setter
-    private Headers headers;
+    private final Headers headers;
 
-    @Getter
-    @Setter
-    private Set<SetCookieHeader> cookies;
+    private final Set<SetCookieHeader> cookies;
 
-    @Getter
-    @Setter
-    private List<ValidationFailureData> validationFailures;
+    private final List<ValidationFailureData> validationFailures;
 
     protected Response(ResponseBuilder b) {
 

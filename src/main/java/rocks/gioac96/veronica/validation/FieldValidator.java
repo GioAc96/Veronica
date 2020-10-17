@@ -31,7 +31,6 @@ public class FieldValidator {
 
     }
 
-
     public void validateField(String fieldName, String fieldValue) throws ValidationException {
 
         if (fieldValue == null && !nullable) {
@@ -57,8 +56,8 @@ public class FieldValidator {
 
     public static class FieldValidatorBuilder extends ConfigurableProvider<FieldValidator> {
 
-        private final PriorityQueue<PriorityEntry<ValidationRule>> validationRules = new PriorityQueue<>();
-        private Boolean nullable = false;
+        protected PriorityQueue<PriorityEntry<ValidationRule>> validationRules = new PriorityQueue<>();
+        protected boolean nullable;
 
         public FieldValidatorBuilder validationRule(@NonNull ValidationRule validationRule) {
 
@@ -99,9 +98,9 @@ public class FieldValidator {
 
         }
 
-        public FieldValidatorBuilder nullable(@NonNull Provider<Boolean> nullable) {
+        public FieldValidatorBuilder nullable(@NonNull Provider<Boolean> nullableProvider) {
 
-            return nullable(nullable.provide());
+            return nullable(nullableProvider.provide());
 
         }
 
@@ -120,9 +119,7 @@ public class FieldValidator {
         @Override
         protected boolean isValid() {
 
-            return super.isValid()
-                && validationRules != null
-                && nullable != null;
+            return validationRules != null;
 
         }
 

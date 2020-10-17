@@ -5,7 +5,9 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import lombok.NonNull;
 import rocks.gioac96.veronica.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.providers.Provider;
 
 /**
  * Class that manages permissions of file directories. Used to set and get permissions of directories.
@@ -155,7 +157,7 @@ public final class FilePermissionsManager<P> {
 
     public static class FilePermissionsManagerBuilder<P> extends ConfigurableProvider<FilePermissionsManager<P>> {
 
-        private final Set<PermissionTree<P>> rootTrees = new HashSet<>();
+        protected final Set<PermissionTree<P>> rootTrees = new HashSet<>();
 
         /**
          * Sets the permissions of the specified path.
@@ -163,7 +165,7 @@ public final class FilePermissionsManager<P> {
          * @param path        path to set the permissions of
          * @param permissions permissions tos set
          */
-        public FilePermissionsManagerBuilder<P> permissions(Path path, P permissions) {
+        public FilePermissionsManagerBuilder<P> permissions(@NonNull Path path, P permissions) {
 
             Path normalizedPath = path.normalize();
 
@@ -181,9 +183,36 @@ public final class FilePermissionsManager<P> {
 
         }
 
-        public FilePermissionsManagerBuilder<P> permissions(String path, P permissions) {
+        public FilePermissionsManagerBuilder<P> permissions(@NonNull String path, P permissions) {
 
             return permissions(Paths.get(path), permissions);
+
+        }
+
+        public FilePermissionsManagerBuilder<P> permissions(
+            @NonNull Provider<Path> pathProvider,
+            @NonNull P permissions
+        ) {
+
+            return permissions(pathProvider.provide(), permissions);
+
+        }
+
+        public FilePermissionsManagerBuilder<P> permissions(
+            @NonNull Path path,
+            @NonNull Provider<P> permissionsProvider
+        ) {
+
+            return permissions(path, permissionsProvider.provide());
+
+        }
+
+        public FilePermissionsManagerBuilder<P> permissions(
+            @NonNull Provider<Path> pathProvider,
+            @NonNull Provider<P> permissionsProvider
+        ) {
+
+            return permissions(pathProvider.provide(), permissionsProvider.provide());
 
         }
 

@@ -2,8 +2,11 @@ package rocks.gioac96.veronica.common.validation_rules;
 
 import java.util.Arrays;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
+import rocks.gioac96.veronica.providers.Singleton;
 
-public class BooleanRule extends InArray {
+public class BooleanRule
+    extends InArray
+    implements Singleton {
 
     public static final String[] TRUE_VALUES = {
         "true",

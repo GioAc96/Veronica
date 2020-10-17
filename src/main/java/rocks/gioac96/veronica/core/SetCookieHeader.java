@@ -19,17 +19,17 @@ import rocks.gioac96.veronica.providers.Provider;
 public final class SetCookieHeader {
 
     private static final String INVALID_NAME_SPECIAL_CHARS = "()<>@,;:\\\"/[]?={}";
-
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("E, dd MMM yyyy HH:mm:ss");
     private static final Charset COOKIE_VALUE_CHARSET = StandardCharsets.UTF_8;
+
     private final String name;
     private final String value;
     private final ZonedDateTime expires;
     private final Long maxAge;
     private final String domain;
     private final String path;
-    private final Boolean secure;
-    private final Boolean httpOnly;
+    private final boolean secure;
+    private final boolean httpOnly;
     private final SameSitePolicy sameSite;
 
     protected SetCookieHeader(
@@ -136,13 +136,13 @@ public final class SetCookieHeader {
 
         }
 
-        if (secure != null && secure) {
+        if (secure) {
 
             stringBuilder.append("; Secure");
 
         }
 
-        if (httpOnly != null && httpOnly) {
+        if (httpOnly) {
 
             stringBuilder.append("; HttpOnly");
 
@@ -182,15 +182,15 @@ public final class SetCookieHeader {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "unused"})
     public static class SetCookieHeaderBuilder extends ConfigurableProvider<SetCookieHeader> {
 
-        private String name;
-        private String value;
-        private ZonedDateTime expires = null;
-        private Long maxAge = null;
-        private String domain = null;
-        private String path = null;
-        private Boolean secure = null;
-        private Boolean httpOnly = null;
-        private SameSitePolicy sameSite = null;
+        protected String name;
+        protected String value;
+        protected ZonedDateTime expires;
+        protected Long maxAge;
+        protected String domain;
+        protected String path;
+        protected boolean secure = false;
+        protected boolean httpOnly = false;
+        protected SameSitePolicy sameSite;
 
         SetCookieHeaderBuilder() {
         }
@@ -202,9 +202,9 @@ public final class SetCookieHeader {
 
         }
 
-        public SetCookieHeaderBuilder name(@NonNull Provider<String> name) {
+        public SetCookieHeaderBuilder name(@NonNull Provider<String> nameProvider) {
 
-            return name(name.provide());
+            return name(nameProvider.provide());
 
         }
 
@@ -215,9 +215,9 @@ public final class SetCookieHeader {
 
         }
 
-        public SetCookieHeaderBuilder value(@NonNull Provider<String> value) {
+        public SetCookieHeaderBuilder value(@NonNull Provider<String> valueProvider) {
 
-            return value(value.provide());
+            return value(valueProvider.provide());
 
         }
 
@@ -229,9 +229,9 @@ public final class SetCookieHeader {
 
         }
 
-        public SetCookieHeaderBuilder expires(@NonNull Provider<ZonedDateTime> expires) {
+        public SetCookieHeaderBuilder expires(@NonNull Provider<ZonedDateTime> expiresProvider) {
 
-            return expires(expires.provide());
+            return expires(expiresProvider.provide());
 
         }
 
@@ -243,9 +243,9 @@ public final class SetCookieHeader {
 
         }
 
-        public SetCookieHeaderBuilder maxAge(@NonNull Provider<Long> maxAge) {
+        public SetCookieHeaderBuilder maxAge(@NonNull Provider<Long> maxAgeProvider) {
 
-            return maxAge(maxAge.provide());
+            return maxAge(maxAgeProvider.provide());
 
         }
 
@@ -257,12 +257,11 @@ public final class SetCookieHeader {
 
         }
 
-        public SetCookieHeaderBuilder domain(@NonNull Provider<String> domain) {
+        public SetCookieHeaderBuilder domain(@NonNull Provider<String> domainProvider) {
 
-            return domain(domain.provide());
+            return domain(domainProvider.provide());
 
         }
-
 
         public SetCookieHeaderBuilder path(String path) {
 
@@ -271,24 +270,29 @@ public final class SetCookieHeader {
 
         }
 
-        public SetCookieHeaderBuilder secure(Boolean secure) {
+        public SetCookieHeaderBuilder path(Provider<String> pathProvider) {
+
+            return path(pathProvider.provide());
+
+        }
+
+        public SetCookieHeaderBuilder secure(boolean secure) {
 
             this.secure = secure;
             return this;
 
         }
 
-        public SetCookieHeaderBuilder secure(@NonNull Provider<Boolean> secure) {
-
-            return secure(secure.provide());
-
-        }
-
-
         public SetCookieHeaderBuilder secure() {
 
             this.secure = true;
             return this;
+
+        }
+
+        public SetCookieHeaderBuilder secure(@NonNull Provider<Boolean> secureProvider) {
+
+            return secure(secureProvider.provide());
 
         }
 
@@ -299,19 +303,19 @@ public final class SetCookieHeader {
 
         }
 
-        public SetCookieHeaderBuilder httpOnly(@NonNull Provider<Boolean> httpOnly) {
-
-            return httpOnly(httpOnly.provide());
-
-        }
-
-
         public SetCookieHeaderBuilder httpOnly() {
 
             this.httpOnly = true;
             return this;
 
         }
+
+        public SetCookieHeaderBuilder httpOnly(@NonNull Provider<Boolean> httpOnlyProvider) {
+
+            return httpOnly(httpOnlyProvider.provide());
+
+        }
+
 
         public SetCookieHeaderBuilder sameSite(SameSitePolicy sameSite) {
 
@@ -320,9 +324,9 @@ public final class SetCookieHeader {
 
         }
 
-        public SetCookieHeaderBuilder sameSite(@NonNull Provider<SameSitePolicy> sameSite) {
+        public SetCookieHeaderBuilder sameSite(@NonNull Provider<SameSitePolicy> sameSiteProvider) {
 
-            return sameSite(sameSite.provide());
+            return sameSite(sameSiteProvider.provide());
 
         }
 

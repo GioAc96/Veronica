@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.providers;
 
-public class InvalidConfigurationException extends Exception {
+public class InvalidConfigurationException extends CreationException {
 
     private final ConfigurableProvider<?> invalidConfigurableProvider;
 
@@ -8,7 +8,16 @@ public class InvalidConfigurationException extends Exception {
         ConfigurableProvider<?> invalidConfigurableProvider
     ) {
 
+        this.invalidConfigurableProvider = invalidConfigurableProvider;
 
+    }
+
+    public InvalidConfigurationException(
+        Throwable cause,
+        ConfigurableProvider<?> invalidConfigurableProvider
+    ) {
+
+        super(cause);
         this.invalidConfigurableProvider = invalidConfigurableProvider;
 
     }

@@ -4,23 +4,31 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
+import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
 public class InArray extends ValidationRuleBuilderWithConstantFailureReason {
 
-    private final Set<String> allowedValues = new HashSet<>();
+    protected Set<String> allowedValues = new HashSet<>();
 
-    public InArray allowedValue(String allowedValue) {
+    public InArray allowedValue(@NonNull String allowedValue) {
 
         this.allowedValues.add(allowedValue);
         return this;
 
     }
 
-    public InArray allowedValues(Collection<String> allowedValues) {
+    public InArray allowedValue(@NonNull Provider<String> allowedValueProvider) {
+
+        return allowedValue(allowedValueProvider.provide());
+
+    }
+
+    public InArray allowedValues(@NonNull Collection<String> allowedValues) {
 
         this.allowedValues.addAll(allowedValues);
 
