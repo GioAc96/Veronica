@@ -10,20 +10,18 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationFailureData;
 
 /**
  * Http response.
  */
+@Getter
 public class Response {
 
-    @Getter
-    @Setter
     @NonNull
-    protected HttpStatus httpStatus;
+    protected final HttpStatus httpStatus;
 
     @Getter
     private byte[] bodyBytes;
@@ -31,18 +29,12 @@ public class Response {
     @Getter
     private String body;
 
-    @Getter
     @NonNull
-    @Setter
-    private Headers headers;
+    private final Headers headers;
 
-    @Getter
-    @Setter
-    private Set<SetCookieHeader> cookies;
+    private final Set<SetCookieHeader> cookies;
 
-    @Getter
-    @Setter
-    private List<ValidationFailureData> validationFailures;
+    private final List<ValidationFailureData> validationFailures;
 
     protected Response(ResponseBuilder b) {
 
@@ -59,7 +51,7 @@ public class Response {
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static ResponseBuilder builder() {
 
-        class ResponseBuilderImpl extends ResponseBuilder implements BuildsMultipleInstances {
+        class ResponseBuilderImpl extends ResponseBuilder {
 
         }
 
@@ -122,7 +114,7 @@ public class Response {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public abstract static class ResponseBuilder extends Builder<Response> {
+    public static class ResponseBuilder extends ConfigurableProvider<Response> {
 
         private Set<SetCookieHeader> cookies = null;
         private HttpStatus httpStatus = HttpStatus.OK;
@@ -286,8 +278,7 @@ public class Response {
         @Override
         protected boolean isValid() {
 
-            return super.isValid()
-                && httpStatus != null;
+            return httpStatus != null;
 
         }
 

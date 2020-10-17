@@ -12,8 +12,8 @@ public class File {
             .port(80)
             .router(Router.builder()
                 .defaultRequestHandler(request -> CommonResponses.fileInline("D:\\test.pdf"))
-                .build())
-            .build()
+                .provide())
+            .provide()
             .start();
 
     }

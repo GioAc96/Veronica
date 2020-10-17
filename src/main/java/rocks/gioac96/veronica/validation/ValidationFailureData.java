@@ -3,8 +3,7 @@ package rocks.gioac96.veronica.validation;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 
 /**
@@ -27,17 +26,11 @@ public class ValidationFailureData {
 
     public static ValidationFailureDataBuilder builder() {
 
-        class ValidationFailureDataBuilderImpl
-            extends ValidationFailureDataBuilder
-            implements BuildsMultipleInstances {
-
-        }
-
-        return new ValidationFailureDataBuilderImpl();
+        return new ValidationFailureDataBuilder();
 
     }
 
-    public abstract static class ValidationFailureDataBuilder extends Builder<ValidationFailureData> {
+    public static class ValidationFailureDataBuilder extends ConfigurableProvider<ValidationFailureData> {
 
         protected ValidationFailureReason failureReason;
         protected String fieldName;
@@ -71,8 +64,7 @@ public class ValidationFailureData {
         @Override
         protected boolean isValid() {
 
-            return super.isValid()
-                && failureReason != null
+            return failureReason != null
                 && fieldName != null;
 
         }

@@ -1,9 +1,8 @@
 package rocks.gioac96.veronica.tutorials.https.ssl;
 
 import rocks.gioac96.veronica.core.SSLContextBuilder;
-import rocks.gioac96.veronica.providers.BuildsSingleInstance;
 
-public class MyContext extends SSLContextBuilder implements BuildsSingleInstance {
+public class MyContext extends SSLContextBuilder  {
 
     @Override
     public void configure() {

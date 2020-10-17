@@ -16,15 +16,15 @@ public class StaticServer {
                     .permissionManager(FilePermissionsManager.<Boolean>builder()
                         .permissions("D:\\projects\\veronica\\src", true)
                         .permissions("D:\\projects\\veronica\\src\\test", false)
-                        .build())
+                        .provide())
                     .permissionDecider((request, filePermissions) -> filePermissions)
                     .baseDir("D:\\projects\\veronica")
                     .basePath("/static")
-                    .build())
+                    .provide())
                 .defaultRequestHandler(CommonRequestHandlers.notFound())
-                .build())
+                .provide())
             .port(80)
-            .build()
+            .provide()
             .start();
 
 

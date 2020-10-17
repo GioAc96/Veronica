@@ -34,7 +34,7 @@ public class CommonRequestMatchers {
         return RequestMatcher.builder()
             .httpMethod(HttpMethod.GET)
             .pathPattern(pathPattern)
-            .build();
+            .provide();
 
     }
 
@@ -49,7 +49,7 @@ public class CommonRequestMatchers {
         return RequestMatcher.builder()
             .httpMethod(HttpMethod.POST)
             .pathPattern(pathPattern)
-            .build();
+            .provide();
 
     }
 
@@ -64,7 +64,7 @@ public class CommonRequestMatchers {
         return RequestMatcher.builder()
             .httpMethod(HttpMethod.PUT)
             .pathPattern(pathPattern)
-            .build();
+            .provide();
 
     }
 
@@ -79,7 +79,7 @@ public class CommonRequestMatchers {
         return RequestMatcher.builder()
             .httpMethod(HttpMethod.HEAD)
             .pathPattern(pathPattern)
-            .build();
+            .provide();
 
     }
 
@@ -94,7 +94,7 @@ public class CommonRequestMatchers {
         return RequestMatcher.builder()
             .httpMethod(HttpMethod.DELETE)
             .pathPattern(pathPattern)
-            .build();
+            .provide();
 
     }
 

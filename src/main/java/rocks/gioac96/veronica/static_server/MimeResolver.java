@@ -4,8 +4,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.MimeType;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.providers.Provider;
 
 /**
  * Class used to resolve file extensions to MIME types.
@@ -23,11 +23,7 @@ public class MimeResolver {
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static MimeResolverBuilder builder() {
 
-        class MimeResolverBuilderImpl extends MimeResolverBuilder implements BuildsMultipleInstances {
-
-        }
-
-        return new MimeResolverBuilderImpl();
+        return new MimeResolverBuilder();
 
     }
 
@@ -65,14 +61,11 @@ public class MimeResolver {
 
     }
 
+    public static class MimeResolverBuilder extends ConfigurableProvider<MimeResolver> {
 
-    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
-    public abstract static class MimeResolverBuilder extends Builder<MimeResolver> {
-
-        private final HashMap<String, String> extensionMimeMap = new HashMap<>();
+        protected HashMap<String, String> extensionMimeMap = new HashMap<>();
 
         public MimeResolverBuilder mime(@NonNull MimeType mimeType) {
-
 
             for (String extension : mimeType.getExtensions()) {
 
@@ -81,6 +74,12 @@ public class MimeResolver {
             }
 
             return this;
+
+        }
+
+        public MimeResolverBuilder mime(@NonNull Provider<MimeType> mimeTypeProvider) {
+
+            return mime(mimeTypeProvider.provide());
 
         }
 
@@ -96,6 +95,12 @@ public class MimeResolver {
 
         }
 
+        @Override
+        protected boolean isValid() {
+
+            return extensionMimeMap != null;
+
+        }
 
         @Override
         protected MimeResolver instantiate() {

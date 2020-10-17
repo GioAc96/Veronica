@@ -24,13 +24,13 @@ class PatternRuleTest {
     ) {
 
         assertValidationFails(
-            CommonValidationRules.pattern(pattern, ValidationFailureReason.builder().message(message).build()),
+            CommonValidationRules.pattern(pattern, ValidationFailureReason.builder().message(message).provide()),
             "test",
             value,
             ValidationFailureData.builder()
                 .fieldName("test")
-                .failureReason(ValidationFailureReason.builder().message(message).build())
-                .build()
+                .failureReason(ValidationFailureReason.builder().message(message).provide())
+                .provide()
         );
 
     }
@@ -52,7 +52,7 @@ class PatternRuleTest {
             ValidationFailureData.builder()
                 .fieldName("test")
                 .failureReason(CommonValidationFailureReasons.patternNotMatches())
-                .build()
+                .provide()
         );
 
     }

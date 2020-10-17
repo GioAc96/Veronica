@@ -24,7 +24,7 @@ public class BasicAuth {
                     credentials.getUsername().equals("giorgio")
                         && credentials.getPassword().equals("password")
                 )
-                .build();
+                .provide();
 
         } else {
 
@@ -34,16 +34,16 @@ public class BasicAuth {
                     credentials.getUsername().equals("giorgio")
                         && credentials.getPassword().equals("password")
                 )
-                .build();
+                .provide();
 
         }
 
         router = Router.builder()
             .defaultRequestHandler(Pipeline.builder()
                 .preFilter(basicAuthFilter)
-                .requestHandler(request -> Response.builder().body("You are authenticated").build())
-                .build())
-            .build();
+                .requestHandler(request -> Response.builder().body("You are authenticated").provide())
+                .provide())
+            .provide();
     }
 
     public static void main(String[] args) {
@@ -51,7 +51,7 @@ public class BasicAuth {
         Application.builder()
             .port(80)
             .router(new BasicAuth("my realm").router)
-            .build()
+            .provide()
             .start();
 
     }

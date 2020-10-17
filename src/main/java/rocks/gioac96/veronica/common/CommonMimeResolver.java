@@ -2,13 +2,12 @@ package rocks.gioac96.veronica.common;
 
 import java.util.Arrays;
 import rocks.gioac96.veronica.core.MimeType;
-import rocks.gioac96.veronica.providers.BuildsSingleInstance;
 import rocks.gioac96.veronica.static_server.MimeResolver;
 
 /**
  * The framework's default common {@link MimeResolver} builder.
  */
-public class CommonMimeResolver extends MimeResolver.MimeResolverBuilder implements BuildsSingleInstance {
+public class CommonMimeResolver extends MimeResolver.MimeResolverBuilder {
 
     @Override
     protected void configure() {

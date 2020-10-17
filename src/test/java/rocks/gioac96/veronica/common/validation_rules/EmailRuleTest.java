@@ -29,7 +29,7 @@ class EmailRuleTest {
             ValidationFailureData.builder()
                 .fieldName("test")
                 .failureReason(CommonValidationFailureReasons.invalidEmail())
-                .build()
+                .provide()
         );
 
     }

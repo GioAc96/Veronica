@@ -17,13 +17,13 @@ class PredicateRuleTest {
         assertValidationFails(
             new PredicateRule()
                 .predicate(value -> false)
-                .build(),
+                .provide(),
             "test",
             "val",
             ValidationFailureData.builder()
                 .fieldName("test")
                 .failureReason(CommonValidationFailureReasons.generic())
-                .build()
+                .provide()
         );
 
     }
@@ -32,7 +32,7 @@ class PredicateRuleTest {
 
         new PredicateRule()
             .predicate(value -> true)
-            .build()
+            .provide()
             .validate(
                 "test",
                 "value"
@@ -46,7 +46,7 @@ class PredicateRuleTest {
         assertThrows(
             CreationException.class,
             () -> new PredicateRule()
-                .build()
+                .provide()
         );
 
     }

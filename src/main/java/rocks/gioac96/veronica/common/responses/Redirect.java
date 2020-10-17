@@ -3,12 +3,12 @@ package rocks.gioac96.veronica.common.responses;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.HttpStatus;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.Provider;
 
-public class Redirect extends Response.ResponseBuilder implements BuildsMultipleInstances {
+public class Redirect
+    extends Response.ResponseBuilder  {
 
     protected String location;
-
     protected boolean isPermanent = false;
 
     public Redirect location(@NonNull String location) {
@@ -18,12 +18,25 @@ public class Redirect extends Response.ResponseBuilder implements BuildsMultiple
         return this;
 
     }
+    
+    public Redirect location(@NonNull Provider<String> locationProvider) {
+        
+        return location(locationProvider.provide());
+        
+    }
 
     public Redirect permanent(boolean isPermanent) {
 
         this.isPermanent = isPermanent;
 
         return this;
+
+    }
+
+
+    public Redirect permanent(@NonNull Provider<Boolean> permanentProvider) {
+
+        return permanent(permanentProvider.provide());
 
     }
 
@@ -46,8 +59,8 @@ public class Redirect extends Response.ResponseBuilder implements BuildsMultiple
     @Override
     protected boolean isValid() {
 
-        return super.isValid() &&
-            location != null;
+        return super.isValid()
+            && location != null;
 
     }
 

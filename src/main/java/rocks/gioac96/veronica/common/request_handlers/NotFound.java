@@ -3,10 +3,12 @@ package rocks.gioac96.veronica.common.request_handlers;
 import rocks.gioac96.veronica.core.HttpStatus;
 import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsSingleInstance;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.providers.Singleton;
 
-public class NotFound extends Builder<RequestHandler> implements BuildsSingleInstance {
+public class NotFound
+    extends ConfigurableProvider<RequestHandler>
+    implements Singleton {
 
     @Override
     protected RequestHandler instantiate() {
@@ -14,7 +16,7 @@ public class NotFound extends Builder<RequestHandler> implements BuildsSingleIns
         return request -> Response.builder()
             .httpStatus(HttpStatus.NOT_FOUND)
             .emptyBody()
-            .build();
+            .provide();
 
     }
 

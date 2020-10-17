@@ -1,12 +1,12 @@
 package rocks.gioac96.veronica.core;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 
 /**
@@ -16,9 +16,7 @@ import rocks.gioac96.veronica.providers.Provider;
 public class RequestMatcher {
 
     private final Set<String> pathPatterns;
-
     private final Set<HttpMethod> httpMethods;
-
     private final Set<Predicate<Request>> conditions;
 
     private RequestMatcher(RequestMatcherBuilder b) {
@@ -31,20 +29,15 @@ public class RequestMatcher {
 
     public static RequestMatcherBuilder builder() {
 
-        class RequestMatcherBuilderImpl
-            extends RequestMatcherBuilder
-            implements BuildsMultipleInstances {
-        }
-
-        return new RequestMatcherBuilderImpl();
+        return new RequestMatcherBuilder();
 
     }
 
-    public static abstract class RequestMatcherBuilder extends Builder<RequestMatcher> {
+    public static class RequestMatcherBuilder extends ConfigurableProvider<RequestMatcher> {
 
-        private final Set<String> pathPatterns = new HashSet<>();
-        private final Set<HttpMethod> httpMethods = new HashSet<>();
-        private final Set<Predicate<Request>> conditions = new HashSet<>();
+        protected Set<String> pathPatterns = new HashSet<>();
+        protected Set<HttpMethod> httpMethods = new HashSet<>();
+        protected Set<Predicate<Request>> conditions = new HashSet<>();
 
         public RequestMatcherBuilder pathPattern(@NonNull String pathPattern) {
 
@@ -54,9 +47,9 @@ public class RequestMatcher {
 
         }
 
-        public RequestMatcherBuilder pathPattern(@NonNull Provider<String> pathPattern) {
+        public RequestMatcherBuilder pathPattern(@NonNull Provider<String> pathPatternProvider) {
 
-            return pathPattern(pathPattern.provide());
+            return pathPattern(pathPatternProvider.provide());
 
         }
 
@@ -68,9 +61,9 @@ public class RequestMatcher {
 
         }
 
-        public RequestMatcherBuilder httpMethod(@NonNull Provider<HttpMethod> httpMethod) {
+        public RequestMatcherBuilder httpMethod(@NonNull Provider<HttpMethod> httpMethodProvider) {
 
-            return httpMethod(httpMethod);
+            return httpMethod(httpMethodProvider.provide());
 
         }
 
@@ -82,9 +75,9 @@ public class RequestMatcher {
 
         }
 
-        public RequestMatcherBuilder condition(@NonNull Provider<Predicate<Request>> condition) {
+        public RequestMatcherBuilder condition(@NonNull Provider<Predicate<Request>> conditionProvider) {
 
-            return condition(condition.provide());
+            return condition(conditionProvider.provide());
 
         }
 
@@ -92,7 +85,9 @@ public class RequestMatcher {
         protected boolean isValid() {
 
             return super.isValid()
-                && pathPatterns.size() > 0;
+                && pathPatterns != null
+                && !pathPatterns.isEmpty()
+                && pathPatterns.stream().noneMatch(Objects::isNull);
 
         }
 

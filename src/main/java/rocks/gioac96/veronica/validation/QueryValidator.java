@@ -13,8 +13,7 @@ import rocks.gioac96.veronica.core.PipelineBreakException;
 import rocks.gioac96.veronica.core.PreFilter;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.HasPriority;
 import rocks.gioac96.veronica.util.PriorityEntry;
@@ -31,6 +30,12 @@ public class QueryValidator implements PreFilter {
     public QueryValidator(QueryValidatorBuilder b) {
 
         this.fieldValidators = b.getFieldValidators();
+
+    }
+
+    public static QueryValidatorBuilder builder() {
+
+        return new QueryValidatorBuilder();
 
     }
 
@@ -56,23 +61,13 @@ public class QueryValidator implements PreFilter {
             throw new PipelineBreakException(Response.builder()
                 .httpStatus(CommonHttpStatus.validationFailure())
                 .validationFailures(validationFailures)
-                .build());
+                .provide());
 
         }
 
     }
 
-    public static QueryValidatorBuilder builder() {
-
-        class QueryValidatorBuilderImpl extends QueryValidatorBuilder implements BuildsMultipleInstances {
-
-        }
-
-        return new QueryValidatorBuilderImpl();
-
-    }
-    
-    public abstract static class QueryValidatorBuilder extends Builder<QueryValidator> {
+    public static class QueryValidatorBuilder extends ConfigurableProvider<QueryValidator> {
 
         private final PriorityQueue<PriorityEntry<Tuple<String, FieldValidator>>> orderedFieldValidators = new PriorityQueue<>();
         private final HashSet<String> registeredFields = new HashSet<>();
@@ -121,22 +116,22 @@ public class QueryValidator implements PreFilter {
         }
 
         public QueryValidatorBuilder fieldValidator(
-            @NonNull Provider<String> fieldName,
+            @NonNull Provider<String> fieldNameProvider,
             @NonNull FieldValidator fieldValidator
         ) {
 
-            if (fieldName instanceof HasPriority) {
+            if (fieldNameProvider instanceof HasPriority) {
 
                 return fieldValidator(
-                    fieldName.provide(),
+                    fieldNameProvider.provide(),
                     fieldValidator,
-                    ((HasPriority) fieldName).getPriority()
+                    ((HasPriority) fieldNameProvider).getPriority()
                 );
 
             } else {
 
                 return fieldValidator(
-                    fieldName.provide(),
+                    fieldNameProvider.provide(),
                     fieldValidator
                 );
 
@@ -149,10 +144,22 @@ public class QueryValidator implements PreFilter {
             @NonNull Provider<FieldValidator> fieldValidatorProvider
         ) {
 
-            return fieldValidator(
-              fieldName,
-              fieldValidatorProvider.provide()
-            );
+            if (fieldValidatorProvider instanceof HasPriority) {
+
+                return fieldValidator(
+                    fieldName,
+                    fieldValidatorProvider.provide(),
+                    ((HasPriority) fieldValidatorProvider).getPriority()
+                );
+
+            } else {
+
+                return fieldValidator(
+                    fieldName,
+                    fieldValidatorProvider.provide()
+                );
+
+            }
 
         }
 
@@ -162,8 +169,8 @@ public class QueryValidator implements PreFilter {
         ) {
 
             return fieldValidator(
-              fieldName,
-              fieldValidatorProvider.provide()
+                fieldName.provide(),
+                fieldValidatorProvider
             );
 
         }
@@ -171,14 +178,13 @@ public class QueryValidator implements PreFilter {
         @Override
         protected boolean isValid() {
 
-            return super.isValid()
-                && ! registeredFields.isEmpty()
+            return !registeredFields.isEmpty()
                 && orderedFieldValidators.stream().noneMatch(Objects::isNull)
                 && orderedFieldValidators.stream().allMatch(entry -> {
-                    return entry.getValue() != null
-                        && entry.getValue().getFirst() != null
-                        && entry.getValue().getSecond() != null;
-                });
+                return entry.getValue() != null
+                    && entry.getValue().getFirst() != null
+                    && entry.getValue().getSecond() != null;
+            });
 
         }
 

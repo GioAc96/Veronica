@@ -32,14 +32,14 @@ public class StaticServerCustomRequest {
                     .permissionManager(FilePermissionsManager.<Boolean>builder()
                         .permissions("D:\\projects\\veronica\\src", true)
                         .permissions("D:\\projects\\veronica\\src\\test", false)
-                        .build())
+                        .provide())
                     .permissionDecider((request, filePermissions) -> AuthenticationService.isAuthenticated(request) && filePermissions)
                     .basePath("")
                     .baseDir("D:\\projects\\veronica\\src")
-                    .build())
+                    .provide())
                 .defaultRequestHandler(CommonRequestHandlers.notFound())
-                .build())
-            .build()
+                .provide())
+            .provide()
             .start();
 
 

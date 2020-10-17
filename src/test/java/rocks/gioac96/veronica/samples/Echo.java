@@ -22,17 +22,17 @@ public class Echo {
 
                     return Response.builder()
                         .body(request.getBody())
-                        .build();
+                        .provide();
 
                 } else {
 
                     return Response.builder()
                         .body(errorMessage)
-                        .build();
+                        .provide();
 
                 }
             })
-            .build();
+            .provide();
     }
 
     public static void main(String[] args) throws IOException, CreationException {
@@ -42,7 +42,7 @@ public class Echo {
         Application application = Application.builder()
             .port(80)
             .router(echo.router)
-            .build();
+            .provide();
 
         application.start();
 

@@ -30,13 +30,13 @@ public class Cookies {
                     .cookie(SetCookieHeader.builder()
                         .name("hit-counter")
                         .value(String.valueOf(hitCounter + 1))
-                        .build()
+                        .provide()
                     )
                     .body("You have visited this page " + hitCounter + " times before")
-                    .build();
+                    .provide();
 
             })
-            .build();
+            .provide();
 
         int port = 8000;
 
@@ -45,7 +45,7 @@ public class Cookies {
             Application app = Application.builder()
                 .port(port)
                 .router(router)
-                .build();
+                .provide();
             app.start();
 
         } catch (CreationException e) {

@@ -22,11 +22,11 @@ public class Multithreading {
 
                     return Response.builder()
                         .body("Hello, there!")
-                        .build();
+                        .provide();
 
                 })
-                .build()
-            ).build();
+                .provide()
+            ).provide();
 
         app.start();
 

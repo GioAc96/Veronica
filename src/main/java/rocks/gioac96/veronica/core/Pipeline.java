@@ -4,8 +4,7 @@ import java.util.Objects;
 import java.util.PriorityQueue;
 import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonExecutorServices;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.HasPriority;
 import rocks.gioac96.veronica.util.PriorityEntry;
@@ -33,11 +32,7 @@ public final class Pipeline implements RequestHandler {
 
     public static PipelineBuilder builder() {
 
-        class PipelineBuilderImpl extends PipelineBuilder implements BuildsMultipleInstances {
-
-        }
-
-        return new PipelineBuilderImpl();
+        return new PipelineBuilder();
     }
 
     private Response preRender(Request request) {
@@ -135,11 +130,11 @@ public final class Pipeline implements RequestHandler {
     }
 
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType", "UnusedReturnValue"})
-    public abstract static class PipelineBuilder extends Builder<Pipeline> {
+    public static class PipelineBuilder extends ConfigurableProvider<Pipeline> {
 
-        private final PriorityQueue<PriorityEntry<PreFilter>> preFilters = new PriorityQueue<>();
-        private final PriorityQueue<PriorityEntry<PostFilter>> postFilters = new PriorityQueue<>();
-        private final PriorityQueue<PriorityEntry<PostProcessor>> postProcessors = new PriorityQueue<>();
+        protected PriorityQueue<PriorityEntry<PreFilter>> preFilters = new PriorityQueue<>();
+        protected PriorityQueue<PriorityEntry<PostFilter>> postFilters = new PriorityQueue<>();
+        protected PriorityQueue<PriorityEntry<PostProcessor>> postProcessors = new PriorityQueue<>();
 
         private RequestHandler requestHandler;
 
@@ -284,8 +279,7 @@ public final class Pipeline implements RequestHandler {
         @Override
         protected boolean isValid() {
 
-            return super.isValid()
-                && requestHandler != null
+            return requestHandler != null
                 && preFilters != null
                 && postFilters != null
                 && postProcessors != null

@@ -12,17 +12,15 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.HasPriority;
 
-@SuppressWarnings("unused")
+@Getter
 public class PriorityFixedThreadPoolExecutor
     extends ThreadPoolExecutor
     implements PriorityExecutorService {
 
-    @Getter
     private final int defaultPriority;
 
     protected PriorityFixedThreadPoolExecutor(
@@ -43,13 +41,7 @@ public class PriorityFixedThreadPoolExecutor
 
     public static PriorityFixedThreadPoolExecutorBuilder builder() {
 
-        class PriorityFixedThreadPoolExecutorBuilderImpl
-            extends PriorityFixedThreadPoolExecutorBuilder
-            implements BuildsMultipleInstances {
-
-        }
-
-        return new PriorityFixedThreadPoolExecutorBuilderImpl();
+        return new PriorityFixedThreadPoolExecutorBuilder();
 
     }
 
@@ -191,23 +183,24 @@ public class PriorityFixedThreadPoolExecutor
 
     }
 
-    public abstract static class PriorityFixedThreadPoolExecutorBuilder
-        extends Builder<PriorityFixedThreadPoolExecutor> {
+    public static class PriorityFixedThreadPoolExecutorBuilder
+        extends ConfigurableProvider<PriorityFixedThreadPoolExecutor> {
 
-        private int defaultPriority = Integer.MAX_VALUE;
-        private int poolSize = Runtime.getRuntime().availableProcessors();
-        private long keepAliveTime = 0;
-        private TimeUnit keepAliveTimeUnit = TimeUnit.MILLISECONDS;
-        private ThreadFactory threadFactory = Executors.defaultThreadFactory();
-        private RejectedExecutionHandler rejectedExecutionHandler = new ThreadPoolExecutor.DiscardPolicy();
+        protected int defaultPriority = Integer.MAX_VALUE;
+        protected int poolSize = Runtime.getRuntime().availableProcessors();
+        protected long keepAliveTime = 0;
+        protected TimeUnit keepAliveTimeUnit = TimeUnit.MILLISECONDS;
+        protected ThreadFactory threadFactory = Executors.defaultThreadFactory();
+        protected RejectedExecutionHandler rejectedExecutionHandler = new ThreadPoolExecutor.DiscardPolicy();
 
         @Override
         protected boolean isValid() {
 
-            return super.isValid() &&
-                keepAliveTimeUnit != null &&
-                threadFactory != null &&
-                rejectedExecutionHandler != null;
+            return poolSize > 0
+                && keepAliveTime >= 0
+                && keepAliveTimeUnit != null
+                && threadFactory != null
+                && rejectedExecutionHandler != null;
 
         }
 
@@ -225,9 +218,9 @@ public class PriorityFixedThreadPoolExecutor
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder poolSize(@NonNull Provider<Integer> poolSize) {
+        public PriorityFixedThreadPoolExecutorBuilder poolSize(@NonNull Provider<Integer> poolSizeProvider) {
 
-            return poolSize(poolSize.provide());
+            return poolSize(poolSizeProvider.provide());
 
         }
 
@@ -238,9 +231,9 @@ public class PriorityFixedThreadPoolExecutor
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder defaultPriority(@NonNull Provider<Integer> defaultPriority) {
+        public PriorityFixedThreadPoolExecutorBuilder defaultPriority(@NonNull Provider<Integer> defaultPriorityProvider) {
 
-            return defaultPriority(defaultPriority.provide());
+            return defaultPriority(defaultPriorityProvider.provide());
 
         }
 
@@ -260,9 +253,9 @@ public class PriorityFixedThreadPoolExecutor
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder keepAliveTime(@NonNull Provider<Long> keepAliveTime) {
+        public PriorityFixedThreadPoolExecutorBuilder keepAliveTime(@NonNull Provider<Long> keepAliveTimeProvider) {
 
-            return keepAliveTime(keepAliveTime.provide());
+            return keepAliveTime(keepAliveTimeProvider.provide());
 
         }
 
@@ -273,9 +266,9 @@ public class PriorityFixedThreadPoolExecutor
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder keepAliveTimeUnit(@NonNull Provider<TimeUnit> keepAliveTimeUnit) {
+        public PriorityFixedThreadPoolExecutorBuilder keepAliveTimeUnit(@NonNull Provider<TimeUnit> keepAliveTimeUnitProvider) {
 
-            return keepAliveTimeUnit(keepAliveTimeUnit.provide());
+            return keepAliveTimeUnit(keepAliveTimeUnitProvider.provide());
 
         }
 
@@ -286,9 +279,9 @@ public class PriorityFixedThreadPoolExecutor
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder threadFactory(@NonNull Provider<ThreadFactory> threadFactory) {
+        public PriorityFixedThreadPoolExecutorBuilder threadFactory(@NonNull Provider<ThreadFactory> threadFactoryProvider) {
 
-            return threadFactory(threadFactory.provide());
+            return threadFactory(threadFactoryProvider.provide());
 
         }
 
@@ -299,9 +292,9 @@ public class PriorityFixedThreadPoolExecutor
 
         }
 
-        public PriorityFixedThreadPoolExecutorBuilder rejectedExecutionHandler(@NonNull Provider<RejectedExecutionHandler> rejectedExecutionHandler) {
+        public PriorityFixedThreadPoolExecutorBuilder rejectedExecutionHandler(@NonNull Provider<RejectedExecutionHandler> rejectedExecutionHandlerProvider) {
 
-            return rejectedExecutionHandler(rejectedExecutionHandler.provide());
+            return rejectedExecutionHandler(rejectedExecutionHandlerProvider.provide());
 
         }
 

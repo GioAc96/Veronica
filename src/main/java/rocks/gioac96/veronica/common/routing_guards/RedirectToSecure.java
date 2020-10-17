@@ -1,13 +1,15 @@
 package rocks.gioac96.veronica.common.routing_guards;
 
+import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonResponses;
+import rocks.gioac96.veronica.common.responses.Redirect;
 import rocks.gioac96.veronica.core.RoutingGuard;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.providers.Provider;
 
-public class RedirectToSecure extends Builder<RoutingGuard> implements BuildsMultipleInstances {
+public class RedirectToSecure extends ConfigurableProvider<RoutingGuard> {
 
-    private boolean isPermanent = false;
+    protected boolean isPermanent = false;
 
     public RedirectToSecure permanent() {
 
@@ -27,6 +29,12 @@ public class RedirectToSecure extends Builder<RoutingGuard> implements BuildsMul
 
         this.isPermanent = isPermanent;
         return this;
+
+    }
+
+    public RedirectToSecure permanent(@NonNull Provider<Boolean> permanentProvider) {
+
+        return permanent(permanentProvider.provide());
 
     }
 

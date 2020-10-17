@@ -5,7 +5,7 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.providers.Provider;
 
@@ -13,7 +13,7 @@ import rocks.gioac96.veronica.providers.Provider;
  * Factory for SSLContext.
  */
 @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
-public abstract class SSLContextBuilder extends Builder<SSLContext> {
+public abstract class SSLContextBuilder extends ConfigurableProvider<SSLContext> {
 
     private KeyStore keyStore;
     private String password;

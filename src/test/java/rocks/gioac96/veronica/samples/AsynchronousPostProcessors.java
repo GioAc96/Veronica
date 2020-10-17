@@ -23,17 +23,17 @@ public class AsynchronousPostProcessors {
             .requestHandler(Pipeline.builder()
                 .requestHandler(request -> CommonResponses.ok())
                 .postProcessor((PostProcessor.Asynchronous) (request, response) -> sleep())
-                .build())
-            .build())
+                .provide())
+            .provide())
         .route(Route.builder()
             .requestMatcher(get("/sync"))
             .requestHandler(Pipeline.builder()
                 .requestHandler(CommonRequestHandlers.ok())
                 .postProcessor((request, response) -> sleep())
-                .build())
-            .build())
+                .provide())
+            .provide())
         .defaultRequestHandler(CommonRequestHandlers.notFound())
-        .build();
+        .provide();
 
     public AsynchronousPostProcessors(
         int sleepTime
@@ -48,7 +48,7 @@ public class AsynchronousPostProcessors {
         Application.builder()
             .port(80)
             .router(new AsynchronousPostProcessors(2000).router)
-            .build()
+            .provide()
             .start();
 
     }

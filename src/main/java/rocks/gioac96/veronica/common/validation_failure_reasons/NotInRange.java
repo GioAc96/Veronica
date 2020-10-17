@@ -1,12 +1,11 @@
 package rocks.gioac96.veronica.common.validation_failure_reasons;
 
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
 
-public class NotInRange extends Builder<ValidationFailureReason> implements BuildsMultipleInstances {
+public class NotInRange extends ConfigurableProvider<ValidationFailureReason> {
 
     protected Double minValue;
     protected Double maxValue;
@@ -53,7 +52,7 @@ public class NotInRange extends Builder<ValidationFailureReason> implements Buil
 
         return ValidationFailureReason.builder()
             .message("value must be between " + minValue + " and " + maxValue)
-            .build();
+            .provide();
 
     }
 

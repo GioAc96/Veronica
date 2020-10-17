@@ -40,7 +40,7 @@ public class CommonValidationFailureReasons {
         return new NotInRange()
             .minValue(minValue)
             .maxValue(maxValue)
-            .build();
+            .provide();
 
     }
 
@@ -48,7 +48,7 @@ public class CommonValidationFailureReasons {
 
         return new ValueTooBig()
             .maxValue(maxValue)
-            .build();
+            .provide();
 
     }
 
@@ -56,7 +56,7 @@ public class CommonValidationFailureReasons {
 
         return new ValueTooSmall()
             .minValue(minValue)
-            .build();
+            .provide();
 
     }
 

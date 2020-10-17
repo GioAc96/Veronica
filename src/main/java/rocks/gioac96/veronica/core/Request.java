@@ -12,35 +12,20 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 
 /**
  * Http Request.
  */
+@Getter
 public class Request {
 
-    @Getter
     @Setter
     private static Charset COOKIE_VALUE_CHARSET = StandardCharsets.UTF_8;
-
-    @Getter
-    @NonNull
     protected final HttpMethod httpMethod;
-
-    @Getter
-    @NonNull
     protected final String body;
-
-    @Getter
-    @NonNull
     protected final Headers headers;
-
-    @Getter
-    @NonNull
     protected final URI uri;
-
-    @Getter
     protected final boolean secure;
 
     @Getter(lazy = true)
@@ -80,11 +65,7 @@ public class Request {
 
     public static RequestBuilder builder() {
 
-        class RequestBuilderImpl extends RequestBuilder implements BuildsMultipleInstances {
-
-        }
-
-        return new RequestBuilderImpl();
+        return new RequestBuilder();
 
     }
 
@@ -178,7 +159,7 @@ public class Request {
     }
 
     @Getter(AccessLevel.PROTECTED)
-    public abstract static class RequestBuilder extends Builder<Request> {
+    public static class RequestBuilder extends ConfigurableProvider<Request> {
 
         private HttpMethod httpMethod;
         private String body;
@@ -232,8 +213,7 @@ public class Request {
         @Override
         protected boolean isValid() {
 
-            return super.isValid()
-                && httpMethod != null
+            return httpMethod != null
                 && body != null
                 && headers != null
                 && uri != null

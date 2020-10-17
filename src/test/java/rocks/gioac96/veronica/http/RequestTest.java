@@ -98,7 +98,7 @@ class RequestTest {
             .uri(uriMock)
             .secure(false)
             .httpExchange(exchangeMock)
-            .build();
+            .provide();
 
         assertEquals(path, request.getPath());
 
@@ -118,7 +118,7 @@ class RequestTest {
             .uri(uriMock)
             .secure(false)
             .httpExchange(exchangeMock)
-            .build();
+            .provide();
 
         assertEquals(expected.size(), request.getQueryMap().size());
 

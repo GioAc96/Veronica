@@ -36,7 +36,7 @@ public class NumericPredicateTest {
             ValidationFailureData.builder()
                 .fieldName("test")
                 .failureReason(CommonValidationFailureReasons.notNumeric())
-                .build()
+                .provide()
         );
 
     }
@@ -55,7 +55,7 @@ public class NumericPredicateTest {
 
         ValidationFailureReason failureReason = ValidationFailureReason.builder()
             .message("number is not even")
-            .build();
+            .provide();
 
         assertValidationFails(
             CommonValidationRules.numericPredicate(val -> val % 2 == 0d, failureReason),
@@ -64,7 +64,7 @@ public class NumericPredicateTest {
             ValidationFailureData.builder()
                 .fieldName("test")
                 .failureReason(failureReason)
-                .build()
+                .provide()
         );
 
     }
@@ -82,7 +82,7 @@ public class NumericPredicateTest {
 
         ValidationFailureReason failureReason = ValidationFailureReason.builder()
             .message("number is not even")
-            .build();
+            .provide();
 
         CommonValidationRules.numericPredicate(val -> val % 2 == 0d, failureReason).validate(
             "test",
@@ -96,7 +96,7 @@ public class NumericPredicateTest {
 
         assertThrows(
             CreationException.class,
-            () -> new NumericPredicateRule().build()
+            () -> new NumericPredicateRule().provide()
         );
 
     }

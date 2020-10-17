@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Router;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
 
 public abstract class E2ETest {
 
@@ -50,7 +49,7 @@ public abstract class E2ETest {
 
         for (Map.Entry<Request.RequestBuilder, Consumer<Response>> testCase : getTestCases().entrySet()) {
 
-            Request request = testCase.getKey().build();
+            Request request = testCase.getKey().provide();
             Consumer<Response> assertions = testCase.getValue();
 
             try {
@@ -69,7 +68,7 @@ public abstract class E2ETest {
 
     }
 
-    protected static class MockRequestBuilder extends Request.RequestBuilder implements BuildsMultipleInstances {
+    protected static class MockRequestBuilder extends Request.RequestBuilder  {
 
         private String path = null;
         private String query = null;

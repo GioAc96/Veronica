@@ -16,29 +16,29 @@ public class Routing {
                 .requestMatcher(get("/home"))
                 .requestHandler(req -> Response.builder()
                     .body("This is the homepage")
-                    .build()
+                    .provide()
                 )
-                .build()
+                .provide()
             )
             .route(Route.builder()
                 .requestMatcher(get("/about"))
                 .requestHandler(req -> Response.builder()
                     .body("This is the about page")
-                    .build()
+                    .provide()
                 )
-                .build()
+                .provide()
             )
             .defaultRequestHandler(req -> Response.builder()
                 .body("We could not find what you're looking for")
-                .build()
-            ).build();
+                .provide()
+            ).provide();
 
         int port = 8000;
 
         Application app = Application.builder()
             .port(port)
             .router(router)
-            .build();
+            .provide();
 
         app.start();
 

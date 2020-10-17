@@ -14,8 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.Tuple;
 
@@ -37,11 +36,7 @@ public class Router implements RequestHandler {
 
     public static RouterBuilder builder() {
 
-        class RouterBuilderImpl extends RouterBuilder implements BuildsMultipleInstances {
-
-        }
-
-        return new RouterBuilderImpl();
+        return new RouterBuilder();
 
     }
 
@@ -227,13 +222,55 @@ public class Router implements RequestHandler {
 
     }
 
-    public abstract static class RouterBuilder extends Builder<Router> {
+    public static class RouterBuilder extends ConfigurableProvider<Router> {
 
-        private final Map<HttpMethod, RouteTree> methodRouteTrees = new HashMap<>();
-        private final List<RoutingGuard> routingGuards = new LinkedList<>();
         private final List<Route> routesToRegister = new LinkedList<>();
-        private RequestHandler defaultRequestHandler;
-        private String pathPrefix = null;
+
+        protected Map<HttpMethod, RouteTree> methodRouteTrees = new HashMap<>();
+        protected List<RoutingGuard> routingGuards = new LinkedList<>();
+        protected RequestHandler defaultRequestHandler;
+        protected String pathPrefix = null;
+
+
+        @Override
+        protected boolean isValid() {
+
+            return methodRouteTrees != null
+                && routingGuards != null
+                && defaultRequestHandler != null
+                && (pathPrefix == null || (pathPrefix.startsWith("/") & !pathPrefix.endsWith("/"))); // TODO throw an exception
+
+        }
+
+        @Override
+        protected Router instantiate() {
+
+            for (Route route : routesToRegister) {
+
+                Predicate<Request> aggregateCondition = aggregateMatchingConditions(route.getRequestMatcher());
+
+                Set<HttpMethod> httpMethods = aggregateHttpMethods(route.getRequestMatcher());
+
+                for (HttpMethod httpMethod : httpMethods) {
+
+                    for (String pathPattern : route.getRequestMatcher().getPathPatterns()) {
+
+                        register(
+                            httpMethod,
+                            pathPattern,
+                            aggregateCondition,
+                            route.getRequestHandler()
+                        );
+
+                    }
+
+                }
+
+            }
+
+            return new Router(this);
+
+        }
 
         private static Set<HttpMethod> aggregateHttpMethods(RequestMatcher requestMatcher) {
 
@@ -285,9 +322,9 @@ public class Router implements RequestHandler {
 
         }
 
-        public RouterBuilder defaultRequestHandler(@NonNull Provider<RequestHandler> requestHandler) {
+        public RouterBuilder defaultRequestHandler(@NonNull Provider<RequestHandler> requestHandlerProvider) {
 
-            return defaultRequestHandler(requestHandler.provide());
+            return defaultRequestHandler(requestHandlerProvider.provide());
 
         }
 
@@ -299,9 +336,9 @@ public class Router implements RequestHandler {
 
         }
 
-        public RouterBuilder route(@NonNull Provider<Route> route) {
+        public RouterBuilder route(@NonNull Provider<Route> routeProvider) {
 
-            return route(route.provide());
+            return route(routeProvider.provide());
 
         }
 
@@ -313,9 +350,9 @@ public class Router implements RequestHandler {
             return route(Route.builder()
                 .requestMatcher(RequestMatcher.builder()
                     .pathPattern(pathPattern)
-                    .build())
+                    .provide())
                 .requestHandler(requestHandler)
-                .build()
+                .provide()
             );
 
         }
@@ -330,9 +367,9 @@ public class Router implements RequestHandler {
                 .requestMatcher(RequestMatcher.builder()
                     .pathPattern(pathPattern)
                     .httpMethod(httpMethod)
-                    .build())
+                    .provide())
                 .requestHandler(requestHandler)
-                .build()
+                .provide()
             );
 
         }
@@ -345,7 +382,7 @@ public class Router implements RequestHandler {
             return route(Route.builder()
                 .requestMatcher(requestMatcher)
                 .requestHandler(requestHandler)
-                .build()
+                .provide()
             );
 
         }
@@ -358,9 +395,9 @@ public class Router implements RequestHandler {
 
         }
 
-        public RouterBuilder routingGuard(@NonNull Provider<RoutingGuard> routingGuard) {
+        public RouterBuilder routingGuard(@NonNull Provider<RoutingGuard> routingGuardProvider) {
 
-            return routingGuard(routingGuard.provide());
+            return routingGuard(routingGuardProvider.provide());
 
         }
 
@@ -372,9 +409,9 @@ public class Router implements RequestHandler {
 
         }
 
-        public RouterBuilder pathPrefix(@NonNull Provider<String> pathPrefix) {
+        public RouterBuilder pathPrefix(@NonNull Provider<String> pathPrefixProvider) {
 
-            return pathPrefix(pathPrefix.provide());
+            return pathPrefix(pathPrefixProvider.provide());
 
         }
 
@@ -515,45 +552,6 @@ public class Router implements RequestHandler {
                 propagateNewStarPath(child.getValue(), condition, route);
 
             }
-
-        }
-
-        @Override
-        protected boolean isValid() {
-
-            return super.isValid()
-                && defaultRequestHandler != null
-                && (pathPrefix == null || (pathPrefix.startsWith("/") & !pathPrefix.endsWith("/"))); //TODO throw an exception
-
-        }
-
-        @Override
-        protected Router instantiate() {
-
-            for (Route route : routesToRegister) {
-
-                Predicate<Request> aggregateCondition = aggregateMatchingConditions(route.getRequestMatcher());
-
-                Set<HttpMethod> httpMethods = aggregateHttpMethods(route.getRequestMatcher());
-
-                for (HttpMethod httpMethod : httpMethods) {
-
-                    for (String pathPattern : route.getRequestMatcher().getPathPatterns()) {
-
-                        register(
-                            httpMethod,
-                            pathPattern,
-                            aggregateCondition,
-                            route.getRequestHandler()
-                        );
-
-                    }
-
-                }
-
-            }
-
-            return new Router(this);
 
         }
 

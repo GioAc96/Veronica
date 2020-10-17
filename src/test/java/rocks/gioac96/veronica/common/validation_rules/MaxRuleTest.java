@@ -35,7 +35,7 @@ class MaxRuleTest {
             ValidationFailureData.builder()
                 .fieldName("test")
                 .failureReason(CommonValidationFailureReasons.tooBig(max))
-                .build()
+                .provide()
         );
 
     }
@@ -61,7 +61,7 @@ class MaxRuleTest {
     void testInvalidMax() {
 
         assertThrows(CreationException.class, () -> {
-            new MaxRule().build();
+            new MaxRule().provide();
         });
 
 

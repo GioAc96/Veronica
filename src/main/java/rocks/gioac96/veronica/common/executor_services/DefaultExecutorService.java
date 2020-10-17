@@ -1,17 +1,16 @@
 package rocks.gioac96.veronica.common.executor_services;
 
 import java.util.concurrent.ExecutorService;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsSingleInstance;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.providers.Singleton;
 
 /**
  * Framework's default executor service.
  */
 public class DefaultExecutorService
-    extends Builder<ExecutorService>
-    implements BuildsSingleInstance {
+    extends ConfigurableProvider<ExecutorService>
+    implements Singleton {
 
-    @Override
     protected ExecutorService instantiate() {
 
         return new DefaultPriorityExecutorService()

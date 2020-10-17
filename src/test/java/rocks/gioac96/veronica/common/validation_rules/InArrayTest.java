@@ -32,13 +32,13 @@ class InArrayTest {
                 .allowedValue("two")
                 .allowedValue("three")
                 .allowedValue("four")
-                .build(),
+                .provide(),
             "test",
             "five",
             ValidationFailureData.builder()
                 .fieldName("test")
                 .failureReason(CommonValidationFailureReasons.notInArray())
-                .build()
+                .provide()
         );
 
     }
@@ -55,7 +55,7 @@ class InArrayTest {
             .allowedValue("five")
             .allowedValue("six")
             .allowedValue("seven")
-            .build()
+            .provide()
             .validate("test", value);
 
     }
@@ -63,7 +63,7 @@ class InArrayTest {
     @Test
     void testInArrayInvalid() {
 
-        assertThrows(CreationException.class, () -> new InArray().build());
+        assertThrows(CreationException.class, () -> new InArray().provide());
 
     }
 

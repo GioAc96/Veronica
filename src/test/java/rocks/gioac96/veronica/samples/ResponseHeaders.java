@@ -14,8 +14,8 @@ public class ResponseHeaders {
         .defaultRequestHandler(request -> Response.builder()
             .header("content-type", "application/json")
             .body("{\"hello\": \"world\"}")
-            .build())
-        .build();
+            .provide())
+        .provide();
 
     public static void main(String[] args) throws IOException, CreationException {
 
@@ -23,7 +23,7 @@ public class ResponseHeaders {
         Application application = Application.builder()
             .port(80)
             .router(new ResponseHeaders().router)
-            .build();
+            .provide();
 
         application.start();
 

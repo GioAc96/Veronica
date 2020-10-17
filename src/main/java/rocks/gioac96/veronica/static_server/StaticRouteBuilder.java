@@ -8,28 +8,25 @@ import rocks.gioac96.veronica.core.Pipeline;
 import rocks.gioac96.veronica.core.RequestMatcher;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Route;
-import rocks.gioac96.veronica.providers.Builder;
-import rocks.gioac96.veronica.providers.BuildsMultipleInstances;
+import rocks.gioac96.veronica.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.providers.Provider;
 
 /**
  * Builder for static server routes.
  *
  * @param <P> the type of the file permissions
  */
-public class StaticRouteBuilder<
-    P
-    > extends Builder<Route>
-    implements BuildsMultipleInstances {
+public class StaticRouteBuilder<P> extends ConfigurableProvider<Route> {
 
-    private FilePermissionsManager<P> permissionsManager;
-    private FilePermissionsDecider<P> permissionDecider;
-    private Path baseDir;
-    private RequestMatcher requestMatcher = null;
-    private Response accessDeniedResponse = CommonResponses.forbidden();
-    private Response fileNotFoundResponse = CommonResponses.notFound();
-    private ContentDisposition contentDisposition = null;
-    private Pipeline.PipelineBuilder pipelineSchematics = null;
-    private String basePath = null;
+    protected FilePermissionsManager<P> permissionsManager;
+    protected FilePermissionsDecider<P> permissionDecider;
+    protected Path baseDir;
+    protected RequestMatcher requestMatcher;
+    protected Response accessDeniedResponse = CommonResponses.forbidden();
+    protected Response fileNotFoundResponse = CommonResponses.notFound();
+    protected ContentDisposition contentDisposition;
+    protected Pipeline.PipelineBuilder pipelineSchematics;
+    protected String basePath;
 
     public StaticRouteBuilder<P> basePath(@NonNull String basePath) {
 
@@ -37,26 +34,28 @@ public class StaticRouteBuilder<
 
             this.basePath = basePath;
 
-            return requestMatcher(RequestMatcher.builder()
+            this.requestMatcher = RequestMatcher.builder()
                 .pathPattern(basePath + "*")
-                .build());
+                .provide();
 
         } else {
 
             this.basePath = basePath + "/";
 
-            return requestMatcher(RequestMatcher.builder()
+            this.requestMatcher = RequestMatcher.builder()
                 .pathPattern(basePath + "/*")
-                .build());
+                .provide();
+
 
         }
 
+        return this;
+
     }
 
-    private StaticRouteBuilder<P> requestMatcher(@NonNull RequestMatcher requestMatcher) {
+    public StaticRouteBuilder<P> basePath(@NonNull Provider<String> basePathProvider) {
 
-        this.requestMatcher = requestMatcher;
-        return this;
+        return basePath(basePathProvider.provide());
 
     }
 
@@ -66,10 +65,17 @@ public class StaticRouteBuilder<
     ) {
 
         this.basePath = basePath;
-        return requestMatcher(requestMatcher);
+        this.requestMatcher = requestMatcher;
+        return this;
 
     }
 
+    public StaticRouteBuilder<P> baseDir(@NonNull Path baseDir) {
+
+        this.baseDir = baseDir.normalize();
+        return this;
+
+    }
 
     public StaticRouteBuilder<P> baseDir(@NonNull String baseDir) {
 
@@ -77,11 +83,9 @@ public class StaticRouteBuilder<
 
     }
 
+    public StaticRouteBuilder<P> baseDir(@NonNull Provider<Path> baseDirProvider) {
 
-    public StaticRouteBuilder<P> baseDir(@NonNull Path baseDir) {
-
-        this.baseDir = baseDir.normalize();
-        return this;
+        return baseDir(baseDirProvider.provide());
 
     }
 
@@ -92,10 +96,22 @@ public class StaticRouteBuilder<
 
     }
 
+    public StaticRouteBuilder<P> permissionDecider(@NonNull Provider<FilePermissionsDecider<P>> permissionDeciderProvider) {
+
+        return permissionDecider(permissionDeciderProvider.provide());
+
+    }
+
     public StaticRouteBuilder<P> permissionManager(@NonNull FilePermissionsManager<P> permissionsManager) {
 
         this.permissionsManager = permissionsManager;
         return this;
+
+    }
+
+    public StaticRouteBuilder<P> permissionManager(@NonNull Provider<FilePermissionsManager<P>> permissionsManagerProvider) {
+
+        return permissionManager(permissionsManagerProvider.provide());
 
     }
 
@@ -106,39 +122,61 @@ public class StaticRouteBuilder<
 
     }
 
+    public StaticRouteBuilder<P> contentDisposition(@NonNull ContentDisposition contentDisposition) {
+
+        this.contentDisposition = contentDisposition;
+        return this;
+
+    }
+
+    public StaticRouteBuilder<P> contentDisposition(@NonNull Provider<ContentDisposition> contentDispositionProvider) {
+
+        return contentDisposition(contentDispositionProvider.provide());
+
+    }
+
     public StaticRouteBuilder<P> disposeInline() {
 
-        this.contentDisposition = ContentDisposition.INLINE;
-        return this;
+        return contentDisposition(ContentDisposition.INLINE);
 
     }
 
     public StaticRouteBuilder<P> disposeAsAttachment() {
 
-        this.contentDisposition = ContentDisposition.ATTACHMENT;
-        return this;
+        return contentDisposition(ContentDisposition.ATTACHMENT);
 
     }
 
-    public StaticRouteBuilder<P> accessDeniedResponse(Response accessDeniedResponse) {
+    public StaticRouteBuilder<P> accessDeniedResponse(@NonNull Response accessDeniedResponse) {
 
         this.accessDeniedResponse = accessDeniedResponse;
         return this;
 
     }
+    
+    public StaticRouteBuilder<P> accessDeniedResponse(@NonNull Provider<Response> accessDeniedResponseProvider) {
 
-    public StaticRouteBuilder<P> fileNotFoundResponse(Response fileNotFoundResponse) {
+        return accessDeniedResponse(accessDeniedResponseProvider.provide());
+
+    }
+
+    public StaticRouteBuilder<P> fileNotFoundResponse(@NonNull Response fileNotFoundResponse) {
 
         this.fileNotFoundResponse = fileNotFoundResponse;
         return this;
 
     }
 
+    public StaticRouteBuilder<P> fileNotFoundResponse(@NonNull Provider<Response> fileNotFoundResponseProvider) {
+
+        return fileNotFoundResponse(fileNotFoundResponseProvider.provide());
+
+    }
+
     @Override
     protected boolean isValid() {
 
-        return super.isValid()
-            && baseDir != null
+        return baseDir != null
             && basePath != null
             && permissionDecider != null
             && permissionsManager != null
@@ -162,7 +200,7 @@ public class StaticRouteBuilder<
                 fileNotFoundResponse,
                 pipelineSchematics
             ))
-            .build();
+            .provide();
 
     }
 
