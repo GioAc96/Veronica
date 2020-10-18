@@ -1,2 +1,10 @@
 rootProject.name = 'veronica'
 
+include 'core'
+include 'validation'
+include 'samples'
+include 'routing'
+include 'file-server'
+include 'auth'
+include 'http-basic-auth'
+
