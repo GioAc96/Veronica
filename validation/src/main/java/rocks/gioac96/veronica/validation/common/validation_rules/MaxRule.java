@@ -1,8 +1,8 @@
-package rocks.gioac96.veronica.core.validation.validation_rules;
+package rocks.gioac96.veronica.validation.common.validation_rules;
 
 import lombok.NonNull;
-import rocks.gioac96.veronica.core.common.CommonValidationFailureReasons;
-import rocks.gioac96.veronica.providers.Provider;
+import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
+import rocks.gioac96.veronica.core.providers.Provider;
 
 public class MaxRule extends NumericPredicateRule {
 

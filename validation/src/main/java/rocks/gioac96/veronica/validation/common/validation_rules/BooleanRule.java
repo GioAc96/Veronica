@@ -1,8 +1,8 @@
-package rocks.gioac96.veronica.core.validation.validation_rules;
+package rocks.gioac96.veronica.validation.common.validation_rules;
 
 import java.util.Arrays;
-import rocks.gioac96.veronica.core.common.CommonValidationFailureReasons;
-import rocks.gioac96.veronica.providers.Singleton;
+import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
+import rocks.gioac96.veronica.core.providers.Singleton;
 
 public class BooleanRule
     extends InArray

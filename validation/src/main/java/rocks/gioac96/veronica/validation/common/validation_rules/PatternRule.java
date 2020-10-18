@@ -1,11 +1,11 @@
-package rocks.gioac96.veronica.core.validation.validation_rules;
+package rocks.gioac96.veronica.validation.common.validation_rules;
 
 import java.util.regex.Pattern;
 import lombok.NonNull;
-import rocks.gioac96.veronica.core.common.CommonValidationFailureReasons;
-import rocks.gioac96.veronica.providers.Provider;
-import validation.ValidationException;
-import validation.ValidationRule;
+import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
+import rocks.gioac96.veronica.core.providers.Provider;
+import rocks.gioac96.veronica.validation.ValidationException;
+import rocks.gioac96.veronica.validation.ValidationRule;
 
 public class PatternRule
     extends ValidationRuleBuilderWithConstantFailureReason {

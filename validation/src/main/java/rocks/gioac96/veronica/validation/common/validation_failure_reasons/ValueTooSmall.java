@@ -1,9 +1,9 @@
-package rocks.gioac96.veronica.core.common.validation_failure_reasons;
+package rocks.gioac96.veronica.validation.common.validation_failure_reasons;
 
 import lombok.NonNull;
-import rocks.gioac96.veronica.providers.ConfigurableProvider;
-import rocks.gioac96.veronica.providers.Provider;
-import validation.ValidationFailureReason;
+import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.core.providers.Provider;
+import rocks.gioac96.veronica.validation.ValidationFailureReason;
 
 public class ValueTooSmall extends ConfigurableProvider<ValidationFailureReason> {
 

@@ -1,7 +1,7 @@
-package rocks.gioac96.veronica.core.common.validation_failure_reasons;
+package rocks.gioac96.veronica.validation.common.validation_failure_reasons;
 
-import rocks.gioac96.veronica.providers.Singleton;
-import validation.ValidationFailureReason;
+import rocks.gioac96.veronica.core.providers.Singleton;
+import rocks.gioac96.veronica.validation.ValidationFailureReason;
 
 public class IsNull
     extends ValidationFailureReason.ValidationFailureReasonBuilder

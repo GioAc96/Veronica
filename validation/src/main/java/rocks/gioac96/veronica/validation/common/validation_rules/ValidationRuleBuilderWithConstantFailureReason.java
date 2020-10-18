@@ -1,11 +1,11 @@
-package rocks.gioac96.veronica.core.validation.validation_rules;
+package rocks.gioac96.veronica.validation.common.validation_rules;
 
 import lombok.NonNull;
-import rocks.gioac96.veronica.core.common.CommonValidationFailureReasons;
-import rocks.gioac96.veronica.providers.ConfigurableProvider;
-import rocks.gioac96.veronica.providers.Provider;
-import validation.ValidationFailureReason;
-import validation.ValidationRule;
+import rocks.gioac96.veronica.validation.ValidationFailureReason;
+import rocks.gioac96.veronica.validation.ValidationRule;
+import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
+import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.core.providers.Provider;
 
 public abstract class ValidationRuleBuilderWithConstantFailureReason
     extends ConfigurableProvider<ValidationRule> {

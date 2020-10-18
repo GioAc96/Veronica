@@ -1,9 +1,9 @@
-package rocks.gioac96.veronica.core.validation.validation_rules;
+package rocks.gioac96.veronica.validation.common.validation_rules;
 
-import rocks.gioac96.veronica.core.common.CommonValidationFailureReasons;
-import rocks.gioac96.veronica.providers.Singleton;
-import validation.ValidationException;
-import validation.ValidationRule;
+import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
+import rocks.gioac96.veronica.core.providers.Singleton;
+import rocks.gioac96.veronica.validation.ValidationException;
+import rocks.gioac96.veronica.validation.ValidationRule;
 
 public class NumericRule
     extends ValidationRuleBuilderWithConstantFailureReason
