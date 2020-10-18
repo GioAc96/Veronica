@@ -10,7 +10,6 @@ import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.common.CommonValidationRules;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 
 public class MinRuleTest {
 
@@ -27,12 +26,8 @@ public class MinRuleTest {
 
         assertValidationFails(
             CommonValidationRules.min(min),
-            "test",
             String.valueOf(value),
-            ValidationFailureData.builder()
-                .fieldName("test")
-                .failureReason(CommonValidationFailureReasons.tooSmall(min))
-                .provide()
+            CommonValidationFailureReasons.tooSmall(min)
         );
 
     }
@@ -50,7 +45,7 @@ public class MinRuleTest {
         double value
     ) throws ValidationException {
 
-        CommonValidationRules.min(min).validate("test", String.valueOf(value));
+        CommonValidationRules.min(min).validate(String.valueOf(value));
 
     }
 

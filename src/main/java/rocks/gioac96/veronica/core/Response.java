@@ -9,32 +9,27 @@ import java.util.List;
 import java.util.Set;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 
 /**
  * Http response.
  */
-@Getter
 public class Response {
 
-    @NonNull
+    @Getter
     protected final HttpStatus httpStatus;
 
-    @Getter
     private byte[] bodyBytes;
 
     @Getter
     private String body;
 
-    @NonNull
+    @Getter
     private final Headers headers;
 
+    @Getter
     private final Set<SetCookieHeader> cookies;
-
-    private final List<ValidationFailureData> validationFailures;
 
     protected Response(ResponseBuilder b) {
 
@@ -43,25 +38,35 @@ public class Response {
         this.bodyBytes = b.bodyBytes;
         this.headers = b.headers;
         this.cookies = b.cookies;
-        this.validationFailures = b.validationFailures;
 
     }
 
+    public byte[] getBodyBytes() {
+
+        if (bodyBytes == null) {
+
+            if (body == null) {
+
+                return new byte[0];
+
+            } else {
+
+                return body.getBytes();
+
+            }
+
+        } else {
+
+            return bodyBytes;
+
+        }
+
+    }
 
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public static ResponseBuilder builder() {
 
-        class ResponseBuilderImpl extends ResponseBuilder {
-
-        }
-
-        return new ResponseBuilderImpl();
-
-    }
-
-    public boolean hasValidationFailures() {
-
-        return validationFailures != null && !validationFailures.isEmpty();
+        return new ResponseBuilder();
 
     }
 
@@ -116,12 +121,11 @@ public class Response {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public static class ResponseBuilder extends ConfigurableProvider<Response> {
 
-        private Set<SetCookieHeader> cookies = null;
+        private Set<SetCookieHeader> cookies;
         private HttpStatus httpStatus = HttpStatus.OK;
         private byte[] bodyBytes;
         private String body;
         private Headers headers = new Headers();
-        private List<ValidationFailureData> validationFailures = null;
 
         public ResponseBuilder httpStatus(@NonNull HttpStatus httpStatus) {
 
@@ -235,43 +239,6 @@ public class Response {
             this.cookies.add(cookie);
 
             return this;
-
-        }
-
-        public ResponseBuilder validationFailures(@NonNull List<ValidationFailureData> validationFailures) {
-
-            if (this.validationFailures == null) {
-
-                this.validationFailures = validationFailures;
-
-            } else {
-
-                this.validationFailures.addAll(validationFailures);
-
-            }
-
-            return this;
-
-        }
-
-
-        public ResponseBuilder validationFailure(@NonNull ValidationFailureData validationFailure) {
-
-            if (this.validationFailures == null) {
-
-                validationFailures = new LinkedList<>();
-
-            }
-
-            validationFailures.add(validationFailure);
-
-            return this;
-
-        }
-
-        public ResponseBuilder validationFailure(@NonNull Provider<ValidationFailureData> validationFailure) {
-
-            return validationFailure(validationFailure.provide());
 
         }
 

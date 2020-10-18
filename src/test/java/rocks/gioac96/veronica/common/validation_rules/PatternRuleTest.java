@@ -7,7 +7,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.common.CommonValidationRules;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
 
 class PatternRuleTest {
@@ -25,12 +24,8 @@ class PatternRuleTest {
 
         assertValidationFails(
             CommonValidationRules.pattern(pattern, ValidationFailureReason.builder().message(message).provide()),
-            "test",
             value,
-            ValidationFailureData.builder()
-                .fieldName("test")
-                .failureReason(ValidationFailureReason.builder().message(message).provide())
-                .provide()
+            ValidationFailureReason.builder().message(message).provide()
         );
 
     }
@@ -47,12 +42,8 @@ class PatternRuleTest {
 
         assertValidationFails(
             CommonValidationRules.pattern(pattern),
-            "test",
             value,
-            ValidationFailureData.builder()
-                .fieldName("test")
-                .failureReason(CommonValidationFailureReasons.patternNotMatches())
-                .provide()
+            CommonValidationFailureReasons.patternNotMatches()
         );
 
     }
@@ -67,7 +58,7 @@ class PatternRuleTest {
         String pattern
     ) throws ValidationException {
 
-        CommonValidationRules.pattern(pattern).validate("test", value);
+        CommonValidationRules.pattern(pattern).validate(value);
 
     }
 

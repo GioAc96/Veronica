@@ -5,7 +5,6 @@ import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 import rocks.gioac96.veronica.validation.ValidationRule;
 
 public class PatternRule
@@ -63,14 +62,11 @@ public class PatternRule
     @Override
     protected ValidationRule instantiate() {
 
-        return (fieldName, fieldValue) -> {
+        return fieldValue -> {
 
             if (!pattern.matcher(fieldValue).find()) {
 
-                throw new ValidationException(ValidationFailureData.builder()
-                    .fieldName(fieldName)
-                    .failureReason(failureReason)
-                    .provide());
+                throw new ValidationException(failureReason);
 
             }
 

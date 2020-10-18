@@ -30,7 +30,7 @@ public class ResponseHeadersTest extends E2ETest {
     }
 
     @Override
-    protected Router getRouter() {
+    protected Router getRequestHandler() {
 
         return new ResponseHeaders().getRouter();
 

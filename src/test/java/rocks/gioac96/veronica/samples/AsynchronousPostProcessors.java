@@ -6,10 +6,12 @@ import lombok.Getter;
 import rocks.gioac96.veronica.common.CommonRequestHandlers;
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.core.Application;
-import rocks.gioac96.veronica.core.Pipeline;
-import rocks.gioac96.veronica.core.PostProcessor;
+import rocks.gioac96.veronica.core.Request;
+import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.pipeline.Pipeline;
 import rocks.gioac96.veronica.core.Route;
 import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.core.pipeline.PostProcessor;
 
 public class AsynchronousPostProcessors {
 
@@ -21,15 +23,20 @@ public class AsynchronousPostProcessors {
         .route(Route.builder()
             .requestMatcher(get("/async"))
             .requestHandler(Pipeline.builder()
-                .requestHandler(request -> CommonResponses.ok())
-                .postProcessor((PostProcessor.Asynchronous) (request, response) -> sleep())
+                .postProcessor((request, response, pipelineData) -> {
+                    sleep();
+                })
+                .stage((request, responseBuilder, data) -> CommonResponses.ok())
                 .provide())
             .provide())
         .route(Route.builder()
             .requestMatcher(get("/sync"))
             .requestHandler(Pipeline.builder()
-                .requestHandler(CommonRequestHandlers.ok())
-                .postProcessor((request, response) -> sleep())
+                .stage((request, responseBuilder, data) -> {
+                    sleep();
+                    return null;
+                })
+                .stage((request, responseBuilder, data) -> CommonResponses.ok())
                 .provide())
             .provide())
         .defaultRequestHandler(CommonRequestHandlers.notFound())

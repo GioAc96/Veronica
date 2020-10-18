@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 
 class InArrayTest {
 
@@ -33,12 +32,8 @@ class InArrayTest {
                 .allowedValue("three")
                 .allowedValue("four")
                 .provide(),
-            "test",
             "five",
-            ValidationFailureData.builder()
-                .fieldName("test")
-                .failureReason(CommonValidationFailureReasons.notInArray())
-                .provide()
+            CommonValidationFailureReasons.notInArray()
         );
 
     }
@@ -56,7 +51,7 @@ class InArrayTest {
             .allowedValue("six")
             .allowedValue("seven")
             .provide()
-            .validate("test", value);
+            .validate(value);
 
     }
 

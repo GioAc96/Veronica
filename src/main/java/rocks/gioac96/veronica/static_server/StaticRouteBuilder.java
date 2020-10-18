@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonResponses;
-import rocks.gioac96.veronica.core.Pipeline;
+import rocks.gioac96.veronica.core.pipeline.Pipeline;
 import rocks.gioac96.veronica.core.RequestMatcher;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Route;
@@ -25,7 +25,6 @@ public class StaticRouteBuilder<P> extends ConfigurableProvider<Route> {
     protected Response accessDeniedResponse = CommonResponses.forbidden();
     protected Response fileNotFoundResponse = CommonResponses.notFound();
     protected ContentDisposition contentDisposition;
-    protected Pipeline.PipelineBuilder pipelineSchematics;
     protected String basePath;
 
     public StaticRouteBuilder<P> basePath(@NonNull String basePath) {
@@ -114,14 +113,6 @@ public class StaticRouteBuilder<P> extends ConfigurableProvider<Route> {
         return permissionManager(permissionsManagerProvider.provide());
 
     }
-
-    public StaticRouteBuilder<P> pipelineSchematics(@NonNull Pipeline.PipelineBuilder pipelineSchematics) {
-
-        this.pipelineSchematics = pipelineSchematics;
-        return this;
-
-    }
-
     public StaticRouteBuilder<P> contentDisposition(@NonNull ContentDisposition contentDisposition) {
 
         this.contentDisposition = contentDisposition;
@@ -197,8 +188,7 @@ public class StaticRouteBuilder<P> extends ConfigurableProvider<Route> {
                 baseDir,
                 basePath,
                 accessDeniedResponse,
-                fileNotFoundResponse,
-                pipelineSchematics
+                fileNotFoundResponse
             ))
             .provide();
 

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import rocks.gioac96.veronica.core.HttpMethod;
 import rocks.gioac96.veronica.core.Request;
+import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Router;
 import rocks.gioac96.veronica.samples.HelloWorld;
@@ -44,9 +45,9 @@ public class HelloWorldTest extends E2ETest {
     }
 
     @Override
-    protected Router getRouter() {
+    protected RequestHandler getRequestHandler() {
 
-        return new HelloWorld().getRouter();
+        return new HelloWorld().getRequestHandler();
 
     }
 

@@ -7,7 +7,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.common.CommonValidationRules;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 
 class EmailRuleTest {
 
@@ -24,12 +23,8 @@ class EmailRuleTest {
 
         assertValidationFails(
             CommonValidationRules.email(),
-            "test",
             value,
-            ValidationFailureData.builder()
-                .fieldName("test")
-                .failureReason(CommonValidationFailureReasons.invalidEmail())
-                .provide()
+            CommonValidationFailureReasons.invalidEmail()
         );
 
     }
@@ -43,7 +38,7 @@ class EmailRuleTest {
     })
     void testEmailOk(String value) throws ValidationException {
 
-        CommonValidationRules.email().validate("test", value);
+        CommonValidationRules.email().validate(value);
 
     }
 

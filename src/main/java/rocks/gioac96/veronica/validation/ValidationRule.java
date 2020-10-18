@@ -5,6 +5,6 @@ package rocks.gioac96.veronica.validation;
  */
 public interface ValidationRule {
 
-    void validate(String fieldName, String fieldValue) throws ValidationException;
+    void validate(String fieldValue) throws ValidationException;
 
 }

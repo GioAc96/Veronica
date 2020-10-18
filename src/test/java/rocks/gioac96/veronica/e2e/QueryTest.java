@@ -76,7 +76,7 @@ public class QueryTest extends E2ETest {
     }
 
     @Override
-    protected Router getRouter() {
+    protected Router getRequestHandler() {
 
         return new Query().getRouter();
 

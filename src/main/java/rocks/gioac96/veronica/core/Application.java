@@ -77,15 +77,20 @@ public final class Application {
             exchange.getResponseHeaders().putAll(response.getHeaders());
 
             // Cookies
-            List<String> cookieHeaders = new ArrayList<>();
 
-            for (SetCookieHeader httpCookie : response.getCookies()) {
+            if (response.getCookies() != null) {
 
-                cookieHeaders.add(httpCookie.toHeaderString());
+                List<String> cookieHeaders = new ArrayList<>();
+
+                for (SetCookieHeader httpCookie : response.getCookies()) {
+
+                    cookieHeaders.add(httpCookie.toHeaderString());
+
+                }
+
+                exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
 
             }
-
-            exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
 
             // Send response headers
             exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBodyBytes().length);

@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import rocks.gioac96.veronica.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.providers.CreationException;
 import rocks.gioac96.veronica.validation.ValidationException;
-import rocks.gioac96.veronica.validation.ValidationFailureData;
 
 class BetweenRuleTest {
 
@@ -32,12 +31,8 @@ class BetweenRuleTest {
 
         assertValidationFails(
             between(min, max),
-            "test",
             String.valueOf(value),
-            ValidationFailureData.builder()
-                .fieldName("test")
-                .failureReason(CommonValidationFailureReasons.notInRange(min, max))
-                .provide()
+            CommonValidationFailureReasons.notInRange(min, max)
         );
 
     }
@@ -56,7 +51,7 @@ class BetweenRuleTest {
         double max
     ) throws ValidationException {
 
-        between(min, max).validate("test", String.valueOf(value));
+        between(min, max).validate(String.valueOf(value));
 
     }
 

@@ -1,43 +1,42 @@
 package rocks.gioac96.veronica.auth.http_basic;
 
 import lombok.NonNull;
-import rocks.gioac96.veronica.auth.AuthenticationException;
 import rocks.gioac96.veronica.auth.Credentials;
 import rocks.gioac96.veronica.auth.CredentialsChecker;
 import rocks.gioac96.veronica.common.CommonResponses;
-import rocks.gioac96.veronica.core.PreFilter;
+import rocks.gioac96.veronica.core.pipeline.PipelineStage;
 import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 
 /**
  * Http basic authentication filter builder.
  */
-public class BasicAuthFilterBuilder extends ConfigurableProvider<PreFilter> {
+public class BasicAuthFilterBuilder<D extends HoldsBasicAuthenticationData> extends ConfigurableProvider<PipelineStage<D>> {
 
     protected CredentialsChecker credentialsChecker;
     protected String realm;
 
-    public BasicAuthFilterBuilder credentialsChecker(@NonNull CredentialsChecker credentialsChecker) {
+    public BasicAuthFilterBuilder<D> credentialsChecker(@NonNull CredentialsChecker credentialsChecker) {
 
         this.credentialsChecker = credentialsChecker;
         return this;
 
     }
 
-    public BasicAuthFilterBuilder credentialsChecker(@NonNull Provider<CredentialsChecker> credentialsCheckerProvider) {
+    public BasicAuthFilterBuilder<D> credentialsChecker(@NonNull Provider<CredentialsChecker> credentialsCheckerProvider) {
 
         return credentialsChecker(credentialsCheckerProvider.provide());
 
     }
 
-    public BasicAuthFilterBuilder realm(@NonNull String realm) {
+    public BasicAuthFilterBuilder<D> realm(String realm) {
 
         this.realm = realm;
         return this;
 
     }
 
-    public BasicAuthFilterBuilder realm(@NonNull Provider<String> realm) {
+    public BasicAuthFilterBuilder<D> realm(@NonNull Provider<String> realm) {
 
         return realm(realm.provide());
 
@@ -51,25 +50,35 @@ public class BasicAuthFilterBuilder extends ConfigurableProvider<PreFilter> {
     }
 
     @Override
-    protected PreFilter instantiate() {
+    protected PipelineStage<D> instantiate() {
 
-        return request -> {
+        return (request, responseBuilder, data) -> {
 
             try {
 
                 Credentials credentials = BasicAuth.fromRequest(request);
 
-                if (!credentialsChecker.check(credentials)) {
+                if (credentialsChecker.check(credentials)) {
 
-                    throw new AuthenticationException(CommonResponses.promptBasicAuth(realm));
+                    data.setBasicAuthenticationResult(credentials, true);
+
+                } else {
+
+                    data.setBasicAuthenticationResult(credentials, false);
+
+                    return CommonResponses.promptBasicAuth(realm);
 
                 }
 
             } catch (BasicAuth.BasicAuthCredentialsParsingException e) {
 
-                throw new AuthenticationException(e, CommonResponses.promptBasicAuth(realm));
+                data.setBasicAuthenticationResult(null, false);
+
+                return CommonResponses.promptBasicAuth(realm);
 
             }
+
+            return null;
 
         };
     }

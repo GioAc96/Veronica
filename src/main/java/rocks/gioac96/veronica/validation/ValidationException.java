@@ -8,21 +8,21 @@ import lombok.Getter;
 @Getter
 public class ValidationException extends Exception {
 
-    private final ValidationFailureData validationFailureData;
+    private final ValidationFailureReason validationFailureReason;
 
-    public ValidationException(Throwable cause, ValidationFailureData validationFailureData) {
+    public ValidationException(Throwable cause, ValidationFailureReason validationFailureReason) {
 
         super(cause);
 
-        this.validationFailureData = validationFailureData;
+        this.validationFailureReason = validationFailureReason;
 
     }
 
-    public ValidationException(ValidationFailureData validationFailureData) {
+    public ValidationException(ValidationFailureReason validationFailureReason) {
 
         super();
 
-        this.validationFailureData = validationFailureData;
+        this.validationFailureReason = validationFailureReason;
 
     }
 

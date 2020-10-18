@@ -2,7 +2,6 @@ package rocks.gioac96.veronica.static_server;
 
 import java.nio.file.Path;
 import rocks.gioac96.veronica.common.CommonResponses;
-import rocks.gioac96.veronica.core.Pipeline;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.Response;
@@ -26,8 +25,7 @@ class StaticFileRequestHandler<P> implements RequestHandler {
         Path baseDir,
         String basePath,
         Response accessDeniedResponse,
-        Response fileNotFoundResponse,
-        Pipeline.PipelineBuilder pipelineSchematics
+        Response fileNotFoundResponse
     ) {
 
         this.contentDisposition = contentDisposition;
@@ -38,21 +36,11 @@ class StaticFileRequestHandler<P> implements RequestHandler {
         this.accessDeniedResponse = accessDeniedResponse;
         this.fileNotFoundResponse = fileNotFoundResponse;
 
-        if (pipelineSchematics == null) {
-
-            this.requestHandler = getDefaultHandler(this);
-
-        } else {
-
-            this.requestHandler = pipelineSchematics
-                .requestHandler(getDefaultHandler(this))
-                .provide();
-
-        }
+        this.requestHandler = getDefaultRequestHandler(this);
 
     }
 
-    private static <P> RequestHandler getDefaultHandler(
+    private static <P> RequestHandler getDefaultRequestHandler(
         StaticFileRequestHandler<P> instance
     ) {
 
