@@ -1,5 +1,5 @@
 plugins {
-    id 'io.freefair.lombok' version '5.2.1'
+    id 'io.freefair.lombok'
 }
 
 repositories {
@@ -18,11 +18,7 @@ test {
 dependencies {
 
     implementation project(':core')
-    implementation project(':routing')
-    implementation project(':validation')
-    implementation project(':file-server')
     implementation project(':auth')
-    implementation project(':auth:http-basic')
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.5.7'
@@ -31,6 +27,7 @@ dependencies {
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.7.0-M1'
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0-M1'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.5.7'
+
 
 
 }
