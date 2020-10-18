@@ -2,8 +2,7 @@ package rocks.gioac96.veronica.common.routing_guards;
 
 import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonResponses;
-import rocks.gioac96.veronica.common.responses.Redirect;
-import rocks.gioac96.veronica.core.RoutingGuard;
+import rocks.gioac96.veronica.RoutingGuard;
 import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 

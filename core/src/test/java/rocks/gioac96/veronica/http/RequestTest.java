@@ -14,8 +14,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
-import rocks.gioac96.veronica.core.HttpMethod;
-import rocks.gioac96.veronica.core.Request;
+import rocks.gioac96.veronica.HttpMethod;
+import rocks.gioac96.veronica.Request;
 
 class RequestTest {
 

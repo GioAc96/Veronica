@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core;
+package rocks.gioac96.veronica;
 
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;

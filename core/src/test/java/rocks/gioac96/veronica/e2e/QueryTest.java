@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import rocks.gioac96.veronica.core.HttpMethod;
-import rocks.gioac96.veronica.core.Request;
-import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.HttpMethod;
+import rocks.gioac96.veronica.Request;
+import rocks.gioac96.veronica.Response;
+import rocks.gioac96.veronica.Router;
 import rocks.gioac96.veronica.samples.Query;
 
 public class QueryTest extends E2ETest {

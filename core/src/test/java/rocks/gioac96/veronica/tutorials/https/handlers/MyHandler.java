@@ -1,7 +1,7 @@
 package rocks.gioac96.veronica.tutorials.https.handlers;
 
-import rocks.gioac96.veronica.core.RequestHandler;
-import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.RequestHandler;
+import rocks.gioac96.veronica.Response;
 import rocks.gioac96.veronica.providers.ConfigurableProvider;
 
 public class MyHandler extends ConfigurableProvider<RequestHandler> {

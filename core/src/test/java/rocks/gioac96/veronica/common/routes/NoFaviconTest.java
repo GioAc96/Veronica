@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import org.junit.jupiter.api.Test;
 import rocks.gioac96.veronica.common.request_handlers.NotFound;
 import rocks.gioac96.veronica.common.request_matchers.Favicon;
-import rocks.gioac96.veronica.core.RequestHandler;
+import rocks.gioac96.veronica.RequestHandler;
 
 class NoFaviconTest {
 

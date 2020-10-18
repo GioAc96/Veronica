@@ -7,10 +7,10 @@ import static org.mockito.Mockito.when;
 
 import java.net.URI;
 import org.junit.jupiter.api.Test;
-import rocks.gioac96.veronica.core.HttpStatus;
-import rocks.gioac96.veronica.core.Request;
-import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.RoutingGuard;
+import rocks.gioac96.veronica.HttpStatus;
+import rocks.gioac96.veronica.Request;
+import rocks.gioac96.veronica.Response;
+import rocks.gioac96.veronica.RoutingGuard;
 
 class RedirectToSecureTest {
 

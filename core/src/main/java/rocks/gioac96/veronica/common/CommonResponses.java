@@ -12,7 +12,7 @@ import rocks.gioac96.veronica.common.responses.Ok;
 import rocks.gioac96.veronica.common.responses.PromptBasicAuth;
 import rocks.gioac96.veronica.common.responses.PromptBasicAuthRealm;
 import rocks.gioac96.veronica.common.responses.Redirect;
-import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.Response;
 import rocks.gioac96.veronica.providers.Provider;
 
 /**

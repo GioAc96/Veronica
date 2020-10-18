@@ -1,7 +1,7 @@
 package rocks.gioac96.veronica.tutorials.multiple_servers;
 
-import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.Response;
+import rocks.gioac96.veronica.Route;
 
 public class RouteA extends Route.RouteBuilder  {
 

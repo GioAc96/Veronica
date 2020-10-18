@@ -1,7 +1,7 @@
 package rocks.gioac96.veronica.common;
 
 import rocks.gioac96.veronica.common.routes.NoFavicon;
-import rocks.gioac96.veronica.core.Route;
+import rocks.gioac96.veronica.Route;
 import rocks.gioac96.veronica.providers.Provider;
 
 /**

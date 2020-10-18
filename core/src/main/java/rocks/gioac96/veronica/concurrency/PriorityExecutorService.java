@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core.concurrency;
+package rocks.gioac96.veronica.concurrency;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;

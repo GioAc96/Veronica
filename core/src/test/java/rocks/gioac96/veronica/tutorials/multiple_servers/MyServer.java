@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.tutorials.multiple_servers;
 
-import rocks.gioac96.veronica.core.ServerBuilder;
+import rocks.gioac96.veronica.ServerBuilder;
 
 public class MyServer extends ServerBuilder {
 

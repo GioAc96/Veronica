@@ -10,10 +10,9 @@ import java.net.URI;
 import java.util.Map;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
-import rocks.gioac96.veronica.core.Request;
-import rocks.gioac96.veronica.core.RequestHandler;
-import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.Request;
+import rocks.gioac96.veronica.RequestHandler;
+import rocks.gioac96.veronica.Response;
 
 public abstract class E2ETest {
 

@@ -1,7 +1,7 @@
 package rocks.gioac96.veronica.common;
 
 import java.util.Arrays;
-import rocks.gioac96.veronica.core.MimeType;
+import rocks.gioac96.veronica.MimeType;
 import rocks.gioac96.veronica.static_server.MimeResolver;
 
 /**

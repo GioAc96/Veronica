@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.tutorials.factories;
 
-import rocks.gioac96.veronica.core.Application;
+import rocks.gioac96.veronica.Application;
 
 public class Launcher {
 

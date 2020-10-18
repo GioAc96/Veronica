@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core;
+package rocks.gioac96.veronica;
 
 import java.net.URLEncoder;
 import java.nio.charset.Charset;

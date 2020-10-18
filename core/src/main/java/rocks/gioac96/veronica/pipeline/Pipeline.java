@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core.pipeline;
+package rocks.gioac96.veronica.pipeline;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -6,19 +6,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.PriorityQueue;
 import lombok.NonNull;
 import rocks.gioac96.veronica.common.CommonExecutorServices;
-import rocks.gioac96.veronica.core.Request;
-import rocks.gioac96.veronica.core.RequestHandler;
-import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.concurrency.PriorityExecutorService;
+import rocks.gioac96.veronica.Request;
+import rocks.gioac96.veronica.RequestHandler;
+import rocks.gioac96.veronica.Response;
+import rocks.gioac96.veronica.concurrency.PriorityExecutorService;
 import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 import rocks.gioac96.veronica.util.HasPriority;
-import rocks.gioac96.veronica.util.PriorityEntry;
-import rocks.gioac96.veronica.util.PriorityQueueUtils;
 
 /**
  * Request pipeline.

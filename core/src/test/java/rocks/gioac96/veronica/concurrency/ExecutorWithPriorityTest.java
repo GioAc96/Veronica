@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core.concurrency;
+package rocks.gioac96.veronica.concurrency;
 
 class ExecutorWithPriorityTest {
 

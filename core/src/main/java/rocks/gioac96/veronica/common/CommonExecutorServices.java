@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutorService;
 import rocks.gioac96.veronica.common.executor_services.DefaultExecutorService;
 import rocks.gioac96.veronica.common.executor_services.DefaultPriorityExecutorService;
 import rocks.gioac96.veronica.common.executor_services.ServerExecutorService;
-import rocks.gioac96.veronica.core.concurrency.PriorityExecutorService;
+import rocks.gioac96.veronica.concurrency.PriorityExecutorService;
 import rocks.gioac96.veronica.providers.Provider;
 
 /**

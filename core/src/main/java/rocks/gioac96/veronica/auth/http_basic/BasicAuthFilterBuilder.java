@@ -5,7 +5,7 @@ import rocks.gioac96.veronica.auth.Credentials;
 import rocks.gioac96.veronica.auth.CredentialsChecker;
 import rocks.gioac96.veronica.auth.HoldsAuthenticationData;
 import rocks.gioac96.veronica.common.CommonResponses;
-import rocks.gioac96.veronica.core.pipeline.PipelineStage;
+import rocks.gioac96.veronica.pipeline.PipelineStage;
 import rocks.gioac96.veronica.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.providers.Provider;
 

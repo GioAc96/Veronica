@@ -1,6 +1,6 @@
-package rocks.gioac96.veronica.core.pipeline;
+package rocks.gioac96.veronica.pipeline;
 
-import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.Response;
 
 public interface PipelineResponseBuilderFactory {
 

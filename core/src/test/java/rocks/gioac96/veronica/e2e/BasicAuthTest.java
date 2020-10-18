@@ -1,16 +1,15 @@
 package rocks.gioac96.veronica.e2e;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static rocks.gioac96.veronica.core.HttpStatus.OK;
-import static rocks.gioac96.veronica.core.HttpStatus.UNAUTHORIZED;
+import static rocks.gioac96.veronica.HttpStatus.OK;
+import static rocks.gioac96.veronica.HttpStatus.UNAUTHORIZED;
 
 import java.util.Base64;
 import org.junit.jupiter.api.Test;
-import rocks.gioac96.veronica.core.HttpMethod;
-import rocks.gioac96.veronica.core.Request;
-import rocks.gioac96.veronica.core.RequestHandler;
-import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.HttpMethod;
+import rocks.gioac96.veronica.Request;
+import rocks.gioac96.veronica.RequestHandler;
+import rocks.gioac96.veronica.Response;
 import rocks.gioac96.veronica.samples.BasicAuth;
 
 public class BasicAuthTest {
