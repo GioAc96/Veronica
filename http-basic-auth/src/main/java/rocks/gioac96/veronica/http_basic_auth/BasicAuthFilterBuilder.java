@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.auth.http_basic;
+package rocks.gioac96.veronica.http_basic_auth;
 
 import lombok.NonNull;
 import rocks.gioac96.veronica.auth.Credentials;

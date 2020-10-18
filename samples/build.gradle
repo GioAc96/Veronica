@@ -22,7 +22,7 @@ dependencies {
     implementation project(':validation')
     implementation project(':file-server')
     implementation project(':auth')
-    implementation project(':auth:http-basic')
+    implementation project(':http-basic-auth')
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.5.7'

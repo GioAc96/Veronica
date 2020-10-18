@@ -6,5 +6,5 @@ include 'samples'
 include 'routing'
 include 'file-server'
 include 'auth'
-include 'auth:http-basic'
+include 'http-basic-auth'
 
