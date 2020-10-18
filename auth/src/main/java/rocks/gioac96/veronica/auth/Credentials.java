@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core.auth;
+package rocks.gioac96.veronica.auth;
 
 import lombok.Getter;
 import lombok.NonNull;

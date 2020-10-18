@@ -1,7 +1,7 @@
-package rocks.gioac96.veronica.core.auth.http_basic;
+package rocks.gioac96.veronica.auth.http_basic;
 
 import java.util.Base64;
-import rocks.gioac96.veronica.core.auth.Credentials;
+import rocks.gioac96.veronica.auth.Credentials;
 import rocks.gioac96.veronica.core.Request;
 
 /**

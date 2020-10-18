@@ -1,10 +1,10 @@
 package rocks.gioac96.veronica.samples;
 
 import lombok.Getter;
-import rocks.gioac96.veronica.core.auth.Credentials;
-import rocks.gioac96.veronica.core.auth.CredentialsChecker;
-import rocks.gioac96.veronica.core.auth.http_basic.BasicAuthFilterBuilder;
-import rocks.gioac96.veronica.core.auth.HoldsAuthenticationData;
+import rocks.gioac96.veronica.auth.Credentials;
+import rocks.gioac96.veronica.auth.CredentialsChecker;
+import rocks.gioac96.veronica.auth.http_basic.BasicAuthFilterBuilder;
+import rocks.gioac96.veronica.auth.HoldsAuthenticationData;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.pipeline.Pipeline;
