@@ -4,9 +4,9 @@ import lombok.Getter;
 import rocks.gioac96.veronica.core.common.CommonRequestHandlers;
 import rocks.gioac96.veronica.core.common.CommonResponses;
 import rocks.gioac96.veronica.core.Application;
-import rocks.gioac96.veronica.core.Route;
-import rocks.gioac96.veronica.core.Router;
-import rocks.gioac96.veronica.core.common.CommonRequestMatchers;
+import rocks.gioac96.veronica.routing.Route;
+import rocks.gioac96.veronica.routing.Router;
+import rocks.gioac96.veronica.routing.common.CommonRequestMatchers;
 import rocks.gioac96.veronica.core.pipeline.Pipeline;
 
 public class AsynchronousPostProcessors {
@@ -50,7 +50,7 @@ public class AsynchronousPostProcessors {
 
         Application.builder()
             .port(80)
-            .router(new AsynchronousPostProcessors(2000).router)
+            .requestHandler(new AsynchronousPostProcessors(2000).router)
             .provide()
             .start();
 

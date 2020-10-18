@@ -6,7 +6,7 @@ import static rocks.gioac96.veronica.samples.E2ETest.measureTime;
 import org.junit.jupiter.api.Test;
 import rocks.gioac96.veronica.core.HttpMethod;
 import rocks.gioac96.veronica.core.Request;
-import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.routing.Router;
 
 public class AsynchronousPostProcessorsTest {
 

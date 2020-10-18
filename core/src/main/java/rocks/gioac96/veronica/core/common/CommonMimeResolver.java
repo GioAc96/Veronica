@@ -1,8 +1,8 @@
-package rocks.gioac96.veronica.core.common;
+package rocks.gioac96.veronica.file_server.common;
 
 import java.util.Arrays;
-import rocks.gioac96.veronica.core.MimeType;
-import rocks.gioac96.veronica.core.static_server.MimeResolver;
+import rocks.gioac96.veronica.file_server.MimeType;
+import rocks.gioac96.veronica.file_server.MimeResolver;
 
 /**
  * The framework's default common {@link MimeResolver} builder.

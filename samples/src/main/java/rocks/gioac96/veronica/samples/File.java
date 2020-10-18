@@ -2,7 +2,7 @@ package rocks.gioac96.veronica.samples;
 
 import rocks.gioac96.veronica.core.common.CommonResponses;
 import rocks.gioac96.veronica.core.Application;
-import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.routing.Router;
 
 public class File {
 
@@ -10,7 +10,7 @@ public class File {
 
         Application.builder()
             .port(80)
-            .router(Router.builder()
+            .requestHandler(Router.builder()
                 .defaultRequestHandler(request -> CommonResponses.fileInline("D:\\test.pdf"))
                 .provide())
             .provide()

@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import rocks.gioac96.veronica.core.HttpMethod;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.Router;
+import rocks.gioac96.veronica.routing.Router;
 
 public class ResponseHeadersTest extends E2ETest {
 

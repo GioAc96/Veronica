@@ -146,19 +146,6 @@ public final class Application {
         private ExceptionHandler exceptionHandler = new ExceptionHandler() {
         };
 
-        public ApplicationBuilder router(@NonNull Router router) {
-
-            this.requestHandler = router;
-            return this;
-
-        }
-
-        public ApplicationBuilder router(@NonNull Provider<Router> routerProvider) {
-
-            return router(routerProvider.provide());
-
-        }
-
         public ApplicationBuilder requestHandler(@NonNull RequestHandler requestHandler) {
 
             this.requestHandler = requestHandler;
