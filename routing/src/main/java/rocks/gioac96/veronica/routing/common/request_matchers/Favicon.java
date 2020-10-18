@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core.common.request_matchers;
+package rocks.gioac96.veronica.routing.common.request_matchers;
 
 import rocks.gioac96.veronica.core.HttpMethod;
 import rocks.gioac96.veronica.routing.RequestMatcher;

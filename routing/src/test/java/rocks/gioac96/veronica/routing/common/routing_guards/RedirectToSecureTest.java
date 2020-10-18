@@ -77,7 +77,7 @@ class RedirectToSecureTest {
         String locationHeader = response.getHeaders().getFirst("Location");
 
         assertEquals(secureUri, locationHeader);
-        Assertions.assertEquals(HttpStatus.MOVED_PERMANENTLY, response.getHttpStatus());
+        assertEquals(HttpStatus.MOVED_PERMANENTLY, response.getHttpStatus());
 
     }
 

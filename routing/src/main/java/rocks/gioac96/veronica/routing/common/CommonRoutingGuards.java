@@ -1,6 +1,6 @@
-package rocks.gioac96.veronica.core.common;
+package rocks.gioac96.veronica.routing.common;
 
-import rocks.gioac96.veronica.core.common.routing_guards.RedirectToSecure;
+import rocks.gioac96.veronica.routing.common.routing_guards.RedirectToSecure;
 import rocks.gioac96.veronica.routing.RoutingGuard;
 import rocks.gioac96.veronica.core.providers.Provider;
 

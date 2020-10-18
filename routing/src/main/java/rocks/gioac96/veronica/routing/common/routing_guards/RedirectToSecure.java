@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core.common.routing_guards;
+package rocks.gioac96.veronica.routing.common.routing_guards;
 
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.common.CommonResponses;

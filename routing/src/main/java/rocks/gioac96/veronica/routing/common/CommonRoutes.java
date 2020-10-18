@@ -1,6 +1,6 @@
-package rocks.gioac96.veronica.core.common;
+package rocks.gioac96.veronica.routing.common;
 
-import rocks.gioac96.veronica.core.common.routes.NoFavicon;
+import rocks.gioac96.veronica.routing.common.routes.NoFavicon;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.core.providers.Provider;
 

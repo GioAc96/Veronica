@@ -1,7 +1,7 @@
-package rocks.gioac96.veronica.core.common.routes;
+package rocks.gioac96.veronica.routing.common.routes;
 
 import rocks.gioac96.veronica.core.common.CommonRequestHandlers;
-import rocks.gioac96.veronica.core.common.CommonRequestMatchers;
+import rocks.gioac96.veronica.routing.common.CommonRequestMatchers;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.core.providers.Singleton;
 
