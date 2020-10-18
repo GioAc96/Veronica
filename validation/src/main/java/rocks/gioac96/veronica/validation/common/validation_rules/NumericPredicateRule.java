@@ -2,12 +2,12 @@ package rocks.gioac96.veronica.validation.common.validation_rules;
 
 import java.util.function.Predicate;
 import lombok.NonNull;
-import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationRule;
+import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 
 public class NumericPredicateRule extends ConfigurableProvider<ValidationRule> {
 
@@ -42,6 +42,7 @@ public class NumericPredicateRule extends ConfigurableProvider<ValidationRule> {
         return predicateNotAppliesFailureReason(predicateNotAppliesFailureReasonProvider.provide());
 
     }
+
     public NumericPredicateRule notNumericFailureReason(@NonNull ValidationFailureReason notNumericFailureReason) {
 
         this.notNumericFailureReason = notNumericFailureReason;

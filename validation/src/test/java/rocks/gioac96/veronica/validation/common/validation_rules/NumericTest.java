@@ -6,9 +6,9 @@ import java.util.Random;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.validation.common.CommonValidationRulesTest;
-import rocks.gioac96.veronica.validation.ValidationException;
 
 class NumericTest {
 

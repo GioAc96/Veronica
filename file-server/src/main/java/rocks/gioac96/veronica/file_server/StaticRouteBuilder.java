@@ -3,12 +3,12 @@ package rocks.gioac96.veronica.file_server;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import lombok.NonNull;
-import rocks.gioac96.veronica.core.common.CommonResponses;
-import rocks.gioac96.veronica.routing.RequestMatcher;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.routing.Route;
+import rocks.gioac96.veronica.core.common.CommonResponses;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.core.providers.Provider;
+import rocks.gioac96.veronica.routing.RequestMatcher;
+import rocks.gioac96.veronica.routing.Route;
 
 /**
  * Builder for static server routes.
@@ -112,6 +112,7 @@ public class StaticRouteBuilder<P> extends ConfigurableProvider<Route> {
         return permissionManager(permissionsManagerProvider.provide());
 
     }
+
     public StaticRouteBuilder<P> contentDisposition(@NonNull ContentDisposition contentDisposition) {
 
         this.contentDisposition = contentDisposition;
@@ -143,7 +144,7 @@ public class StaticRouteBuilder<P> extends ConfigurableProvider<Route> {
         return this;
 
     }
-    
+
     public StaticRouteBuilder<P> accessDeniedResponse(@NonNull Provider<Response> accessDeniedResponseProvider) {
 
         return accessDeniedResponse(accessDeniedResponseProvider.provide());

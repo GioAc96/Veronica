@@ -2,10 +2,10 @@ package rocks.gioac96.veronica.validation.common.validation_rules;
 
 import java.util.regex.Pattern;
 import lombok.NonNull;
-import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationRule;
+import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 
 public class PatternRule
     extends ValidationRuleBuilderWithConstantFailureReason {

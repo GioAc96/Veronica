@@ -5,6 +5,7 @@ import static rocks.gioac96.veronica.validation.common.CommonValidationFailureRe
 import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
 import rocks.gioac96.veronica.validation.ValidationRule;
 import rocks.gioac96.veronica.validation.common.validation_rules.BetweenRule;
@@ -16,7 +17,6 @@ import rocks.gioac96.veronica.validation.common.validation_rules.MinRule;
 import rocks.gioac96.veronica.validation.common.validation_rules.NumericPredicateRule;
 import rocks.gioac96.veronica.validation.common.validation_rules.NumericRule;
 import rocks.gioac96.veronica.validation.common.validation_rules.PatternRule;
-import rocks.gioac96.veronica.core.providers.Provider;
 
 public class CommonValidationRules {
 

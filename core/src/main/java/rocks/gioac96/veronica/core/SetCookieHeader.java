@@ -8,8 +8,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Getter;
 import lombok.NonNull;
-import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.core.providers.Provider;
 
 /**
  * Used to generate Set-Cookie http headers. Supports all features from RFC 6265, section 4.1: Set-Cookie.

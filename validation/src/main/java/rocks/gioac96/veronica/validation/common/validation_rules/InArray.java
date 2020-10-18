@@ -5,10 +5,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import lombok.NonNull;
+import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationRule;
 import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
-import rocks.gioac96.veronica.core.providers.Provider;
 
 public class InArray extends ValidationRuleBuilderWithConstantFailureReason {
 

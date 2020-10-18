@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import rocks.gioac96.veronica.core.HttpStatus;
 import rocks.gioac96.veronica.core.Request;

@@ -3,11 +3,11 @@ package rocks.gioac96.veronica.validation;
 import java.util.PriorityQueue;
 import lombok.Getter;
 import lombok.NonNull;
-import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.core.util.HasPriority;
 import rocks.gioac96.veronica.core.util.PriorityEntry;
+import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 
 /**
  * Field validator.

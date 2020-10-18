@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import lombok.NonNull;
+import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.core.providers.CreationException;
 import rocks.gioac96.veronica.core.providers.Provider;
-import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 
 /**
  * Veronica application.
@@ -216,7 +216,7 @@ public final class Application {
 
             return super.isValid()
                 && httpServers != null
-                && ! httpServers.isEmpty()
+                && !httpServers.isEmpty()
                 && httpServers.stream().allMatch(Objects::nonNull)
                 && requestHandler != null
                 && exchangeParser != null

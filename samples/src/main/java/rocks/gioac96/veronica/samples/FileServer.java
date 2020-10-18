@@ -1,10 +1,10 @@
 package rocks.gioac96.veronica.samples;
 
-import rocks.gioac96.veronica.core.common.CommonRequestHandlers;
 import rocks.gioac96.veronica.core.Application;
+import rocks.gioac96.veronica.core.common.CommonRequestHandlers;
+import rocks.gioac96.veronica.file_server.FilePermissionsManager;
 import rocks.gioac96.veronica.file_server.StaticRouteBuilder;
 import rocks.gioac96.veronica.routing.Router;
-import rocks.gioac96.veronica.file_server.FilePermissionsManager;
 
 public class FileServer {
 

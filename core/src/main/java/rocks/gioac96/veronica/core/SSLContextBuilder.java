@@ -5,9 +5,9 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import lombok.NonNull;
+import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.core.providers.CreationException;
 import rocks.gioac96.veronica.core.providers.Provider;
-import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 
 /**
  * Factory for SSLContext.

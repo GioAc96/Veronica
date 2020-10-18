@@ -1,9 +1,9 @@
 package rocks.gioac96.veronica.routing.common;
 
-import rocks.gioac96.veronica.routing.common.request_matchers.Favicon;
 import rocks.gioac96.veronica.core.HttpMethod;
-import rocks.gioac96.veronica.routing.RequestMatcher;
 import rocks.gioac96.veronica.core.providers.Provider;
+import rocks.gioac96.veronica.routing.RequestMatcher;
+import rocks.gioac96.veronica.routing.common.request_matchers.Favicon;
 
 /**
  * Framework's common request matchers.

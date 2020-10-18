@@ -9,69 +9,6 @@ import org.junit.jupiter.api.Test;
 
 class ProvidersTest {
 
-    private static class GreetingProvider extends ConfigurableProvider<String> {
-
-        private String greeting = null;
-
-        public GreetingProvider italian() {
-
-            greeting = "Ciao";
-            return this;
-
-        }
-        public GreetingProvider english() {
-
-            greeting = "Hello";
-            return this;
-
-        }
-
-        @Override
-        protected boolean isValid() {
-
-            return super.isValid()
-                && greeting != null;
-
-        }
-
-        @Override
-        protected String instantiate() {
-
-            return new String(greeting);
-
-        }
-
-    }
-
-    private static class ItalianGreetingProvider extends GreetingProvider {
-
-        @Override
-        protected void configure() {
-
-            italian();
-
-            super.configure();
-
-        }
-
-    }
-    private static class ItalianGreetingProviderSingleton extends ItalianGreetingProvider implements Singleton {
-
-    }
-
-    private class EnglishGreetingProvider extends GreetingProvider {
-
-        @Override
-        protected void configure() {
-
-            english();
-
-            super.configure();
-
-        }
-
-    }
-
     @Test
     void testNotValidFails() {
 
@@ -126,6 +63,71 @@ class ProvidersTest {
                 .english()
                 .provide()
         );
+
+    }
+
+    private static class GreetingProvider extends ConfigurableProvider<String> {
+
+        private String greeting = null;
+
+        public GreetingProvider italian() {
+
+            greeting = "Ciao";
+            return this;
+
+        }
+
+        public GreetingProvider english() {
+
+            greeting = "Hello";
+            return this;
+
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            return super.isValid()
+                && greeting != null;
+
+        }
+
+        @Override
+        protected String instantiate() {
+
+            return new String(greeting);
+
+        }
+
+    }
+
+    private static class ItalianGreetingProvider extends GreetingProvider {
+
+        @Override
+        protected void configure() {
+
+            italian();
+
+            super.configure();
+
+        }
+
+    }
+
+    private static class ItalianGreetingProviderSingleton extends ItalianGreetingProvider implements Singleton {
+
+    }
+
+    private class EnglishGreetingProvider extends GreetingProvider {
+
+        @Override
+        protected void configure() {
+
+            english();
+
+            super.configure();
+
+        }
 
     }
 

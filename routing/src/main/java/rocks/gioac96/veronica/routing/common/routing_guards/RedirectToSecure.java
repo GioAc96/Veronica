@@ -2,9 +2,9 @@ package rocks.gioac96.veronica.routing.common.routing_guards;
 
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.common.CommonResponses;
-import rocks.gioac96.veronica.routing.RoutingGuard;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.core.providers.Provider;
+import rocks.gioac96.veronica.routing.RoutingGuard;
 
 public class RedirectToSecure extends ConfigurableProvider<RoutingGuard> {
 

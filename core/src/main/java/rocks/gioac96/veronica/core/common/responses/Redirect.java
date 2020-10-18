@@ -6,7 +6,7 @@ import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.providers.Provider;
 
 public class Redirect
-    extends Response.ResponseBuilder  {
+    extends Response.ResponseBuilder {
 
     protected String location;
     protected boolean isPermanent = false;
@@ -18,11 +18,11 @@ public class Redirect
         return this;
 
     }
-    
+
     public Redirect location(@NonNull Provider<String> locationProvider) {
-        
+
         return location(locationProvider.provide());
-        
+
     }
 
     public Redirect permanent(boolean isPermanent) {

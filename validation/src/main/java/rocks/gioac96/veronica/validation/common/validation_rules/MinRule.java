@@ -2,8 +2,8 @@ package rocks.gioac96.veronica.validation.common.validation_rules;
 
 
 import lombok.NonNull;
-import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.core.providers.Provider;
+import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 
 public class MinRule extends NumericPredicateRule {
 

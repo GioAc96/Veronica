@@ -2,8 +2,8 @@ package rocks.gioac96.veronica.auth;
 
 import lombok.Getter;
 import lombok.NonNull;
-import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.core.providers.Provider;
 
 /**
  * Authentication credentials.
@@ -48,31 +48,31 @@ public class Credentials {
         }
 
         public CredentialsBuilder username(@NonNull String username) {
-            
+
             this.username = username;
             return this;
-            
+
         }
-        
+
         public CredentialsBuilder username(@NonNull Provider<String> usernameProvider) {
-            
+
             return username(usernameProvider.provide());
-            
+
         }
 
         public CredentialsBuilder password(@NonNull String password) {
-            
+
             this.password = password;
             return this;
-            
+
         }
-        
+
         public CredentialsBuilder password(@NonNull Provider<String> passwordProvider) {
-            
+
             return password(passwordProvider.provide());
-            
+
         }
-        
+
     }
 
 

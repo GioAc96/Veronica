@@ -5,11 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import rocks.gioac96.veronica.core.providers.CreationException;
+import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.validation.common.CommonValidationRules;
 import rocks.gioac96.veronica.validation.common.CommonValidationRulesTest;
-import rocks.gioac96.veronica.core.providers.CreationException;
-import rocks.gioac96.veronica.validation.ValidationException;
 
 class MaxRuleTest {
 
@@ -48,7 +48,7 @@ class MaxRuleTest {
         double max
     ) throws ValidationException {
 
-        CommonValidationRules.max(max).validate( String.valueOf(value));
+        CommonValidationRules.max(max).validate(String.valueOf(value));
 
     }
 

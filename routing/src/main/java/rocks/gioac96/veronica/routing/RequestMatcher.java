@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.HttpMethod;
 import rocks.gioac96.veronica.core.Request;
-import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.core.providers.Provider;
 
 /**
  * Request matching conditions.

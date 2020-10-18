@@ -16,17 +16,13 @@ public class Response {
 
     @Getter
     protected final HttpStatus httpStatus;
-
-    private byte[] bodyBytes;
-
-    @Getter
-    private String body;
-
     @Getter
     private final Headers headers;
-
     @Getter
     private final Set<SetCookieHeader> cookies;
+    private byte[] bodyBytes;
+    @Getter
+    private String body;
 
     protected Response(ResponseBuilder b) {
 
@@ -35,6 +31,13 @@ public class Response {
         this.bodyBytes = b.bodyBytes;
         this.headers = b.headers;
         this.cookies = b.cookies;
+
+    }
+
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    public static ResponseBuilder builder() {
+
+        return new ResponseBuilder();
 
     }
 
@@ -57,13 +60,6 @@ public class Response {
             return bodyBytes;
 
         }
-
-    }
-
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
-    public static ResponseBuilder builder() {
-
-        return new ResponseBuilder();
 
     }
 

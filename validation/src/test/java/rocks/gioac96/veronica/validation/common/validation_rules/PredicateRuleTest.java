@@ -3,10 +3,10 @@ package rocks.gioac96.veronica.validation.common.validation_rules;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
-import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
-import rocks.gioac96.veronica.validation.common.CommonValidationRulesTest;
 import rocks.gioac96.veronica.core.providers.CreationException;
 import rocks.gioac96.veronica.validation.ValidationException;
+import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
+import rocks.gioac96.veronica.validation.common.CommonValidationRulesTest;
 
 class PredicateRuleTest {
 
@@ -22,6 +22,7 @@ class PredicateRuleTest {
         );
 
     }
+
     @Test
     void testPredicateSucceeds() throws ValidationException {
 

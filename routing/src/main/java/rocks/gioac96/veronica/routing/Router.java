@@ -235,47 +235,6 @@ public class Router implements RequestHandler {
         protected RequestHandler defaultRequestHandler;
         protected String pathPrefix = null;
 
-
-        @Override
-        protected boolean isValid() {
-
-            return methodRouteTrees != null
-                && routingGuards != null
-                && defaultRequestHandler != null
-                && (pathPrefix == null || (pathPrefix.startsWith("/") & !pathPrefix.endsWith("/"))); // TODO throw an exception
-
-        }
-
-        @Override
-        protected Router instantiate() {
-
-            for (Route route : routesToRegister) {
-
-                Predicate<Request> aggregateCondition = aggregateMatchingConditions(route.getRequestMatcher());
-
-                Set<HttpMethod> httpMethods = aggregateHttpMethods(route.getRequestMatcher());
-
-                for (HttpMethod httpMethod : httpMethods) {
-
-                    for (String pathPattern : route.getRequestMatcher().getPathPatterns()) {
-
-                        register(
-                            httpMethod,
-                            pathPattern,
-                            aggregateCondition,
-                            route.getRequestHandler()
-                        );
-
-                    }
-
-                }
-
-            }
-
-            return new Router(this);
-
-        }
-
         private static Set<HttpMethod> aggregateHttpMethods(RequestMatcher requestMatcher) {
 
             if (requestMatcher.getHttpMethods().size() == 0) {
@@ -316,6 +275,46 @@ public class Router implements RequestHandler {
             }
 
             return aggregateCondition;
+
+        }
+
+        @Override
+        protected boolean isValid() {
+
+            return methodRouteTrees != null
+                && routingGuards != null
+                && defaultRequestHandler != null
+                && (pathPrefix == null || (pathPrefix.startsWith("/") & !pathPrefix.endsWith("/"))); // TODO throw an exception
+
+        }
+
+        @Override
+        protected Router instantiate() {
+
+            for (Route route : routesToRegister) {
+
+                Predicate<Request> aggregateCondition = aggregateMatchingConditions(route.getRequestMatcher());
+
+                Set<HttpMethod> httpMethods = aggregateHttpMethods(route.getRequestMatcher());
+
+                for (HttpMethod httpMethod : httpMethods) {
+
+                    for (String pathPattern : route.getRequestMatcher().getPathPatterns()) {
+
+                        register(
+                            httpMethod,
+                            pathPattern,
+                            aggregateCondition,
+                            route.getRequestHandler()
+                        );
+
+                    }
+
+                }
+
+            }
+
+            return new Router(this);
 
         }
 

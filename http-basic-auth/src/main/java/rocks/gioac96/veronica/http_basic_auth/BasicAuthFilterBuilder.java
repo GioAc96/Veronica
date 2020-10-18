@@ -5,9 +5,9 @@ import rocks.gioac96.veronica.auth.Credentials;
 import rocks.gioac96.veronica.auth.CredentialsChecker;
 import rocks.gioac96.veronica.auth.HoldsAuthenticationData;
 import rocks.gioac96.veronica.core.common.CommonResponses;
-import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.core.pipeline.PipelineStage;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.core.providers.Provider;
 
 /**
  * Http basic authentication filter builder.

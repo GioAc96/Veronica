@@ -4,8 +4,8 @@ import java.io.IOException;
 import lombok.Getter;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.routing.Router;
 import rocks.gioac96.veronica.core.providers.CreationException;
+import rocks.gioac96.veronica.routing.Router;
 
 public class Echo {
 

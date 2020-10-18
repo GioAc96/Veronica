@@ -5,9 +5,9 @@ import static rocks.gioac96.veronica.validation.common.CommonValidationRules.boo
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.validation.common.CommonValidationRulesTest;
-import rocks.gioac96.veronica.validation.ValidationException;
 
 public class BooleanTest {
 

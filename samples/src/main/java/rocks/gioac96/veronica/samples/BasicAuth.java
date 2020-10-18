@@ -4,10 +4,10 @@ import lombok.Getter;
 import rocks.gioac96.veronica.auth.Credentials;
 import rocks.gioac96.veronica.auth.CredentialsChecker;
 import rocks.gioac96.veronica.auth.HoldsAuthenticationData;
-import rocks.gioac96.veronica.http_basic_auth.BasicAuthFilterBuilder;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.pipeline.Pipeline;
+import rocks.gioac96.veronica.http_basic_auth.BasicAuthFilterBuilder;
 
 public class BasicAuth {
 
@@ -46,7 +46,7 @@ public class BasicAuth {
             })
             .stage((request, responseBuilder, data) -> {
 
-                if (! data.isAuthenticated()) {
+                if (!data.isAuthenticated()) {
 
                     return responseBuilder.body("invalid credentials").provide();
 

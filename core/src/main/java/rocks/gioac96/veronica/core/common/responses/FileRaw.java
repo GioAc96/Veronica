@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import lombok.NonNull;
-import rocks.gioac96.veronica.core.common.CommonMimeResolver;
 import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.common.CommonMimeResolver;
 import rocks.gioac96.veronica.core.providers.CreationException;
 
 public class FileRaw extends Response.ResponseBuilder {

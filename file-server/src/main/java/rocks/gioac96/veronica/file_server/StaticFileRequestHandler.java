@@ -1,10 +1,10 @@
 package rocks.gioac96.veronica.file_server;
 
 import java.nio.file.Path;
-import rocks.gioac96.veronica.core.common.CommonResponses;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.common.CommonResponses;
 
 class StaticFileRequestHandler<P> implements RequestHandler {
 

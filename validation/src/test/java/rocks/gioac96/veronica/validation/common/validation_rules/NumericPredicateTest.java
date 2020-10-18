@@ -6,11 +6,11 @@ import static rocks.gioac96.veronica.validation.common.CommonValidationRulesTest
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
-import rocks.gioac96.veronica.validation.common.CommonValidationRules;
 import rocks.gioac96.veronica.core.providers.CreationException;
 import rocks.gioac96.veronica.validation.ValidationException;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
+import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
+import rocks.gioac96.veronica.validation.common.CommonValidationRules;
 
 public class NumericPredicateTest {
 

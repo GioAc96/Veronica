@@ -1,17 +1,17 @@
 package rocks.gioac96.veronica.validation.common;
 
-import rocks.gioac96.veronica.validation.common.validation_failure_reasons.GenericFailureReason;
-import rocks.gioac96.veronica.validation.common.validation_failure_reasons.NotBoolean;
-import rocks.gioac96.veronica.validation.common.validation_failure_reasons.NotInArray;
-import rocks.gioac96.veronica.validation.common.validation_failure_reasons.PatternNotMatches;
-import rocks.gioac96.veronica.validation.common.validation_failure_reasons.InvalidEmail;
-import rocks.gioac96.veronica.validation.common.validation_failure_reasons.IsNull;
-import rocks.gioac96.veronica.validation.common.validation_failure_reasons.NotInRange;
-import rocks.gioac96.veronica.validation.common.validation_failure_reasons.NotNumeric;
-import rocks.gioac96.veronica.validation.common.validation_failure_reasons.ValueTooBig;
-import rocks.gioac96.veronica.validation.common.validation_failure_reasons.ValueTooSmall;
 import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.validation.ValidationFailureReason;
+import rocks.gioac96.veronica.validation.common.validation_failure_reasons.GenericFailureReason;
+import rocks.gioac96.veronica.validation.common.validation_failure_reasons.InvalidEmail;
+import rocks.gioac96.veronica.validation.common.validation_failure_reasons.IsNull;
+import rocks.gioac96.veronica.validation.common.validation_failure_reasons.NotBoolean;
+import rocks.gioac96.veronica.validation.common.validation_failure_reasons.NotInArray;
+import rocks.gioac96.veronica.validation.common.validation_failure_reasons.NotInRange;
+import rocks.gioac96.veronica.validation.common.validation_failure_reasons.NotNumeric;
+import rocks.gioac96.veronica.validation.common.validation_failure_reasons.PatternNotMatches;
+import rocks.gioac96.veronica.validation.common.validation_failure_reasons.ValueTooBig;
+import rocks.gioac96.veronica.validation.common.validation_failure_reasons.ValueTooSmall;
 
 public class CommonValidationFailureReasons {
 

@@ -2,6 +2,7 @@ package rocks.gioac96.veronica.core.common;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.common.responses.FileDownload;
 import rocks.gioac96.veronica.core.common.responses.FileInline;
 import rocks.gioac96.veronica.core.common.responses.FileRaw;
@@ -12,7 +13,6 @@ import rocks.gioac96.veronica.core.common.responses.Ok;
 import rocks.gioac96.veronica.core.common.responses.PromptBasicAuth;
 import rocks.gioac96.veronica.core.common.responses.PromptBasicAuthRealm;
 import rocks.gioac96.veronica.core.common.responses.Redirect;
-import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.providers.Provider;
 
 /**

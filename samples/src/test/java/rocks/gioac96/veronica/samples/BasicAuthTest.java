@@ -6,10 +6,10 @@ import java.util.Base64;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import rocks.gioac96.veronica.core.HttpMethod;
+import rocks.gioac96.veronica.core.HttpStatus;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.HttpStatus;
 
 public class BasicAuthTest {
 

@@ -1,8 +1,8 @@
 package rocks.gioac96.veronica.validation.common.validation_rules;
 
 import java.util.regex.Pattern;
-import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 import rocks.gioac96.veronica.core.providers.Singleton;
+import rocks.gioac96.veronica.validation.common.CommonValidationFailureReasons;
 
 public class EmailRule
     extends PatternRule

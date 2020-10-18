@@ -10,6 +10,7 @@ public class ServerExecutorService
     implements Singleton {
 
     public static final int SERVER_TASKS_PRIORITY = 0;
+
     @Override
     protected ExecutorService instantiate() {
 

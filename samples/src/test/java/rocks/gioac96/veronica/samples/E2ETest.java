@@ -68,7 +68,7 @@ public abstract class E2ETest {
 
     }
 
-    protected static class MockRequestBuilder extends Request.RequestBuilder  {
+    protected static class MockRequestBuilder extends Request.RequestBuilder {
 
         private String path = null;
         private String query = null;
