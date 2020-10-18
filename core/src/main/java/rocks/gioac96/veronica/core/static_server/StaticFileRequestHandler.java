@@ -1,7 +1,7 @@
 package rocks.gioac96.veronica.core.static_server;
 
 import java.nio.file.Path;
-import rocks.gioac96.veronica.validation.common.CommonResponses;
+import rocks.gioac96.veronica.core.common.CommonResponses;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.Response;

@@ -1,7 +1,7 @@
 package rocks.gioac96.veronica.core.tutorials;
 
 import java.util.Map;
-import rocks.gioac96.veronica.validation.common.CommonRoutes;
+import rocks.gioac96.veronica.core.common.CommonRoutes;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.Router;

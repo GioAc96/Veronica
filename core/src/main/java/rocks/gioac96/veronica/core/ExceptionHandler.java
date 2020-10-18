@@ -1,7 +1,7 @@
 package rocks.gioac96.veronica.core;
 
 import java.io.IOException;
-import rocks.gioac96.veronica.validation.common.CommonResponses;
+import rocks.gioac96.veronica.core.common.CommonResponses;
 
 /**
  * Application exception handler.

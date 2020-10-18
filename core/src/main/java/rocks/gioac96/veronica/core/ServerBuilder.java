@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executor;
 import lombok.NonNull;
-import rocks.gioac96.veronica.validation.common.CommonExecutorServices;
+import rocks.gioac96.veronica.core.common.CommonExecutorServices;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.core.providers.CreationException;
 import rocks.gioac96.veronica.core.providers.Provider;
