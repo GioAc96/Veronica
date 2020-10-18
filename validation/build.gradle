@@ -17,13 +17,15 @@ test {
 
 dependencies {
 
+    implementation project(':core')
+
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0-M1'
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.7.0-M1'
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0-M1'
 
-    testImplementation "org.mockito:mockito-core:3.5.7"
-    testImplementation "org.mockito:mockito-inline:3.5.7"
+    implementation("org.mockito:mockito-core:3.5.7")
+    implementation("org.mockito:mockito-inline:3.5.7")
 
 }
