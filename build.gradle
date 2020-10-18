@@ -1,39 +1,15 @@
-plugins {
-    id 'java'
-    id 'maven'
-    id 'io.freefair.lombok' version '4.1.6'
-}
+allprojects {
 
-group 'rocks.gioac96'
-version '0.14-preview'
+    version = "0.14-preview"
 
-repositories {
-    mavenCentral()
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-}
-
-build {
-
-    dependsOn test
 
 }
 
-dependencies {
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
 
-    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0-M1'
-    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.7.0-M1'
-    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0-M1'
-
-    implementation("org.mockito:mockito-core:3.5.7")
-    implementation("org.mockito:mockito-inline:3.5.7")
+    sourceCompatibility = 1.11
+    targetCompatibility = 1.11
 
 }
