@@ -2,4 +2,3 @@ rootProject.name = 'veronica'
 include 'core'
 include 'validation'
 include 'samples'
-
