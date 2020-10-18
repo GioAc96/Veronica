@@ -4,7 +4,7 @@ import lombok.Getter;
 import rocks.gioac96.veronica.auth.Credentials;
 import rocks.gioac96.veronica.auth.CredentialsChecker;
 import rocks.gioac96.veronica.auth.http_basic.BasicAuthFilterBuilder;
-import rocks.gioac96.veronica.auth.http_basic.HoldsBasicAuthenticationData;
+import rocks.gioac96.veronica.auth.HoldsAuthenticationData;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.RequestHandler;
 import rocks.gioac96.veronica.core.pipeline.Pipeline;
@@ -76,7 +76,7 @@ public class BasicAuth {
     }
 
     @Getter
-    private static final class PipelineData implements HoldsBasicAuthenticationData {
+    private static final class PipelineData implements HoldsAuthenticationData {
 
         private Credentials credentials;
         private boolean isAuthenticated;

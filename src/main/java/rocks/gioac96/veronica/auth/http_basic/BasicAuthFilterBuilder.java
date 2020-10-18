@@ -3,6 +3,7 @@ package rocks.gioac96.veronica.auth.http_basic;
 import lombok.NonNull;
 import rocks.gioac96.veronica.auth.Credentials;
 import rocks.gioac96.veronica.auth.CredentialsChecker;
+import rocks.gioac96.veronica.auth.HoldsAuthenticationData;
 import rocks.gioac96.veronica.common.CommonResponses;
 import rocks.gioac96.veronica.core.pipeline.PipelineStage;
 import rocks.gioac96.veronica.providers.ConfigurableProvider;
@@ -11,7 +12,7 @@ import rocks.gioac96.veronica.providers.Provider;
 /**
  * Http basic authentication filter builder.
  */
-public class BasicAuthFilterBuilder<D extends HoldsBasicAuthenticationData> extends ConfigurableProvider<PipelineStage<D>> {
+public class BasicAuthFilterBuilder<D extends HoldsAuthenticationData> extends ConfigurableProvider<PipelineStage<D>> {
 
     protected CredentialsChecker credentialsChecker;
     protected String realm;

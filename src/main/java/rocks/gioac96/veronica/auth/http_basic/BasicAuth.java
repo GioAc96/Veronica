@@ -27,13 +27,10 @@ public final class BasicAuth {
 
             int firstColonPos = decodedCredentials.indexOf(':');
 
-            String username = decodedCredentials.substring(0, firstColonPos);
-            String password = decodedCredentials.substring(firstColonPos + 1);
-
-            return new Credentials(
-                username,
-                password
-            );
+            return Credentials.builder()
+                .username(decodedCredentials.substring(0, firstColonPos))
+                .password(decodedCredentials.substring(firstColonPos + 1))
+                .provide();
 
         } catch (Exception e) {
 
