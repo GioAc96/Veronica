@@ -8,5 +8,5 @@ include 'file-server'
 include 'auth'
 include 'http-basic-auth'
 include 'session'
-include 'server-side-session'
+include 'application-session'
 

@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.session.server_side;
+package rocks.gioac96.veronica.session.application;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -9,9 +9,27 @@ import lombok.NonNull;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.SetCookieHeader;
+import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
+import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.session.SessionStorage;
+public class ApplicationSessionStorage<D> implements SessionStorage<D> {
 
-public class ServerSideSessionStorage<D> implements SessionStorage<D> {
+    private final Map<UUID, SessionEntry<D>> entries = new HashMap<>();
+    private final long expirationTime;
+    private final String cookieName;
+
+    protected ApplicationSessionStorage(ApplicationSessionStorageBuilder<D> b) {
+
+        expirationTime = b.expirationTime;
+        cookieName = b.cookieName;
+
+    }
+
+    public static <D> ApplicationSessionStorageBuilder<D> builder() {
+
+        return new ApplicationSessionStorageBuilder<>();
+
+    }
 
     @AllArgsConstructor
     private static class SessionEntry<D> {
@@ -28,9 +46,6 @@ public class ServerSideSessionStorage<D> implements SessionStorage<D> {
 
     }
 
-    private final long expirationTime = 3600;
-    private final Map<UUID, SessionEntry<D>> entries = new HashMap<>();
-    private final String sessionCookieName = "_veronica-sss";
 
     public boolean clearExpiredSessions() {
 
@@ -61,7 +76,7 @@ public class ServerSideSessionStorage<D> implements SessionStorage<D> {
 
     private UUID getSessionKey(Request request) {
 
-        String sessionId = request.getCookie().get(sessionCookieName);
+        String sessionId = request.getCookie().get(cookieName);
 
         if (sessionId == null) {
             return null;
@@ -156,7 +171,7 @@ public class ServerSideSessionStorage<D> implements SessionStorage<D> {
         return SetCookieHeader.builder()
             .httpOnly()
             .secure()
-            .name(sessionCookieName)
+            .name(cookieName)
             .value(sessionKey.toString())
             .provide();
 
@@ -233,6 +248,56 @@ public class ServerSideSessionStorage<D> implements SessionStorage<D> {
         }
 
         return entries.remove(sessionKey) != null;
+
+    }
+
+    public static class ApplicationSessionStorageBuilder<D>
+        extends ConfigurableProvider<ApplicationSessionStorage<D>> {
+
+        protected long expirationTime = 3600;
+        protected String cookieName = "_vas";
+
+        @Override
+        protected boolean isValid() {
+
+            return expirationTime >= 0
+                && SetCookieHeader.isNameValid(cookieName);
+
+        }
+
+        @Override
+        protected ApplicationSessionStorage<D> instantiate() {
+
+            return new ApplicationSessionStorage<>(this);
+
+        }
+
+        public ApplicationSessionStorageBuilder<D> expirationTime(long expirationTime) {
+
+            this.expirationTime = expirationTime;
+            return this;
+
+        }
+
+        public ApplicationSessionStorageBuilder<D> expirationTime(@NonNull Provider<Long> expirationTimeProvider) {
+
+            return expirationTime(expirationTimeProvider.provide());
+
+        }
+
+
+        public ApplicationSessionStorageBuilder<D> cookieName(@NonNull String cookieName) {
+
+            this.cookieName = cookieName;
+            return this;
+
+        }
+
+        public ApplicationSessionStorageBuilder<D> cookieName(@NonNull Provider<String> cookieNameProvider) {
+
+            return cookieName(cookieNameProvider.provide());
+
+        }
 
     }
 

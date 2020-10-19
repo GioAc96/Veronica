@@ -55,7 +55,7 @@ public final class SetCookieHeader {
 
     }
 
-    private static boolean isNameValid(String name) {
+    public static boolean isNameValid(String name) {
 
         if (name == null) {
 
