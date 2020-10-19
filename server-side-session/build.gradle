@@ -1,0 +1,32 @@
+plugins {
+    id 'io.freefair.lombok' version '5.2.1'
+}
+
+repositories {
+
+    mavenCentral()
+
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+dependencies {
+
+    implementation project(':core')
+    implementation project(':session')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.5.7'
+
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0-M1'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.7.0-M1'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0-M1'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.5.7'
+
+
+}
