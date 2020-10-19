@@ -3,7 +3,7 @@ package rocks.gioac96.veronica.session;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
 
-public interface SessionStorage<D> {
+public interface SessionStore<D> {
 
     D getSessionData(Request request);
 

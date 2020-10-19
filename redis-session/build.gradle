@@ -21,6 +21,8 @@ dependencies {
     implementation project(':session')
     implementation project(':cookie-session')
 
+    implementation group: 'redis.clients', name: 'jedis', version: '3.3.0'
+
     testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.5.7'
 

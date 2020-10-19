@@ -11,17 +11,18 @@ import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.SetCookieHeader;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.core.providers.Provider;
-import rocks.gioac96.veronica.session.SessionStorage;
-public class ApplicationSessionStorage<D> implements SessionStorage<D> {
+import rocks.gioac96.veronica.session.cookie.CookieSessionStore;
+
+public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
     private final Map<UUID, SessionEntry<D>> entries = new HashMap<>();
     private final long expirationTime;
-    private final String cookieName;
 
-    protected ApplicationSessionStorage(ApplicationSessionStorageBuilder<D> b) {
+    protected ApplicationSessionStore(ApplicationSessionStorageBuilder<D> b) {
 
-        expirationTime = b.expirationTime;
-        cookieName = b.cookieName;
+        super(b);
+
+        this.expirationTime = b.expirationTime;
 
     }
 
@@ -45,7 +46,6 @@ public class ApplicationSessionStorage<D> implements SessionStorage<D> {
         }
 
     }
-
 
     public boolean clearExpiredSessions() {
 
@@ -71,18 +71,6 @@ public class ApplicationSessionStorage<D> implements SessionStorage<D> {
             return true;
 
         }
-
-    }
-
-    private UUID getSessionKey(Request request) {
-
-        String sessionId = request.getCookie().get(cookieName);
-
-        if (sessionId == null) {
-            return null;
-        }
-
-        return UUID.fromString(sessionId);
 
     }
 
@@ -166,23 +154,6 @@ public class ApplicationSessionStorage<D> implements SessionStorage<D> {
 
     }
 
-    private SetCookieHeader generateSessionKeyCookie(UUID sessionKey) {
-
-        return SetCookieHeader.builder()
-            .httpOnly()
-            .secure()
-            .name(cookieName)
-            .value(sessionKey.toString())
-            .provide();
-
-    }
-
-    private void storeSessionCookie(Response.ResponseBuilder responseBuilder, UUID sessionKey) {
-
-        responseBuilder.cookie(generateSessionKeyCookie(sessionKey));
-
-    }
-
     private void storeNewSession(Response.ResponseBuilder responseBuilder, D sessionData) {
 
         UUID sessionKey = generateNewSessionKey();
@@ -192,6 +163,7 @@ public class ApplicationSessionStorage<D> implements SessionStorage<D> {
         entries.put(sessionKey, sessionEntry);
 
     }
+
 
     private void updateSessionEntry(SessionEntry<D> sessionEntry, D sessionData) {
 
@@ -252,23 +224,29 @@ public class ApplicationSessionStorage<D> implements SessionStorage<D> {
     }
 
     public static class ApplicationSessionStorageBuilder<D>
-        extends ConfigurableProvider<ApplicationSessionStorage<D>> {
+        extends CookieSessionStoreBuilder<D, ApplicationSessionStore<D>, ApplicationSessionStorageBuilder<D>> {
 
         protected long expirationTime = 3600;
-        protected String cookieName = "_vas";
 
         @Override
-        protected boolean isValid() {
+        protected ApplicationSessionStorageBuilder<D> self() {
 
-            return expirationTime >= 0
-                && SetCookieHeader.isNameValid(cookieName);
+            return this;
 
         }
 
         @Override
-        protected ApplicationSessionStorage<D> instantiate() {
+        protected boolean isValid() {
 
-            return new ApplicationSessionStorage<>(this);
+            return super.isValid()
+                && expirationTime > 0;
+
+        }
+
+        @Override
+        protected ApplicationSessionStore<D> instantiate() {
+
+            return new ApplicationSessionStore<>(this);
 
         }
 
@@ -282,20 +260,6 @@ public class ApplicationSessionStorage<D> implements SessionStorage<D> {
         public ApplicationSessionStorageBuilder<D> expirationTime(@NonNull Provider<Long> expirationTimeProvider) {
 
             return expirationTime(expirationTimeProvider.provide());
-
-        }
-
-
-        public ApplicationSessionStorageBuilder<D> cookieName(@NonNull String cookieName) {
-
-            this.cookieName = cookieName;
-            return this;
-
-        }
-
-        public ApplicationSessionStorageBuilder<D> cookieName(@NonNull Provider<String> cookieNameProvider) {
-
-            return cookieName(cookieNameProvider.provide());
 
         }
 

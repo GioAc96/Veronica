@@ -9,4 +9,6 @@ include 'auth'
 include 'http-basic-auth'
 include 'session'
 include 'application-session'
+include 'redis-session'
+include 'cookie-session'
 
