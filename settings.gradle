@@ -11,4 +11,5 @@ include 'session'
 include 'application-session'
 include 'redis-session'
 include 'cookie-session'
+include 'graphql'
 
