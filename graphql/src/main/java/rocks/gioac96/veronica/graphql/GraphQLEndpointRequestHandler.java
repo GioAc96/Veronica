@@ -17,7 +17,7 @@ import rocks.gioac96.veronica.core.providers.Provider;
 public class GraphQLEndpointRequestHandler implements RequestHandler {
 
     private final GraphQL graphQL;
-    private final QueryErrorHandler queryErrorHandler;
+    private final GraphQLQueryErrorHandler queryErrorHandler;
     private final Gson gson;
 
     protected GraphQLEndpointRequestHandler(GraphQLEndpointRequestHandlerBuilder b) {
@@ -64,7 +64,7 @@ public class GraphQLEndpointRequestHandler implements RequestHandler {
     public static class GraphQLEndpointRequestHandlerBuilder extends ConfigurableProvider<GraphQLEndpointRequestHandler> {
 
         private GraphQL graphQL;
-        private QueryErrorHandler queryErrorHandler;
+        private GraphQLQueryErrorHandler queryErrorHandler;
         private Gson gson = new Gson();
 
         @Override
@@ -98,7 +98,7 @@ public class GraphQLEndpointRequestHandler implements RequestHandler {
         }
 
         public GraphQLEndpointRequestHandlerBuilder queryErrorHandler(
-            @NonNull QueryErrorHandler queryErrorHandler
+            @NonNull GraphQLQueryErrorHandler queryErrorHandler
         ) {
 
             this.queryErrorHandler = queryErrorHandler;
@@ -107,7 +107,7 @@ public class GraphQLEndpointRequestHandler implements RequestHandler {
         }
 
         public GraphQLEndpointRequestHandlerBuilder queryErrorHandler(
-            @NonNull Provider<QueryErrorHandler> queryErrorHandlerProvider
+            @NonNull Provider<GraphQLQueryErrorHandler> queryErrorHandlerProvider
         ) {
 
             return queryErrorHandler(queryErrorHandlerProvider.provide());
