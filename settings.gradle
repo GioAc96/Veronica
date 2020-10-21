@@ -7,4 +7,5 @@ include 'routing'
 include 'file-server'
 include 'auth'
 include 'http-basic-auth'
+include 'graphql'
 

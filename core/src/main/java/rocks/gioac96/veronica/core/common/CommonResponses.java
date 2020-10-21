@@ -3,6 +3,7 @@ package rocks.gioac96.veronica.core.common;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.common.responses.BadRequest;
 import rocks.gioac96.veronica.core.common.responses.FileDownload;
 import rocks.gioac96.veronica.core.common.responses.FileInline;
 import rocks.gioac96.veronica.core.common.responses.FileRaw;
@@ -25,6 +26,7 @@ public class CommonResponses {
     private static final Provider<Response> forbidden = new Forbidden();
     private static final Provider<Response> internalError = new InternalError();
     private static final Provider<Response> promptBasicAuth = new PromptBasicAuth();
+    private static final Provider<Response> badRequest = new BadRequest();
 
     /**
      * Gets the framework's common "ok" {@link Response}.
@@ -212,4 +214,9 @@ public class CommonResponses {
 
     }
 
+    public static Response badRequest() {
+
+        return badRequest.provide();
+
+    }
 }
