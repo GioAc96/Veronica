@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
@@ -12,6 +13,7 @@ import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 /**
  * Http response.
  */
+@EqualsAndHashCode
 public class Response {
 
     @Getter
