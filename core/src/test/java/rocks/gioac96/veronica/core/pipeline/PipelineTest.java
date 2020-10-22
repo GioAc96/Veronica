@@ -123,6 +123,4 @@ class PipelineTest {
 
     }
 
-    void testPostProcessorsExecutionOrder()
-
 }
