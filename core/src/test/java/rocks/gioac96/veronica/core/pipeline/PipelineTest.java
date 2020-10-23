@@ -1,15 +1,19 @@
 package rocks.gioac96.veronica.core.pipeline;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import rocks.gioac96.veronica.core.HttpStatus;
+import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
+import rocks.gioac96.veronica.core.concurrency.PriorityFixedThreadPoolExecutor;
 
 class PipelineTest {
 
@@ -123,4 +127,86 @@ class PipelineTest {
 
     }
 
+    @Test
+    void testNoPostPipelineStages() {
+
+        assertEquals(
+            Response.builder().provide(),
+            Pipeline.builder().provide().handle(null)
+        );
+
+    }
+
+    @Test
+    void testResponseBuilderFactory() {
+
+        PipelineResponseBuilderFactory factory = () -> Response.builder()
+            .httpStatus(HttpStatus.CONFLICT);
+
+        Response expected = Response.builder()
+            .httpStatus(HttpStatus.CONFLICT)
+            .body("veronica<3")
+            .provide();
+
+        assertEquals(
+            expected,
+            Pipeline.builder()
+                .responseBuilderFactory(factory)
+                .stage((request, responseBuilder, data) -> {
+
+                    responseBuilder.body("veronica<3");
+
+                    return null;
+
+                })
+                .provide().handle(null)
+        );
+
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = 100)
+    void testPostProcessorsSchedulingOrder(int testSize) throws InterruptedException {
+
+        @AllArgsConstructor
+        class PostProcessorWithSchedulingOrder implements PostProcessor<Object> {
+
+            final int schedulingOrder;
+
+            @Override
+            public void process(Request request, Response response, Object pipelineData) {
+
+            }
+        }
+
+
+        int priorityBound = testSize / 5;
+
+        Pipeline.PipelineBuilder<Object> pipelineBuilder = Pipeline.builder();
+
+        for (int i = 0; i < testSize; i++) {
+
+            int priority = random.nextInt(priorityBound);
+
+            pipelineBuilder.postProcessor(
+                new PostProcessorWithSchedulingOrder(priority),
+                priority
+            );
+
+        }
+
+        PriorityFixedThreadPoolExecutor executor = mock(PriorityFixedThreadPoolExecutor.class);
+        List<PostProcessor<Object>> sortedPostProcessors = pipelineBuilder.generatePostProcessorsList();
+
+        int lastP = -1;
+
+        for (PostProcessor<Object> sortedPostProcessor : sortedPostProcessors) {
+
+            assertTrue(lastP <= ((PostProcessorWithSchedulingOrder) sortedPostProcessor).schedulingOrder, "Wrong scheduling order");
+            lastP = ((PostProcessorWithSchedulingOrder) sortedPostProcessor).schedulingOrder;
+
+        }
+
+    }
+    
 }
