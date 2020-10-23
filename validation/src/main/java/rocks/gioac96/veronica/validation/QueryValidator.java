@@ -1,9 +1,6 @@
 package rocks.gioac96.veronica.validation;
 
-import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.Objects;
-import java.util.PriorityQueue;
 import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.Request;
@@ -13,8 +10,7 @@ import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.core.util.HasPriority;
 import rocks.gioac96.veronica.core.util.PriorityEntry;
-import rocks.gioac96.veronica.core.util.PriorityQueueUtils;
-import rocks.gioac96.veronica.core.util.Tuple;
+import rocks.gioac96.veronica.core.util.PriorityLinkedHashMapBuilder;
 
 @Getter
 public class QueryValidator<D extends HoldsValidationFailureData> implements PipelineStage<D> {
@@ -53,17 +49,18 @@ public class QueryValidator<D extends HoldsValidationFailureData> implements Pip
 
     }
 
-    public static class QueryValidatorBuilder extends ConfigurableProvider<QueryValidator> {
+    public static class QueryValidatorBuilder<D extends HoldsValidationFailureData> extends ConfigurableProvider<QueryValidator<D>> {
 
-        private final PriorityQueue<PriorityEntry<Tuple<String, FieldValidator>>> orderedFieldValidators = new PriorityQueue<>();
-        private final HashSet<String> registeredFields = new HashSet<>();
+        private final PriorityLinkedHashMapBuilder<String, FieldValidator> fieldValidatorsBuilder
+            = new PriorityLinkedHashMapBuilder<>();
 
         protected LinkedHashMap<String, FieldValidator> generateFieldValidators() {
 
-            return PriorityQueueUtils.transferEntriesToSortedLinkedHashMap(orderedFieldValidators);
+            return fieldValidatorsBuilder.toLinkedHashMap();
+
         }
 
-        public QueryValidatorBuilder fieldValidator(
+        public QueryValidatorBuilder<D> fieldValidator(
             @NonNull String fieldName,
             @NonNull FieldValidator fieldValidator
         ) {
@@ -76,27 +73,19 @@ public class QueryValidator<D extends HoldsValidationFailureData> implements Pip
 
         }
 
-        public QueryValidatorBuilder fieldValidator(
+        public QueryValidatorBuilder<D> fieldValidator(
             @NonNull String fieldName,
             @NonNull FieldValidator fieldValidator,
             @NonNull Integer priority
         ) {
 
-            if (registeredFields.contains(fieldName)) {
-
-                orderedFieldValidators.removeIf(entry -> entry.getValue().getFirst().equals(fieldName));
-                registeredFields.remove(fieldName);
-
-            }
-
-            registeredFields.add(fieldName);
-            orderedFieldValidators.add(new PriorityEntry<>(new Tuple<>(fieldName, fieldValidator)));
+            fieldValidatorsBuilder.put(fieldName, fieldValidator, priority);
 
             return this;
 
         }
 
-        public QueryValidatorBuilder fieldValidator(
+        public QueryValidatorBuilder<D> fieldValidator(
             @NonNull Provider<String> fieldNameProvider,
             @NonNull FieldValidator fieldValidator
         ) {
@@ -120,7 +109,7 @@ public class QueryValidator<D extends HoldsValidationFailureData> implements Pip
 
         }
 
-        public QueryValidatorBuilder fieldValidator(
+        public QueryValidatorBuilder<D> fieldValidator(
             @NonNull String fieldName,
             @NonNull Provider<FieldValidator> fieldValidatorProvider
         ) {
@@ -144,7 +133,7 @@ public class QueryValidator<D extends HoldsValidationFailureData> implements Pip
 
         }
 
-        public QueryValidatorBuilder fieldValidator(
+        public QueryValidatorBuilder<D> fieldValidator(
             @NonNull Provider<String> fieldName,
             @NonNull Provider<FieldValidator> fieldValidatorProvider
         ) {
@@ -159,20 +148,18 @@ public class QueryValidator<D extends HoldsValidationFailureData> implements Pip
         @Override
         protected boolean isValid() {
 
-            return !registeredFields.isEmpty()
-                && orderedFieldValidators.stream().noneMatch(Objects::isNull)
-                && orderedFieldValidators.stream().allMatch(entry -> {
-                return entry.getValue() != null
-                    && entry.getValue().getFirst() != null
-                    && entry.getValue().getSecond() != null;
-            });
+            LinkedHashMap<String, FieldValidator> draft = fieldValidatorsBuilder.getDraft();
+
+            return draft != null
+                && !draft.isEmpty()
+                && draft.entrySet().stream().allMatch(entry -> entry.getValue() != null);
 
         }
 
         @Override
-        protected QueryValidator instantiate() {
+        protected QueryValidator<D> instantiate() {
 
-            return new QueryValidator(this);
+            return new QueryValidator<>(this);
 
         }
 
