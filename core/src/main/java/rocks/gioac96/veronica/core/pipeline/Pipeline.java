@@ -15,6 +15,7 @@ import rocks.gioac96.veronica.core.concurrency.PriorityExecutorService;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.core.util.HasPriority;
+import rocks.gioac96.veronica.core.util.PriorityListBuilder;
 
 /**
  * Request pipeline.
@@ -80,21 +81,15 @@ public class Pipeline<D> implements RequestHandler {
 
     public static class PipelineBuilder<D> extends ConfigurableProvider<Pipeline<D>> {
 
-        private final Map<Integer, List<PipelineStage<D>>> stages = new HashMap<>();
-        private final Map<Integer, List<PostProcessor<D>>> postProcessors = new HashMap<>();
+        private final PriorityListBuilder<PipelineStage<D>> stagesListBuilder = new PriorityListBuilder<>();
+        private final PriorityListBuilder<PostProcessor<D>> postProcessorsListBuilder = new PriorityListBuilder<>();
         protected PipelineDataFactory<D> dataFactory = request -> null;
         protected PipelineResponseBuilderFactory responseBuilderFactory = Response::builder;
         protected PriorityExecutorService postProcessorsExecutor = CommonExecutorServices.defaultPriorityExecutorService();
-        private int stagesSize = 0;
-        private int postProcessorsSize = 0;
 
         public PipelineBuilder<D> stage(@NonNull PipelineStage<D> stage, int priority) {
 
-            List<PipelineStage<D>> samePriorityStagesList = stages.computeIfAbsent(priority, k -> new LinkedList<>());
-
-            samePriorityStagesList.add(stage);
-
-            stagesSize++;
+            stagesListBuilder.put(stage, priority);
 
             return this;
 
@@ -129,11 +124,7 @@ public class Pipeline<D> implements RequestHandler {
         public PipelineBuilder<D> postProcessor(@NonNull PostProcessor<D> postProcessor, int priority) {
 
 
-            List<PostProcessor<D>> samePriorityPostProcessorsList = postProcessors.computeIfAbsent(priority, k -> new LinkedList<>());
-
-            samePriorityPostProcessorsList.add(postProcessor);
-
-            postProcessorsSize++;
+            postProcessorsListBuilder.put(postProcessor, priority);
 
             return this;
 
@@ -196,7 +187,6 @@ public class Pipeline<D> implements RequestHandler {
         protected boolean isValid() {
 
             return dataFactory != null
-                && stagesSize > 0
                 && responseBuilderFactory != null
                 && postProcessorsExecutor != null;
 
@@ -211,29 +201,13 @@ public class Pipeline<D> implements RequestHandler {
 
         public List<PipelineStage<D>> generateStagesList() {
 
-            List<PipelineStage<D>> pipelineStages = new ArrayList<>(stagesSize);
-
-            stages.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getKey)).forEachOrdered(entry -> {
-
-                pipelineStages.addAll(entry.getValue());
-
-            });
-
-            return pipelineStages;
+            return stagesListBuilder.toArrayList();
 
         }
 
         public List<PostProcessor<D>> generatePostProcessorsList() {
 
-            List<PostProcessor<D>> pipelinePostProcessors = new ArrayList<>(postProcessorsSize);
-
-            postProcessors.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getKey)).forEachOrdered(entry -> {
-
-                pipelinePostProcessors.addAll(entry.getValue());
-
-            });
-
-            return pipelinePostProcessors;
+            return postProcessorsListBuilder.toArrayList();
 
         }
 
