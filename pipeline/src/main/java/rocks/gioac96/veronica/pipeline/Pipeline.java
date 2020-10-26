@@ -1,11 +1,6 @@
-package rocks.gioac96.veronica.core.pipeline;
+package rocks.gioac96.veronica.pipeline;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.RequestHandler;

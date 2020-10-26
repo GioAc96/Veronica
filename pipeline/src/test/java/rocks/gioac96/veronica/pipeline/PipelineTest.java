@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core.pipeline;
+package rocks.gioac96.veronica.pipeline;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;

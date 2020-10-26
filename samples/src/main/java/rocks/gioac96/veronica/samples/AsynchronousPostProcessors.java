@@ -4,7 +4,7 @@ import lombok.Getter;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.common.CommonRequestHandlers;
 import rocks.gioac96.veronica.core.common.CommonResponses;
-import rocks.gioac96.veronica.core.pipeline.Pipeline;
+import rocks.gioac96.veronica.pipeline.Pipeline;
 import rocks.gioac96.veronica.routing.Route;
 import rocks.gioac96.veronica.routing.Router;
 import rocks.gioac96.veronica.routing.common.CommonRequestMatchers;

@@ -1,4 +1,4 @@
-package rocks.gioac96.veronica.core.pipeline;
+package rocks.gioac96.veronica.pipeline;
 
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
