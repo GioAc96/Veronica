@@ -30,21 +30,6 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
     }
 
-    @AllArgsConstructor
-    private static class SessionEntry<D> {
-
-        private LocalDateTime expiresAt;
-
-        private D sessionData;
-
-        public boolean hasExpired() {
-
-            return expiresAt == null || expiresAt.isBefore(LocalDateTime.now());
-
-        }
-
-    }
-
     synchronized public boolean clearExpiredSessions() {
 
         int initialSize = entries.size();
@@ -217,6 +202,21 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
         }
 
         return entries.remove(sessionKey) != null;
+
+    }
+
+    @AllArgsConstructor
+    private static class SessionEntry<D> {
+
+        private LocalDateTime expiresAt;
+
+        private D sessionData;
+
+        public boolean hasExpired() {
+
+            return expiresAt == null || expiresAt.isBefore(LocalDateTime.now());
+
+        }
 
     }
 

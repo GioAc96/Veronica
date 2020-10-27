@@ -10,8 +10,8 @@ import rocks.gioac96.veronica.core.providers.CreationException;
 
 public final class PriorityListBuilder<T> {
 
-    private final Map<Integer, List<T>> priorityLists = new HashMap<>();
     private static final int DEFAULT_PRIORITY = Integer.MAX_VALUE;
+    private final Map<Integer, List<T>> priorityLists = new HashMap<>();
     private int entriesCount = 0;
 
     public void put(T element) {
@@ -47,7 +47,7 @@ public final class PriorityListBuilder<T> {
 
     }
 
-    private void appendEntriesToList(List<T>  list) throws CreationException {
+    private void appendEntriesToList(List<T> list) throws CreationException {
 
         priorityLists
             .entrySet()

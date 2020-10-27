@@ -1,6 +1,6 @@
 package rocks.gioac96.veronica.session.application;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -25,13 +24,6 @@ class ApplicationSessionStoreTest {
 
     ApplicationSessionStore<String> sessionStore;
 
-    @BeforeEach
-    void setup() {
-
-        sessionStore = ApplicationSessionStore.<String>builder().provide();
-
-    }
-
     public static Request requestWithEmptyCookieMap() {
 
         Request requestMock = mock(Request.class);
@@ -40,7 +32,6 @@ class ApplicationSessionStoreTest {
         return requestMock;
 
     }
-
 
     public static Request responseToRequestWithCookies(Response.ResponseBuilder responseBuilder) {
 
@@ -63,6 +54,13 @@ class ApplicationSessionStoreTest {
         }});
 
         return requestWithCookies;
+
+    }
+
+    @BeforeEach
+    void setup() {
+
+        sessionStore = ApplicationSessionStore.<String>builder().provide();
 
     }
 
@@ -107,7 +105,7 @@ class ApplicationSessionStoreTest {
 
         }
 
-        while (! expectedSessionData.isEmpty()) {
+        while (!expectedSessionData.isEmpty()) {
 
             int randomIndex = new Random().nextInt(expectedSessionData.size());
 

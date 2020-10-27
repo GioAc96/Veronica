@@ -5,12 +5,12 @@ import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.pipeline.PipelineStage;
 import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.core.util.HasPriority;
 import rocks.gioac96.veronica.core.util.PriorityEntry;
 import rocks.gioac96.veronica.core.util.PriorityLinkedHashMapBuilder;
+import rocks.gioac96.veronica.pipeline.PipelineStage;
 
 @Getter
 public class QueryValidator<D extends HoldsValidationFailureData> implements PipelineStage<D> {

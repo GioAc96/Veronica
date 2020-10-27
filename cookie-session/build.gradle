@@ -19,7 +19,7 @@ dependencies {
 
     implementation project(':core')
     implementation project(':session')
-    
+
     testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.5.7'
 

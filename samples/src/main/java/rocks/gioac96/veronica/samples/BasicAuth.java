@@ -6,8 +6,8 @@ import rocks.gioac96.veronica.auth.CredentialsChecker;
 import rocks.gioac96.veronica.auth.HoldsAuthenticationData;
 import rocks.gioac96.veronica.core.Application;
 import rocks.gioac96.veronica.core.RequestHandler;
-import rocks.gioac96.veronica.pipeline.Pipeline;
 import rocks.gioac96.veronica.http_basic_auth.BasicAuthFilterBuilder;
+import rocks.gioac96.veronica.pipeline.Pipeline;
 
 public class BasicAuth {
 

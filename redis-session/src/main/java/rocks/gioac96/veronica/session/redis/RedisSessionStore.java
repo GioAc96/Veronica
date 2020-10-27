@@ -151,7 +151,7 @@ public class RedisSessionStore<D> extends CookieSessionStore<D> {
 
             matchingKeys.addAll(keys);
 
-        } while(!nextCursor.equals("0"));
+        } while (!nextCursor.equals("0"));
 
         if (matchingKeys.size() == 0) {
             return false;
@@ -225,7 +225,7 @@ public class RedisSessionStore<D> extends CookieSessionStore<D> {
             return redisSessionKeyPrefix(redisSessionKeyPrefixProvider.provide());
 
         }
-        
+
         public RedisSessionStoreBuilder<D> encoder(@NonNull SessionDataEncoder<D> encoder) {
 
             this.encoder = encoder;
@@ -240,7 +240,7 @@ public class RedisSessionStore<D> extends CookieSessionStore<D> {
             return encoder(encoderProvider.provide());
 
         }
-        
+
         public RedisSessionStoreBuilder<D> parser(@NonNull SessionDataParser<D> parser) {
 
             this.parser = parser;
