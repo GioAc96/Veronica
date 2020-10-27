@@ -9,8 +9,8 @@ public interface SessionStore<D> {
 
     void setSessionData(Request request, Response.ResponseBuilder responseBuilder, D sessionData);
 
-    boolean clearSessionData(Request request);
+    void clearSessionData(Request request);
 
-    boolean clearAllSessions();
+    void clearAllSessions();
 
 }

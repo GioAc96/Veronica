@@ -209,4 +209,28 @@ class ApplicationSessionStoreTest {
 
     }
 
+    @Test
+    void testClearSessionData() {
+
+        sessionStore = ApplicationSessionStore
+            .<String>builder()
+            .expirationTime(1)
+            .provide();
+
+        Request requestMock = requestWithEmptyCookieMap();
+        Response.ResponseBuilder responseBuilder = Response.builder();
+
+        sessionStore.setSessionData(requestMock, responseBuilder, "my data");
+
+        Request retrieveSessionRequest = responseToRequestWithCookies(responseBuilder);
+
+        assertEquals("my data", sessionStore.getSessionData(retrieveSessionRequest));
+
+        sessionStore.clearSessionData(retrieveSessionRequest);
+
+        assertNull(sessionStore.getSessionData(retrieveSessionRequest));
+
+
+    }
+
 }

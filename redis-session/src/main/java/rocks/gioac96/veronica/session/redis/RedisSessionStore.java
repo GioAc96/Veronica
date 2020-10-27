@@ -119,24 +119,16 @@ public class RedisSessionStore<D> extends CookieSessionStore<D> {
     }
 
     @Override
-    public boolean clearSessionData(Request request) {
+    public void clearSessionData(Request request) {
 
         String redisSessionKey = getRedisSessionKey(request);
 
-        if (redisSessionKey == null) {
-
-            return false;
-
-        } else {
-
-            return connection.del(redisSessionKey) == 1;
-
-        }
+        connection.del(redisSessionKey);
 
     }
 
     @Override
-    public boolean clearAllSessions() {
+    public void clearAllSessions() {
 
         List<String> matchingKeys = new LinkedList<>();
         ScanParams params = new ScanParams();
@@ -154,12 +146,10 @@ public class RedisSessionStore<D> extends CookieSessionStore<D> {
         } while (!nextCursor.equals("0"));
 
         if (matchingKeys.size() == 0) {
-            return false;
+            return;
         }
 
         connection.del(matchingKeys.toArray(new String[0]));
-
-        return true;
 
     }
 

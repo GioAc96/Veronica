@@ -1,31 +1,44 @@
 package rocks.gioac96.veronica.session.application;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
 import rocks.gioac96.veronica.core.providers.Provider;
+import rocks.gioac96.veronica.core.util.Tuple;
 import rocks.gioac96.veronica.session.cookie.CookieSessionStore;
 
 public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
-    private final Map<UUID, SessionEntry<D>> entries = new HashMap<>();
-
-    @Getter
-    private final long expirationTime;
+    private final SessionEntries<D> sessionEntries;
 
     protected ApplicationSessionStore(ApplicationSessionStorageBuilder<D> b) {
 
         super(b);
 
-        this.expirationTime = b.expirationTime;
+        this.sessionEntries = new SessionEntries<>(b.expirationTime);
+
+        new Thread(() -> {
+
+            try {
+
+                Thread.sleep(b.expirationTime);
+                sessionEntries.clearExpiredEntries();
+
+            } catch (InterruptedException e) {
+
+                e.printStackTrace();
+
+            }
+
+        }).start();
 
     }
+
 
     public static <D> ApplicationSessionStorageBuilder<D> builder() {
 
@@ -33,55 +46,21 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
     }
 
-    synchronized public boolean clearExpiredSessions() {
+    public long getExpirationTime() {
 
-        int initialSize = entries.size();
-
-        entries.entrySet().removeIf(entry -> entry.getValue().hasExpired());
-
-        return entries.size() < initialSize;
+        return sessionEntries.expirationTime;
 
     }
 
     @Override
-    synchronized public boolean clearAllSessions() {
+    public void clearAllSessions() {
 
-        if (entries.isEmpty()) {
-
-            return false;
-
-        } else {
-
-            entries.clear();
-
-            return true;
-
-        }
+        sessionEntries.clearAll();
 
     }
 
-    synchronized private SessionEntry<D> getSessionEntryCheckingExpiration(UUID sessionKey) {
-
-        SessionEntry<D> sessionEntry = entries.get(sessionKey);
-
-        if (sessionEntry == null) {
-
-            return null;
-
-        }
-
-        if (sessionEntry.hasExpired()) {
-
-            entries.remove(sessionKey);
-            return null;
-
-        }
-
-        return sessionEntry;
-
-    }
-
-    private SessionEntry<D> getSessionEntryCheckingExpiration(Request request) {
+    @Override
+    public D getSessionData(@NonNull Request request) {
 
         UUID sessionKey = getSessionKey(request);
 
@@ -91,69 +70,9 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
         } else {
 
-            return getSessionEntryCheckingExpiration(sessionKey);
+            return sessionEntries.getData(sessionKey);
 
         }
-
-
-    }
-
-    @Override
-    public D getSessionData(@NonNull Request request) {
-
-        SessionEntry<D> sessionEntry = getSessionEntryCheckingExpiration(request);
-
-        if (sessionEntry == null) {
-
-            return null;
-
-        } else {
-
-            return sessionEntry.sessionData;
-
-        }
-
-    }
-
-    private UUID generateNewSessionKey() {
-
-        UUID sessionKey;
-
-        do {
-
-            sessionKey = UUID.randomUUID();
-
-        } while (entries.containsKey(sessionKey));
-
-        return sessionKey;
-
-    }
-
-    private SessionEntry<D> generateNewSessionEntry(
-        D data
-    ) {
-
-        return new SessionEntry<>(
-            LocalDateTime.now().plusSeconds(expirationTime),
-            data
-        );
-
-    }
-
-    synchronized private void storeNewSession(Response.ResponseBuilder responseBuilder, D sessionData) {
-
-        UUID sessionKey = generateNewSessionKey();
-        SessionEntry<D> sessionEntry = generateNewSessionEntry(sessionData);
-
-        storeSessionCookie(responseBuilder, sessionKey);
-        entries.put(sessionKey, sessionEntry);
-
-    }
-
-    synchronized private void updateSessionEntry(SessionEntry<D> sessionEntry, D sessionData) {
-
-        sessionEntry.sessionData = sessionData;
-        sessionEntry.expiresAt = LocalDateTime.now().plusSeconds(expirationTime);
 
     }
 
@@ -165,59 +84,134 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
     ) {
 
         UUID sessionKey = getSessionKey(request);
-        SessionEntry<D> sessionEntry;
 
         if (sessionKey == null) {
 
             // Request does not have a session key. Generating key and entry
-            storeNewSession(responseBuilder, sessionData);
+            sessionKey = sessionEntries.generateSessionKey();
+            storeSessionCookie(responseBuilder, sessionKey);
 
-        } else {
+        } else if (sessionEntries.isValidSession(sessionKey)) {
 
-            // Request has a session key.
-            sessionEntry = getSessionEntryCheckingExpiration(sessionKey);
+            // Session key is invalid or expired, updating
+            sessionKey = sessionEntries.generateSessionKey();
 
-            if (sessionEntry == null) {
+            // Storing new session key
+            storeSessionCookie(responseBuilder, sessionKey);
 
-                // Session key is invalid or expired
-                storeNewSession(responseBuilder, sessionData);
+        }
 
-            } else {
+        sessionEntries.setData(sessionKey, sessionData);
 
-                // Session key is valid, updating
-                updateSessionEntry(sessionEntry, sessionData);
+    }
+
+    @Override
+    public void clearSessionData(Request request) {
+
+        UUID sessionKey = getSessionKey(request);
+
+        sessionEntries.clearSessionData(sessionKey);
+
+    }
+
+    private final static class SessionEntries<D> {
+
+        private final LinkedHashMap<UUID, Tuple<LocalDateTime, D>> entries = new LinkedHashMap<>();
+        private final long expirationTime;
+
+        public SessionEntries(long expirationTime) {
+
+            this.expirationTime = expirationTime;
+
+        }
+
+        synchronized void clearAll() {
+
+            entries.clear();
+
+        }
+
+        synchronized void clearExpiredEntries() {
+
+            Iterator<Map.Entry<UUID, Tuple<LocalDateTime, D>>> iterator = entries.entrySet().iterator();
+
+            while (iterator.hasNext()) {
+
+                Map.Entry<UUID, Tuple<LocalDateTime, D>> next = iterator.next();
+
+                if (next.getValue().getFirst().isBefore(LocalDateTime.now())) {
+
+                    iterator.remove();
+
+                } else {
+
+                    break;
+
+                }
 
             }
 
         }
 
-    }
+        synchronized D getData(UUID id) {
 
-    @Override
-    synchronized public boolean clearSessionData(Request request) {
+            Tuple<LocalDateTime, D> entry = entries.get(id);
 
-        UUID sessionKey = getSessionKey(request);
+            if (entry == null) {
 
-        if (sessionKey == null) {
+                return null;
 
-            return false;
+            }
+
+            if (entry.getFirst().isBefore(LocalDateTime.now())) {
+
+                return null;
+
+            }
+
+            return entry.getSecond();
 
         }
 
-        return entries.remove(sessionKey) != null;
+        synchronized void setData(UUID id, D data) {
 
-    }
+            entries.remove(id);
 
-    @AllArgsConstructor
-    private static class SessionEntry<D> {
+            entries.put(id, new Tuple<>(LocalDateTime.now().plusSeconds(expirationTime), data));
 
-        private LocalDateTime expiresAt;
+        }
 
-        private D sessionData;
+        UUID generateSessionKey() {
 
-        public boolean hasExpired() {
+            UUID sessionKey;
 
-            return expiresAt == null || expiresAt.isBefore(LocalDateTime.now());
+            do {
+
+                sessionKey = UUID.randomUUID();
+
+            } while (entries.containsKey(sessionKey));
+
+            return sessionKey;
+
+        }
+
+        boolean isValidSession(UUID sessionKey) {
+
+            Tuple<LocalDateTime, D> entry = entries.get(sessionKey);
+
+            if (entry == null) {
+
+                return false;
+
+            }
+
+            return !entry.getFirst().isBefore(LocalDateTime.now());
+
+        }
+
+        void clearSessionData(UUID sessionKey) {
+
+            entries.remove(sessionKey);
 
         }
 
