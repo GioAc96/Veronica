@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
-import rocks.gioac96.veronica.core.SetCookieHeader;
-import rocks.gioac96.veronica.core.providers.ConfigurableProvider;
 import rocks.gioac96.veronica.core.providers.Provider;
 import rocks.gioac96.veronica.session.cookie.CookieSessionStore;
 
@@ -47,7 +45,7 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
     }
 
-    public boolean clearExpiredSessions() {
+    synchronized public boolean clearExpiredSessions() {
 
         int initialSize = entries.size();
 
@@ -58,7 +56,7 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
     }
 
     @Override
-    public boolean clearAllSessions() {
+    synchronized public boolean clearAllSessions() {
 
         if (entries.isEmpty()) {
 
@@ -74,7 +72,7 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
     }
 
-    private SessionEntry<D> getSessionEntryCheckingExpiration(UUID sessionKey) {
+    synchronized private SessionEntry<D> getSessionEntryCheckingExpiration(UUID sessionKey) {
 
         SessionEntry<D> sessionEntry = entries.get(sessionKey);
 
@@ -154,7 +152,7 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
     }
 
-    private void storeNewSession(Response.ResponseBuilder responseBuilder, D sessionData) {
+    synchronized private void storeNewSession(Response.ResponseBuilder responseBuilder, D sessionData) {
 
         UUID sessionKey = generateNewSessionKey();
         SessionEntry<D> sessionEntry = generateNewSessionEntry(sessionData);
@@ -164,8 +162,7 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
     }
 
-
-    private void updateSessionEntry(SessionEntry<D> sessionEntry, D sessionData) {
+    synchronized private void updateSessionEntry(SessionEntry<D> sessionEntry, D sessionData) {
 
         sessionEntry.sessionData = sessionData;
         sessionEntry.expiresAt = LocalDateTime.now().plusSeconds(expirationTime);
@@ -209,7 +206,7 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
     }
 
     @Override
-    public boolean clearSessionData(Request request) {
+    synchronized public boolean clearSessionData(Request request) {
 
         UUID sessionKey = getSessionKey(request);
 
