@@ -233,4 +233,26 @@ class ApplicationSessionStoreTest {
 
     }
 
+    @Test
+    void testAutomaticallyClearExpiredSessions() throws InterruptedException {
+
+        Request requestMock = requestWithEmptyCookieMap();
+        Response.ResponseBuilder responseBuilder = Response.builder();
+
+        sessionStore = ApplicationSessionStore
+            .<String>builder()
+            .expirationTime(1)
+            .provide();
+        
+        sessionStore.setSessionData(requestMock, responseBuilder, "my data");
+
+        assertEquals(1, sessionStore.getStoredSessionsCount());
+
+        Thread.sleep(1500);
+
+        assertEquals(0, sessionStore.getStoredSessionsCount());
+
+
+    }
+
 }

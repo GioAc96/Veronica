@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
@@ -22,20 +24,14 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
         this.sessionEntries = new SessionEntries<>(b.expirationTime);
 
-        new Thread(() -> {
+        Executors.newSingleThreadScheduledExecutor()
+            .scheduleAtFixedRate(
+                sessionEntries::clearExpiredEntries,
+                b.expirationTime / 2 + 1,
+                b.expirationTime,
+                TimeUnit.SECONDS
+            );
 
-            try {
-
-                Thread.sleep(b.expirationTime);
-                sessionEntries.clearExpiredEntries();
-
-            } catch (InterruptedException e) {
-
-                e.printStackTrace();
-
-            }
-
-        }).start();
 
     }
 
@@ -111,6 +107,12 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
         UUID sessionKey = getSessionKey(request);
 
         sessionEntries.clearSessionData(sessionKey);
+
+    }
+
+    public int getStoredSessionsCount() {
+
+        return sessionEntries.entries.size();
 
     }
 
