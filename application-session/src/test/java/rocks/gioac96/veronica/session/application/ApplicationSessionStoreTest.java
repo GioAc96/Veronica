@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.session.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import rocks.gioac96.veronica.core.Request;
@@ -179,6 +181,31 @@ class ApplicationSessionStoreTest {
             assertEquals(data, sessionStore.getSessionData(req));
 
         });
+
+    }
+
+    @Test
+    void testSessionExpiration() throws InterruptedException {
+
+        sessionStore = ApplicationSessionStore
+            .<String>builder()
+            .expirationTime(1)
+            .provide();
+
+        Request requestMock = requestWithEmptyCookieMap();
+        Response.ResponseBuilder responseBuilder = Response.builder();
+
+        sessionStore.setSessionData(requestMock, responseBuilder, "my data");
+
+        Request retrieveSessionRequest = responseToRequestWithCookies(responseBuilder);
+
+        Thread.sleep(sessionStore.getExpirationTime() * 1000 / 2);
+
+        assertEquals("my data", sessionStore.getSessionData(retrieveSessionRequest));
+
+        Thread.sleep((long) (sessionStore.getExpirationTime() * 1000 * 1.1));
+
+        assertNull(sessionStore.getSessionData(retrieveSessionRequest));
 
     }
 

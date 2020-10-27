@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
@@ -14,6 +15,8 @@ import rocks.gioac96.veronica.session.cookie.CookieSessionStore;
 public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
     private final Map<UUID, SessionEntry<D>> entries = new HashMap<>();
+
+    @Getter
     private final long expirationTime;
 
     protected ApplicationSessionStore(ApplicationSessionStorageBuilder<D> b) {
