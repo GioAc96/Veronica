@@ -24,7 +24,7 @@ public class QueryTest extends E2ETest {
                     .query("")
                     .httpMethod(HttpMethod.GET),
 
-                response -> assertEquals(new HashMap<>().toString(), response.getBody())
+                response -> assertEquals(new HashMap<>().toString(), response.getBodyString())
             );
 
             put(
@@ -37,7 +37,7 @@ public class QueryTest extends E2ETest {
 
                     put("var1", "val1");
 
-                }}.toString(), response.getBody())
+                }}.toString(), response.getBodyString())
             );
 
             put(
@@ -51,7 +51,7 @@ public class QueryTest extends E2ETest {
                     put("var1", "val1");
                     put("var2", "second_value");
 
-                }}.toString(), response.getBody())
+                }}.toString(), response.getBodyString())
             );
 
             put(
@@ -66,7 +66,7 @@ public class QueryTest extends E2ETest {
                     put("var2", "second_value");
                     put("bool", "");
 
-                }}.toString(), response.getBody())
+                }}.toString(), response.getBodyString())
             );
 
 

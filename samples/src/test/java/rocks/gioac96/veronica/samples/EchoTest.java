@@ -32,7 +32,7 @@ public class EchoTest extends E2ETest {
                     .httpMethod(HttpMethod.GET),
                 response -> assertEquals(
                     Echo.getErrorMessage(),
-                    response.getBody()
+                    response.getBodyString()
                 )
             );
 
@@ -48,7 +48,7 @@ public class EchoTest extends E2ETest {
                     .httpMethod(HttpMethod.GET),
                 response -> assertEquals(
                     bodyValue,
-                    response.getBody()
+                    response.getBodyString()
                 )
             );
 

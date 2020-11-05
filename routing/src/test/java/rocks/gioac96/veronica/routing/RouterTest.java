@@ -30,7 +30,7 @@ class RouterTest {
     ) {
 
         assertEquals(HttpStatus.OK, response.getHttpStatus());
-        assertEquals(testRequestHandler.handle(null).getBody(), response.getBody());
+        assertEquals(testRequestHandler.handle(null).getBodyString(), response.getBodyString());
 
     }
 
@@ -517,7 +517,7 @@ class RouterTest {
         when(validRequestHome.isSecure()).thenReturn(true);
         when(validRequestHome.getBody()).thenReturn("request is secure");
 
-        assertEquals("secure route", router.handle(validRequestHome).getBody());
+        assertEquals("secure route", router.handle(validRequestHome).getBodyString());
 
         Request invalidRequestHomeNonSecure = Mockito.mock(Request.class);
         when(invalidRequestHomeNonSecure.getHttpMethod()).thenReturn(HttpMethod.GET);
@@ -737,7 +737,7 @@ class RouterTest {
 
         assertEquals(
             "routed",
-            router.handle(mockRequest(HttpMethod.GET, "/prefix/giorgio")).getBody()
+            router.handle(mockRequest(HttpMethod.GET, "/prefix/giorgio")).getBodyString()
         );
 
         assertNull(router.handle(mockRequest(HttpMethod.GET, "/")));
@@ -787,8 +787,8 @@ class RouterTest {
             mockRequest(HttpMethod.GET, "/")
         };
 
-        assertEquals("v1", root.handle(v1Req).getBody());
-        assertEquals("v2", root.handle(v2Req).getBody());
+        assertEquals("v1", root.handle(v1Req).getBodyString());
+        assertEquals("v2", root.handle(v2Req).getBodyString());
 
         for (Request invalidRequest : invalid) {
 

@@ -18,21 +18,21 @@ public class Response {
 
     @Getter
     protected final HttpStatus httpStatus;
+
     @Getter
     private final Headers headers;
+
+    private final byte[] bodyBytes;
+
     @Getter
-    private final Set<SetCookieHeader> cookies;
-    private byte[] bodyBytes;
-    @Getter
-    private String body;
+    private final String bodyString;
 
     protected Response(ResponseBuilder b) {
 
         this.httpStatus = b.httpStatus;
-        this.body = b.body;
+        this.bodyString = b.bodyString;
         this.bodyBytes = b.bodyBytes;
         this.headers = b.headers;
-        this.cookies = b.cookies;
 
     }
 
@@ -45,69 +45,13 @@ public class Response {
 
     public byte[] getBodyBytes() {
 
-        if (bodyBytes == null) {
-
-            if (body == null) {
-
-                return new byte[0];
-
-            } else {
-
-                return body.getBytes();
-
-            }
-
-        } else {
+        if (bodyString == null) {
 
             return bodyBytes;
 
-        }
-
-    }
-
-    /**
-     * Checks whether the response is already rendered.
-     *
-     * @return true iff the response is already rendered
-     */
-    public boolean isRendered() {
-
-        return body != null;
-
-    }
-
-    /**
-     * Writes the body of the response if the response is not already rendered.
-     *
-     * @param body body of the response
-     * @return true iff the response was not already rendered and the body was successfully written
-     */
-    @SuppressWarnings("UnusedReturnValue")
-    public boolean writeBody(@NonNull String body) {
-
-        this.body = body;
-        return writeBody(body.getBytes());
-
-    }
-
-    /**
-     * Writes the body of the response if the response is not already rendered.
-     *
-     * @param body body of the response
-     * @return true iff the response was not already rendered and the body was successfully written
-     */
-    @SuppressWarnings("UnusedReturnValue")
-    public boolean writeBody(@NonNull byte[] body) {
-
-        if (isRendered()) {
-
-            return false;
-
         } else {
 
-            this.bodyBytes = body;
-
-            return true;
+            return bodyString.getBytes();
 
         }
 
@@ -116,10 +60,10 @@ public class Response {
     @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
     public static class ResponseBuilder extends ConfigurableProvider<Response> {
 
-        private Set<SetCookieHeader> cookies;
         private HttpStatus httpStatus = HttpStatus.OK;
+
         private byte[] bodyBytes;
-        private String body;
+        private String bodyString;
         private Headers headers = new Headers();
 
         public ResponseBuilder httpStatus(@NonNull HttpStatus httpStatus) {
@@ -130,16 +74,18 @@ public class Response {
 
         }
 
-        public ResponseBuilder body(@NonNull String body) {
+        public ResponseBuilder body(@NonNull byte[] bodyBytes) {
 
-            this.body = body;
-            return body(body.getBytes());
+            this.bodyBytes = bodyBytes;
+            this.bodyString = null;
+            return this;
 
         }
 
-        public ResponseBuilder body(@NonNull byte[] body) {
+        public ResponseBuilder body(@NonNull String bodyString) {
 
-            this.bodyBytes = body;
+            this.bodyString = bodyString;
+            this.bodyBytes = null;
             return this;
 
         }
@@ -155,18 +101,6 @@ public class Response {
             this.headers = headers;
 
             return this;
-
-        }
-
-        public ResponseBuilder requestBasicAuth(@NonNull String realm) {
-
-            return header("WWW-Authenticate", "Basic realm=\"" + realm + '\"');
-
-        }
-
-        public ResponseBuilder requestBasicAuth() {
-
-            return header("WWW-Authenticate", "Basic");
 
         }
 
@@ -188,52 +122,9 @@ public class Response {
 
         }
 
-        @SuppressWarnings({"checkstyle:RightCurly", "checkstyle:Indentation"})
-        public ResponseBuilder header(@NonNull String key, @NonNull Collection<String> values) {
-
-            if (this.headers.containsKey(key)) {
-
-                this.headers.get(key).addAll(values);
-
-            } else {
-
-                this.headers.put(key, new ArrayList<String>() {{
-                    addAll(values);
-                }});
-
-            }
-
-            return this;
-
-        }
-
-        private void initCookies() {
-
-            if (cookies == null) {
-
-                cookies = new HashSet<>();
-
-            }
-
-        }
-
-        public ResponseBuilder cookies(@NonNull Collection<SetCookieHeader> cookies) {
-
-            initCookies();
-
-            this.cookies.addAll(cookies);
-
-            return this;
-
-        }
-
         public ResponseBuilder cookie(@NonNull SetCookieHeader cookie) {
 
-            initCookies();
-
-            this.cookies.add(cookie);
-
-            return this;
+            return header("Set-Cookie", cookie.toHeaderString());
 
         }
 

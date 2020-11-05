@@ -22,6 +22,7 @@ public final class Application {
     private final RequestHandler requestHandler;
     private final ExchangeParser exchangeParser;
     private final ExceptionHandler exceptionHandler;
+    private final Response defaultResponse;
 
     protected Application(
         ApplicationBuilder b
@@ -30,6 +31,7 @@ public final class Application {
         this.requestHandler = b.requestHandler;
         this.exchangeParser = b.exchangeParser;
         this.exceptionHandler = b.exceptionHandler;
+        this.defaultResponse = b.defaultResponse;
 
         this.httpServers = b.httpServers;
 
@@ -42,9 +44,9 @@ public final class Application {
     }
 
     /**
-     * Instantiates a generic application builder.
+     * Instantiates an application builder.
      *
-     * @return the instantiated generic application builder
+     * @return the instantiated application builder
      */
     public static ApplicationBuilder builder() {
 
@@ -65,47 +67,40 @@ public final class Application {
             // Generate response
             response = requestHandler.handle(request);
 
-
         } catch (Exception e) {
 
             response = exceptionHandler.handle(e);
 
         }
 
+        response = Objects.requireNonNullElse(response, defaultResponse);
+
         try {
+
             // Writing response headers
             exchange.getResponseHeaders().putAll(response.getHeaders());
 
-            // Cookies
-
-            if (response.getCookies() != null) {
-
-                List<String> cookieHeaders = new ArrayList<>();
-
-                for (SetCookieHeader httpCookie : response.getCookies()) {
-
-                    cookieHeaders.add(httpCookie.toHeaderString());
-
-                }
-
-                exchange.getResponseHeaders().put("Set-Cookie", cookieHeaders);
-
-            }
+            byte[] bodyBytes = Objects.requireNonNullElse(response.getBodyBytes(), "".getBytes());
 
             // Send response headers
-            exchange.sendResponseHeaders(response.getHttpStatus().getCode(), response.getBodyBytes().length);
+            exchange.sendResponseHeaders(response.getHttpStatus().getCode(), bodyBytes.length);
 
             // Send response body
-            exchange.getResponseBody().write(response.getBodyBytes());
-
-            // Close response
-            exchange.close();
+            exchange.getResponseBody().write(bodyBytes);
 
         } catch (IOException e) {
 
             exceptionHandler.handleExchangeException(e);
 
+        } catch (Exception ignored) {
+
+
+        } finally {
+
+            exchange.close();
+
         }
+
     }
 
     /**
@@ -145,6 +140,7 @@ public final class Application {
 
         private ExceptionHandler exceptionHandler = new ExceptionHandler() {
         };
+        private Response defaultResponse = Response.builder().provide();
 
         public ApplicationBuilder requestHandler(@NonNull RequestHandler requestHandler) {
 
@@ -152,7 +148,6 @@ public final class Application {
             return this;
 
         }
-
 
         public ApplicationBuilder requestHandler(@NonNull Provider<RequestHandler> requestHandlerProvider) {
 
@@ -211,6 +206,19 @@ public final class Application {
 
         }
 
+        public ApplicationBuilder defaultResponse(@NonNull Response defaultResponse) {
+
+            this.defaultResponse = defaultResponse;
+            return this;
+
+        }
+
+        public ApplicationBuilder defaultResponse(@NonNull Provider<Response> defaultResponseProvider) {
+
+            return defaultResponse(defaultResponseProvider.provide());
+
+        }
+
         @Override
         protected boolean isValid() {
 
@@ -220,7 +228,8 @@ public final class Application {
                 && httpServers.stream().allMatch(Objects::nonNull)
                 && requestHandler != null
                 && exchangeParser != null
-                && exceptionHandler != null;
+                && exceptionHandler != null
+                && defaultResponse != null;
 
         }
 

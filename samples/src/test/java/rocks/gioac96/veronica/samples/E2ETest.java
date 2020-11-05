@@ -36,7 +36,7 @@ public abstract class E2ETest {
 
     protected static void assertResponseBodyEquals(String expected, Response response) {
 
-        assertEquals(expected, response.getBody());
+        assertEquals(expected, response.getBodyString());
 
     }
 

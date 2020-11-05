@@ -21,21 +21,21 @@ public class HelloWorldTest extends E2ETest {
                 mockRequest()
                     .path("/")
                     .httpMethod(HttpMethod.GET),
-                response -> assertEquals(HelloWorld.getMessage(), response.getBody())
+                response -> assertEquals(HelloWorld.getMessage(), response.getBodyString())
             );
 
             put(
                 mockRequest()
                     .path("/some/path")
                     .httpMethod(HttpMethod.POST),
-                response -> assertEquals(HelloWorld.getMessage(), response.getBody())
+                response -> assertEquals(HelloWorld.getMessage(), response.getBodyString())
             );
 
             put(
                 mockRequest()
                     .path("/some/other/path?query=myquery")
                     .httpMethod(HttpMethod.PUT),
-                response -> assertEquals(HelloWorld.getMessage(), response.getBody())
+                response -> assertEquals(HelloWorld.getMessage(), response.getBodyString())
             );
 
         }};
