@@ -118,7 +118,7 @@ class ProvidersTest {
 
     }
 
-    private class EnglishGreetingProvider extends GreetingProvider {
+    private static class EnglishGreetingProvider extends GreetingProvider {
 
         @Override
         protected void configure() {
