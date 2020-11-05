@@ -1,6 +1,7 @@
 package rocks.gioac96.veronica.session.cookie;
 
 import java.util.UUID;
+import lombok.Getter;
 import lombok.NonNull;
 import rocks.gioac96.veronica.core.Request;
 import rocks.gioac96.veronica.core.Response;
@@ -11,6 +12,7 @@ import rocks.gioac96.veronica.session.SessionStore;
 
 public abstract class CookieSessionStore<D> implements SessionStore<D> {
 
+    @Getter
     protected final String cookieName;
 
     protected CookieSessionStore(CookieSessionStoreBuilder<D, ?, ?> b) {
