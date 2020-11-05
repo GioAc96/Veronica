@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -47,9 +48,9 @@ class ApplicationSessionStoreTest {
 
         when(requestWithCookies.getCookie()).thenReturn(new HashMap<>() {{
 
-            response.getCookies().forEach(setCookieHeader -> {
+            response.getHeaders().get("Set-Cookie").forEach(cookie -> {
 
-                put(setCookieHeader.getName(), setCookieHeader.getValue());
+                put(cookie.split("=")[0], cookie.split("=")[1].split(";")[0]);
 
             });
 
@@ -243,7 +244,7 @@ class ApplicationSessionStoreTest {
             .<String>builder()
             .expirationTime(1)
             .provide();
-        
+
         sessionStore.setSessionData(requestMock, responseBuilder, "my data");
 
         assertEquals(1, sessionStore.getStoredSessionsCount());
@@ -252,6 +253,71 @@ class ApplicationSessionStoreTest {
 
         assertEquals(0, sessionStore.getStoredSessionsCount());
 
+    }
+
+    @Test
+    void testOverwriteSession() {
+
+        Request requestMock = requestWithEmptyCookieMap();
+        Response.ResponseBuilder responseBuilder = Response.builder();
+
+        sessionStore.setSessionData(requestMock, responseBuilder, "1");
+
+        requestMock = responseToRequestWithCookies(responseBuilder);
+
+        assertEquals("1", sessionStore.getSessionData(requestMock));
+
+        responseBuilder = Response.builder();
+
+        sessionStore.setSessionData(requestMock, responseBuilder, "2");
+
+        assertEquals("2", sessionStore.getSessionData(requestMock));
+
+        assertEquals(1, sessionStore.getStoredSessionsCount());
+
+    }
+
+    @Test
+    void testClearAll() {
+
+        Request requestMock = requestWithEmptyCookieMap();
+        Response.ResponseBuilder responseBuilder = Response.builder();
+
+        sessionStore.setSessionData(requestMock, responseBuilder, "1");
+
+        requestMock = responseToRequestWithCookies(responseBuilder);
+
+        assertEquals("1", sessionStore.getSessionData(requestMock));
+
+
+        sessionStore.clearAllSessions();
+
+        assertNull(sessionStore.getSessionData(requestMock));
+
+        assertEquals(0, sessionStore.getStoredSessionsCount());
+
+    }
+
+    @Test
+    void testInvalidSessionKey() {
+
+        Response.ResponseBuilder responseBuilder = Response.builder();
+
+        Request requestMock = requestWithEmptyCookieMap();
+
+        sessionStore.setSessionData(requestMock, responseBuilder, "test");
+
+        Request requestWithWrongSessionKey = mock(Request.class);
+
+        when(requestWithWrongSessionKey.getCookie()).thenReturn(new HashMap<>() {{
+
+            put(sessionStore.getCookieName(), UUID.randomUUID().toString());
+
+        }});
+
+        assertNull(
+            sessionStore.getSessionData(requestWithWrongSessionKey)
+        );
 
     }
 

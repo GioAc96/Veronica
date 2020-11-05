@@ -81,18 +81,10 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
         UUID sessionKey = getSessionKey(request);
 
-        if (sessionKey == null) {
+        if (sessionKey == null || ! sessionEntries.isValidSession(sessionKey)) {
 
             // Request does not have a session key. Generating key and entry
             sessionKey = sessionEntries.generateSessionKey();
-            storeSessionCookie(responseBuilder, sessionKey);
-
-        } else if (sessionEntries.isValidSession(sessionKey)) {
-
-            // Session key is invalid or expired, updating
-            sessionKey = sessionEntries.generateSessionKey();
-
-            // Storing new session key
             storeSessionCookie(responseBuilder, sessionKey);
 
         }
@@ -167,6 +159,8 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
             if (entry.getFirst().isBefore(LocalDateTime.now())) {
 
+                // Untestable. Expired entries are deleted by a separate thread before
+                // any test could attempt to retrieve them.
                 return null;
 
             }
