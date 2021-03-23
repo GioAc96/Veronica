@@ -75,7 +75,7 @@ public final class Application {
 
         response = Objects.requireNonNullElse(response, defaultResponse);
 
-        try {
+        try (exchange) {
 
             // Writing response headers
             exchange.getResponseHeaders().putAll(response.getHeaders());
@@ -94,10 +94,6 @@ public final class Application {
 
         } catch (Exception ignored) {
 
-
-        } finally {
-
-            exchange.close();
 
         }
 
