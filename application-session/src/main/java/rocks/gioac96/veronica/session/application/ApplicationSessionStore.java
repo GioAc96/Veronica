@@ -34,8 +34,7 @@ public class ApplicationSessionStore<D> extends CookieSessionStore<D> {
 
 
     }
-
-
+    
     public static <D> ApplicationSessionStorageBuilder<D> builder() {
 
         return new ApplicationSessionStorageBuilder<>();
