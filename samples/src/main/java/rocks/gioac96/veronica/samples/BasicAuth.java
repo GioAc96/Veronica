@@ -82,7 +82,7 @@ public class BasicAuth {
         private boolean isAuthenticated;
 
         @Override
-        public void setBasicAuthenticationResult(Credentials credentials, boolean isAuthenticated) {
+        public void setAuthenticationResult(Credentials credentials, boolean isAuthenticated) {
 
             this.credentials = credentials;
             this.isAuthenticated = isAuthenticated;

@@ -61,11 +61,11 @@ public class BasicAuthFilterBuilder<D extends HoldsAuthenticationData> extends C
 
                 if (credentialsChecker.check(credentials)) {
 
-                    data.setBasicAuthenticationResult(credentials, true);
+                    data.setAuthenticationResult(credentials, true);
 
                 } else {
 
-                    data.setBasicAuthenticationResult(credentials, false);
+                    data.setAuthenticationResult(credentials, false);
 
                     return CommonResponses.promptBasicAuth(realm);
 
@@ -73,7 +73,7 @@ public class BasicAuthFilterBuilder<D extends HoldsAuthenticationData> extends C
 
             } catch (BasicAuth.BasicAuthCredentialsParsingException e) {
 
-                data.setBasicAuthenticationResult(null, false);
+                data.setAuthenticationResult(null, false);
 
                 return CommonResponses.promptBasicAuth(realm);
 
