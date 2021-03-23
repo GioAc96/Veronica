@@ -321,4 +321,13 @@ class ApplicationSessionStoreTest {
 
     }
 
+    @Test
+    void testNoSessionKey() {
+
+        Request requestMock = requestWithEmptyCookieMap();
+
+        assertNull(sessionStore.getSessionData(requestMock));
+
+    }
+
 }
