@@ -11,7 +11,7 @@
 <p>You can find a work in progress version of the documentation <a href="https://veronica-gioac96.readme.io/">here</a>.</p>
 <a href="https://jitpack.io/#GioAc96/Veronica"><img alt="Release" src="https://jitpack.io/v/GioAc96/Veronica.svg"></a>
 <hr>
-<p align="center">Developed with ❤️ by Giorgio Acquati.<br><a href="https://gioac96.rocks/">https://gioac96.rocks/</a></p>
+<p align="center">Developed with ❤️ by Giorgio Acquati.<br><a href="https://acquati.dev/">https://acquati.dev/</a></p>
 
 # 💣Version 1.0 Features
 This is the first production ready release of Veronica. Here's what has changed from version 0.14-preview:
@@ -80,7 +80,7 @@ repositories {
 dependencies {
         ...
 
-         // Veronica 1.0 https://veronica.gioac96.rocks/
+         // Veronica 1.0 https://acquati.dev/veronica
 	 implementation 'com.github.GioAc96:Veronica:core:1.0'
 	 // implementation 'com.github.GioAc96:Veronica:routing:1.0'
 	 // implementation 'com.github.GioAc96:Veronica:pipeline:1.0'
