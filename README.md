@@ -7,7 +7,7 @@
   <br>
 </p>
 <h2>State of development</h2>
-<p>Veronica is still in the early stages of its development and is missing proper testing.
+<p>Veronica is still in the early stages of its development and is missing proper documentation. As of now, it is advised that you refer to the <a href="https://github.com/GioAc96/Veronica/tree/master/src/test/java/rocks/gioac96/veronica/samples">code samples</a> to check out Veronica's capabilities.</p>
 <p>You can find a work in progress version of the documentation <a href="https://veronica-gioac96.readme.io/">here</a>.</p>
 <a href="https://jitpack.io/#GioAc96/Veronica"><img alt="Release" src="https://jitpack.io/v/GioAc96/Veronica.svg"></a>
 <hr>
