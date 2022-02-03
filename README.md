@@ -21,7 +21,7 @@ This is the first production ready release of Veronica. Here's what has changed 
 Veronica 1.0 adds support for Server-Side session storage. Currently, the framework provides two different implementations:
 
 ### 💨 Application Session Storage
-This implementation associates each session with a unique id stored inside of HTTP Cookies. The session data is stored by the Veronica Application inside of a HashMap. This provides very fast session data access, at the expense of server memory usage. This is ideal for small applications or fast prototyping.
+This implementation associates each session with a unique session id which is passed to the http cookie. The session data is stored kept in memory in a HashMap data structure. This provides very fast session data access, at the expense of server memory usage. This is ideal for small applications or fast prototyping.
 
 ### <img src="https://www.vectorlogo.zone/logos/redis/redis-icon.svg" height="26px"> Redis Session Storage
 This implementation stores session data inside of a Redis database. It makes use of the [Jedis library](https://github.com/redis/jedis) to communicate with the database.
@@ -36,7 +36,7 @@ The pipeline structure has been greatly simplified, getting rid of obscure termi
 
 ## <img src="https://graphql.org/img/logo.svg" height="30px"> Support for GraphQL
 
-Veronica now supports serving GraphQL api endpoints.
+Veronica now supports serving GraphQL API endpoints.
 
 ## 📦 Modules
 Veronica is now split into several modules. This allows developers to include only the functionalities that they need need in their project, minimizing the impact that Veronica has on application architecture. Here is a list of the current modules that shipped with this version of Veronica:
